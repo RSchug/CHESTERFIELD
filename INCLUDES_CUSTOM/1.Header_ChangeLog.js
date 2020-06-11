@@ -8,7 +8,7 @@
 |
 | ------------------------------------------------------------------------------------------------------
 |
-| Change Log:
+| Change Log: 
 | 04/21/2020 TRUEPOINT / MHELVICK Added loadCustomScript, getVendor, NOTIFICATION TEMPLATE functions, DIGEPLAN EDR custom functions
 | 05/??/2020 DB Added doScriptActions for sending email via ACA
 | 05/??/2020 Alex Charlton Added createChildLic, getCapWorkDesModel, copyDetailedDescription, getParentCapIDForReview, appHasConditiontrue
