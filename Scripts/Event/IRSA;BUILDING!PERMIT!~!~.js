@@ -13,6 +13,22 @@ if (inspType.equals("Amusement Final") && inspResult.equals("Approved")){
 	logDebug("Updating " + expField + " to " + expDateNew);
 	editAppSpecific(expField, expDateNew);
 }
+//If Inspection Result is "Corrections Required" for Inspection Type "BI Erosion Control" schedule a E and SC Inspection 2 days out assigned to EE Inspector.//
+if (inspType.equals("BI Erosion Control") && inspResult.equals("Corrections Required")) {
+	scheduleInspection("E and SC", 2, currentUserID, null, "Auto Scheduled from BI Erosion Control Status of Corrections Required");
+}
+//If Inspection Result is "Extended" for Inspection Type "E and SC" schedule another E and SC Inspection 2 days out assigned to EE Inspector.//
+if (inspType.equals("E and SC") && inspResult.equals("Extended")) {
+	scheduleInspection("E and SC", 2, currentUserID, null, "Auto Scheduled from E and SC Status of Extended");
+}
+//If Inspection Result is 'Not Approved' or "Rain Not Approved" and Inspection Type is 'E and SC' then create an ESC Notice to Comply child record AND schedule a Follow-up inspection on the ESC Notice to Comply child record with a scheduled date 2 days from system date.
+if (inspType.equals("E and SC")) {
+	var newCapId = createChild("EnvEngineering", "ESC Notice to Comply", "NA", "NA", "");
+	var sCapId = capId; // save current capId
+	capId = newCapId; // use child capId
+	scheduleInspection("Follow-up", 2, currentUserID, null, "Auto Scheduled from Not Approved E and SC Inspection");
+	capId = sCapId; // restore capId
+}
 // 35B: For Record Types: Residential Bldg, Residential Multi-Family and Commercial Building
 // If the Inspection Result is 'Approved' on Inspection Type of 'Building Final', and the related 
 // BUILDING/STRUCTURE Record Status is 'New Building' update Record Status on BUILDING/STRUCTURE to 'Existing'
