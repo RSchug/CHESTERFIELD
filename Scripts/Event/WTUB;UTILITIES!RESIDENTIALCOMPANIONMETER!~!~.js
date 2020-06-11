@@ -1,43 +1,23 @@
-//Fees must be paid before Workflow Status is Accepted//
-try {
-    if ((wfTask == 'Application Submittal' && wfStatus == 'Accepted') && balanceDue > 0) 
-{
+if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
+	//Fees must be paid before Workflow Status is Accepted//
+	if (balanceDue > 0) {
         showMessage = true;
-        comment('<font size=small><b>Unpaid Fees:</b></font><br><br>Cannot Complete until Fees are Paid, Balance Due is $ ' + balanceDue);
+        comment('<font size=small><b>Unpaid Fees:</b></font><br><br>Cannot Complete until Fees are Paid, Balance Due is $ ' + balanceDue+'</b></font>');
         cancel = true;
-}
-    } catch (err) 
-{
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-//Custom Fields are required//
-try {
-    if ((wfTask == 'Application Submittal' && wfStatus == 'Accepted') && (AInfo["Cycle"] == null)) 
-{
+	}
+	//Custom Fields are required//
+    if (AInfo["Cycle"] == null) {
         showMessage = true;
-        comment('<font size=small><b>Custom Fields are Required');
+		comment('<font size=small><b>Custom Fields are Required</b></font>');
         cancel = true;
-}
-    } catch (err) 
-{
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-//Estimated Cost of Construction is required//
-try {
-    if ((wfTask == 'Application Submittal' && wfStatus == 'Accepted') && estValue == 0) 
-{
+	}
+	//Estimated Cost of Construction is required//
+    if (estValue == 0)  {
         showMessage = true;
-        comment('<font size=small><b>Estimated Cost of Construction is Required');
+		comment('<font size=small><b>Estimated Cost of Construction is Required</b></font>');
         cancel = true;
-}
-    } catch (err) 
-{
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-//Address, Parcel and Owner required before Application Submittal Accepted
-try {
-if ((wfTask == 'Application Submittal' && wfStatus == 'Accepted')) 
-{
+	}
+	//Address, Parcel and Owner required before Application Submittal Accepted
 	//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
 	if (!addressExistsOnCap()) {          // Check if address exists
 	   showMessage = true;
@@ -55,14 +35,13 @@ if ((wfTask == 'Application Submittal' && wfStatus == 'Accepted'))
 	   cancel = true;
 	}
 }
-    } catch (err) 
-{
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-// WTUB:Building/Permit/*/*
 	//Before Workflow Task 'Permit Issuance' Status is 'Issued' IF Licensed Professional is null then Error: Licensed Professional is Required before Permit Issuance//
-	if (getLicenseProf(null,null)) {
+if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
+	var lps = getLicenseProf(null, null);
+	logDebug("lps: " + (lps ? "[" + lps.join(",") + "]" : lps))
+	if (lps == false || lps.length == 0) {
 		showMessage = true;
-		comment('<font size=small><b>Licensed Professional is required prior to Issuance</b></font>');
+		comment('<font size=small><b>Licensed Professional is required prior to Permit Issuance</b></font>');
 		cancel = true;
 	}
+}
