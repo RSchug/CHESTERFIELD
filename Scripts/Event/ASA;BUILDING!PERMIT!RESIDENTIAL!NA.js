@@ -1,7 +1,8 @@
 //Add Fees//
 if (AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && !feeExists("NEWCONST")){
 addFee("NEWCONST","CC-BLD-RES","FINAL",1,"Y");
-updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
+updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y");
+addFee("VSMP","CC-BLD-RES","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "Industrialized Building" && !feeExists("INDUSTRIAL")){
 addFee("INDUSTRIAL","CC-BLD-RES","FINAL",1,"Y");
