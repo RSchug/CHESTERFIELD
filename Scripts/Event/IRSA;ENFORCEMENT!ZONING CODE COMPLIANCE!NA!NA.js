@@ -39,6 +39,6 @@ if((matches(inspResult,"Abated - County") && inspType.equals("Follow-up")) && is
 	} 
 if((matches(inspResult,"Abated - Owner") && inspType.equals("Follow-up")) && isTaskActive("Enforcement")){
 	closeTask("Enforcement","Complied","Updated based on Abated - Owner Follow-up Inspection","");
-	} 
+	}   
 
 
