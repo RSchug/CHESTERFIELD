@@ -1,4 +1,4 @@
-function getFirstInspector(insp2Check) {
+function getFirstInspector(insp2Check) { 
     // function getLastInspector: returns the inspector ID (string) of the first inspector to result the inspection.
     //
     var inspUserID = null;
