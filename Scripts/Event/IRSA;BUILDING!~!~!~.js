@@ -12,6 +12,7 @@ try {
 //If Inspection Result is "Approved" for Inspection Type "Building Final" close the Inspections Workflow Task.//
 if (inspType.equals("Building Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","CO Ready to Issue","Updated based on Completed Inspection Result","");
+activateTask("Certificate of Occupancy");
 	}
 //If Inspection Result is "Approved" for Inspection Type "Property Conversion Inspection" close the Inspections Workflow Task.//
 if (inspType.equals("Property Conversion Inspection") && inspResult.equals("Approved")){
