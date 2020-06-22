@@ -1,7 +1,4 @@
 comment("Test form ISA");
-
-
-
 comment("Get the Inspection Count for this type");
 var inspResult = aa.inspection.getInspection(capId,inspId); 
 inspObj = inspResult.getOutput(); 
@@ -21,3 +18,7 @@ if(getLastInspectioncomment(inspType) != "No Comments")
 		editInspectionComment(capId, inspId, getLastInspectioncomment(inspType));
 	}
 }
+//When Framing Inspection Type is scheduled, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
+if(matches(inspType,"Framing")){
+	scheduleInspectDate("VSMP",dateAdd(inspSchedDate,1),currentUserID,null,"Auto Scheduled from Scheduled Framing Inspection");
+	}
