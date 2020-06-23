@@ -4,8 +4,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_EREVIEW1");
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for EREVIEW1
 var docGroupArrayModule = ["EREVIEW"];
-var docTypeArrayModule = ["Plans","Supporting Documents","Application","Calculation","Correspondance","Code Modification","Image","Legal Documentation","Plat"];
-
+var docTypeArrayModule = ["Plans","Supporting Documents","Application","Calculation","Correspondance","Code Modification","Image","Legal Documentation","Plat","Comments","Final Plans"];
 
 //Workflow Specific variables for EREVIEW1
 var reviewTasksArray = ["STRUCTURAL REVIEW","NON-STRUCTURAL REVIEW","MECHANICAL REVIEW","PLUMBING REVIEW","ELECTRICAL REVIEW","GAS REVIEW","ADDRESSING REVIEW","ENVIRONMENTAL ENGINEERING REVIEW","PLANNING REVIEW","UTILITIES REVIEW","BUDGET AND MANAGEMENT REVIEW","HEALTH DEPARTMENT REVIEW"];
@@ -18,8 +17,8 @@ var reviewTaskResubmitStatus = "Corrections Required";
 var reviewTaskApprovedStatusArray = ["Approved","Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null,"",undefined,"Revisions Received","In Review"];
 var consolidationTask = "Review Consolidation";
-var consolidationResubmitStatus = "Corrections Required";
-var consolidationApprovedStatus = "Approved";
+var ResubmitStatus = "Corrections Required";
+var ApprovedStatus = "Approved";
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
@@ -56,13 +55,24 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask.toUppe
         //emailReviewConsolidationNotification();
 }
 
-//send email to Applicant on consolidationTask/consolidationResubmitStatus or consolidationTask/consolidationApprovedStatus
-if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && wfTask == consolidationTask && matches(wfStatus,consolidationResubmitStatus,consolidationApprovedStatus)) {
-	emailReviewCompleteNotification(wfStatus,consolidationResubmitStatus,consolidationApprovedStatus,docGroupArrayModule);
+//send email to Applicant on consolidationTask/consolidationResubmitStatus or consolidationTask/ApprovedStatus and update type to Comment
+if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && wfTask == consolidationTask && matches(wfStatus,ResubmitStatus,ApprovedStatus)) {
+	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
+//Update the mark up report to Comment Doc Type
+	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
+		var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+		if(docArray != null && docArray.length > 0) {
+			for (d in docArray) {
+				if(docArray[d]["docStatus"] == "Review Complete") {
+					updateDocPermissionsbyCategory(docArray[d],"Comments");
+				}
+			}
+		}
+	}
 }
 
-//Update Approved Document Statuses/Category on consolidationTask/consolidationApprovedStatus
-if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,consolidationTask) && matches(wfStatus,consolidationApprovedStatus)) {
+//Update Approved Document Statuses/Category on consolidationTask/ApprovedStatus
+if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,consolidationTask) && matches(wfStatus,ApprovedStatus)) {
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -70,11 +80,9 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,conso
 			//logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
 			//logDebug("DocName: " + docArray[d]["docName"]);
 			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
-			if((exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && matches(docArray[d]["docStatus"],reviewCompleteDocStatus,"Uploaded") && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
-				if(docArray[d]["docName"].indexOf("Interim Report") == -1 && matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
-					if(matches(getParentDocStatus(docArray[d]),approvedDocStatus)) updateParentDocStatus(docArray[d],approvedPendingDocStatus);
-					logDebug("<font color='green'>*Final Report - Approved DocumentID: " + docArray[d]["documentNo"]+ "</font>");
-					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedPendingDocStatus);
+			if((exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && matches(docArray[d]["docStatus"],reviewCompleteDocStatus)) {
+				if(matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
+					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 					updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
 				}
 				if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
