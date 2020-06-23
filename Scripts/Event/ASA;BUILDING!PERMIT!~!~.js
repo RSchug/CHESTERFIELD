@@ -4,7 +4,7 @@ var expField = "Permit Expiration Date";
 var expDateNew = jsDateToASIDate(new Date(dateAdd(fileDate,180)));
 logDebug("Updating " + expField + " to " + expDateNew);
 editAppSpecific(expField, expDateNew);
-
+ 
 //update ASI Housing Units based on Additional Info Housing Units
 editAppSpecific("Number of Units", houseCount);
 
