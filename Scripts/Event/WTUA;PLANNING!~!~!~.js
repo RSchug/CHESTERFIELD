@@ -1,3 +1,7 @@
+try {
+
+//Below is all code from previous implementer
+
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",
 		"Planning/Subdivision/Conceptual Plan", "Planning/Subdivision/ExceptiontoPreliminary", "Planning/siteplan/Major", "Planning/siteplan/Minor",
 		"Planning/siteplan/Schematics");
@@ -33,10 +37,8 @@ for (var i in recordTypesArray) {
 				editTaskDueDate(tasktobeActive, getDueDate(28, 4));
 				scheduleMeeting(getDueDate(28, 4));
 			}
-
 		}
 	}
-
 }
 
 /**
@@ -158,6 +160,7 @@ function getContactsListByType(ContactType) {
 		return contactsArray
 	}
 
-	return false;
+	return false;  }
+} catch (err) {
+	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-
