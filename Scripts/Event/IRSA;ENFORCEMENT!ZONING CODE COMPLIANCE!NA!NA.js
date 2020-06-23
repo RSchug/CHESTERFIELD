@@ -1,7 +1,7 @@
 //Enforcement/Zoning Code Compliance/*/* if Initial Inspection is In Violation then close Investigation Workflow with In Violation status and update Notice Workflow with Pending Notice status and schedule Follow-up Inspection for next day 
 if((matches(inspResult,"In Violation") && inspType.equals("Initial")) && isTaskActive("Investigation")){
-	closeTask("Investigation","In Violation","Updated based on In Violation Initial Inspection","");
-	updateTask("Notice","Pending Notice","Updated based on In Violation Initial Inspection","");
+	closeTask("Investigation","In Violation","Updated based on In Violation Initial Inspection",""); activateTask("Notice");
+	updateTask("Notice","Pending Notice","Updated based on In Violation Initial Inspection",""); 
 	scheduleInspection("Follow-up",1,currentUserID,null,"Auto Scheduled");
 	}
 if((matches(inspResult,"10 Day In Violation") && inspType.equals("Initial")) && isTaskActive("Investigation")){
