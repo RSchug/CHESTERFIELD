@@ -1,8 +1,8 @@
 try {
     // Create Conditions from proffers on Zoning Case Record
     if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved') && balanceDue = 0) {
-		//var a = e,
-		r = aa.appSpecificTableScript.getAppSpecificTableGroupModel(a).getOutput(),
+		var profferTableArray = ['PROFFER CONDITIONS'];
+		r = aa.appSpecificTableScript.getAppSpecificTableGroupModel(profferTableArray).getOutput(),
 		s = r.getTablesArray(),
 		n = s.iterator(),
 		i = (new Array, new Array),
