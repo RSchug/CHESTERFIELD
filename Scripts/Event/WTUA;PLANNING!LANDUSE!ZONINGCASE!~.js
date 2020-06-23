@@ -1,7 +1,7 @@
 try {
     // Create Conditions from proffers on Zoning Case Record
     if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved') && balanceDue = 0) {
-		var a = e,
+		//var a = e,
 		r = aa.appSpecificTableScript.getAppSpecificTableGroupModel(a).getOutput(),
 		s = r.getTablesArray(),
 		n = s.iterator(),
@@ -39,7 +39,7 @@ try {
 				}
 				c.push(u)
 			}
-			logDebug("ASI Table Array : " + l + " (" + p + " Rows)")
+			logDebug("ASI Table Array : " + l + " (" + p + " Rows)");
 		}
 	}
 
