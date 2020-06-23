@@ -45,3 +45,4 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'KCB Workorder')
     updateTask("Initiation","Pending Review","Updated based on Concern Record","");
     capId = saveCapId;
     }
+	
