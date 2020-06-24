@@ -1,13 +1,17 @@
 try {
     // Create Conditions from proffers on Zoning Case Record
 	if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved')) {
-		var profferTableArray = loadASITable('PROFFER CONDITIONS');
-		logDebug('value of column a is : ' + columnA);
-		logDebug('value of column b is : ' + columnB);
-		logDebug('value of column c is : ' + columnC);
-		logDebug('value of column d is : ' + columnD);
-		logDebug('value of column e is : ' + columnE);
-		logDebug('value of column f is : ' + columnF);
+		showMessage = true;
+		myTable = loadASITable('PROFFER CONDITIONS')
+		firstRow = myTable[0];
+		columnA = firstRow[“Column A”]
+		columnB = firstRow[“Column B”]
+		columnC = firstRow[“Column C”]
+		columnD = firstRow[“Column D”]
+		columnE = firstRow[“Column E”]
+		columnF = firstRow[“Column F”]
+		comment(“value of column a is : “ + columnA.fieldValue)
+
 	}
 
 //            (AInfo['Temp Underground Electric'] == 'CHECKED')
