@@ -4,7 +4,7 @@ try {
 		showMessage = true;
 		myTable = loadASITable('PROFFER CONDITIONS');
 		firstRow = myTable[0];
-		columnA = firstRow{'Column A'];
+		columnA = firstRow['Column A'];
 		columnB = firstRow['Column B'];
 		columnC = firstRow['Column C'];
 		columnD = firstRow['Column D'];
