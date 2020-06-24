@@ -10,7 +10,7 @@ try {
 		columnD = firstRow['Column D'];
 		columnE = firstRow['Column E'];
 		columnF = firstRow['Column F'];
-		comment('value of column a is : ' + columnA.fieldValue);
+		comment('value of column a is : ' + columnA);
 
 	}
 
