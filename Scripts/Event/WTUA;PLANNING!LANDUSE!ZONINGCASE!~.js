@@ -6,9 +6,9 @@ try {
 		var tempAsit = loadASITable("PROFFER CONDITIONS");
 		if (tempAsit) {
 			for (a in tempAsit) {
-				if (!isNaN(tempAsit[a]["Approved"])) {
-					var cType = 'EE-Building Res';  //tempAsit[a]["Department"]+'-'+tempAsit[a]["Record Type"]
-					var cDesc = tempAsit[a]["Proffer Condition"]
+				if (tempAsit[a]["Approved"] == 'CHECKED') {
+					var cType = tempAsit[a]["Department"]+'-'+tempAsit[a]["Record Type"];
+					var cDesc = tempAsit[a]["Proffer Condition"];
 					//var cComment = 
 					addParcelCondition(null,cType,'Applied',cDesc,null,null);
 				}
