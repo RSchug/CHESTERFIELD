@@ -32,6 +32,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
+| 06/25/2020 David B. Added function for a standard comment to be added to a parcel.
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -266,6 +267,39 @@ function addFee_Violations() {
         var tssmResult = aa.appSpecificTableScript.removeAppSpecificTableInfos(tableName, feeCapId, "ADMIN");
         addASITable(tableName, tableArray, feeCapId);
     }
+}
+
+function addParcelStdCondition(parcelNum, cType, cDesc, cComment)
+//if parcelNum is null, condition is added to all parcels on CAP - db added StndCondition to be addded to the parcel...
+{
+    if (!parcelNum) {
+        var capParcelResult = aa.parcel.getParcelandAttribute(capId, null);
+        if (capParcelResult.getSuccess()) {
+            var Parcels = capParcelResult.getOutput().toArray();
+            for (zz in Parcels) {
+				logDebug("Adding Standard Condition to parcel #" + zz + " = " + Parcels[zz].getParcelNumber());
+				standardConditions = aa.capCondition.getStandardConditions(cType, cDesc).getOutput();
+				for (i = 0; i < standardConditions.length; i++) {
+					standardCondition = standardConditions[i]
+						var addCapCondResult = aa.capCondition.addCapCondition(Parcels[zz].getParcelNumber(), standardCondition.getConditionType(), standardCondition.getConditionDesc(), cComment, sysDate, null, sysDate, null, null, standardCondition.getImpactCode(), systemUserObj, systemUserObj, "Applied", currentUserID, "A")
+						if (addCapCondResult.getSuccess()) {
+							logDebug("Successfully added condition (" + standardCondition.getConditionDesc() + ")");
+						} else {
+							logDebug("**ERROR: adding condition (" + standardCondition.getConditionDesc() + "): " + addCapCondResult.getErrorMessage());
+						}
+				}
+			}
+		} else {
+			var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNum, cType, cDesc, cComment, null, null, cImpact, cStatus, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj);
+
+			if (addParcelCondResult.getSuccess()) {
+				logMessage("Successfully added condition to Parcel " + parcelNum + "  (" + cImpact + ") " + cDesc);
+				logDebug("Successfully added condition to Parcel " + parcelNum + "  (" + cImpact + ") " + cDesc);
+			} else {
+				logDebug("**ERROR: adding condition to Parcel " + parcelNum + "  (" + cImpact + "): " + addParcelCondResult.getErrorMessage());
+			}
+		}
+	}
 }
 
 function addToASITable(tableName, tableValues) // optional capId
