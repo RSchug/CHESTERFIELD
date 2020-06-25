@@ -7,10 +7,10 @@ try {
 		if (tempAsit) {
 			for (a in tempAsit) {
 				if (tempAsit[a]["Approved"] == 'CHECKED') {
-					var cType = tempAsit[a]["Department"]+'-'+tempAsit[a]["Record Type"];
-					var cDesc = tempAsit[a]["Proffer Condition"];
-					//var cComment = 
-					addParcelCondition(null,cType,'Applied',cDesc,null,null);
+					var cType = tempAsit[a]["Department"];
+					var cDesc = tempAsit[a]["Department"]+' - '+tempAsit[a]["Record Type"];
+					var cComment = tempAsit[a]["Proffer Condition"];
+					addParcelStdCondition(null,cType,cDesc,cComment);
 				}
 			}//for all rows
 		}
