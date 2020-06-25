@@ -1,22 +1,20 @@
 try {
     // Create Conditions from proffers on Zoning Case Record
 	if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved')) {
-		showMessage = true;
-		myTable = loadASITable('PROFFER CONDITIONS');
-		firstRow = myTable[0];
-		columnA = firstRow['Column A'];
-		columnB = firstRow['Column B'];
-		columnC = firstRow['Column C'];
-		columnD = firstRow['Column D'];
-		columnE = firstRow['Column E'];
-		columnF = firstRow['Column F'];
-		comment('value of column a is : ' + columnA);
 
+		var sum = 0;
+		var tempAsit = loadASITable("PROFFER CONDITIONS");
+		if (tempAsit) {
+			for (a in tempAsit) {
+				if (!isNaN(tempAsit[a]["Approved"])) {
+					var cType = 'EE-Building Res';  //tempAsit[a]["Department"]+'-'+tempAsit[a]["Record Type"]
+					var cDesc = tempAsit[a]["Proffer Condition"]
+					//var cComment = 
+					addParcelCondition(null,cType,'Applied',cDesc,null,null);
+				}
+			}//for all rows
+		}
 	}
-
-//            (AInfo['Temp Underground Electric'] == 'CHECKED')
-
-
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
