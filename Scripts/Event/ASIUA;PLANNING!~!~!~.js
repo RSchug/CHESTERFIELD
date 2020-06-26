@@ -18,7 +18,7 @@ if (tempAsit) {
         if (!isNaN(tempAsit[a]["Revised acreage"])) {
             revisedAcreage += parseInt(tempAsit[a]["Revised acreage"]);
         }
-        countpParcels++;
+        countParcels++;
 	}//for all rows
 	//editAppSpecific("CC-LU-TPA-SUM.Total application acreage", sum);
     editAppSpecific("Total Parcel Acreage", parcelAcreage);
