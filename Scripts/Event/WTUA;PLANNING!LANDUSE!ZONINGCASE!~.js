@@ -10,8 +10,8 @@ try {
 					var cType = tempAsit[a]["Department"];
 					var cDesc = tempAsit[a]["Department"]+' - '+tempAsit[a]["Record Type"];
 					var cComment = tempAsit[a]["Proffer Condition"];
-					//addParcelCondition(null,cType,cDesc,cComment);
-					addParcelCondition(null,cType,'Applied',cDesc,cComment,'Notice');
+					addParcelStdCondition(null,cType,cDesc,cComment);
+					//addParcelCondition(null,cType,'Applied',cDesc,cComment,'Notice');
 				}
 			}//for all rows
 		}
