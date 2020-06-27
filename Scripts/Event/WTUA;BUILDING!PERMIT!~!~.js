@@ -6,10 +6,13 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	editAppSpecific(expField, expDateNew);
 	if (appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family") || appMatch("Building/Permit/Commercial/NA")) {
 		var childRecs = getChildren("Building/Permit/*/*", capId);
-	} else {
+	} else if (parentCapId) {
 		logDebug("Updating parent " + parentCapId.getCustomID() + " " + expField + " to " + expDateNew);
 		editAppSpecific(expField, expDateNew, parentCapId);
 		var childRecs = getChildren("Building/Permit/*/*", parentCapId);
+	} else {
+		comment("Parent record missing. Could not update parent expiration date.");
+		var childRecs = [];
 	}
 	for (var c in childRecs) {
 		var childCapId = childRecs[c];
