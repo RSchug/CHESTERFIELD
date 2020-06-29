@@ -1,7 +1,7 @@
 logDebug("Entering IRSA:BUILDING/*/*/*");
 var inspBillable = inspObj.getInspection().getActivity().getInspBillable();
 logDebug("Inspection Billable checkbox = " + inspBillable + ". And Inspection Result = " + inspResult);
-if (inspBillable == "Y" && matches(inspResult,"Corrections Required")) {
+if (inspBillable == "Y" && matches(inspResult,"Corrections Required","Approved")) {
 	addFeeWithExtraData("REINSPECTION","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" ("+Math.round(inspTotalTime)+")");
 }
 //52B:If Inspection Result = Corrections Required, and 'Not Ready Fee' is checked, then add Not Ready Fee("CC-BLD-ADMIN", "NOTREADY"). Inspection Detail Page field is called 'Overtime'
