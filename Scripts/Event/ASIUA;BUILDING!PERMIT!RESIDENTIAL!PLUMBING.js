@@ -19,7 +19,7 @@ if (AInfo["Nature of Work"] == "New" && AInfo["Type of Building"] == "Industrial
 addFee("INDUSTRIAL","CC-BLD-RES-PLUMB","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-PLUMB","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Addition, Renovation, Conversion" && AInfo["Rough-in Inspection"] == "Existing" && !feeExists("EXISTROUGH")){
+if (AInfo["Nature of Work"] == "Addition, Renovation, Conversion" && AInfo["Rough-in Inspection"] == "Not Required" && !feeExists("EXISTROUGH")){
 addFee("EXISTROUGH","CC-BLD-RES-PLUMB","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-PLUMB","FINAL",1,"Y")}
 
