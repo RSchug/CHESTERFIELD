@@ -97,91 +97,91 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '2"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"' && (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '5/8"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '1"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '1"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP1","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP1","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '1"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '1"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP1","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP1","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '1 1/2"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '1 1/2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP15","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1 1/2"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1 1/2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP15","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '1 1/2"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '1 1/2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP15","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1 1/2"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '1 1/2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP15","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '2"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '2"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '2"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '2"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '2"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '3"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '3"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP3","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '3"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '3"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP3","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '3"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '3"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP3","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '3"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '3"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP3","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '4"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '4"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP4","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '4"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '4"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP4","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '4"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '4"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP4","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '4"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '4"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP4","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '6"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '6"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP6","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '6"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '6"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP6","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '6"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '6"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP6","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '6"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '6"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP6","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '8"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP8","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '8"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP8","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '8"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP8","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '8"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '8"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP8","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '10"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '10"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP10","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '10"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '10"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP10","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '10"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '10"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP10","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '10"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '10"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP10","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '12"'){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '12"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP12","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '12"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '12"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP12","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '12"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '12"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP12","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '12"'){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '12"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("SEWERCAP12","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Category"] == "Multifamily"){
-		addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
-		addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
 	if (AInfo["Utility Type"] == "Sewer" && AInfo["Category"] == "Multifamily"){
-		addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
-		addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
