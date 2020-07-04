@@ -39,34 +39,7 @@ function generateNewSerivceNumber() {
 */
 var newServNumber = Number(lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER"));
 var count = 1;
-if (AInfo["Utility Type"] == "Water" && !feeExists("WATERCAPITAL")){
-addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Water" && !feeExists("WATERMETER")){
-addFee("WATERMETER","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Water" && AInfo["Connection Type"] == "F" && !feeExists("SEWERSERVICE")){
-addFee("SEWERSERVICE","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Sewer" && !feeExists("SEWERCAPITAL")){
-addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Sewer" && !feeExists("SEWERSERVICE") && AInfo["Connection Type"] != "F"){
-addFee("SEWERSERVICE","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Both" && !feeExists("WATERCAPITAL")){
-addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Both" && !feeExists("WATERMETER")){
-addFee("WATERMETER","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && !feeExists("SEWERSERVICE")){
-addFee("SEWERSERVICE","CC-UTL-SC","FINAL",1,"Y")}
-
-if (AInfo["Utility Type"] == "Both" && !feeExists("SEWERCAPITAL")){
-addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
 if (AInfo["Generate New Service Number"] == "CHECKED" && AInfo["Service Number"] ==null) {
 editAppSpecific("Service Number",lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER"));
 editLookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER",zeroPad(newServNumber+count,8));
 }
-//Add Fees

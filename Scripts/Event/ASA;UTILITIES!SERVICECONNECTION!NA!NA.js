@@ -185,3 +185,9 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
 	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+var newServNumber = Number(lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER"));
+var count = 1;
+if (AInfo["Generate New Service Number"] == "CHECKED" && AInfo["Service Number"] ==null) {
+editAppSpecific("Service Number",lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER"));
+editLookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER",zeroPad(newServNumber+count,8));
+}
