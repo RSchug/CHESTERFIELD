@@ -177,3 +177,11 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SEWERCAP12","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '12"'){
 	addFee("SEWERCAP12","CC-UTL-SC","FINAL",1,"Y")}
+	if (AInfo["Utility Type"] == "Water" && AInfo["Category"] == "Multifamily"){
+		addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
+		addFee("WATERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Category"] == "Multifamily"){
+		addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
+		addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
