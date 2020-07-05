@@ -164,3 +164,11 @@ function getContactsListByType(ContactType) {
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
+//4P
+if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
+	activateTask("Public Notice");
+	activateTask("Adjacents");
+	activateTask("IVR");
+	activateTask("Sign Posting");
+	activateTask("Maps");
+		}
