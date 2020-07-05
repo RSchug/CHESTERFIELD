@@ -172,7 +172,3 @@ if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS
 	activateTask("Sign Posting");
 	activateTask("Maps");
 		}
-//6P
-if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to BOS"))){
-	activateTask("BOS Hearing");
-		}
