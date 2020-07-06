@@ -100,9 +100,8 @@ if (inspType.equals("VSMP")) {
 	scheduleInspection("Follow-up",7,currentUserID,null,"Auto Scheduled");
 	capId = sCapId; // restore capId.
 } 
-
 //If Inspection Type is Pre-Construction Meeting and Inspection Result is Compelted, then Close Land Disturbance Permit Task with Issued and Activate Inspections Task with Undisturbed.//
-if(matches(inspType,"Pre-Construction Meeting") && (matches(inspResult,"Completed")){
-closeTask("Land Disturbance Permit","Issued","Updated based on Pre-Construction Meeting Inspection Result","");
-activateTask("Inspections"); updateTask("inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection","");
+if(matches(inspResult,"Completed") && inspType.equals("Pre-Construction Meeting")) {
+	closeTask("Land Disturbance Permit","Issued","Updated based on Pre-Construction Meeting Inspection Result",""); activateTask("Inspections");
+	updateTask("Inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection Result","");v
 }
