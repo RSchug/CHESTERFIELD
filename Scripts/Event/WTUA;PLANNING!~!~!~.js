@@ -166,9 +166,9 @@ function getContactsListByType(ContactType) {
 }
 //4P
 if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
-	activateTask("Public Notice");
+	activateTask("Public Notices");
 	activateTask("Adjacents");
-	activateTask("IVR");
+	activateTask("IVR Message");
 	activateTask("Sign Posting");
 	activateTask("Maps");
 		}
