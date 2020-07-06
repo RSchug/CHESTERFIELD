@@ -166,9 +166,9 @@ function getContactsListByType(ContactType) {
 }
 //4P
 if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
-	activateTask("Public Notices");
-	activateTask("Adjacents");
-	activateTask("IVR Message");
-	activateTask("Sign Posting");
-	activateTask("Maps");
+	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	addAdHocTask("ADHOC_WORKFLOW","Maps","");
 		}
