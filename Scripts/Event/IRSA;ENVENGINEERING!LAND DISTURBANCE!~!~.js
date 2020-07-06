@@ -103,5 +103,5 @@ if (inspType.equals("VSMP")) {
 //If Inspection Type is Pre-Construction Meeting and Inspection Result is Compelted, then Close Land Disturbance Permit Task with Issued and Activate Inspections Task with Undisturbed.//
 if(matches(inspResult,"Completed") && inspType.equals("Pre-Construction Meeting")) {
 	closeTask("Land Disturbance Permit","Issued","Updated based on Pre-Construction Meeting Inspection Result",""); activateTask("Inspections");
-	updateTask("Inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection Result","");v
+	updateTask("Inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection Result","");
 }
