@@ -97,13 +97,13 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '2"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"' && (AInfo["Category"] != "Multifamily")){
+	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"' && (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == null)){
 	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == null)){
 	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == null)){
 	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily")){
+	if (AInfo["Utility Type"] == "Both" && AInfo["Actual Meter Size"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == null)){
 	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '1"'&& (AInfo["Category"] != "Multifamily")){
 	addFee("WATERCAP1","CC-UTL-SC","FINAL",1,"Y")}
@@ -185,6 +185,14 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Category"] == "Multifamily"){
 	addFee("SEWERUNIT","CC-UTL-SC","FINAL",AInfo["Number of Units"],"Y")}
+	if (AInfo["Utility Type"] == "Water" && AInfo["Virtual Meter"] == '5/8"' && (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == "CHECKED")){
+	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
+	if (AInfo["Utility Type"] == "Both" && AInfo["Virtual Meter"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == "CHECKED")){
+	addFee("WATERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Virtual Meter"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == "CHECKED")){
+	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
+	if (AInfo["Utility Type"] == "Both" && AInfo["Virtual Meter"] == '5/8"'&& (AInfo["Category"] != "Multifamily") && (AInfo["Virtual Meter?"] == "CHECKED")){
+	addFee("SEWERCAPITAL","CC-UTL-SC","FINAL",1,"Y")}
 var newServNumber = Number(lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER"));
 var count = 1;
 if (AInfo["Generate New Service Number"] == "CHECKED" && AInfo["Service Number"] ==null) {
