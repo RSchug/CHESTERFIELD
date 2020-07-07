@@ -36,3 +36,6 @@ if (appTypeArr && appTypeArr[2].toUpperCase().equals("COMMERCIAL")) {
 	if (feeExists("CC-BLD-CAP01"))
 		calcFee_CC_BLD_COMM_AUX_PLUMBING_CC_BLD_CAP01();
 }
+if(matches(appStatus,"Cancelled","Expired","Withdrawn"))
+{taskCloseAllExcept("Cancelled","Closed due to Record Status update");
+}
