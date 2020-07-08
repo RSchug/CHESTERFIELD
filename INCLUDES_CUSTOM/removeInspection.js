@@ -8,5 +8,6 @@ function removeInspection(inspectionModel) {
 		} catch (err) {
             logDebug("**WARNING** error removing inspection failed " + err.message);
 		}
-	}
+    }
+    return removeResult;
 }
