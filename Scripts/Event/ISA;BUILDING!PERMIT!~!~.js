@@ -23,13 +23,18 @@ if(matches(inspType,"Framing")){
 	scheduleInspectDate("VSMP",dateAdd(inspSchedDate,1),currentUserID,null,"Auto Scheduled from Scheduled Framing Inspection");
 	}
 
+
+var isInspectionRemove = false;
 // Permit must be Issued or Temporary CO Issued, except Site Visit Inspection
-// Remove Pending Inspection created via Manage Inspection
 if (inspType != "Site Visit" && (!wasCapStatus(["Issued", "Temporary CO Issued"]))) {
 	showMessage = true;
 	comment('<font size=small><b>Record must be Issued to schedule inspections</b></font>');
-	if (vEventName != "InspectionMultipleScheduleBefore") cancel = true;
-	logDebug("vEventName: " + vEventName + ", cancel: " + cancel);
+	if (vEventName == "InspectionMultipleScheduleBefore") isInspectionRemove = true;
+	logDebug("vEventName: " + vEventName + ", removeInspection: " + isInspectionRemove);
+}
+
+// Remove Pending Inspection created via Manage Inspection
+if (isInspectionRemove) {
 	if (inspObj.getInspection) {
 		var removeResult = removeInspection(inspObj.getInspection());
 		logDebug("Removing Inspection: " + inspObj.getIdNumber()
