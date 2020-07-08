@@ -38,4 +38,5 @@ if (appTypeArr && appTypeArr[2].toUpperCase().equals("COMMERCIAL")) {
 }
 if(matches(appStatus,"Cancelled","Withdrawn"))
 {taskCloseAllExcept("Cancelled","Closed due to Record Status update","Application Submittal");
+deactivateTask("Review Distribution");
 }
