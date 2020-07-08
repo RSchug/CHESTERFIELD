@@ -3,6 +3,5 @@
 if (inspType != "Site Visit" && (!wasCapStatus(["Issued", "Temporary CO Issued"]))) {
         showMessage = true;
         comment('<font size=small><b>Record must be Issued to schedule inspections</b></font>');
-        if (vEventName != "InspectionMultipleScheduleBefore") cancel = true;
-        logDebug("vEventName: " + vEventName + ", cancel: " + cancel);
+        if (!exists(vEventName, ["InspectionMultipleScheduleAfter", "InspectionMultipleScheduleBefore"])) cancel = true;
 }
