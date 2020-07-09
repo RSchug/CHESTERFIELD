@@ -6,6 +6,7 @@ Description :
 
 try {
 	//Manufactured Homes and RPA Exception Record Types and Zoning Case - !appMatch(Planning/LandUse/ZoningCase/NA) ??
+	var resultArray = "5";
 	getParcelConditions('CDOT', 'Applied', null, null);
 	logDebug("resultArray: " + resultArray);
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved') && 
