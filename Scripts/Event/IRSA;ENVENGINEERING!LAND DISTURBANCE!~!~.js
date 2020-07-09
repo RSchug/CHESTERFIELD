@@ -80,7 +80,6 @@ scheduleInspection("Undisturbed",14,currentUserID,null,"Auto Scheduled based on 
 //If Inspection Result is 'Pending Closure' then schedule another Pending Closure Inspection Type 56 calendar days out.//
 if (matches(inspResult,"Pending Closure")){
 scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
-    updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
 	}
 //If Inspection Result is 'Completed' then schedule another Pending Closure Inspection Type 56 calendar days out and Close Inspections Workflow Task.//
 if (matches(inspResult,"Completed")){
@@ -106,4 +105,33 @@ if(matches(inspResult,"Completed") && inspType.equals("Pre-Construction Meeting"
 	closeTask("Land Disturbance Permit","Issued","Updated based on Pre-Construction Meeting Inspection Result",""); activateTask("Inspections");
 	updateTask("Inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection Result","");
 }
-
+//If Inspection Type is 'Timbering Only' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("Timbering Only")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
+//If Inspection Type is 'Clearing and Grubbing' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("Clearing and Grubbing")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
+//If Inspection Type is 'Rough Grading' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("Rough Grading")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
+//If Inspection Type is 'Final Stabilization' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("Final Stabilization")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
+//If Inspection Type is 'Stabilized and Inactive' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("Stabilized and Inactive")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
+//If Inspection Type is 'VSMP' and Inspection Result is 'Pending Closure', then update Inspections task with a status of Pending Closure and then schedule a Pending Closure Inspection Type 56 calendar days out.//
+if(matches(inspResult,"Pending Closure") && inspType.equals("VSMP")) {
+scheduleInspection("Pending Closure",56,currentUserID,null,"Auto Scheduled");
+	updateTask("Inspections","Pending Closure","Updated based on Completed Inspection Result","");
+}
