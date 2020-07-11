@@ -1,5 +1,5 @@
 //Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
-var ParcelInspectorEnvEng = AInfo["PARCEL.INSPECTIONDISTRICT"];
+var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
 var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
 //If Inspection Result is 'Approved', 'Rain Approved', 'Not Approved' or 'Rain Not Approved' then schedule another Inspection Type a certain amount of days out per Inspection Type.//
 if(matches(inspResult,"Approved","Rain Approved","Not Approved","Rain Not Approved") && inspType.equals("E and SC")){
