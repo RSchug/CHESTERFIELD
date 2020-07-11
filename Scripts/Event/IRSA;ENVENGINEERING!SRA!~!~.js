@@ -1,5 +1,5 @@
 //Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
-var ParcelInspectorEnvEng = AInfo["PARCEL.INSPECTIONDISTRICT"];
+var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
 var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
 //If EE QC Inspection Result is 'Approved' then close Inspections Workflow Task.//
 if (inspType.equals("EE QC Inspection") && inspResult.equals("Approved")){
