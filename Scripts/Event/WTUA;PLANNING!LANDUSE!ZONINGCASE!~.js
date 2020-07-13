@@ -9,10 +9,10 @@ try {
 				if (tempAsit[a]["Approved"] == 'CHECKED') {
 					var cType = tempAsit[a]["Department"];
 					var cDesc = tempAsit[a]["Department"]+' - '+tempAsit[a]["Record Type"];
-					var cComment = tempAsit[a]["Proffer Condition"];
-					//var clngComment = tempAsit[a]["Long Comment"];
-					//addParcelStdCondition_TPS(null,cType,cDesc,cName,clngComment);
-					addParcelCondition(null,cType,'Applied',cDesc,cComment,'Notice');
+					var cShortComment = tempAsit[a]["Proffer Condition"];
+                    var cLongComment = tempAsit[a]["Long Comment"];
+					addParcelStdCondition_TPS(null, cType, cDesc, cShortComment, cLongComment);
+					//addParcelCondition(null,cType,'Applied',cDesc,cComment,'Notice');
 				}
 			}//for all rows
 		}
