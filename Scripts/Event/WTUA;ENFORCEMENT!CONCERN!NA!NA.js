@@ -1,48 +1,58 @@
 //
-
+/* 1CE When: Workflow Task = 'Community Enhancement' and Task Status = 'Inspection Required PM'
+ THEN:  deactive Community Enhancement Workflow Task
+        create child Enforcement / Property Maintenance / NA / NA record
+        schedule "Initial" inspection for next day on Child Record and assign inspection Based on Inspector GIS Layer and add the Custom Fields Data from Parent record that is checked to the Inspection Request field on the Child Record
+        copy Custom Fields Data from Parent record that is checked to the Inspection Request field on the Child Record
+        CC-ENF-ZONE >  CC-ENF-PROAC or CC-ENF-ZONE
+*/
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') 
-{deactivateTask("Community Enhancement"); 
-newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
+{   deactivateTask("Community Enhancement"); 
+    newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     saveCapId = capId;
     capId = newChildID;
-    scheduleInspection("Initial",1,currentUserID,null,"Auto Scheduled");
+    get
+    scheduleInspection_CHESTERFIELD("Initial",1,null,null,"Auto Scheduled");
     capId = saveCapId;
+    copyAppSpecific(newChildID);
     }
 
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') 
-{deactivateTask("Community Enhancement"); 
-newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
-    saveCapId = capId;
-    capId = newChildID;
-    scheduleInspection("Initial",1,currentUserID,null,"Auto Scheduled");
+{   deactivateTask("Community Enhancement"); 
     deactivateTask("Initiation");
     activateTask("Investigation");
+    newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
+    saveCapId = capId;
+    capId = newChildID;
+    scheduleInspection_CHESTERFIELD("Initial",1,null,null,"Auto Scheduled");
     capId = saveCapId;
+    copyAppSpecific(newChildID);
     }
 
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and ZC') 
-{deactivateTask("Community Enhancement"); 
-newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
+{   deactivateTask("Community Enhancement"); 
+    newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     saveCapId = capId;
     capId = newChildID;
-    scheduleInspection("Initial",1,currentUserID,null,"Auto Scheduled");
+    scheduleInspection_CHESTERFIELD("Initial",1,currentUserID,null,"Auto Scheduled");
     capId = saveCapId;
-    }
-
-if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and ZC') 
-{newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
-    saveCapId = capId;
-    capId = newChildID;
-    scheduleInspection("Initial",1,currentUserID,null,"Auto Scheduled");
+    copyAppSpecific(newChildID);
     deactivateTask("Initiation");
     activateTask("Investigation");
+    newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
+    saveCapId = capId;
+    capId = newChildID;
+    scheduleInspection_CHESTERFIELD("Initial",1,currentUserID,null,"Auto Scheduled");
     capId = saveCapId;
+    copyAppSpecific(newChildID);
     }
+
 if (wfTask == 'Community Enhancement' && wfStatus == 'KCB Workorder')
-{newChildID = createChild("Enforcement","KCB Workorder","NA","NA","");
+{   newChildID = createChild("Enforcement","KCB Workorder","NA","NA","");
     saveCapId = capId;
     capId = newChildID;
     updateTask("Initiation","Pending Review","Updated based on Concern Record","");
     capId = saveCapId;
+    copyAppSpecific(newChildID);
     }
-	
+    
