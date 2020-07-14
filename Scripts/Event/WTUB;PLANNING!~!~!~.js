@@ -6,33 +6,31 @@ Description :
 
 try {
 	//Manufactured Homes and RPA Exception Record Types and Zoning Case - !appMatch(Planning/LandUse/ZoningCase/NA) ??
-	logDebug("resultArray: " + getParcelConditions('CDOT', 'Applied', null, null));
-	logDebug("resultArray: " + getParcelConditions('BI', 'Applied', null, null));
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved') && 
-		(getParcelConditions('BI', 'Applied', null, null) ||
-		getParcelConditions('CDOT', 'Applied', null, null) ||
-		getParcelConditions('EE', 'Applied', null, null) ||
-		getParcelConditions('Fire', 'Applied', null, null) ||
-		getParcelConditions('Health', 'Applied', null, null) ||
-		getParcelConditions('Parks and Rec', 'Applied', null, null) ||
-		getParcelConditions('Planning', 'Applied', null, null) ||
-		getParcelConditions('Utilities', 'Applied', null, null) ||
-		getParcelConditions('VDOT', 'Applied', null, null) ||
-		getParcelConditions('Real Property', 'Applied', null, null))) {
+		(parcelHasConditiontrue_TPS('BI', 'Applied') ||
+		parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
+		parcelHasConditiontrue_TPS('EE', 'Applied') ||
+		parcelHasConditiontrue_TPS('Fire', 'Applied') ||
+		parcelHasConditiontrue_TPS('Health', 'Applied') ||
+		parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
+		parcelHasConditiontrue_TPS('Planning', 'Applied') ||
+		parcelHasConditiontrue_TPS('Utilities', 'Applied') ||
+		parcelHasConditiontrue_TPS('VDOT', 'Applied') ||
+		parcelHasConditiontrue_TPS('Real Property', 'Applied'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
 			cancel = true;
 	}
 	//Variance and SpecialException and AdminVariance
 	if (matches(wfTask, 'Case Complete') && matches(wfStatus, 'Closed') && 
-		(getParcelConditions('CDOT', 'Applied', null, null) ||
-		getParcelConditions('EE', 'Applied', null, null) ||
-		getParcelConditions('Fire', 'Applied', null, null) ||
-		getParcelConditions('Health', 'Applied', null, null) ||
-		getParcelConditions('Parks and Rec', 'Applied', null, null) ||
-		getParcelConditions('Planning', 'Applied', null, null) ||
-		getParcelConditions('Utilities', 'Applied', null, null) ||
-		getParcelConditions('VDOT', 'Applied', null, null))) {
+		(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
+		parcelHasConditiontrue_TPS('EE', 'Applied') ||
+		parcelHasConditiontrue_TPS('Fire', 'Applied') ||
+		parcelHasConditiontrue_TPS('Health', 'Applied') ||
+		parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
+		parcelHasConditiontrue_TPS('Planning', 'Applied') ||
+		parcelHasConditiontrue_TPS('Utilities', 'Applied') ||
+		parcelHasConditiontrue_TPS('VDOT', 'Applied'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
 			cancel = true;
