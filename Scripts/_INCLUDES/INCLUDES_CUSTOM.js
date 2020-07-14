@@ -1,4 +1,4 @@
-logDebug("Loading Events>Custom Script>INCLUDES_CUSTOM");
+logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 /*------------------------------------------------------------------------------------------------------/
 | Accela Automation
 | Accela, Inc.
@@ -271,6 +271,47 @@ function addFee_Violations() {
 	if (tableUpdate) {
 		var tssmResult = aa.appSpecificTableScript.removeAppSpecificTableInfos(tableName,feeCapId,"ADMIN");
 	    addASITable(tableName, tableArray, feeCapId);
+	}
+}
+
+function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComment)
+//if parcelNum is null, condition is added to all parcels on CAP
+{
+	if (!parcelNum)	{
+		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
+		if (capParcelResult.getSuccess()) {
+			var Parcels = capParcelResult.getOutput().toArray();
+			for (zz in Parcels) {
+				logDebug("Adding Condition to parcel #" + zz + " = " + Parcels[zz].getParcelNumber());
+				var standardConditions = aa.capCondition.getStandardConditions(cType,cDesc).getOutput();
+				for (i = 0; i < standardConditions.length; i++) {
+					standardCondition = standardConditions[i];
+					//var cStatus = "Active", cStatusType = "Active";
+					var addParcelCondResult = aa.parcelCondition.addParcelCondition(Parcels[zz].getParcelNumber(), standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), "Applied", sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
+					if (addParcelCondResult.getSuccess()) {
+						logDebug("Successfully added condition to Parcel " + Parcels[zz].getParcelNumber() + ":  " + cDesc);
+					}
+					else {
+						logDebug( "**ERROR: adding condition to Parcel " + Parcels[zz].getParcelNumber() + ": " + addParcelCondResult.getErrorMessage());
+					}
+				}
+			}
+		}
+	} else {
+		logDebug("Adding Condition to parcel #" + parcelNum);
+		var standardConditions = aa.capCondition.getStandardConditions(cType,cDesc).getOutput();
+		for (i = 0; i < standardConditions.length; i++) {
+			standardCondition = standardConditions[i];
+			//var cStatus = "Active", cStatusType = "Active";
+			var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNum, standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), "Applied", sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
+			if (addParcelCondResult.getSuccess()) {
+//				logMessage("Successfully added condition to Parcel " + parcelNum + ":  " + cDesc);
+				logDebug("Successfully added condition to Parcel " + parcelNum + ":  " + cDesc);
+			}
+			else {
+				logDebug( "**ERROR: adding condition to Parcel " + parcelNum + ": " + addParcelCondResult.getErrorMessage());
+			}
+		}
 	}
 }
 
@@ -4376,6 +4417,43 @@ function ownerExistsOnCap() {
  
 }
 
+function parcelHasConditiontrue_TPS(pType,pStatus)
+// for the Parcel Conditions, checks all parcels, and if any have an Applied Condition, returns true
+{
+	if (!parcelNum)	{
+		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
+		if (capParcelResult.getSuccess()) {
+			var Parcels = capParcelResult.getOutput().toArray();
+			for (zz in Parcels) {
+				logDebug("Getting Applied Conditions on parcel #" + zz + " = " + Parcels[zz].getParcelNumber());
+				var condResult = aa.capCondition.getCapConditions(pType,pStatus);
+				if (condResult.getSuccess()) {
+					var capConds = condResult.getOutput();
+				} else { 
+					logDebug("**ERROR: getting parcel conditions: " + condResult.getErrorMessage());
+					return false;
+				}
+			}
+		}
+		var cStatus;
+		var cDesc;
+		for (cc in capConds) {
+			var thisCond = capConds[cc];
+			var cStatus = thisCond.getConditionStatus();
+			var cDesc = thisCond.getConditionDescription();
+			if (cStatus==null)
+				cStatus = " ";
+			if (cDesc==null)
+				cDesc = " ";
+			logDebug("The Status of the " + cDesc + " Condition is " + cStatus);
+			//Look for matching condition
+			if ( (pStatus==null || pStatus.toUpperCase().equals(cStatus.toUpperCase())) && (pDesc==null || pDesc.toUpperCase().equals(cDesc.toUpperCase())) )
+				return true; //matching condition found
+		}
+		return false; //no matching condition found
+	}
+}
+
 // S11A Certain record type will have the ID of the parent in the ASI or ASIT. Relate the record to its parent. 
 // Sample calls (capId.getCustomID(),parentCapID.getCustomID())- ("20161214-00001","BLD16-00019")
 function relatebyCapID(childCapID,parentCapID){
@@ -4424,7 +4502,8 @@ function removeInspection(inspectionModel) {
 		} catch (err) {
             logDebug("**WARNING** error removing inspection failed " + err.message);
 		}
-	}
+    }
+    return removeResult;
 }
 
 function reversePayment() {
@@ -4448,6 +4527,55 @@ function runReportTest(aaReportName) {
 		aa.env.setValue("ScriptReturnCode", "0");
 		aa.env.setValue("ScriptReturnMessage", msg.getOutput());
 	}
+}
+
+function scheduleInspection_CHESTERFIELD(inspType) {
+    // TODO: Update with GIS Info based on record type or insp type.
+    // 07/10/2020 RS: Modified from INCLUDES_ACCELA_FUNCTION to also identify inspector
+     // optional inspector ID.  This function requires dateAdd function
+    // DQ - Added Optional 4th parameter inspTime Valid format is HH12:MIAM or AM (SR5110) 
+    // DQ - Added Optional 5th parameter inspComm ex. to call without specifying other options params scheduleInspection("Type",5,null,null,"Schedule Comment");
+    var DaysAhead = (arguments.length > 1 && arguments[1] != null ? arguments[1] : 1);
+    var inspectorId = (arguments.length > 2 && arguments[2] != null ? arguments[2] : null);
+    var inspTime = (arguments.length > 3 && arguments[3] != null ? arguments[3] : null);
+    var inspComm = (arguments.length > 4 && arguments[4] != null ? arguments[4] : "Scheduled via Script");
+    var useWorking = (arguments.length > 5 && arguments[5] == true ? true : false);
+
+    // Determine GIS Info to use for inspector id or inspection district.
+    gisLayerField = null;
+    if (appMatch("Enforcement/*/*/*")) {
+        gisLayerName = "Enforcement Boundaries";
+        gisLayerAbbr = "Enforcement Boundaries";
+        gisLayerField = "InspectorID";
+    }
+    if (inspectorId == null && gisLayerField != null) { // Auto assign inspector based on GIS
+        inspectionArea = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+        // Check for inspection district mapping to inspectors
+        inspectorId = lookup("USER_DISTRICTS", gisLayerAbbr + "-" + inspectionArea);
+        if (typeof (inspectorId) == "undefined") inspectorId = inspectionArea;
+        if (inspectorId == "") inspectorId == null;
+        // Check for valid inspector id.
+        if (inspectorId) {
+            iNameResult = aa.person.getUser(inspectorId);
+            if (!iNameResult.getSuccess()) { 
+                logDebug("ERROR: retrieving user model " + inspectorId + " : " + iNameResult.getErrorMessage());
+                inspectorId = null; 
+            }
+        }
+    }
+    if (inspectorId == null && !publicUser) inspectorId = currentUserID; // Default to current user if no user found.
+    inspDate = null;
+    if (useWorking) {
+        inspDate = dateAdd(td, amt, true);
+
+    }
+    if (inspDate) {
+        logDebug("inspDate: " + inspDate);
+        scheduleInspectDate(inspType, inspDate, inspectorId, inspTime, inspComm);
+    } else {
+        scheduleInspection(inspType, DaysAhead, inspectorId, inspTime, inspComm);
+    }
+    // assignCapInspector(inspectorId);
 }
 
 //scheduleMeeting(capId,"PLANNING COMMISSION HEARING",'01/01/2017','02/01/2017');
