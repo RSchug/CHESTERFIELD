@@ -1,4 +1,4 @@
-1CE - 3CE Violations to Inspection Request Commentfunction assignInspection_CHESTERFIELD(inspId) {
+function assignInspection_CHESTERFIELD(inspId) {
     // TODO: Update with GIS Info based on record type or insp type.
     // use inspId is null then it will use inspType & cap info to determine inspector.
     var inspectorId = (arguments.length > 1 && arguments[1] != null ? arguments[1] : null);
