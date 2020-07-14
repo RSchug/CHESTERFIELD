@@ -11,13 +11,14 @@ function scheduleInspection_CHESTERFIELD(inspType) {
     var useWorking = (arguments.length > 5 && arguments[5] == true ? true : false);
 
     // Determine GIS Info to use for inspector id or inspection district.
-    gisLayerField = null;
+    if (typeof (gisMapService) == "undefined") gisMapService = null;
+    var gisLayerName = null, gisLayerAbbr = null, gisLayerField = null;
     if (appMatch("Enforcement/*/*/*")) {
         gisLayerName = "Enforcement Boundaries";
         gisLayerAbbr = "Enforcement Boundaries";
         gisLayerField = "InspectorID";
     }
-    if (inspectorId == null && gisLayerField != null) { // Auto assign inspector based on GIS
+    if (inspectorId == null && gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
         inspectionArea = getGISInfo(gisMapService, gisLayerName, gisLayerField);
         // Check for inspection district mapping to inspectors
         inspectorId = lookup("USER_DISTRICTS", gisLayerAbbr + "-" + inspectionArea);
