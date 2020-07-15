@@ -12,7 +12,7 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
     logDebug("Violations: " + checkedItems);
     newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     if (newChildID) {
-        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled for violations: " + checkedItems, newChildID);
+        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
     }
@@ -24,7 +24,7 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') {
     logDebug("Violations: " + checkedItems);
     newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
     if (newChildID) {
-        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled for violations: " + checkedItems, newChildID);
+        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
         saveCapId = capId;
@@ -42,13 +42,13 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and
     logDebug("Violations: " + checkedItems);
     newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     if (newChildID) {
-        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled for violations: " + checkedItems, newChildID);
+        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
     }
     newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
     if (newChildID) {
-        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled for violations: " + checkedItems, newChildID);
+        var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
         saveCapId = capId;
