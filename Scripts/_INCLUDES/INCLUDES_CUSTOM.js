@@ -32,7 +32,6 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
-| 07/13/2020 D Boucher added 2 condition scripts addParcelStdCondition_TPS and parcelHasConditiontrue_TPS
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -315,7 +314,6 @@ function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComm
 		}
 	}
 }
-
 function addToASITable(tableName, tableValues) // optional capId
 {
 	//  tableName is the name of the ASI table
@@ -449,6 +447,119 @@ function appHasConditiontrue(pType,pStatus,pDesc,pImpact,capid)
 		}
 	return false; //no matching condition found
 	} //function
+
+function assignInspection_CHESTERFIELD(inspId) {
+    // TODO: Update with GIS Info based on record type or insp type.
+    // use inspId is null then it will use inspType & cap info to determine inspector.
+    var inspectorId = (arguments.length > 1 && arguments[1] != null ? arguments[1] : null);
+    var itemCap = (arguments.length > 2 && arguments[2] != null ? arguments[2] : capId);
+    var inspType = (arguments.length > 3 && arguments[3] != null ? arguments[3] : null);
+
+    if (arguments.length > 2 && arguments[2] != null) {
+        var cap = aa.cap.getCap(itemCap).getOutput();
+        var capTypeResult = cap.getCapType();
+        var capTypeString = capTypeResult.toString();
+        var appTypeArray = capTypeString.split("/");
+    } else {
+        var appTypeArray = appTypeString.split("/");
+    }
+
+    if (inspId) {
+        iObjResult = aa.inspection.getInspection(itemCap, inspId);
+        if (!iObjResult.getSuccess()) {
+            logDebug("**WARNING retrieving inspection " + inspId + " : " + iObjResult.getErrorMessage());
+            return false;
+        }
+        iObj = iObjResult.getOutput();
+        inspType = null;
+        if (iObj) {
+            inspType = iObj.getInspection().getInspectionType();
+        }
+    }
+
+    var inspDiscipline = appTypeArray[0], inspDistrict = null;
+    var gisLayerName = null, gisLayerAbbr = null, gisLayerField = null;
+    if (typeof (gisMapService) == "undefined") gisMapService = null; // Check for global.
+    if (appMatch("Enforcement/*/*/*")) {
+        inspDiscipline = "Enforcement";
+        gisLayerName = "Enforcement Boundaries";
+        gisLayerField = "InspectorID";
+    } else if (appMatch("EnvEngineering/*/*/*")) {
+        inspDiscipline = "EnvEngineering";
+        gisLayerName = "Parcel";
+        gisLayerField = "EE Inspector";
+    }
+    if (inspectorId == "") inspectorId == null;
+
+    if (inspectorId == null) {
+        if (gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
+            inspDistrict = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+        }
+        if (typeof (inspDistrict) == "undefined") inspDistrict = null;
+        if (typeof (inspDiscipline) == "undefined") inspDiscipline = null;
+        // Check for inspection discipline & district mapping to inspectors
+        inspectorId = lookup("USER_DISTRICTS", (inspDiscipline ? inspDiscipline : "") + (inspDistrict ? "-" + inspDistrict : ""));
+        if (typeof (inspectorId) == "undefined" && inspDiscipline)
+            inspectorId = lookup("USER_DISTRICTS", inspDiscipline);
+        if (typeof (inspectorId) == "undefined" && inspDistrict)
+            inspectorId = lookup("USER_DISTRICTS", inspDistrict);
+        if (typeof (inspectorId) == "undefined") inspectorId = null;
+        if (inspectorId == "") inspectorId == null;
+    }
+
+    // Check for valid inspector id.
+    var iName = inspectorId;
+    var iInspector = getInspectorObj(iName);
+
+    if (!iInspector) {
+        logDebug("**WARNING could not find inspector or department: " + iName + ", no assignment was made");
+        return false;
+    }
+
+    if (inspId) {
+        if (inspectorId != null && inspectorId != "" && false) {
+            assignInspection(inspId, inspectorId, itemCap);
+            logDebug("assigning inspection " + inspId + " to " + inspectorId);
+            /* iObj.setInspector(iInspector);
+            if (iObj.getScheduledDate() == null) {
+                iObj.setScheduledDate(sysDate);
+            }
+            aa.inspection.editInspection(iObj) */
+        } else if (iInspector) { // Department
+            logDebug("assigning inspection " + inspId + " to department " + iName);
+            iObj.setInspector(iInspector);
+            if (iObj.getScheduledDate() == null) {
+                iObj.setScheduledDate(sysDate);
+            }
+            var inspResult = aa.inspection.editInspection(iObj)
+            if (inspResult.getSuccess()) {
+                logDebug("Successfully assigned inspection: " + inspId
+                    + (inspType ? " " + inspType : "") + " to "
+                    + (iInspector && iInspector.getGaUserID() ? "inspector: " : "department: ") + iName
+                    + (iInspector && iInspector.getGaUserID() && iInspector.getFullName() ? ", Name: " + iInspector.getFullName() : "")
+                    + (inspDiscipline ? ", Discipline: " + inspDiscipline : "")
+                    + (inspDistrict ? ", District: " + inspDistrict : "")
+                );
+            } else {
+                logDebug("ERROR: assigning inspection: " + inspId
+                    + (inspType ? " " + inspType : "") + " to "
+                    + (iInspector && iInspector.getGaUserID() ? "inspector: " : "department: ") + iName
+                    + (iInspector && iInspector.getGaUserID() && iInspector.getFullName() ? ", Name: " + iInspector.getFullName() : "")
+                    + (inspDiscipline ? ", Discipline: " + inspDiscipline : "")
+                    + (inspDistrict ? ", District: " + inspDistrict : "")
+                    + ": " + inspResult.getErrorMessage());
+            }
+        }
+    } else {
+        logDebug("Found "
+            + (iInspector && iInspector.getGaUserID() ? "inspector: " : "department: ") + iName
+            + (iInspector && iInspector.getGaUserID() && iInspector.getFullName() ? ", Name: " + iInspector.getFullName() : "")
+            + (inspDiscipline ? ", Discipline: " + inspDiscipline : "")
+            + (inspDistrict ? ", District: " + inspDistrict : "")
+        );
+    }
+    return iInspector;
+}
 
 function associatedLicensedProfessionalWithPublicUser(licnumber, publicUserID) {
 	var mylicense = aa.licenseScript.getRefLicenseProfBySeqNbr(aa.getServiceProviderCode(), licnumber);
@@ -3845,40 +3956,37 @@ function getAllRelatedCaps(capID)
 }
 
 function getAppSpecificFieldLabels() {
-    // returns an array of field labels (Alias | Label) for each field that matches.
+// returns an array of field labels (Alias | Label) for each field that matches.
     var itemCap = (arguments.length > 0 && arguments[0] != null ? arguments[0] : capId); // use cap ID specified in args
     var itemGroups = (arguments.length > 1 && arguments[1] != null ? arguments[1] : null);
     var itemNames = (arguments.length > 2 && arguments[2] != null ? arguments[2] : null);
     var itemValues = (arguments.length > 3 && arguments[3] != null ? arguments[3] : ['CHECKED', 'YES', 'Y', 'SELECTED', 'TRUE', 'ON']);
-    var itemTypes = (arguments.length > 4 && arguments[4] != null ? arguments[3] : ['Y/N', 'Checkbox']);
+    var itemTypes = (arguments.length > 4 && arguments[4] != null ? arguments[3] : ['Y/N','Checkbox']);
+
     var fieldTypes = ["", "Text", "Date", "Y/N", "Number", "Dropdown List", "Text Area", "Time", "Money", "Checkbox", ""];
+
     var items = [];
     var appSpecInfoResult = aa.appSpecificInfo.getByCapID(itemCap);
     if (appSpecInfoResult.getSuccess()) {
         var appspecObj = appSpecInfoResult.getOutput();
         for (var i in appspecObj) {
             var fieldType = appspecObj[i].getCheckboxInd();
-            if (appspecObj[i].getCheckboxInd() != null && appspecObj[i].getCheckboxInd() < fieldTypes.length)
-                fieldType = fieldTypes[appspecObj[i].getCheckboxInd()]
-                    if (itemGroups && !exists(appspecObj[i].getCheckboxType(), itemGroups))
-                        continue;
-                    if (itemNames && !exists(appspecObj[i].getCheckboxDesc(), itemNames))
-                        continue;
-                    //if (i == 0) logDebug("appspecObj[i]: " + br + describe_TPS(appspecObj[i]));
-                    //logDebug("appspecObj["+i+"]: " + appspecObj[i].getCheckboxType() + "." + appspecObj[i].getCheckboxDesc() + ", Label " + appspecObj[i].getFieldLabel() + ", (Type:" + appspecObj[i].getCheckboxInd() +" "+ fieldType + "):  " + appspecObj[i].getChecklistComment());
-                    if (itemValues && !exists(appspecObj[i].getChecklistComment(), itemValues))
-                        continue;
-                    if (appspecObj[i].getLabelAlias()) { // Use Alias.
-                        items.push(appspecObj[i].getLabelAlias());
-                    } else {
-                        items.push(appspecObj[i].getCheckboxDesc());
-                    }
+            if (appspecObj[i].getCheckboxInd() != null && appspecObj[i].getCheckboxInd() < fieldTypes.length) fieldType = fieldTypes[appspecObj[i].getCheckboxInd()]
+            if (itemGroups && !exists(appspecObj[i].getCheckboxType(), itemGroups)) continue;
+            if (itemNames && !exists(appspecObj[i].getCheckboxDesc(), itemNames)) continue;
+            //if (i == 0) logDebug("appspecObj[i]: " + br + describe_TPS(appspecObj[i]));
+            //logDebug("appspecObj["+i+"]: " + appspecObj[i].getCheckboxType() + "." + appspecObj[i].getCheckboxDesc() + ", Label " + appspecObj[i].getFieldLabel() + ", (Type:" + appspecObj[i].getCheckboxInd() +" "+ fieldType + "):  " + appspecObj[i].getChecklistComment());
+            if (itemValues && !exists(appspecObj[i].getChecklistComment(), itemValues)) continue;
+            if (appspecObj[i].getLabelAlias()) { // Use Alias.
+                items.push(appspecObj[i].getLabelAlias());
+            } else {
+                items.push(appspecObj[i].getCheckboxDesc());
+            }
         }
-    } else {
-        logDebug("**ERROR: getting app specific info for Cap : " + appSpecInfoResult.getErrorMessage())
     }
-    return items;
-    }
+    else { logDebug("**ERROR: getting app specific info for Cap : " + appSpecInfoResult.getErrorMessage()) }
+	return items;
+}
 
 function getcapIdsbyfeecodedaterange() {
 	var feeCode = (arguments.length > 0 && arguments[0]? arguments[0]: "CC_GEN_10");
@@ -4018,6 +4126,43 @@ function getInspectionComment(itemCap, inspectionId) {
 							  
                }
                return comment;
+}
+
+function getInspectorObj(inspectorId) {
+    // Get inspectorObj based on valid inspector (UserID or Department).
+    var iName = inspectorId;
+    var iInspector = null;
+    if (iName) {
+        var iNameResult = aa.person.getUser(iName);
+        if (iNameResult.getOutput()) {
+            iInspector = iNameResult.getOutput();
+        } else { // Check for department name
+            inspectorId = null;
+            var dpt = aa.people.getDepartmentList(null).getOutput();
+            for (var thisdpt in dpt) {
+                var m = dpt[thisdpt]
+                if (iName.equals(m.getDeptName())) {
+                    iNameResult = aa.person.getUser(null, null, null, null, m.getAgencyCode(), m.getBureauCode(), m.getDivisionCode(), m.getSectionCode(), m.getGroupCode(), m.getOfficeCode());
+                    if (!iNameResult.getSuccess()) {
+                        logDebug("**WARNING retrieving department user model " + iName + " : " + iNameResult.getErrorMessage());
+                        return false;
+                    }
+                    iInspector = iNameResult.getOutput();
+                }
+            }
+        }
+    }
+    if (iInspector && iInspector.getGaUserID() == null) { // Set FullName to Dept Name
+        iInspector.setFullName(iName);
+    }
+/*
+    logDebug("iInspector: " + iInspector 
+        + (iInspector && iInspector.getFullName() ? ", Name: " + iInspector.getFullName() : "")
+        + (iInspector && iInspector.getGaUserID() ? ", UserID: " + iInspector.getGaUserID() : "")
+        + (iInspector && iInspector.isInspector? ", (Inspector)":"")
+        );
+*/
+    return iInspector;
 }
 
 //Used for Inspection Sequence tracking requirement
@@ -4473,7 +4618,6 @@ function parcelHasConditiontrue_TPS(pType,pStatus)
 				return true;
 		}
 }
-
 // S11A Certain record type will have the ID of the parent in the ASI or ASIT. Relate the record to its parent. 
 // Sample calls (capId.getCustomID(),parentCapID.getCustomID())- ("20161214-00001","BLD16-00019")
 function relatebyCapID(childCapID,parentCapID){
@@ -4549,54 +4693,63 @@ function runReportTest(aaReportName) {
 	}
 }
 
-function scheduleInspection_CHESTERFIELD(inspType) {
-    // TODO: Update with GIS Info based on record type or insp type.
-    // 07/10/2020 RS: Modified from INCLUDES_ACCELA_FUNCTION to also identify inspector
-     // optional inspector ID.  This function requires dateAdd function
+function scheduleInspection_TPS(inspType) {
+    // optional inspector ID.  This function requires dateAdd function
     // DQ - Added Optional 4th parameter inspTime Valid format is HH12:MIAM or AM (SR5110) 
     // DQ - Added Optional 5th parameter inspComm ex. to call without specifying other options params scheduleInspection("Type",5,null,null,"Schedule Comment");
+    // 07/10/2020 RS: Modified from INCLUDES_ACCELA_FUNCTION to also identify inspector
+    // RS - added Optional 6th parameter itemCap, cap to schedule inspection for
+    // RS - added Optional 7th parameter useWorking, make sure it is on a working day
+    // RS - added return scheduled Inspection ID.
     var DaysAhead = (arguments.length > 1 && arguments[1] != null ? arguments[1] : 1);
-    var inspectorId = (arguments.length > 2 && arguments[2] != null ? arguments[2] : null);
-    var inspTime = (arguments.length > 3 && arguments[3] != null ? arguments[3] : null);
-    var inspComm = (arguments.length > 4 && arguments[4] != null ? arguments[4] : "Scheduled via Script");
-    var useWorking = (arguments.length > 5 && arguments[5] == true ? true : false);
+    var inspectorId = (arguments.length > 2 && arguments[2] ? arguments[2] : null);
+    var inspTime = (arguments.length > 3 && arguments[3] ? arguments[3] : null);
+    var inspComm = (arguments.length > 4 && arguments[4] ? arguments[4] : "Scheduled via Script");
+    var itemCap = (arguments.length > 5 && arguments[5] ? arguments[5] : capId);
+    var useWorking = (arguments.length > 6 && arguments[6] == true ? true : false);
 
-    // Determine GIS Info to use for inspector id or inspection district.
-	if (typeof(gisMapService) == "undefined") gisMapService = null;
-	var gisLayerName = null, gisLayerAbbr = null, gisLayerField = null;
-	if (appMatch("Enforcement/*/*/*")) {
-		gisLayerName = "Enforcement Boundaries";
-		gisLayerAbbr = "Enforcement Boundaries";
-		gisLayerField = "InspectorID";
-	}
-	if (inspectorId == null && gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
-        inspectionArea = getGISInfo(gisMapService, gisLayerName, gisLayerField);
-        // Check for inspection district mapping to inspectors
-        inspectorId = lookup("USER_DISTRICTS", gisLayerAbbr + "-" + inspectionArea);
-        if (typeof (inspectorId) == "undefined") inspectorId = inspectionArea;
-        if (inspectorId == "") inspectorId == null;
-        // Check for valid inspector id.
-        if (inspectorId) {
-            iNameResult = aa.person.getUser(inspectorId);
-            if (!iNameResult.getSuccess()) { 
-                logDebug("ERROR: retrieving user model " + inspectorId + " : " + iNameResult.getErrorMessage());
-                inspectorId = null; 
-            }
-        }
+    // Determine inspectorId & get inspectorObj.
+    var iInspector = null;
+    if (inspectorId) {
+        var iInspector = getInspectorObj(inspectorId);
     }
-    if (inspectorId == null && !publicUser) inspectorId = currentUserID; // Default to current user if no user found.
-    inspDate = null;
+
     if (useWorking) {
-        inspDate = dateAdd(td, amt, true);
-
-    }
-    if (inspDate) {
+        inspDate = dateAdd(null, DaysAhead, true);
         logDebug("inspDate: " + inspDate);
-        scheduleInspectDate(inspType, inspDate, inspectorId, inspTime, inspComm);
+        //scheduleInspectDate(inspType, inspDate, inspectorId, inspTime, inspComm);
+        var schedRes = aa.inspection.scheduleInspection(itemCap, iInspector, aa.date.parseDate(inspDate), inspTime, inspType, inspComm);
     } else {
-        scheduleInspection(inspType, DaysAhead, inspectorId, inspTime, inspComm);
+        inspDate = dateAdd(null, DaysAhead);
+        //scheduleInspection(inspType, DaysAhead, inspectorId, inspTime, inspComm);
+        var schedRes = aa.inspection.scheduleInspection(itemCap, iInspector, aa.date.parseDate(dateAdd(null, DaysAhead)), inspTime, inspType, inspComm);
     }
-    // assignCapInspector(inspectorId);
+
+    var inspId = null;
+    if (schedRes.getSuccess()) {
+        inspId = schedRes.getOutput();
+        logDebug("Successfully scheduled inspection: " + inspType
+            + " in " + DaysAhead + " days" + " on " + inspDate
+            + (useWorking ? " (working)" : "")
+            + (iInspector && iInspector.getGaUserID() ? " to inspector: " : (inspectorId ? " to department: " : ""))
+            + (iInspector && iInspector.getFullName() ? iInspector.getFullName() : "")
+            + (iInspector && iInspector.getGaUserID() ? ", UserID: " + iInspector.getGaUserID() : "")
+            + (inspTime ? ", time: " + inspTime : "")
+            + (inspComm ? ", comment: " + inspComm : "")
+            + (schedRes ? ", output: " + schedRes.getOutput() : "")
+        );
+    } else {
+        logDebug("**ERROR: scheduling inspection: " + inspType
+            + " in " + DaysAhead + " days" + " on " + inspDate
+            + (useWorking ? " (working)" : "")
+            + (iInspector && iInspector.getGaUserID() ? " to inspector: " : (inspectorId ? " to department: " : ""))
+            + (iInspector && iInspector.getFullName() ? iInspector.getFullName() : "")
+            + (iInspector && iInspector.getGaUserID() ? ", UserID: " + iInspector.getGaUserID() : "")
+            + (inspTime ? ", time: " + inspTime : "")
+            + (inspComm ? ", comment: " + inspComm : "")
+            + ": " + schedRes.getErrorMessage());
+    }
+    return inspId;
 }
 
 //scheduleMeeting(capId,"PLANNING COMMISSION HEARING",'01/01/2017','02/01/2017');
