@@ -6,7 +6,7 @@ function parcelHasConditiontrue_TPS(pType,pStatus)
 		var Parcels = capParcelResult.getOutput().toArray();
 		for (zz in Parcels) {
 			logDebug("Getting Applied Conditions on parcel #" + zz + " = " + Parcels[zz].getParcelNumber());
-			var condResult = aa.capCondition.getCapConditions(pType,pStatus);
+			var condResult = aa.parcelCondition.getParcelConditions(pType,pStatus,null,null);
 			if (condResult.getSuccess()) {
 				var capConds = condResult.getOutput();
 			} else { 
