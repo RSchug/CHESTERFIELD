@@ -29,7 +29,7 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 	}
 }
 var tempcoexpdate = "Temp CO Expiration Date";
-var tempcoexpdatenew = jsDateToASIDate(new Date(dateAdd(null, 180)));
+var tempcoexpdatenew = getTaskDueDate("Temp CO Issued");
 if (wfStatus == 'Temporary CO Issued'){
 addFee("TEMPCO","CC-BLD-ADMIN","FINAL",1,"Y");
 editAppSpecific(tempcoexpdate,tempcoexpdatenew);}
