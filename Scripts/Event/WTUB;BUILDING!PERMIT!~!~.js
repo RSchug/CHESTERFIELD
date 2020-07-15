@@ -43,11 +43,11 @@ if ((wfTask == 'Permit Issuance' && wfStatus == 'Issued')) {
 }
 
 //Temporary CO Fees must be paid before Workflow Status is Temporary CO Issued//
-if (wfStatus == 'Temporary CO Issued' && balanceDue > 0) {
-	showMessage = true;
-	comment('<font size=small><b>Unpaid Fees:</b></font><br><br>Cannot Issue Temporary CO until Temporary CO Fees are Paid, Balance Due is $ ' + balanceDue);
-	cancel = true;
-}
+//if (wfStatus == 'Temporary CO Issued' && balanceDue > 0) {
+//	showMessage = true;
+//	comment('<font size=small><b>Unpaid Fees:</b></font><br><br>Cannot Issue Temporary CO until Temporary CO Fees are Paid, Balance Due is $ ' + balanceDue);
+//	cancel = true;
+//}
 
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
