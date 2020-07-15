@@ -3846,11 +3846,11 @@ function getAllRelatedCaps(capID)
 
 function getAppSpecificFieldLabels() {
     // returns an array of field labels (Alias | Label) for each field that matches.
-    var itemCap = (arguments.length & gt; 0 & amp;  & amp; arguments[0] != null ? arguments[0] : capId); // use cap ID specified in args
-    var itemGroups = (arguments.length & gt; 1 & amp;  & amp; arguments[1] != null ? arguments[1] : null);
-    var itemNames = (arguments.length & gt; 2 & amp;  & amp; arguments[2] != null ? arguments[2] : null);
-    var itemValues = (arguments.length & gt; 3 & amp;  & amp; arguments[3] != null ? arguments[3] : ['CHECKED', 'YES', 'Y', 'SELECTED', 'TRUE', 'ON']);
-    var itemTypes = (arguments.length & gt; 4 & amp;  & amp; arguments[4] != null ? arguments[3] : ['Y/N', 'Checkbox']);
+    var itemCap = (arguments.length > 0 && arguments[0] != null ? arguments[0] : capId); // use cap ID specified in args
+    var itemGroups = (arguments.length > 1 && arguments[1] != null ? arguments[1] : null);
+    var itemNames = (arguments.length > 2 && arguments[2] != null ? arguments[2] : null);
+    var itemValues = (arguments.length > 3 && arguments[3] != null ? arguments[3] : ['CHECKED', 'YES', 'Y', 'SELECTED', 'TRUE', 'ON']);
+    var itemTypes = (arguments.length > 4 && arguments[4] != null ? arguments[3] : ['Y/N', 'Checkbox']);
     var fieldTypes = ["", "Text", "Date", "Y/N", "Number", "Dropdown List", "Text Area", "Time", "Money", "Checkbox", ""];
     var items = [];
     var appSpecInfoResult = aa.appSpecificInfo.getByCapID(itemCap);
@@ -3858,15 +3858,15 @@ function getAppSpecificFieldLabels() {
         var appspecObj = appSpecInfoResult.getOutput();
         for (var i in appspecObj) {
             var fieldType = appspecObj[i].getCheckboxInd();
-            if (appspecObj[i].getCheckboxInd() != null & amp;  & amp; appspecObj[i].getCheckboxInd() & lt; fieldTypes.length)
+            if (appspecObj[i].getCheckboxInd() != null && appspecObj[i].getCheckboxInd() < fieldTypes.length)
                 fieldType = fieldTypes[appspecObj[i].getCheckboxInd()]
-                    if (itemGroups & amp;  & amp; !exists(appspecObj[i].getCheckboxType(), itemGroups))
+                    if (itemGroups && !exists(appspecObj[i].getCheckboxType(), itemGroups))
                         continue;
-                    if (itemNames & amp;  & amp; !exists(appspecObj[i].getCheckboxDesc(), itemNames))
+                    if (itemNames && !exists(appspecObj[i].getCheckboxDesc(), itemNames))
                         continue;
                     //if (i == 0) logDebug("appspecObj[i]: " + br + describe_TPS(appspecObj[i]));
                     //logDebug("appspecObj["+i+"]: " + appspecObj[i].getCheckboxType() + "." + appspecObj[i].getCheckboxDesc() + ", Label " + appspecObj[i].getFieldLabel() + ", (Type:" + appspecObj[i].getCheckboxInd() +" "+ fieldType + "):  " + appspecObj[i].getChecklistComment());
-                    if (itemValues & amp;  & amp; !exists(appspecObj[i].getChecklistComment(), itemValues))
+                    if (itemValues && !exists(appspecObj[i].getChecklistComment(), itemValues))
                         continue;
                     if (appspecObj[i].getLabelAlias()) { // Use Alias.
                         items.push(appspecObj[i].getLabelAlias());
@@ -3878,7 +3878,7 @@ function getAppSpecificFieldLabels() {
         logDebug("**ERROR: getting app specific info for Cap : " + appSpecInfoResult.getErrorMessage())
     }
     return items;
-}
+    }
 
 function getcapIdsbyfeecodedaterange() {
 	var feeCode = (arguments.length > 0 && arguments[0]? arguments[0]: "CC_GEN_10");
@@ -4584,7 +4584,7 @@ function scheduleInspection_CHESTERFIELD(inspType) {
 		gisLayerAbbr = "Enforcement Boundaries";
 		gisLayerField = "InspectorID";
 	}
-	if (inspectorId == null & amp;  & amp; gisMapService != null & amp;  & amp; gisLayerName != null & amp;  & amp; gisLayerField != null) { // Auto assign inspector based on GIS
+	if (inspectorId == null && gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
         inspectionArea = getGISInfo(gisMapService, gisLayerName, gisLayerField);
         // Check for inspection district mapping to inspectors
         inspectorId = lookup("USER_DISTRICTS", gisLayerAbbr + "-" + inspectionArea);
