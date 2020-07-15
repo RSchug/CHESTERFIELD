@@ -6,5 +6,5 @@ if (inspResult.equals("Damage")){
 	updateTask("Investigation","Damaged","Updated based on Inspection Result","");
 }
 if (inspResult.equals("Approved")){
-			updateTask("Investigation","Approved","Updated based on Inspection Result","");	
+	closeTask("Investigation","Approved","Updated based on Inspection Result","");	
 	}
