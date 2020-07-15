@@ -32,6 +32,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
+| 07/13/2020 D Boucher added 2 condition scripts addParcelStdCondition_TPS and parcelHasConditiontrue_TPS
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -3843,6 +3844,42 @@ function getAllRelatedCaps(capID)
 	}
 }
 
+function getAppSpecificFieldLabels() {
+    // returns an array of field labels (Alias | Label) for each field that matches.
+    var itemCap = (arguments.length & gt; 0 & amp;  & amp; arguments[0] != null ? arguments[0] : capId); // use cap ID specified in args
+    var itemGroups = (arguments.length & gt; 1 & amp;  & amp; arguments[1] != null ? arguments[1] : null);
+    var itemNames = (arguments.length & gt; 2 & amp;  & amp; arguments[2] != null ? arguments[2] : null);
+    var itemValues = (arguments.length & gt; 3 & amp;  & amp; arguments[3] != null ? arguments[3] : ['CHECKED', 'YES', 'Y', 'SELECTED', 'TRUE', 'ON']);
+    var itemTypes = (arguments.length & gt; 4 & amp;  & amp; arguments[4] != null ? arguments[3] : ['Y/N', 'Checkbox']);
+    var fieldTypes = ["", "Text", "Date", "Y/N", "Number", "Dropdown List", "Text Area", "Time", "Money", "Checkbox", ""];
+    var items = [];
+    var appSpecInfoResult = aa.appSpecificInfo.getByCapID(itemCap);
+    if (appSpecInfoResult.getSuccess()) {
+        var appspecObj = appSpecInfoResult.getOutput();
+        for (var i in appspecObj) {
+            var fieldType = appspecObj[i].getCheckboxInd();
+            if (appspecObj[i].getCheckboxInd() != null & amp;  & amp; appspecObj[i].getCheckboxInd() & lt; fieldTypes.length)
+                fieldType = fieldTypes[appspecObj[i].getCheckboxInd()]
+                    if (itemGroups & amp;  & amp; !exists(appspecObj[i].getCheckboxType(), itemGroups))
+                        continue;
+                    if (itemNames & amp;  & amp; !exists(appspecObj[i].getCheckboxDesc(), itemNames))
+                        continue;
+                    //if (i == 0) logDebug("appspecObj[i]: " + br + describe_TPS(appspecObj[i]));
+                    //logDebug("appspecObj["+i+"]: " + appspecObj[i].getCheckboxType() + "." + appspecObj[i].getCheckboxDesc() + ", Label " + appspecObj[i].getFieldLabel() + ", (Type:" + appspecObj[i].getCheckboxInd() +" "+ fieldType + "):  " + appspecObj[i].getChecklistComment());
+                    if (itemValues & amp;  & amp; !exists(appspecObj[i].getChecklistComment(), itemValues))
+                        continue;
+                    if (appspecObj[i].getLabelAlias()) { // Use Alias.
+                        items.push(appspecObj[i].getLabelAlias());
+                    } else {
+                        items.push(appspecObj[i].getCheckboxDesc());
+                    }
+        }
+    } else {
+        logDebug("**ERROR: getting app specific info for Cap : " + appSpecInfoResult.getErrorMessage())
+    }
+    return items;
+}
+
 function getcapIdsbyfeecodedaterange() {
 	var feeCode = (arguments.length > 0 && arguments[0]? arguments[0]: "CC_GEN_10");
 	var DBServer = "MSSQL Azure"; // Values: ORACLE, MSSQL, MSSQL Azure
@@ -4540,13 +4577,14 @@ function scheduleInspection_CHESTERFIELD(inspType) {
     var useWorking = (arguments.length > 5 && arguments[5] == true ? true : false);
 
     // Determine GIS Info to use for inspector id or inspection district.
-    gisLayerField = null;
-    if (appMatch("Enforcement/*/*/*")) {
-        gisLayerName = "Enforcement Boundaries";
-        gisLayerAbbr = "Enforcement Boundaries";
-        gisLayerField = "InspectorID";
-    }
-    if (inspectorId == null && gisLayerField != null) { // Auto assign inspector based on GIS
+	if (typeof(gisMapService) == "undefined") gisMapService = null;
+	var gisLayerName = null, gisLayerAbbr = null, gisLayerField = null;
+	if (appMatch("Enforcement/*/*/*")) {
+		gisLayerName = "Enforcement Boundaries";
+		gisLayerAbbr = "Enforcement Boundaries";
+		gisLayerField = "InspectorID";
+	}
+	if (inspectorId == null & amp;  & amp; gisMapService != null & amp;  & amp; gisLayerName != null & amp;  & amp; gisLayerField != null) { // Auto assign inspector based on GIS
         inspectionArea = getGISInfo(gisMapService, gisLayerName, gisLayerField);
         // Check for inspection district mapping to inspectors
         inspectorId = lookup("USER_DISTRICTS", gisLayerAbbr + "-" + inspectionArea);
