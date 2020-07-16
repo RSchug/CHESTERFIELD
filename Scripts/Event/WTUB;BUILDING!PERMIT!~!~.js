@@ -28,17 +28,17 @@ if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
 	//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
 	if (!addressExistsOnCap()) {          // Check if address exists
 		showMessage = true;
-		comment('<font size=small><b>Address is required prior to Issuance</b></font>');
+		comment('<font size=small><b>Address is required </b></font>');
 		cancel = true;
 	 }
 	 if (!parcelExistsOnCap()) {             // Check if address exists
 		showMessage = true;
-		comment('<font size=small><b>Parcel is required prior to Issuance</b></font>');
+		comment('<font size=small><b>Parcel is required /b></font>');
 		cancel = true;
 	 }
 	 if (!ownerExistsOnCap()) {            // Check if address exists
 		showMessage = true;
-		comment('<font size=small><b>Owner is required prior to Issuance</b></font>');
+		comment('<font size=small><b>Owner is required </b></font>');
 		cancel = true;
 	 }
 	}
