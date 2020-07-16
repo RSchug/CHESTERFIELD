@@ -1,144 +1,123 @@
 //Alex Charlton added for renewals 092619
-try {
-    newChildID = null;   
-    qDate = "";
-    
-    if (appMatch('*/*/Conveyance/Installation') && wfStatus == 'Completed') {
-		 
-	comment("Checking what License to Create");
-	if (appMatch('Building/Permit/Conveyance/Installation')) {
-	     newChildID = createChildLic('Building', 'Permit', 'Conveyance', 'Annual', '');
-             }	
+//RS Fixed for all installation records ()
+// 8B: For Elevator Installation Record when Workflow Task 'Certificate of Inspection' is 'Completed' then create a related 'Building/Permit/Elevator/Annual' Record as the Parent.
+var newCapId = null, newCapAppType = null;
+today = new Date(aa.util.now());
+if (typeof (startDate) != "undefined") today = startDate;
+thisMonth = today.getMonth();
+thisYear = today.getFullYear();
+nextYear = thisYear + 1;
+logDebug("Today: " + today + ", month: " + thisMonth + ", year: " + thisYear + ", Next Year: " + nextYear);
 
-	
-	 if (newChildID){	
-            copyAppSpecific(newChildID); comment('Copying ASI - New Permit id = ' + newChildID);
-            copyASITables(capId,newChildID); comment('Copying ASIT - New License id = ' + newChildID);
+var newCapId = null, newAppTypeString = null, newAppTypeArray = null;
+if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
+      var newCapId = null, newAppTypeString = null, newAppTypeArray = null;
+      logDebug("Checking what License to Create");
+      var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "License";
+      var newCapName = capName;
+      var newCapIdString = null; // capIDString.substr(0, (capIDString.length - 1)) + 'L';
+      if (newCapIdString) logDebug("newCapIdString: " + newCapIdString);
+      var newCapRelation = "Parent";
+      var srcCapId = capId;
+      var copySections = null; // Use Default (most common sections).
+      var initStatus = "Active";
+      var expField = null;
+      var expFieldValue = null;
+      var expType = 'Annual'
+      var expMonths = 12;
+      var expDateField = "Permit Expiration Date";
+      var expDate = null;
+      if (appMatch("Building/Permit/AmusementDevice/Installation")) {
+            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
+            newCapIdString = null;
+            newCapRelation = "Parent";
+            annualQuarter = null;
+      } else if (appMatch("Building/Permit/Elevator/Installation")
+            && AInfo["Commercial or Residential"] == "Commercial") {
+            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
+            newCapIdString = null;
+            expField = 'Annual Quarter'
+            expType = 'Annual'
+            if (today.getMonth() < 3) {
+                  expFieldValue = 'Q1 - March';
+                  expDate = "03/31/" + thisYear;
+            } else if (today.getMonth() < 6) {
+                  expFieldValue = 'Q2 - June';
+                  expDate = "06/30/" + thisYear;
+            } else if (today.getMonth() < 9) {
+                  expFieldValue = 'Q3 - September';
+                  expDate = "09/30/" + thisYear;
+            } else {
+                  expFieldValue = 'Q4 - December';
+                  expDate = "12/31/" + thisYear; //nextYear
+            }
+      }
+      logDebug("Expiration Date: " + expDate);
+      expDate = (expMonths ? dateAddMonths(expDate, expMonths) : expDate);
+      logDebug("New Expiration Date: " + expDate);
 
-	
-            updateAppStatus('Active', 'Created from Application', newChildID);
-            editAppName(capName, newChildID);
-	    theShortNotes = getShortNotes(capId);
-	    updateShortNotes(theShortNotes, newChildID);
-         }
+      if (newAppTypeString) newAppTypeArray = newAppTypeString.split("/");
+      if (newAppTypeArray.length == 4) {
+            var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections, initStatus, sysDateMMDDYYYY, sysDateMMDDYYYY);
+      }
+      var newCapIdString = null;
+      if (newCapId) {
+            // This code gives the License the same # as tha APP 
+            newCapIdString = newCapId.getCustomID();
+            var editIdString = capIDString.substr(0, 14) + 'A';
+            logDebug("newCapId: " + newCapId + ", newCapIdString: " + newCapIdString + ", editIdString: " + editIdString);
+            if (editIdString) {   // Update Record ID
+                  aa.cap.updateCapAltID(newCapId, editIdString);
+                  // get newCapId object with updated capId.
+                  var s_capResult = aa.cap.getCapID(editIdString);
+                  if (s_capResult.getSuccess() && s_capResult.getOutput()) {
+                        newCapId = s_capResult.getOutput();
+                        newCapIdString = newCapId.getCustomID();
+                  } else {
+                        logDebug("ERROR: updating Cap ID " + newCapIdString + " to " + editIdString + ": " + s_capResult.getErrorMessage());
+                  }
+            } else {
+                  newCapIdString = newCapId.getCustomID();
+            }
 
-         // ************START expiration Date code Options 
-	 //default to 12 months from today
-         comment("Checking on what the renewal date should be set to");
+            // ************START expiration Date code Options 
+            logDebug("Setting expiration info");
+            if (expField) { // Update expiration field: Annual Quarter or License Duration
+                  editAppSpecific(expField, expFieldValue, newCapId)
+            }
+            var expFieldValue = getAppSpecific(expField, newCapId);
 
-         numberOfMonths = 12;
+            if (expDate) {              // set the expiration date
+                  if (expDateField) {     // set custom field with expiration date
+                        editAppSpecific(expDateField, expDate, newCapId)
+                  } else {                // set expiration Info
+                        try {
+                              logDebug("NEW expiration Status: Active, Date: " + expDate);
+                              var thisLic = new licenseObject(newCapIdString, newCapId);
+                              if (thisLic) {
+                                    thisLic.setStatus("Active");
+                                    thisLic.setExpiration(dateAdd(expDate, 0));
+                              }
+                        } catch (err) {
+                              logDebug("ERROR: Updating expiration Status: Active, Date: " + expDate + ": " + err);
+                        }
+                  }
+            }
 
-          
-         // if Semi, change to 6 months form today        
-         if (AInfo['License Duration'] == 'Semi-Annual') {
-	       numberOfMonths = 6;
-               }
+      }
+      // ******************END expiration Date code Options
+      updateTask('Annual Status','In Service')
+}
 
-         if (AInfo['Annual Quarter'] == 'Q4 - December') {
-	       numberOfMonths = 12;
-               qDate = '12/31/2020'
-               }
-         if (AInfo['Annual Quarter'] == 'Q1 - March') {
-	       numberOfMonths = 12;
-               qDate = '03/31/2021'
-               }
-         if (AInfo['Annual Quarter'] == 'Q2 - June') {
-	       numberOfMonths = 12;
-               qDate = '6/30/2021'
-               }
-         if (AInfo['Annual Quarter'] == 'Q3 - September') {
-	       numberOfMonths = 12;
-               qDate = '9/30/2021'
-               }
-
-
-    
-          tmpNewDate = dateAddMonths(null, numberOfMonths);
-	  comment("TMP NEW Date Default = "+tmpNewDate);
-	  today = new Date(); comment('Today = ' + today);
-	  theMonth = today.getMonth(); comment('the month = ' + theMonth);
-	  theYear = today.getFullYear(); comment('The Year = ' + theYear);
-	  nextYear = theYear + 1; comment('Next Year = ' + nextYear);
-
-         // Set for 3/31 renewals
-         if (appMatch('Licenses/Security Company/*/*')) {
-	         if (matches(theMonth, '0', '1')) {
-		     tmpNewDate = '03/31/'+ theYear;
-	             }	
-		 else{
-		     tmpNewDate = '03/31/'+ nextYear;
-		     }
-                 logDebug("New Date 3/31 will be: " + tmpNewDate);
-		 }
-
-         // Set for 6/30 renewals
-         if (appMatch('Licenses/Taxi Business/*/*') || appMatch('Licenses/Business Vehicle/*/*')) {
-	         if (matches(theMonth, '0', '1','2','3','4','5')) {
-		     tmpNewDate = '06/30/'+ theYear;
-	             }	
-		 else{
-		     tmpNewDate = '06/30/'+ nextYear;
-		     }
-                 logDebug("New Date 6/30 will be: " + tmpNewDate);
-		 }
-
-         // Set for 9/30 renewals
-         if (appMatch('Licenses/Non-Consent Tow Company/*/*')) {
-	         if (matches(theMonth,'0','1','2','3','4','5','6','7','8')) {
-		     tmpNewDate = '09/30/'+ theYear;
-	             }	
-		 else{
-		     tmpNewDate = '09/30/'+ nextYear;
-		     }
-                 logDebug("New Date 9/30 will be: " + tmpNewDate);
-		 }
- 
-          if (AInfo['Annual Quarter'] == 'Q4 - December') {
-	        tmpNewDate = '12/31/'+ nextYear;
-               }
- 
-        if (AInfo['Annual Quarter'] == 'Q1 - March') {
-	        tmpNewDate = '3/31/'+ nextYear;
-               }
-         if (AInfo['Annual Quarter'] == 'Q2 - June') {
-	        tmpNewDate = '6/30/'+ nextYear;
-               }
-         if (AInfo['Annual Quarter'] == 'Q3 - September') {
-	        tmpNewDate = '9/30/'+ nextYear;
-               }
-
-
- 
-         
-         // set the expiratipon date
-	 comment("TMP NEW Date after checks = "+tmpNewDate);
-         
-	 saveId = capId;
-	 if (newChildID){
-            capId = newChildID;
-         }
-
-         thisLic = new licenseObject(capIDString,capId) ; thisLic.setStatus("Active");  thisLic.setExpiration(dateAdd(tmpNewDate,0));
-         capId = saveId;
-
-         // This code gives the License the same # as tha APP 
-          if (newChildID){
-             newChildIdString = newChildID.getCustomID();editIdString = capIDString.substr(0,14)+'A'; aa.cap.updateCapAltID(newChildID,editIdString); 
-          }
-
- }
-        // ******************END expiration Date code Options
-
-	
-
-
-// If setting the Licecense status manually from the workflow
-
+// If setting the License status manually from the workflow
 if (wfTask == 'Annual Status' && wfStatus == 'About to Expire') {
-	 lic = new licenseObject(capIDString);
-	 lic.setStatus('About to Expire');
-	 }
-
-} catch (err) {
-	logDebug("A JavaScript Error occured: " + err.message + " In Line " + err.lineNumber);
+      try {
+            logDebug("Updating expiration Status: About to Expire");
+            var thisLic = new licenseObject(capIDString);
+            if (thisLic) {
+                  thisLic.setStatus("About to Expire");
+            }
+      } catch (err) {
+            logDebug("ERROR: Updating expiration Status: Active, Date: " + expDate + ": " + err);
+      }
 }
