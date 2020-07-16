@@ -24,7 +24,7 @@ if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
 			cancel = true;
 		}
 	}
-	if (wfTask == 'Application Submittal' && exists(wfStatus,['Accepted - Plan Review Required','Accepted - Plan Review Not Required'])){
+	if (wfTask == 'Application Submittal' && exists(wfStatus,['Accepted - Plan Review Required','Accepted - Plan Review Not Required','Accepted'])){
 	//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
 	if (!addressExistsOnCap()) {          // Check if address exists
 		showMessage = true;
