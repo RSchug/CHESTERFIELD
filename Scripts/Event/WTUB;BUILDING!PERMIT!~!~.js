@@ -1,22 +1,7 @@
 // WTUB:Building/Permit/*/*
 try {
 if ((wfTask == 'Permit Issuance' && wfStatus == 'Issued')) {
-	//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
-	if (!addressExistsOnCap()) {          // Check if address exists
-	   showMessage = true;
-	   comment('<font size=small><b>Address is required prior to Issuance</b></font>');
-	   cancel = true;
-	}
-	if (!parcelExistsOnCap()) {             // Check if address exists
-	   showMessage = true;
-	   comment('<font size=small><b>Parcel is required prior to Issuance</b></font>');
-	   cancel = true;
-	}
-	if (!ownerExistsOnCap()) {            // Check if address exists
-	   showMessage = true;
-	   comment('<font size=small><b>Owner is required prior to Issuance</b></font>');
-	   cancel = true;
-	}
+
 	//Fees must be paid before Permit Issuance Workflow Status is Issued//
     if (balanceDue > 0) {
         showMessage = true;
@@ -40,7 +25,23 @@ if ((wfTask == 'Permit Issuance' && wfStatus == 'Issued')) {
 			cancel = true;
 		}
 	}
-}
+	if (wfTask == 'Application Submittal' && exists(wfStatus,['Accepted - Plan Review Required','Accepted - Plan Review Not Required']))
+	//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
+	if (!addressExistsOnCap()) {          // Check if address exists
+		showMessage = true;
+		comment('<font size=small><b>Address is required prior to Issuance</b></font>');
+		cancel = true;
+	 }
+	 if (!parcelExistsOnCap()) {             // Check if address exists
+		showMessage = true;
+		comment('<font size=small><b>Parcel is required prior to Issuance</b></font>');
+		cancel = true;
+	 }
+	 if (!ownerExistsOnCap()) {            // Check if address exists
+		showMessage = true;
+		comment('<font size=small><b>Owner is required prior to Issuance</b></font>');
+		cancel = true;
+	 }}
 
 //Temporary CO Fees must be paid before Workflow Status is Temporary CO Issued//
 //if (wfStatus == 'Temporary CO Issued' && balanceDue > 0) {
