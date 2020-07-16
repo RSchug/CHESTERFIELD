@@ -106,7 +106,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
 
       }
       // ******************END expiration Date code Options
-      updateTask('Annual Status','In Service')
+      updateTask('Annual Status','In Service','','');
 }
 
 // If setting the License status manually from the workflow
