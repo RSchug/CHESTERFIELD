@@ -35,19 +35,12 @@ function createCap_TPS() {
         var srcCapId = (arguments.length > 4 && arguments[4] ? arguments[4] : capId);
         var srcCapModel = null,
             srcCapName = null,
-            srcAppTypeAlias = appTypeAlias,
-            srcAppTypeString = appTypeString,
-            srcAppTypeArray = appTypeArray;
+            srcAppTypeAlias = null,
+            srcAppTypeString = null,]
+            srcAppTypeArray = null;
         var s_result = aa.cap.getCap(srcCapId);
         if (s_result.getSuccess()) {
             var srcCap = s_result.getOutput();
-
-            cap = aa.cap.getCap(capId).getOutput();
-            appTypeResult = cap.getCapType();
-            appTypeAlias = appTypeResult.getAlias();
-            appTypeString = appTypeResult.toString();
-            appTypeArray = appTypeString.split("/");
-
             var srcCapModel = s_result.getOutput().getCapModel()
             var srcAppTypeResult = srcCap.getCapType();
             var srcAppTypeAlias = srcAppTypeResult.getAlias();
