@@ -112,7 +112,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
 // If setting the License status manually from the workflow
 if (wfTask == 'Annual Status' && wfStatus == 'About to Expire') {
       try {
-            logDebug("Updating expiration Status: About to Expire);
+            logDebug("Updating expiration Status: About to Expire");
             var thisLic = new licenseObject(capIDString);
             if (thisLic) {
                   thisLic.setStatus("About to Expire");
