@@ -1,8 +1,7 @@
 function deactivateTasks_TPS() { // optional process name
 	// modified from INCLUDES_ACCELA_FUNCTIONS deactivateTask.
 	var wfstr = (arguments.length > 0 && arguments[0]? arguments[0]:null);
-	var processName = (arguments.length > 1 && arguments[1]? arguments[1]:"");
-	var useProcess = (processName == ""? false: true);
+    var processName = (arguments.length > 1 && arguments[1] && arguments[1] != ""? arguments[1]:null);
 	var itemCap = (arguments.length > 2 && arguments[2]? arguments[2]:"");
 	var taskArrayExcept = (arguments.length > 3 && arguments[3]? arguments[3]:"");	// tasks to exclude. Do not use if wfstr is not null.
 	
