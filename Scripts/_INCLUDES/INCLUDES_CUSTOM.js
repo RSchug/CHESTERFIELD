@@ -486,15 +486,20 @@ function assignInspection_CHESTERFIELD(inspId) {
         gisLayerField = "InspectorID";
     } else if (appMatch("EnvEngineering/*/*/*")) {
         inspDiscipline = "EnvEngineering";
+        inspDistrict = AInfo["ParcelAttribute.InspectionDistrict"];
         gisLayerName = "Parcel";
         gisLayerField = "EE Inspector";
     }
     if (inspectorId == "") inspectorId == null;
 
+    // Use USER_DISTRICTS, inspDiscipline & inspDistrict to determine inspector.
     if (inspectorId == null) {
-        if (gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
-            inspDistrict = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+        if (inspDistrict == null) {
+            if (gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
+                inspDistrict = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+            }
         }
+
         if (typeof (inspDistrict) == "undefined") inspDistrict = null;
         if (typeof (inspDiscipline) == "undefined") inspDiscipline = null;
         // Check for inspection discipline & district mapping to inspectors
@@ -3043,6 +3048,153 @@ function copyASITfromParent(childCapID,parentRecordType,childASITSubGrpfldNm,par
 	}
 }
 
+function copyCapComments(capId, pCapId) {
+    var sCapId = aa.cap.getCapIDModel(capId.getID1(), capId.getID2(), capId.getID3()).getOutput();
+    var tCapId = aa.cap.getCapIDModel(pCapId.getID1(), pCapId.getID2(), pCapId.getID3()).getOutput();
+
+    var sourceCapScriptModel = aa.cap.getCap(sCapId).getOutput();
+    var targetCapScriptModel = aa.cap.getCap(tCapId).getOutput();
+
+    if (sourceCapScriptModel != null && targetCapScriptModel != null) {
+        aa.cap.copyComments(sourceCapScriptModel, targetCapScriptModel);
+    }
+}
+function copyCapInfo(srcCapId,targetCapId) {
+    var copySections = (arguments.length > 5 && arguments[5] ? arguments[5] : null);
+    // For typically use null, by default valuation, documents & education are not copied.
+    //copy data
+    if (srcCapId == null) srcCapId = capId;
+    if (copySections == null) copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+
+    var srcCap = aa.cap.getCap(srcCapId).getOutput();
+    var srcCapName = srcCap.getSpecialText();
+
+    if (exists("Cap Detail", copySections)) { // Use with care!!
+        aa.cap.copyCapDetailInfo(srcCapId, targetCapId);
+    }
+    if (exists("Cap Name", copySections) && srcCapName) {
+        editAppName(srcCapName, targetCapId);
+    }
+    if (exists("Cap Short Notes", copySections)) { // Included in Cap Detail
+        srcShortNotes = getShortNotes(srcCapId);
+        updateShortNotes(srcShortNotes, targetCapId);
+    }
+    if (exists("Detailed Description", copySections)) {
+        srcWorkDes = workDescGet(srcCapId);
+        if (srcWorkDes != null && newWorkDes != "")
+            updateWorkDesc(srcWorkDes, targetCapId);
+    }
+    if (exists("Addresses", copySections)) copyAddresses(srcCapId, targetCapId);
+    if (exists("Parcels", copySections)) copyParcels(srcCapId, targetCapId);
+    if (exists("Owners", copySections)) copyOwner(srcCapId, targetCapId);
+    if (exists("GIS Objects", copySections)) { //Copy GIS Objects
+        var holdId = capId;
+        capId = targetCapId;
+        copyParcelGisObjects();
+        capId = holdId;
+    }
+    if (exists("ASI", copySections)) {
+        // copyASIFields(srcCapId, targetCapId);       // Must be identical for this to work.
+        if (srcCapId == capId && typeof (AInfo) != "undefined")  // Use AInfo info instead of database.
+            copyAppSpecific(targetCapId);
+        else {
+            var srcASIResult = aa.appSpecificInfo.getByCapID(srcCapId)
+            if (srcASIResult.getSuccess()) {
+                var srcASI = srcASIResult.getOutput();
+            } else {
+                logDebug("**ERROR: getting source ASI: " + sourceASIResult.getErrorMessage());
+                var srcASI = [];
+            }
+            for (var i in srcASI) {
+                var itemName = (useAppSpecificGroupName ? srcASI[i].getCheckboxType() : "") + srcASI[i].getCheckboxDesc();
+                var itemValue = srcASI[i].getChecklistComment();
+                editAppSpecific(itemName, itemValue, newCap);
+            }
+        }
+    }
+    if (exists("ASIT", copySections)) copyASITables(srcCapId, targetCapId);
+    // copyASITables(srcCapId, targetCapId);       // Must be identical for this to work.
+
+    if (exists("Contacts", copySections)) copyContacts(srcCapId, targetCapId);
+    if (exists("LPs", copySections)) copyLicensedProf(srcCapId, targetCapId);
+    if (exists("Valuation Calc", copySections)) copyCalcVal(srcCapId, targetCapId);
+
+
+    if (exists("Additional Info", copySections)) {
+        if (typeof (copyAdditionalInfo) == "function") {
+            copyAdditionalInfo(srcCapId, targetCapId);
+        } else {
+            logDebug("Missing function copyAdditionalInfo")
+        }
+    }
+
+    if (exists("Conditions", copySections)) copyConditions(srcCapId, targetCapId);
+    if (exists("Education", copySections)) {
+        aa.education.copyEducationList(srcCapId, targetCapId);
+        logDebug("copied Education");
+    }
+    if (exists("ContEducation", copySections)) {
+        copyEducation(srcCapId, targetCapId);
+        aa.continuingEducation.copyContEducationList(srcCapId, targetCapId);
+        logDebug("copied Continuing Education");
+    }
+    if (exists("Examination", copySections)) {
+        aa.examination.copyExaminationList(srcCapId, targetCapId);
+        logDebug("copied Examination");
+    }
+    if (exists("Documents", copySections)) {
+        if (typeof (copyDocuments) == "function") {
+            copyDocuments(srcCapId, targetCapId);
+        } else {
+            logDebug("Missing function copyDocuments")
+        }
+    }
+    if (exists("Comments", copySections)) {  // TO DO
+        if (typeof (copyCapComments) == "function") {
+            copyCapComments(srcCapId, targetCapId);
+        } else {
+            logDebug("Missing function copyCapComments")
+        }
+    }
+
+    // Copy License Expiration Information
+    if (exists("License", copySections)) {
+        if (typeof (copyCapLicense) == "function") {
+            copyCapLicense(srcCapId, targetCapId);
+        } else {
+            logDebug("Missing function copyCapLicense")
+        }
+    }
+}
+
+function copyCapLicense(srcCapId, targetCapId) {
+    try { // Handle NullPointerException when no expiration record.
+        var oldLic = new licenseObject(null, srcCapId);
+        if (oldLic != null) {
+            expStatus = oldLic.b1Status;
+            expDate = oldLic.b1ExpDate;
+            logDebug("oldLic: " + oldLic.b1Status + " " + oldLic.b1ExpDate);
+            b1ExpResult = aa.expiration.getLicensesByCapID(targetCapId);
+            if (b1ExpResult.getSuccess()) {
+                var b1Exp = b1ExpResult.getOutput();
+                    if (expStatus) b1Exp.setExpStatus(expStatus);
+                    b1ExpDate = null;
+                    if (expDate) {
+                        var b1ExpDate = aa.date.parseDate(expDate);
+                    }
+                    b1Exp.setExpDate(b1ExpDate);
+                    aa.expiration.editB1Expiration(b1Exp.getB1Expiration());
+                    var newLic = new licenseObject(null, targetCapId);
+                    if (newLic != null)
+                        logDebug("Expiration: " + newLic.b1Status + " " + newLic.b1ExpDate);
+            }
+        }
+    } catch (err) {
+        var b1Exp = null;
+        logDebug("ERROR: copying Expiration: " + err.message);
+    }
+}
+
 // S2 For each case number in the "related cases" of the Zoning Case Record Type, copy all active Conditions to t he current record.
 // Find the related Planning/Landuse/Zoning Case/NA and copy all active (applied) conditions from zoning case to the given cap ID. 
 // First check to make sure that the condition doesnt exist in the given capID (Matching condition type and the Name). DONT copy if already exists.
@@ -3204,6 +3356,225 @@ function copyDetailedDescription(srcCapId, targetCapId) {
 	if (newWorkDes != null && newWorkDes != "")
 		updateWorkDesc(newWorkDes, targetCapId);
 }
+function copyDocuments(pFromCapId, pToCapId) {
+    if (pToCapId == null)
+        var vToCapId = capId;
+    else
+        var vToCapId = pToCapId;
+	//Copies all attachments (documents) from srcCapId to targetCapId
+	var docCategories = null;
+	if (arguments.list > 2) docCategories = arguments[2];
+	var docStatuses = null;
+	if (arguments.list > 3) docStatuses = arguments[3];
+	var preventDuplicate = true;
+	if (arguments.list > 4 && arguments[4] != null) preventDuplicate = arguments[4];
+	var newDocStatus = null;
+	if (arguments.list > 5) newDocStatus = arguments[5];
+
+	var capDocResult = aa.document.getDocumentListByEntity(pFromCapId, "CAP");
+	if (capDocResult.getSuccess()) {
+		if (capDocResult.getOutput().size() > 0) {
+			for (docInx = 0; docInx < capDocResult.getOutput().size(); docInx++) {
+				var documentObject = capDocResult.getOutput().get(docInx);
+				if (docCategories && !exists(documentObject.getDocCategory(),docCategories)) continue;
+				if (docStatuses && !exists(documentObject.getDocStatus(),docStatuses)) continue;
+
+                // Check for Duplicate Document
+                documentFound = false;
+                if (!preventDuplicate) {
+                    var capDocuments2 = aa.document.getDocumentListByEntity(vToCapId, "CAP");
+                    if (capDocuments2.getSuccess()) {
+                        var capDocumentList2 = capDocuments2.getOutput();
+                        if (capDocumentList2.size() > 0) {
+                            for (index = 0; index < capDocumentList2.size(); index++) {
+                                capDocumentModel2 = capDocumentList2.get(index);
+                                if (capDocumentModel.getDocName() == capDocumentModel2.getDocName() && capDocumentModel.getFileKey() == capDocumentModel2.getFileKey()) {
+                                    logDebug("Skipping document1: " + capDocumentModel.getDocumentNo() + " " + capDocumentModel.getDocName() + " " + capDocumentModel.getFileKey() + " from " + pFromCapId.getCustomID() + " to " + vToCapId.getCustomID());
+                                    documentFound = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                if (documentFound) continue;
+				
+				// download the document content
+				var useDefaultUserPassword = true;
+				//If useDefaultUserPassword = true, there is no need to set user name & password, but if useDefaultUserPassword = false, we need define EDMS user name & password.
+				var EMDSUsername = null;
+				var EMDSPassword = null;
+
+				var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				if (downloadResult.getSuccess()) {
+					var path = downloadResult.getOutput();
+					logDebug("path=" + path);
+				}
+
+				var tmpEntId = vToCapId.getID1() + "-" + vToCapId.getID2() + "-" + vToCapId.getID3();
+				documentObject.setDocumentNo(null);
+				documentObject.setCapID(vToCapId);
+				documentObject.setEntityID(tmpEntId);
+
+				// Open and process file
+				try {
+					// put together the document content - use java.io.FileInputStream
+					var newContentModel = aa.document.newDocumentContentModel().getOutput();
+					inputstream = new java.io.FileInputStream(path);
+					newContentModel.setDocInputStream(inputstream);
+					documentObject.setDocumentContent(newContentModel);
+
+					var newDocResult = aa.document.createDocument(documentObject);
+					if (newDocResult.getSuccess()) {
+					    var newDocObject = newDocResult.getOutput();
+						if (newDocStatus) {
+							newDocObject.setDocStatus(newDocStatus);
+							aa.document.updateDocument(newDocObject);
+						}
+						newDocResult.getOutput();
+						logDebug("Successfully copied document: " + documentObject.getFileName());
+					} else {
+						logDebug("Failed to copy document: " + documentObject.getFileName());
+						logDebug(newDocResult.getErrorMessage());
+					}
+				} catch (err) {
+					logDebug("Error copying document: " + err.message);
+					return false;
+				}
+
+			}
+		}
+	}
+}
+function createCap_TPS() {
+    /*  Creates the new application and returns the capID object
+    | Modified from INCLUDES_ACCELA_FUNCTIONS
+    | newAppTypeString - new Application Type string. Default is Current Group/Type/SubType/"License"
+    | newCapName - new Cap Name. Default is "". For new license typically use capName.
+    | newCapIdString - new Cap ID. Default is null (Next Sequence #). For new License typically use capIDString.substr(0, (capIDString.length - 1)) + 'L';
+    | newCapRelation - new Cap is Child, Parent or not related to source Cap. Default is none. For new license typically use "Parent".
+    | srcCapId - source Cap Id. Default is capId. For new license typically use null (default).
+    | copySections - Array of sections of data to copy from source Cap. Default is null. For new license typically use null (default). Use empty array [] if you do not want to copy data. By default not all sections are copied only most commonly used ones.
+    | initStatus - initial new record status. Default is null (Configuration Default). For new license typically use "Active"
+    | scheduledDate - record scheduled date. Default is null (not set). For new License use sysDateMMDDYYYY (today)
+    | firstIssuedDate - First issue date. Default is null (not set). For new License use sysDateMMDDYYYY (today)
+    
+    ***** Uses copyCapInfo, editAppName, editScheduledDate, editFirstIssuedDate.
+    */
+    var newCap = null;
+    var newCapId = null;
+    try {
+        var newAppTypeString = (arguments.length > 0 && arguments[0] ? arguments[0] : srcAppTypeArray[0] + "/" + srcAppTypeArray[1] + "/" + srcAppTypeArray[2] + "/" + "License");
+        var newCapName = (arguments.length > 1 && arguments[1] ? arguments[1] : "");
+        // Typically use capName
+        var newCapIdString = (arguments.length > 2 && arguments[2] ? arguments[2] : null);
+        // For new License typically use capIDString.substr(0, (capIDString.length - 1)) + 'L';
+        var newCapRelation = (arguments.length > 3 && arguments[3] && exists(arguments[3], ["Child", "Parent"]) ? arguments[3] : null);
+        var copySections = (arguments.length > 5 && arguments[5] ? arguments[5] : null);
+        // For new License typically use null, by default education is not copied.
+        var initStatus = (arguments.length > 6 && arguments[6] ? arguments[6] : null);
+        // For new License typically use "Active"
+        var scheduledDate = (arguments.length > 7 && arguments[7] ? arguments[7] : null);
+        // For new License use sysDateMMDDYYYY
+        var firstIssuedDate = (arguments.length > 8 && arguments[8] ? arguments[8] : null);
+        // For new License use sysDateMMDDYYYY
+        if (copySections == null) copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+
+        var srcCapId = (arguments.length > 4 && arguments[4] ? arguments[4] : capId);
+        var srcCapModel = null,
+            srcCapName = null,
+            srcAppTypeAlias = null,
+            srcAppTypeString = null,
+            srcAppTypeArray = null;
+        var s_result = aa.cap.getCap(srcCapId);
+        if (s_result.getSuccess()) {
+            var srcCap = s_result.getOutput();
+            var srcCapModel = s_result.getOutput().getCapModel()
+            var srcCapName = srcCap.getSpecialText();
+            var srcAppTypeResult = srcCap.getCapType();
+            var srcAppTypeAlias = srcAppTypeResult.getAlias();
+            var srcAppTypeString = srcAppTypeResult.toString();
+            var srcAppTypeArray = srcAppTypeString.split("/");
+        } else {
+            logDebug("**WARNING: error getting cap : " + capResult.getErrorMessage());
+        }
+
+
+        // create new record
+        var newAppTypeArray = newAppTypeString.split("/");
+        if (newAppTypeArray.length != 4) {
+            logDebug("**ERROR creating CAP.  Application Type String is incorrectly formatted: " + newAppTypeArray);
+            return false;
+        }
+        var appCreateResult = aa.cap.createApp(newAppTypeArray[0], newAppTypeArray[1], newAppTypeArray[2], newAppTypeArray[3], newCapName);
+        if (!appCreateResult.getSuccess()) {
+            logDebug("**ERROR: creating CAP " + newAppTypeString + ": " + appCreateResult.getErrorMessage());
+            return false;
+        }
+
+        var newCapId = appCreateResult.getOutput();
+        logDebug("CAP " + newAppTypeString + " created successfully ");
+        var newCapObj = aa.cap.getCap(newCapId).getOutput();	//Cap object
+
+        // create Detail Record
+        newCapModel = aa.cap.newCapScriptModel().getOutput();
+        newCapDetailModel = newCapModel.getCapModel().getCapDetailModel();
+        newCapDetailModel.setCapID(newCapId);
+        aa.cap.createCapDetail(newCapDetailModel);
+
+        if (newCapIdString) {   // Update Record ID
+            aa.cap.updateCapAltID(newCapId, newCapIdString);
+            // get newCapId object with updated capId.
+            var s_capResult = aa.cap.getCapID(newCapId);
+            if (s_capResult.getSuccess() && s_capResult.getOutput())
+                newCapId = s_capResult.getOutput();
+            else
+                logDebug("ERROR: updating Cap ID " + newCapId.getCustomID() + " to " + newCapIdString);
+        } else {
+            newCapIdString = newCapId.getCustomID();
+        }
+
+        var statusComment = "";
+        if (srcCapId) {
+            if (newCapRelation) {   // Cap Relationship?
+                if (newCapRelation == "Child") {
+                    var result = aa.cap.createAppHierarchy(srcCapId, newCapId);
+                } else {
+                    var result = aa.cap.createAppHierarchy(newCapId, srcCapId);
+                }
+                if (result.getSuccess())
+                    logDebug(newCapRelation + " CAP " + newAppTypeString + " successfully linked");
+                else
+                    logDebug("Could not link " + newCapRelation.toLowerCase() + " CAP " + newAppTypeString);
+            }
+            copyCapInfo(srcCapId, newCapId);  //copy data
+            var statusComment = "Created from " + srcAppTypeArray[3] + ": " + srcCapId;
+            var statusComment = "Created from " + srcAppTypeAlias + ": " + srcCapId;
+        }
+        if (newCapName && newCapName != "") {
+            logDebug("newCapName: " + newCapName);
+            editAppName(newCapName, newCapId);
+        }
+
+        if (initStatus)
+            updateAppStatus(initStatus, statusComment, newCapId);
+
+        //field repurposed to represent the current term effective date
+        if (typeof (editScheduledDate) == "function" && scheduledDate) {
+            editScheduledDate(scheduledDate, newCapId);
+        }
+
+        //field repurposed to represent the original effective date
+        if (typeof (editFirstIssuedDate) == "function" && firstIssuedDate) {
+            editFirstIssuedDate(firstIssuedDate, newCapId);
+        }
+
+        return newCapId;
+    } catch (err) {
+        logDebug("A JavaScript Error occurred: " + err.message + " Line " + err.lineNumber);
+        return false;
+    }
+}
+
 function createChildLic(grp, typ, stype, cat, desc)
 //
 // creates the new application and returns the capID object
