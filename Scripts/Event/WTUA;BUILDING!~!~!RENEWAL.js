@@ -18,7 +18,7 @@ if (wfStatus == 'Renewed') {
 		var expDate = getAppSpecific(expDateField, parentLicenseCapID);
 		if (appMatch("Building/Permit/AmusementDevice/Renewal")) {
 			resultWorkflowTask("Annual Status", "In Service", wfCommentParent, "");
-		} else if (appMatch("Building/Permit/Elevator/Renewal")
+		} else if (appMatch("Building/Permit/Elevator/Renewal")) {
 			resultWorkflowTask("Annual Status", "In Service", wfCommentParent, "");
 		}
 		updateAppStatus('Active', wfCommentParent, parentLicenseCapID);

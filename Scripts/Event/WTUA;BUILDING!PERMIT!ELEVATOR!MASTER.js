@@ -31,7 +31,7 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     var expDate = null;
     if (appMatch("Building/Permit/AmusementDevice/Installation")) {
         newCapRelation = "Parent";
-    } else if (appMatch("Building/Permit/Elevator/Installation") {
+    } else if (appMatch("Building/Permit/Elevator/Installation")) {
         expField = 'Annual Quarter'
         expFieldValue = getAppSpecific(expField, capId);
         if (expFieldValue == 'Q1 - March') {
