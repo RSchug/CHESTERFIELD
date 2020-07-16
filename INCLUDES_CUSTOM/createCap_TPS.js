@@ -36,17 +36,17 @@ function createCap_TPS() {
         var srcCapModel = null,
             srcCapName = null,
             srcAppTypeAlias = null,
-            srcAppTypeString = null,]
+            srcAppTypeString = null,
             srcAppTypeArray = null;
         var s_result = aa.cap.getCap(srcCapId);
         if (s_result.getSuccess()) {
             var srcCap = s_result.getOutput();
             var srcCapModel = s_result.getOutput().getCapModel()
+            var srcCapName = srcCap.getSpecialText();
             var srcAppTypeResult = srcCap.getCapType();
             var srcAppTypeAlias = srcAppTypeResult.getAlias();
             var srcAppTypeString = srcAppTypeResult.toString();
             var srcAppTypeArray = srcAppTypeString.split("/");
-            var srcCapName = srcCap.getSpecialText();
         } else {
             logDebug("**WARNING: error getting cap : " + capResult.getErrorMessage());
         }
