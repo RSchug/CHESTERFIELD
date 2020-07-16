@@ -36,15 +36,20 @@ function assignInspection_CHESTERFIELD(inspId) {
         gisLayerField = "InspectorID";
     } else if (appMatch("EnvEngineering/*/*/*")) {
         inspDiscipline = "EnvEngineering";
+        inspDistrict = AInfo["ParcelAttribute.InspectionDistrict"];
         gisLayerName = "Parcel";
         gisLayerField = "EE Inspector";
     }
     if (inspectorId == "") inspectorId == null;
 
+    // Use USER_DISTRICTS, inspDiscipline & inspDistrict to determine inspector.
     if (inspectorId == null) {
-        if (gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
-            inspDistrict = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+        if (inspDistrict == null) {
+            if (gisMapService != null && gisLayerName != null && gisLayerField != null) { // Auto assign inspector based on GIS
+                inspDistrict = getGISInfo(gisMapService, gisLayerName, gisLayerField);
+            }
         }
+
         if (typeof (inspDistrict) == "undefined") inspDistrict = null;
         if (typeof (inspDiscipline) == "undefined") inspDiscipline = null;
         // Check for inspection discipline & district mapping to inspectors
