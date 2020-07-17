@@ -8,7 +8,7 @@ try {
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //07-2020 Boucher 11p and 82p
-	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review') {
+	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 
 		if (appMatch('*/SitePlan/Major/*') {
