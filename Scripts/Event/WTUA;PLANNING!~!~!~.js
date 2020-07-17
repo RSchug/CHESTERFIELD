@@ -11,7 +11,7 @@ try {
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 
-		if (appMatch('*/SitePlan/Major/*') {
+		if (appMatch('*/SitePlan/Major/*')) {
 			if (AInfo['Special Consideration'] == 'Expedited') {
 				editTaskDueDate('*',dateAdd(null,14));
 			}
