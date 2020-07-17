@@ -1,1 +1,0 @@
-inspResultDate("currentDate")
