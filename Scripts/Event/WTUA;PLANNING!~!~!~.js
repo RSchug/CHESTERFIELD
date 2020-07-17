@@ -1,7 +1,32 @@
 try {
+//07-2020 Bouquin 4p
+	if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
+		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	}
+//07-2020 Boucher 11p and 82p
+	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review') {
+		editTaskDueDate('Sign Posting',dateAdd(null,7));
 
-//Below is all code from previous implementer
-
+		if (appMatch('*/SitePlan/Major/*') {
+			if (AInfo['Special Consideration'] == 'Expedited') {
+				editTaskDueDate('*',dateAdd(null,14));
+			}
+			else if (AInfo['Special Consideration'] == 'Fast Track') {
+				editTaskDueDate('*',dateAdd(null,7));
+			}
+			else if (AInfo['Special Consideration'] == 'Regular') {
+				editTaskDueDate('*',dateAdd(null,21));
+			}
+		}
+	}
+	
+	
+//Below is all code from previous implementer - Not sure if these work db
+/*
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",
 		"Planning/Subdivision/Conceptual Plan", "Planning/Subdivision/ExceptiontoPreliminary", "Planning/siteplan/Major", "Planning/siteplan/Minor",
 		"Planning/siteplan/Schematics");
@@ -47,7 +72,7 @@ for (var i in recordTypesArray) {
  * @param dayId day id that need to get it Ex. 0 is Sunday and 3 is Wednesday
  * Ex.getDueDate(3,3) this will return date of the next Wednesday after the 3 days from .
  * @returns Due Date
- */
+ *
 function getDueDate(numberofDays, dayId) {
 	var nextDate = new Date();
 	nextDate.setDate(nextDate.getDate() + parseInt(numberofDays));
@@ -63,7 +88,7 @@ function getDueDate(numberofDays, dayId) {
 /**
  * this function to schedule the needed meeting based on the active task
  * @param meetingDate
- */
+ *
 
 function scheduleMeeting(meetingDate) {
 	var workflowTasks = aa.workflow.getTasks(capId).getOutput();
@@ -126,7 +151,7 @@ function scheduleMeeting(meetingDate) {
  * this function is to get the cap contact by type
  * @param ContactType
  * @returns contact array if exists else returns false
- */
+ *
 
 function getContactsListByType(ContactType) {
 	var contactArray = getPeople(capId);
@@ -161,14 +186,7 @@ function getContactsListByType(ContactType) {
 	}
 
 	return false;  }
+*/
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-//4P
-if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
-	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-	addAdHocTask("ADHOC_WORKFLOW","Maps","");
-		}
