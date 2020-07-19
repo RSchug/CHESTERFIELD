@@ -1,4 +1,4 @@
 //Update Fees if additional information is updated//
-updateFee("MULTIFAMILY","CC-BLD-MULTIFAMILY","FINAL",houseCount,"Y");
-updateFee("STATELEVY","CC-BLD-MULTIFAMILY","FINAL",1,"Y","Y");
+//updateFee("MULTIFAMILY","CC-BLD-MULTIFAMILY","FINAL",houseCount,"Y");
+//updateFee("STATELEVY","CC-BLD-MULTIFAMILY","FINAL",,"Y","Y");
 //aa.finance.reCalculateFees("STATELEVY","CONTRACTOR",1); 
