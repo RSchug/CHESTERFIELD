@@ -12,7 +12,7 @@ try {
 				showMessage = true;
 				comment('<font size=small><b>Licensed Professional is required prior to Issuance</b></font>');
 				cancel = true;
-			}}
+			}
 		// Permit must be Issued
 		if (exists(appTypeArray[3],["Boiler","Electrical","Fire","Gas","Mechanical","Plumbing"]) && parentCapId && !wasCapStatus(["Issued"],parentCapId)) {
 			parentCap = aa.cap.getCap(parentCapId).getOutput();
@@ -22,7 +22,7 @@ try {
 				showMessage = true;
 				comment('<font size=small><b>Parent Permit must be Issued before Trade Permit can be Issued</b></font>');
 				cancel = true;
-			}
+			}}
 		}
 		if (wfTask == 'Application Submittal' && exists(wfStatus,['Accepted - Plan Review Required','Accepted - Plan Review Not Required','Accepted'])){
 		//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
