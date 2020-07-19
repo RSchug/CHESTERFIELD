@@ -1,3 +1,11 @@
+//1P Activate Adhoc Tasks based on Fee Payment 'Recieved or Waived'
+if (matches(wfTask,'Fee Payment') && matches (wfStatus,'Fees Received','Fees Waived') && (balanceDue > 0)){
+	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	addAdHocTask("ADHOC_WORKFLOW","Maps","");
+}
 try {
 //07-2020 Bouquin 4p
 	if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
