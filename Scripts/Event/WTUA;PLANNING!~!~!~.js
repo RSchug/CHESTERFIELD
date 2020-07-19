@@ -1,5 +1,5 @@
 //1P Activate Adhoc Tasks based on Fee Payment 'Recieved or Waived'
-if (matches(wfTask,'Fee Payment') && matches (wfStatus,'Fees Received','Fees Waived') && (balanceDue > 0)){
+if (matches(wfTask,'Fee Payment') && matches (wfStatus,'Fees Received','Fees Waived') && (balanceDue <= 0)){
 	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
