@@ -23,6 +23,12 @@ try {
 			}
 		}
 	}
+	//07-2020 Boucher 21p
+	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Transfer to CPC')) {
+		if (tsi["CPC Due Date"] != null) {
+			editTaskDueDate('*',tsi["CPC Due Date"]);
+		}
+	}
 	
 	
 //Below is all code from previous implementer - Not sure if these work db
