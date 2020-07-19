@@ -32,6 +32,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
+| 07/19/2020 D Boucher added functions used in the Pageflow ACA before APO
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -4518,7 +4519,37 @@ function compareInspResultDateDesc(a, b) {
     }
     return (a.getInspection().getActivity().getCompletionDate().getTime() < b.getInspection().getActivity().getCompletionDate().getTime());
 } 
-
+//Function to look for open duplicate permits that are less than 6 months old at the same address.
+function findDuplicateOpenPermitsAtAddress(pCapArray, pPermitType) {
+		var openPermitList = [];
+		for (var i in pCapArray) {
+			var splitArray = String(pCapArray[i]).split('-');
+			var capId = aa.cap.getCapID(splitArray[0], splitArray[1], splitArray[2]).getOutput();
+			var relcap = aa.cap.getCap(capId).getOutput();
+			var dDateObj = relcap.getFileDate();
+			var reltype = relcap.getCapType().toString();
+			if (pPermitType == reltype) {
+				var today = new Date();
+				var permitDate = new Date(String(dDateObj.getYear()), String(dDateObj.getMonth()) - 1, String(dDateObj.getDayOfMonth()));
+				var dateDiff = (today - permitDate) / (1000 * 60 * 60 * 24);
+				if (dateDiff < 183) { //6 months
+					//if(dateDiff < 1) {  //1 day test
+					relStatus = aa.cap.getStatusHistoryByCap(relcap.getCapID(), "APPLICATION", null);
+					var statusHistoryList = relStatus.getOutput();
+					if (statusHistoryList.length > -1) {
+						var statusHistory = statusHistoryList[0];
+						if (statusHistory.getStatus().indexOf("Close") == -1 && statusHistory.getStatus().indexOf("Withdrawn") == -1 && statusHistory.getStatus().indexOf("Abandon") == -1 && statusHistory.getStatus().indexOf("Cancelled") == -1) {
+							openPermitList.push(statusHistory);
+							//if (openPermitList.length > 0) {  //This code in in the ASA:
+								//return ("WARNING: There is a permit for " + pPermitType + " that has been opened within the last 6 months.");
+								//return (openPermitList.length);  }
+						}
+					}
+				}
+			}
+		}
+	return openPermitList.length;
+}
 function getInspectionComment(itemCap, inspectionId) {
 	           var comment = "No Comment";
                var inspResult = aa.inspection.getInspection(itemCap, inspectionId);
@@ -4977,7 +5008,55 @@ function loadCustomScript(scriptName) {
         logDebug("<font color='red'><b>WARNING: Could not load script </b></font>" + scriptName + ". Verify the script in <font color='blue'>Classic Admin>Admin Tools>Events>Scripts</font>");
     }
 }
+//07-2020 Boucher added for Pageflow scripts
+function loadXAPOParcelAttributesTPS(thisArr) {
+	try {
+		// Modified version of the loadParcelAttributesTPS()
+		// Returns an associative array of Parcel Attributes and XAPO data
+		// Optional second parameter, parcel number to load from
+		// If no parcel is passed, function is using the ParcelValidatedNumber variable defined in the "BEGIN Event Specific Variables" list in ApplicationSubmitBefore
 
+		var parcelNum = ParcelValidatedNumber;
+
+		if (arguments.length == 2)
+			parcelNum = arguments[1]; // use parcel number specified in args
+
+		var fParcelObj = null;
+		var parcelResult = aa.parcel.getParceListForAdmin(parcelNum, null, null, null, null, null, null, null, null, null);
+
+		if (!parcelResult.getSuccess())
+			logDebug("**ERROR: Failed to get Parcel object: " + parcelResult.getErrorType() + ":" + parcelResult.getErrorMessage());
+		else
+				var fParcelObj = parcelResult.getOutput()[0];
+		var fParcelModel = fParcelObj.parcelModel;
+		var parcelArea = 0;
+		parcelArea += fParcelModel.getParcelArea();
+		var parcelAttrObj = fParcelModel.getParcelAttribute().toArray();
+
+		for (z in parcelAttrObj)
+			thisArr["ParcelAttribute." + parcelAttrObj[z].getB1AttributeLabel()] = parcelAttrObj[z].getValue();
+
+		// Explicitly load some standard values
+		thisArr["ParcelAttribute.Block"] = fParcelModel.getBlock();
+		thisArr["ParcelAttribute.Book"] = fParcelModel.getBook();
+		thisArr["ParcelAttribute.CensusTract"] = fParcelModel.getCensusTract();
+		thisArr["ParcelAttribute.CouncilDistrict"] = fParcelModel.getCouncilDistrict();
+		thisArr["ParcelAttribute.ExemptValue"] = fParcelModel.getExemptValue();
+		thisArr["ParcelAttribute.ImprovedValue"] = fParcelModel.getImprovedValue();
+		thisArr["ParcelAttribute.InspectionDistrict"] = fParcelModel.getInspectionDistrict();
+		thisArr["ParcelAttribute.LandValue"] = fParcelModel.getLandValue();
+		thisArr["ParcelAttribute.LegalDesc"] = fParcelModel.getLegalDesc();
+		thisArr["ParcelAttribute.Lot"] = fParcelModel.getLot();
+		thisArr["ParcelAttribute.MapNo"] = fParcelModel.getMapNo();
+		thisArr["ParcelAttribute.MapRef"] = fParcelModel.getMapRef();
+		thisArr["ParcelAttribute.ParcelStatus"] = fParcelModel.getParcelStatus();
+		thisArr["ParcelAttribute.SupervisorDistrict"] = fParcelModel.getSupervisorDistrict();
+		thisArr["ParcelAttribute.Tract"] = fParcelModel.getTract();
+		thisArr["ParcelAttribute.PlanArea"] = fParcelModel.getPlanArea();
+	} catch (err) {
+		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+	}
+}
 function ownerExistsOnCap() {
         // Optional parameter, cap ID to load from
         var itemCap = (arguments.length> 0 && arguments[0]? arguments[0]:capId); // use cap ID if specified in args
