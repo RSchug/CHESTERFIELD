@@ -24,13 +24,13 @@ try {
 				cancel = true;
 			}}
 		// 07-2020 Boucher 11p For Residential or Commercial here are the Proffer Conditions that need to be met on the Parcel before permit can be issued
-		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || (appMatch('*/*/Residential/Multi-Family'))  && 
+		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))  && 
 			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
 			parcelHasConditiontrue_TPS('EE', 'Applied') ||
 			parcelHasConditiontrue_TPS('Fire', 'Applied') ||
 			parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
 			parcelHasConditiontrue_TPS('Planning', 'Applied') ||
-			parcelHasConditiontrue_TPS('Utilities', 'Applied')) {
+			parcelHasConditiontrue_TPS('Utilities', 'Applied'))) {
 				showMessage = true;
 				comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
 				cancel = true;
