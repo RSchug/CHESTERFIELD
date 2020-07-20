@@ -23,7 +23,19 @@ try {
 				comment('<font size=small><b>Parent Permit must be Issued before Trade Permit can be Issued</b></font>');
 				cancel = true;
 			}}
+		// 07-2020 Boucher 11p For Residential or Commercial here are the Proffer Conditions that need to be met on the Parcel before permit can be issued
+		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || (appMatch('*/*/Residential/Multi-Family'))  && 
+			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
+			parcelHasConditiontrue_TPS('EE', 'Applied') ||
+			parcelHasConditiontrue_TPS('Fire', 'Applied') ||
+			parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
+			parcelHasConditiontrue_TPS('Planning', 'Applied') ||
+			parcelHasConditiontrue_TPS('Utilities', 'Applied')) {
+				showMessage = true;
+				comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
+				cancel = true;
 		}
+	}
 		if (wfTask == 'Application Submittal' && exists(wfStatus,['Accepted - Plan Review Required','Accepted - Plan Review Not Required','Accepted'])){
 		//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
 		if (!addressExistsOnCap()) {          // Check if address exists
