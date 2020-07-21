@@ -40,7 +40,11 @@ try {
 			editTaskDueDate('*',tsi["CPC Due Date"]);
 		}
 	}
-	
+	//07-2020 Boucher 40p
+	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
+		var subNum = AInfo['Submittal Count']+1;
+		editAppSpecific('Submittal Count',subNum);
+	}
 	
 //Below is all code from previous implementer - Not sure if these work db
 /*
