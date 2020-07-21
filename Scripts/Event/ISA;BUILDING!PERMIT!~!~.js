@@ -21,24 +21,24 @@ if (matches(inspType, "Framing")) {
 }
 
 
-var isInspectionRemove = false;
+//var isInspectionRemove = false;
 // Permit must be Issued or Temporary CO Issued, except Site Visit Inspection
-if (inspType != "Site Visit" && (!wasCapStatus(["Issued", "Temporary CO Issued"]))) {
-	showMessage = true;
-	comment('<font size=small><b>Record must be Issued to schedule inspections</b></font>');
-	if (exists(vEventName, ["InspectionMultipleScheduleAfter", "InspectionMultipleScheduleBefore"])) isInspectionRemove = true;
-}
+//if (inspType != "Site Visit" && (!wasCapStatus(["Issued", "Temporary CO Issued"]))) {
+//	showMessage = true;
+//	comment('<font size=small><b>Record must be Issued to schedule inspections</b></font>');
+//	if (exists(vEventName, ["InspectionMultipleScheduleAfter", "InspectionMultipleScheduleBefore"])) isInspectionRemove = true;
+//}
 
 // Remove Pending Inspection created via Manage Inspection
-if (isInspectionRemove) {
-	if (inspObj.getInspection) {
-		var removeResult = removeInspection(inspObj.getInspection());
-		logDebug("Removing Inspection: " + inspObj.getIdNumber()
-			+ " " + inspObj.getInspectionType()
-			+ " " + inspObj.getInspectionStatus()
-			+ (removeResult ? (removeResult.getSuccess() ? " Successful" : " failed. ERROR:" + removeResult.getErrorMessage()) : "")
-		);
-	} else {
-		logDebug("ERROR: Removing Inspection: " + inspObj.getInspectionType())
-	}
-}
+//if (isInspectionRemove) {
+//	if (inspObj.getInspection) {
+//		var removeResult = removeInspection(inspObj.getInspection());
+//		logDebug("Removing Inspection: " + inspObj.getIdNumber()
+//			+ " " + inspObj.getInspectionType()
+//			+ " " + inspObj.getInspectionStatus()
+//			+ (removeResult ? (removeResult.getSuccess() ? " Successful" : " failed. ERROR:" + removeResult.getErrorMessage()) : "")
+//		);
+//	} else {
+//		logDebug("ERROR: Removing Inspection: " + inspObj.getInspectionType())
+//	}
+//}
