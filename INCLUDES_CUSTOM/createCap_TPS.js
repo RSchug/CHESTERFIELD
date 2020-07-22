@@ -60,12 +60,12 @@ function createCap_TPS() {
         }
         var appCreateResult = aa.cap.createApp(newAppTypeArray[0], newAppTypeArray[1], newAppTypeArray[2], newAppTypeArray[3], newCapName);
         if (!appCreateResult.getSuccess()) {
-            logDebug("**ERROR: creating CAP " + newAppTypeString + ": " + appCreateResult.getErrorMessage());
+            logDebug("**ERROR: creating " + newAppTypeString + " CAP: " + appCreateResult.getErrorMessage());
             return false;
         }
 
         var newCapId = appCreateResult.getOutput();
-        logDebug("CAP " + newAppTypeString + " created successfully ");
+        logDebug("Successfully created " + newAppTypeString + " CAP " + newCapId.getCustomID() + " (" + newCapId + ")");
         var newCapObj = aa.cap.getCap(newCapId).getOutput();	//Cap object
 
         // create Detail Record
@@ -75,13 +75,16 @@ function createCap_TPS() {
         aa.cap.createCapDetail(newCapDetailModel);
 
         if (newCapIdString) {   // Update Record ID
-            aa.cap.updateCapAltID(newCapId, newCapIdString);
+            var s_capResult = aa.cap.updateCapAltID(newCapId, newCapIdString);
+            if (!s_capResult.getSuccess() || !s_capResult.getOutput())
+                logDebug("ERROR: updating Cap ID " + newCapId.getCustomID() + " to " + newCapIdString + ": " + s_capResult.getErrorMessage());
             // get newCapId object with updated capId.
-            var s_capResult = aa.cap.getCapID(newCapId);
-            if (s_capResult.getSuccess() && s_capResult.getOutput())
-                newCapId = s_capResult.getOutput();
+            var s_capResult = aa.cap.getCapID(newCapId.getID1(), newCapId.getID2(), newCapId.getID3());
+            if (!s_capResult.getSuccess() || !s_capResult.getOutput())
+                logDebug("ERROR: getting Cap ID " + newCapIdString + " " + newCapId + ": " + s_capResult.getErrorMessage());
             else
-                logDebug("ERROR: updating Cap ID " + newCapId.getCustomID() + " to " + newCapIdString);
+                newCapId = s_capResult.getOutput();
+            newCapIdString = newCapId.getCustomID();
         } else {
             newCapIdString = newCapId.getCustomID();
         }
