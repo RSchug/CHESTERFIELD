@@ -42,7 +42,7 @@ try {
 	}
 	//07-2020 Boucher 40p
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
-		var subNum = AInfo['Submittal Count']+1;
+		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
 	}
 	
