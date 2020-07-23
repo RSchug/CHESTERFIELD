@@ -45,7 +45,7 @@ try {
 		editAppSpecific(fieldName, AInfo[fieldName]);
 	}
 	//07-2020 Boucher 40p
-	if (AInfo['Submittal Count'] = null) {
+	if (AInfo['Submittal Count'] == null) {
 		editAppSpecific('Submittal Count',1);
 	}
 } catch (err) {

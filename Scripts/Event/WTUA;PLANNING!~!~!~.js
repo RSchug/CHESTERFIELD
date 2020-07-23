@@ -21,13 +21,13 @@ try {
 
 		if (appMatch('*/SitePlan/Major/*')) {
 			if (AInfo['Special Consideration'] == 'Expedited') {
-				editTaskDueDate('*',dateAdd(null,14));
+				editTaskDueDate(isTaskActive(),dateAdd(null,14));
 			}
 			else if (AInfo['Special Consideration'] == 'Fast Track') {
-				editTaskDueDate('*',dateAdd(null,7));
+				editTaskDueDate(isTaskActive(),dateAdd(null,7));
 			}
 			else if (AInfo['Special Consideration'] == 'Regular') {
-				editTaskDueDate('*',dateAdd(null,21));
+				editTaskDueDate(isTaskActive(),dateAdd(null,21));
 			}
 		}
 	}
@@ -37,7 +37,7 @@ try {
 		loadTaskSpecific(tsi);
 		
 		if (tsi["CPC Due Date"] != null) {
-			editTaskDueDate('*',tsi["CPC Due Date"]);
+			editTaskDueDate(isTaskActive(),tsi["CPC Due Date"]);
 		}
 	}
 	//07-2020 Boucher 40p
