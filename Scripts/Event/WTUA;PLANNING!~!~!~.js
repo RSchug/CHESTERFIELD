@@ -45,7 +45,7 @@ try {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
 		if (subNum > 3) {
-			addFee('CC-PLANNING','SITEPLAN2','FINAL',1,'Y');
+			addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
 		}
 	}
 	
