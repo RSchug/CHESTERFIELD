@@ -52,6 +52,15 @@ try {
 				cancel = true;
 		}
 	}
+// 07-2020 Boucher 41p and 42p check that Custom data is filled in before moving to next step
+	if (matches(wfTask, 'CPC Meeting','CPC Hearing') && matches(wfStatus, 'Recommend Approval','Recommend Denial','CPC Approved','CPC Approved with Admin Review','CPC Denied')) {
+		if (AInfo['Approved time limit'] == null || AInfo['Conditions'] == null || AInfo['Number of Town House Units Approved'] == null || AInfo['Non-Residential Gross Building Square Feet'] == null
+		|| AInfo['Expiration Date'] == null || AInfo['Number of Single Family Units Approved'] == null || AInfo['Number of Multi Family Units Approved'] == null) {
+			showMessage = true;
+			comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
+			cancel = true;
+		}
+	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
