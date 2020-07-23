@@ -53,7 +53,7 @@ try {
 		}
 	}
 // 07-2020 Boucher 41p and 42p check that Custom data is filled in before moving to next step
-	if (appMatch('*/*/Major/*') {
+	if (appMatch('*/*/Major/*')) {
 		if (matches(wfTask, 'CPC Meeting','CPC Hearing','BOS Hearing') && matches(wfStatus, 'Recommend Approval','Recommend Denial','CPC Approved','CPC Approved with Admin Review','CPC Denied','Approved','Denied')) {
 			if (AInfo['Approved time limit'] == null || AInfo['Conditions'] == null || AInfo['Number of Town House Units Approved'] == null || AInfo['Non-Residential Gross Building Square Feet'] == null
 			|| AInfo['Expiration Date'] == null || AInfo['Number of Single Family Units Approved'] == null || AInfo['Number of Multi Family Units Approved'] == null) {
