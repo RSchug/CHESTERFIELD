@@ -31,7 +31,7 @@ try {
 			}
 		}
 	}
-	//07-2020 Boucher 21p
+//07-2020 Boucher 21p
 	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Transfer to CPC')) {
 		var tsi = []
 		loadTaskSpecific(tsi);
@@ -40,7 +40,7 @@ try {
 			editTaskDueDate(isTaskActive(),tsi["CPC Due Date"]);
 		}
 	}
-	//07-2020 Boucher 40p
+//07-2020 Boucher 40p
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
@@ -48,6 +48,11 @@ try {
 			addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'N');
 		}
 	}
+//07-2020 Boucher 24p	
+	if (matches(wfTask,'CPC Meeting','CPC Hearing') & matches(wfStatus,'Deferred by Applicant')) {
+		addFee('DEFERRALPC','CC-PLANNING','FINAL',1,'Y');
+	}
+	
 	
 //Below is all code from previous implementer - Not sure if these work db
 /*
