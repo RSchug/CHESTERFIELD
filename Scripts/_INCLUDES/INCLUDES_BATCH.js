@@ -1,36 +1,32 @@
-function getParam(pParamName) //gets parameter value and logs message showing param value
-	{
+function getParam(pParamName) { //gets parameter value and logs message showing param value
 	var ret = "" + aa.env.getValue(pParamName);
 	logDebug("Parameter : " + pParamName+" = "+ret);
 	return ret;
-	}
+}
 
-function isNull(pTestValue,pNewValue)
-	{
-	if (pTestValue==null || pTestValue=="")
+function isNull(pTestValue, pNewValue) {
+	if (pTestValue == null || pTestValue == "")
 		return pNewValue;
 	else
 		return pTestValue;
-	}
+}
 
 function elapsed() {
-	var thisDate = new Date();
+	var thisDate = new Date(aa.util.now());
 	var thisTime = thisDate.getTime();
 	return ((thisTime - startTime) / 1000)
 }
 
-function logDebug(dstr)
-	{
-	if(showDebug)
-		{
+function logDebug(dstr) {
+	if (showDebug) {
 		aa.print(dstr)
-		emailText+= dstr + "<br>";
-		aa.debug(aa.getServiceProviderCode() + " : " + aa.env.getValue("CurrentUserID"),dstr);
-		aa.eventLog.createEventLog("DEBUG", "Batch Process", batchJobName, aa.date.getCurrentDate(), aa.date.getCurrentDate(),"", dstr,batchJobID);
-		}
+		emailText += dstr + "<br>";
+		// disabled to cut down on event log entries.
+		//aa.debug(aa.getServiceProviderCode() + " : " + aa.env.getValue("CurrentUserID"), dstr);
+		//aa.eventLog.createEventLog("DEBUG", "Batch Process", batchJobName, aa.date.getCurrentDate(), aa.date.getCurrentDate(), "", dstr, batchJobID);
 	}
-	
-	
+}
+
 function getACAUrl(){
 
 	// returns the path to the record on ACA.  Needs to be appended to the site
@@ -51,15 +47,12 @@ function getACAUrl(){
 	}
 
 
-function addParameter(pamaremeters, key, value)
-{
-	if(key != null)
-	{
-		if(value == null)
-		{
+function addParameter(pamaremeters, key, value) {
+	if (key != null) {
+		if (value == null) {
 			value = "";
 		}
-		
+
 		pamaremeters.put(key, value);
 	}
 }
