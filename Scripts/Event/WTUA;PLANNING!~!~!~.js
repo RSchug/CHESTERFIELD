@@ -13,7 +13,7 @@ try {
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //07-2020 Boucher 11p and 82p
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
