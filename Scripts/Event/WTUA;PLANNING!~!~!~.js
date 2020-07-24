@@ -18,24 +18,26 @@ try {
 //07-2020 Boucher 11p and 82p
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
-
-		if (AInfo['Special Consideration'] == 'Expedited') {
-			editTaskDueDate('Public Notices',dateAdd(null,14));
-			editTaskDueDate('Adjacents',dateAdd(null,14));
-			editTaskDueDate('IVR Message',dateAdd(null,14));
-			editTaskDueDate('IVR Message',dateAdd(null,14));
+	//took the isTaskActive function, and made it work for this script 82p
+		var workflowResult = aa.workflow.getTaskItems(capId, null, null, null, null, "Y");
+		if (workflowResult.getSuccess()) {
+			wfObj = workflowResult.getOutput();
+		} else {
+			logMessage("**ERROR: Failed to get workflow object: " + s_capResult.getErrorMessage());
 		}
-		else if (AInfo['Special Consideration'] == 'Fast Track') {
-			editTaskDueDate('Public Notices',dateAdd(null,7));
-			editTaskDueDate('Adjacents',dateAdd(null,7));
-			editTaskDueDate('IVR Message',dateAdd(null,7));
-			editTaskDueDate('IVR Message',dateAdd(null,7));
-		}
-		else if (AInfo['Special Consideration'] == 'Regular') {
-			editTaskDueDate('Public Notices',dateAdd(null,21));
-			editTaskDueDate('Adjacents',dateAdd(null,21));
-			editTaskDueDate('IVR Message',dateAdd(null,21));
-			editTaskDueDate('IVR Message',dateAdd(null,21));
+		for (i in wfObj) {
+			fTask = wfObj[i];
+			if (fTask.getActiveFlag() == 'Y') {
+				if (AInfo['Special Consideration'] == 'Expedited') {
+					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,14));
+				} else if (AInfo['Special Consideration'] == 'Fast Track') {
+					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,7));
+				} else if (AInfo['Special Consideration'] == 'Regular') {
+					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,21));
+				}
+			} else {
+				logMessage("**Task is not active: " + fTask);
+			}
 		}
 	}
 
