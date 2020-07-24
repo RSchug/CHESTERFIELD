@@ -13,24 +13,32 @@ try {
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 	}
 //07-2020 Boucher 11p and 82p
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 
-		if (appMatch('*/SitePlan/Major/*')) {
-			if (AInfo['Special Consideration'] == 'Expedited') {
-				editTaskDueDate(isTaskActive(),dateAdd(null,14));
-			}
-			else if (AInfo['Special Consideration'] == 'Fast Track') {
-				editTaskDueDate(isTaskActive(),dateAdd(null,7));
-			}
-			else if (AInfo['Special Consideration'] == 'Regular') {
-				editTaskDueDate(isTaskActive(),dateAdd(null,21));
-			}
+		if (AInfo['Special Consideration'] == 'Expedited') {
+			editTaskDueDate('Public Notices',dateAdd(null,14));
+			editTaskDueDate('Adjacents',dateAdd(null,14));
+			editTaskDueDate('IVR Message',dateAdd(null,14));
+			editTaskDueDate('IVR Message',dateAdd(null,14));
+		}
+		else if (AInfo['Special Consideration'] == 'Fast Track') {
+			editTaskDueDate('Public Notices',dateAdd(null,7));
+			editTaskDueDate('Adjacents',dateAdd(null,7));
+			editTaskDueDate('IVR Message',dateAdd(null,7));
+			editTaskDueDate('IVR Message',dateAdd(null,7));
+		}
+		else if (AInfo['Special Consideration'] == 'Regular') {
+			editTaskDueDate('Public Notices',dateAdd(null,21));
+			editTaskDueDate('Adjacents',dateAdd(null,21));
+			editTaskDueDate('IVR Message',dateAdd(null,21));
+			editTaskDueDate('IVR Message',dateAdd(null,21));
 		}
 	}
+
 //07-2020 Boucher 21p
 	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Transfer to CPC')) {
 		var tsi = []

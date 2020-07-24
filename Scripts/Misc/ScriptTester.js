@@ -15,16 +15,16 @@
 |     will no longer be considered a "Master" script and will not be supported in future releases.  If
 |     changes are made, please add notes above.
 /------------------------------------------------------------------------------------------------------*/
-var myCapId = "20SN0034";		// Replace with Alt ID of test record
+var myCapId = "20PR0020";		// Replace with Alt ID of test record
 var myUserId = "DBOUCHER";			// Replace with User ID of test user.
 
 // Uncomment the event you would like to test be sure to provide event related variables.
 var eventName = ""
-/* ASA  */ var eventName = "ApplicationSubmitAfter";
+/* ASA  */ //var eventName = "ApplicationSubmitAfter";
 /* CTRCA */ //var eventName = "ConvertToRealCapAfter";
 /* ASIUA */ //var eventName = "ApplicationSpecificInfoUpdateAfter";
 /* ACAA */  //var eventName = "ApplicationConditionAddAfter"; conditionId = null; // if conditionId is null then use all conditions on record.
-/* WTUA */  var eventName = "WorkflowTaskUpdateAfter";  wfTask = "BOS Hearing"; wfStatus = "Approved";  // Requires wfTask, wfStatus rest of info from Workflow if task found.
+/* WTUA */  var eventName = "WorkflowTaskUpdateAfter";  wfTask = "Review Distribution"; wfStatus = "Routed for Review";  // Requires wfTask, wfStatus rest of info from Workflow if task found.
 /* IRSA */  //var eventName = "InspectionResultSubmitAfter" ; inspResult = "Pass"; inspResultComment = "Comment";  inspType = "Check Job Status"
 /* ISA  */  //var eventName = "InspectionScheduleAfter" ; inspType = "Roofing"
 /* PRA  */  //var eventName = "PaymentReceiveAfter";  
@@ -337,47 +337,7 @@ if (runEvent && typeof (doConfigurableScriptActions) == "function" && doScripts)
 /------------------------------------------------------------------------------------------------------*/
 
 // New Custom functions
-function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComment)
-//if parcelNum is null, condition is added to all parcels on CAP
-{
-	if (!parcelNum)	{
-		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
-		if (capParcelResult.getSuccess()) {
-			var Parcels = capParcelResult.getOutput().toArray();
-			for (zz in Parcels) {
-				logDebug("Adding Condition to parcel #" + zz + " = " + Parcels[zz].getParcelNumber());
-				var standardConditions = aa.capCondition.getStandardConditions(cType,cDesc).getOutput();
-				for (i = 0; i < standardConditions.length; i++) {
-					standardCondition = standardConditions[i];
-					//var cStatus = "Active", cStatusType = "Active";
-					var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNumber, standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), "Applied", sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
-					if (addParcelCondResult.getSuccess()) {
-//						logMessage("Successfully added condition to Parcel " + Parcels[zz].getParcelNumber() + "  " + cDesc);
-						logDebug("Successfully added condition to Parcel " + Parcels[zz].getParcelNumber() + "  " + cDesc);
-					}
-					else {
-						logDebug( "**ERROR: adding condition to Parcel " + Parcels[zz].getParcelNumber() + ": " + addParcelCondResult.getErrorMessage());
-					}
-				}
-			}
-		}
-	} else {
-		logDebug("Adding Condition to parcel #" + parcelNum);
-		var standardConditions = aa.capCondition.getStandardConditions(cType,cDesc).getOutput();
-		for (i = 0; i < standardConditions.length; i++) {
-			standardCondition = standardConditions[i];
-			//var cStatus = "Active", cStatusType = "Active";
-			var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNumber, standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), "Applied", sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
-			if (addParcelCondResult.getSuccess()) {
-//				logMessage("Successfully added condition to Parcel " + parcelNum + "  " + cDesc);
-				logDebug("Successfully added condition to Parcel " + parcelNum + "  " + cDesc);
-			}
-			else {
-				logDebug( "**ERROR: adding condition to Parcel " + parcelNum + ": " + addParcelCondResult.getErrorMessage());
-			}
-		}
-	}
-}
+
 
 // Custom Code
 try {
@@ -386,23 +346,26 @@ try {
     var customStartTime = now.getTime();
     logDebug("========== Start Custom Code @: " + now.toDateString() + " " + now.toTimeString().replace(" ", "," + now.getMilliseconds()) + "==========");
 
-	var parcelNum=null;
-	
-	if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved')) {
+	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
+		editTaskDueDate('Sign Posting',dateAdd(null,7));
 
-		var sum = 0;
-		var tempAsit = loadASITable("PROFFER CONDITIONS");
-		if (tempAsit) {
-			for (a in tempAsit) {
-				if (tempAsit[a]["Approved"] == 'CHECKED') {
-					var cType = tempAsit[a]["Department"];
-					var cDesc = tempAsit[a]["Department"]+' - '+tempAsit[a]["Record Type"];
-					var cShortComment = tempAsit[a]["Proffer Condition"];
-					var cLongComment = tempAsit[a]["Long Comment"];
-					addParcelStdCondition_TPS(null,cType,cDesc,cShortComment,cLongComment);
-					//addParcelCondition(null,cType,'Applied',cDesc,cComment,'Notice');
-				}
-			}//for all rows
+		if (AInfo['Special Consideration'] == 'Expedited') {
+			editTaskDueDate('Public Notices',dateAdd(null,14));
+			editTaskDueDate('Adjacents',dateAdd(null,14));
+			editTaskDueDate('IVR Message',dateAdd(null,14));
+			editTaskDueDate('IVR Message',dateAdd(null,14));
+		}
+		else if (AInfo['Special Consideration'] == 'Fast Track') {
+			editTaskDueDate('Public Notices',dateAdd(null,7));
+			editTaskDueDate('Adjacents',dateAdd(null,7));
+			editTaskDueDate('IVR Message',dateAdd(null,7));
+			editTaskDueDate('IVR Message',dateAdd(null,7));
+		}
+		else if (AInfo['Special Consideration'] == 'Regular') {
+			editTaskDueDate('Public Notices',dateAdd(null,21));
+			editTaskDueDate('Adjacents',dateAdd(null,21));
+			editTaskDueDate('IVR Message',dateAdd(null,21));
+			editTaskDueDate('IVR Message',dateAdd(null,21));
 		}
 	}
 
