@@ -8,7 +8,7 @@ if (inspBillable == "Y" && matches(inspResult,"Corrections Required","Approved")
 var inspOvertime = inspObj.getInspection().getActivity().getOvertime();
 logDebug("Inspection Not Ready (Overtime) checkbox = " + inspOvertime + ". And Inspection Result = " + inspResult);
 if (matches(inspResult, "Corrections Required") && inspOvertime == "Y") {
-	addFeeWithExtraData("NOTREADY", "CC-BLD-ADMIN", "FINAL", 1, "Y", capId, inspType);
+	addFeeWithExtraData("NOTREADY","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" ("+Math.round(inspTotalTime)+")");
 }
 //If Inspection Result is "Approved" for Inspection Type "Building Final" close the Inspections Workflow Task.//
 if (appMatch("Building/Permit/Residential/NA") && inspType.equals("Building Final") && inspResult.equals("Approved")){
