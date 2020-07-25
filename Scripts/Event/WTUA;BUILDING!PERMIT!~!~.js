@@ -28,8 +28,14 @@ if (wfTask == "Permit Issuance" && wfStatus == "Issued") {
 		}
 	}
 }
+//Temp CO Dates
 var tempcoexpdate = "Temp CO Expiration Date";
 var tempcoexpdatenew = jsDateToASIDate(getTaskDueDate("Inspections"));
-if (wfStatus == 'Temporary CO Issued'){
-addFee("TEMPCO","CC-BLD-ADMIN","FINAL",1,"Y");
-editAppSpecific(tempcoexpdate,tempcoexpdatenew);}
+if (wfStatus == 'Temporary CO Issued') && (appMatch("Building/Permit/Residential/NA") {
+addFee("TEMPCORES","CC-BLD-ADMIN","FINAL",1,"Y");
+editAppSpecific(tempcoexpdate,tempcoexpdatenew);
+}
+if (wfStatus == 'Temporary CO Issued') && (appMatch("Building/Permit/Commercial/NA") {
+	addFee("TEMPCO","CC-BLD-ADMIN","FINAL",1,"Y");
+	editAppSpecific(tempcoexpdate,tempcoexpdatenew);
+}
