@@ -16,14 +16,14 @@ if (appMatch("Building/Permit/Residential/NA") && inspType.equals("Building Fina
 	activateTask("Certificate of Occupancy");
 	}
 if (appMatch("Building/Permit/Residential/Demolition") && inspType.equals("Building Final") && inspResult.equals("Approved")){
-	closeTask("Inspections","CO Ready to Issue","Updated based on Completed Inspection Result","");
+	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
 	}
 if (appMatch("Building/Permit/Commercial/NA") && inspType.equals("Building Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","CO Ready to Issue","Updated based on Completed Inspection Result","");
 	activateTask("Certificate Issuance");
 	}
 if (appMatch("Building/Permit/Commercial/Demolition") && inspType.equals("Building Final") && inspResult.equals("Approved")){
-	closeTask("Inspections","CO Ready to Issue","Updated based on Completed Inspection Result","");
+	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
 	}
 //If Inspection Result is "Approved" for Inspection Type "Property Conversion Inspection" close the Inspections Workflow Task.//
 if (inspType.equals("Property Conversion Inspection") && inspResult.equals("Approved")){
