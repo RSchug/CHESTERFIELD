@@ -229,3 +229,9 @@ function getContactsListByType(ContactType) {
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
+//20P When AdHoc Task 'Signs Posted' Status is updated to any value and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
+if (wfTask == 'Sign Posting') {
+	showMessage = true;
+	comment('Message needs to be recorded before signs can be posted.');
+}
+//&& (isTaskActive('IVR Message') && (wfStatus != 'Message Recorded')))
