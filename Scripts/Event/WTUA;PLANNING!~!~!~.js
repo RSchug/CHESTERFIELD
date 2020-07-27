@@ -14,8 +14,7 @@ if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Revi
 if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Maps")){
 	addAdHocTask("ADHOC_WORKFLOW","Maps","");
 }
-try {
-//07-2020 Bouquin 4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
+//4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
 		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 	}
@@ -31,6 +30,23 @@ try {
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
+//5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
+	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
+	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("IVR Message")){
+	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Sign Posting")){
+	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
+	addAdHocTask("ADHOC_WORKFLOW","Maps","");
+}
+try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
