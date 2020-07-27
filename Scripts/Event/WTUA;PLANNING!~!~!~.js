@@ -15,34 +15,33 @@ try {
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
-//07-2020 Boucher 11p and 82p
+//07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
-	//took the isTaskActive function, and made it work for this script 82p
-		var workflowResult = aa.workflow.getTaskItems(capId, null, null, null, null, "Y");
-		if (workflowResult.getSuccess()) {
-			wfObj = workflowResult.getOutput();
-		} else {
-			logMessage("**ERROR: Failed to get workflow object: " + s_capResult.getErrorMessage());
-		}
-		for (i in wfObj) {
-			fTask = wfObj[i];
-			if (fTask.getActiveFlag() == 'Y') {
-				if (AInfo['Special Consideration'] == 'Expedited') {
-					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,14));
-				} else if (AInfo['Special Consideration'] == 'Fast Track') {
-					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,7));
-				} else if (AInfo['Special Consideration'] == 'Regular') {
-					editTaskDueDate(fTask.getTaskDescription(),dateAdd(null,21));
+	//still in process script 82p
+		
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Public Notice','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','Schoold Board','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		for (var i in workflowTasks) {
+			if (workflowTasks[i].getCompleteFlag() != "Y") {
+				for (var ind in taskAuditArray) {
+					if (taskAuditArray[ind] == workflowTasks[i].getTaskDescription()) {
+						if (AInfo['Special Consideration'] == 'Expedited') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,14));
+						} else if (AInfo['Special Consideration'] == 'Fast Track') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,7));
+						} else if (AInfo['Special Consideration'] == 'Regular') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+						}
+					else
+						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+					}
 				}
-			} else {
-				logMessage("**Task is not active: " + fTask);
 			}
 		}
 	}
-
 //07-2020 Boucher 21p
-	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Transfer to CPC')) {
+	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Move to CPC')) {
 		var tsi = []
 		loadTaskSpecific(tsi);
 		
