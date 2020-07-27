@@ -46,7 +46,21 @@ try {
 		loadTaskSpecific(tsi);
 		
 		if (tsi["CPC Due Date"] != null) {
-			editTaskDueDate(isTaskActive(),tsi["CPC Due Date"]);
+			if (isTaskActive('Public Notices') {
+				editTaskDueDate('Public Notices',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Adjacents') {
+				editTaskDueDate('Adjacents',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('IVR Message') {
+				editTaskDueDate('IVR Message',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Sign Posting') {
+				editTaskDueDate('Sign Posting',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Maps') {
+				editTaskDueDate('Maps',tsi["CPC Due Date"]);
+			}
 		}
 	}
 //07-2020 Boucher 40p
