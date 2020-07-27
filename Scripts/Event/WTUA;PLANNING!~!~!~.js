@@ -1,9 +1,17 @@
-//1P Activate Adhoc Tasks based on Fee Payment 'Recieved or Waived'
-if (matches(wfTask,'Fee Payment') && matches (wfStatus,'Fees Received','Fees Waived') && (balanceDue <= 0)){
+//1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review'
+if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Public Notices")){
 	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+}
+if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Adjacents")){
 	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+}
+if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("IVR Message")){
 	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+}
+if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Sign Posting")){
 	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+}
+if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Maps")){
 	addAdHocTask("ADHOC_WORKFLOW","Maps","");
 }
 try {
