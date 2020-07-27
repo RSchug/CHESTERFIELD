@@ -15,12 +15,20 @@ if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Revi
 	addAdHocTask("ADHOC_WORKFLOW","Maps","");
 }
 try {
-//07-2020 Bouquin 4p
-	if ((matches(wfTask,"CPC Hearing","BOS Staff Report")) && (matches(wfStatus,"BOS Notification","BOS Staff Report Complete"))){
+//07-2020 Bouquin 4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
 		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
 		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Sign Posting")){
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //07-2020 Boucher 11p	
