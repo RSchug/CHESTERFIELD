@@ -56,7 +56,7 @@ if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferr
 if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("IVR Message")){
 	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 }
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant'TaskActive("Sign Posting")){
+if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Sign Posting")){
 	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 }
 if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
