@@ -46,19 +46,19 @@ try {
 		loadTaskSpecific(tsi);
 		
 		if (tsi["CPC Due Date"] != null) {
-			if (isTaskActive('Public Notices') {
+			if (isTaskActive('Public Notices')) {
 				editTaskDueDate('Public Notices',tsi["CPC Due Date"]);
 			}
-			if (isTaskActive('Adjacents') {
+			if (isTaskActive('Adjacents')) {
 				editTaskDueDate('Adjacents',tsi["CPC Due Date"]);
 			}
-			if (isTaskActive('IVR Message') {
+			if (isTaskActive('IVR Message')) {
 				editTaskDueDate('IVR Message',tsi["CPC Due Date"]);
 			}
-			if (isTaskActive('Sign Posting') {
+			if (isTaskActive('Sign Posting')) {
 				editTaskDueDate('Sign Posting',tsi["CPC Due Date"]);
 			}
-			if (isTaskActive('Maps') {
+			if (isTaskActive('Maps')) {
 				editTaskDueDate('Maps',tsi["CPC Due Date"]);
 			}
 		}

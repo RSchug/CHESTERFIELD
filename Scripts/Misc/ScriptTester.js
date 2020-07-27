@@ -348,24 +348,26 @@ try {
 
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
-
-		if (AInfo['Special Consideration'] == 'Expedited') {
-			editTaskDueDate('Public Notices',dateAdd(null,14));
-			editTaskDueDate('Adjacents',dateAdd(null,14));
-			editTaskDueDate('IVR Message',dateAdd(null,14));
-			editTaskDueDate('IVR Message',dateAdd(null,14));
-		}
-		else if (AInfo['Special Consideration'] == 'Fast Track') {
-			editTaskDueDate('Public Notices',dateAdd(null,7));
-			editTaskDueDate('Adjacents',dateAdd(null,7));
-			editTaskDueDate('IVR Message',dateAdd(null,7));
-			editTaskDueDate('IVR Message',dateAdd(null,7));
-		}
-		else if (AInfo['Special Consideration'] == 'Regular') {
-			editTaskDueDate('Public Notices',dateAdd(null,21));
-			editTaskDueDate('Adjacents',dateAdd(null,21));
-			editTaskDueDate('IVR Message',dateAdd(null,21));
-			editTaskDueDate('IVR Message',dateAdd(null,21));
+	//need to have all wfSteps here in order for this script 82p to work.
+		
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Public Notice','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','Schoold Board','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		for (var i in workflowTasks) {
+			if (workflowTasks[i].getCompleteFlag() != "Y") {
+				for (var ind in taskAuditArray) {
+					if (taskAuditArray[ind] == workflowTasks[i].getTaskDescription()) {
+						if (AInfo['Special Consideration'] == 'Expedited') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,14));
+						} else if (AInfo['Special Consideration'] == 'Fast Track') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,7));
+						} else if (AInfo['Special Consideration'] == 'Regular') {
+						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+						}
+					else
+						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+					}
+				}
+			}
 		}
 	}
 
