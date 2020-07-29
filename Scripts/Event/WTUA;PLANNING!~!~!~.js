@@ -66,24 +66,25 @@ try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
-	//still in process script 82p
-		
+	//07-2020 Boucher script 82p
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Public Notices','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','School Board','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
 		for (var ind in taskAuditArray) {
-			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
-				if (workflowTasks[i].getActiveFlag() == 'Y') {
-					//logDebug('Task from Array =' + taskAuditArray[ind] + ' and the Task from Record =' + workflowTasks[i].getTaskDescription());
-					if (taskAuditArray[ind] == workflowTasks[i].getTaskDescription()) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					//logDebug('Task from Array = ' + wfaTask + ' and the Task from Record = ' + wfbTask.getTaskDescription());
+					if (wfaTask == wfbTask.getTaskDescription()) {
 						if (AInfo['Special Consideration'] == 'Expedited') {
-						editTaskDueDate(taskAuditArray,dateAdd(null,14));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,14));
 						} else if (AInfo['Special Consideration'] == 'Fast Track') {
-						editTaskDueDate(taskAuditArray,dateAdd(null,7));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7));
 						} else if (AInfo['Special Consideration'] == 'Regular') {
-						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21));
 						}
 					else
-						editTaskDueDate(taskAuditArray,dateAdd(null,21));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21));
 					}
 				}
 			}
