@@ -153,6 +153,15 @@ if (matches(inspResult, "Completed")) {
 		} else {
 			scheduleInspection("Pending Closure", 56, InspAssignment, null, "Auto Scheduled");
 		}
+	} else if (matches(inspType, "Pre-Construction Meeting")) {
+		// 3EE: WHEN: Inspection Type = Pre - Construction Meeting and Inspection Status = 'Completed'
+		// THEN: Update Land Disturbance Permit Workflow Task with a Task Status = 'Issued'; Close Land Disturbance Permit Workflow Task; activate Inspections Workflow Task with a Workflow Task Status = 'Undisturbed'; schedule an E and SC and a VSMP inspection for same day
+
+		//If Inspection Type is Pre-Construction Meeting and Inspection Result is Completed, then Close Land Disturbance Permit Task with Issued and Activate Inspections Task with Undisturbed.//
+		closeTask("Land Disturbance Permit", "Issued", "Updated based on Pre-Construction Meeting Inspection Result", ""); activateTask("Inspections");
+		updateTask("Inspections", "Undisturbed", "Updated based on Pre-Construction Meeting Inspection Result", "");
+		scheduleInspection("E and SC", 0, InspAssignment, null, "Auto Scheduled");
+		scheduleInspection("VSMP", 0, InspAssignment, null, "Auto Scheduled");
 	} else {
 		scheduleInspection("Pending Closure", 56, InspAssignment, null, "Auto Scheduled");
 		closeTask("Inspections", "Completed", "Updated based on Completed Inspection Result", "");
@@ -171,11 +180,4 @@ if (inspType.equals("VSMP")) {
 	capId = newCapId; // use child capId
 	scheduleInspection("Follow-up",7,InspAssignment,null,"Auto Scheduled");
 	capId = sCapId; // restore capId.
-} 
-//If Inspection Type is Pre-Construction Meeting and Inspection Result is Compelted, then Close Land Disturbance Permit Task with Issued and Activate Inspections Task with Undisturbed.//
-if(matches(inspResult,"Completed") && inspType.equals("Pre-Construction Meeting")) {
-	closeTask("Land Disturbance Permit","Issued","Updated based on Pre-Construction Meeting Inspection Result",""); activateTask("Inspections");
-	updateTask("Inspections","Undisturbed","Updated based on Pre-Construction Meeting Inspection Result","");
 }
-
-
