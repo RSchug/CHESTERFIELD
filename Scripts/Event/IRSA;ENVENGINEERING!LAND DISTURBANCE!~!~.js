@@ -94,7 +94,7 @@ if (matches(inspResult, "Completed")) {
 	// 22EE, 35EE, 48EE, 61EE, 74EE, 87EE, 100EE, 113EE, 126EE, 139EE: WHEN: Inspection Type = E and SC, Undisturbed, Timbering Only, Perimeter Control Installation, Clearing and Grubbing, Rough Grading, Finished Grading, Final Stabilization, Stabilized, One Year Maintenance and Inspection Status = Completed and the Related EnvEngineering/SRA/NA/NA record has an Application (Record) status = 'Closed' and the Related EnvEngineering/BMP/NA/NA record has an Application (Record) status = 'Approved'
 	// THEN: Close (deactivate) Inspections Workflow Task with a Task Status = 'Completed' and set the Application (Record) status to 'Closed' 
 	// ELSE: Schedule an Inspection Type = Pending Closure and schedule it for 56 calendar days out and assign to the inspector based on the EE Inspector GIS Layer; Update Inspections Workflow Task with a Task Status = 'Pending Closure'
-	if (matches(inspType, "E and SC", "Undisturbed", "Timbering Only", "Perimeter Control Installation", "Clearing and Grubbing", "Rough Grading", "Finished Grading", "Final Stabilization", "Stabilized", "One Year Maintenance")) {
+	if (matches(inspType, "E and SC", "Pending Closure", "Undisturbed", "Timbering Only", "Perimeter Control Installation", "Clearing and Grubbing", "Rough Grading", "Finished Grading", "Final Stabilization", "Stabilized", "One Year Maintenance")) {
 		// Check Sibling EnvEngineering/BMP/NA/NA record has an Application (Record) status = 'Approved'
 		var rCapStatusValidBMP = null; // null: not found, true: found Approved, false: found but none Approved;
 		//	var rCapStatusValidBMPs = [], rCapStatusInvalidBMPs = [];
