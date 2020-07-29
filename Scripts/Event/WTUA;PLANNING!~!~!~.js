@@ -115,7 +115,7 @@ try {
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
-		if (subNum > 3) {
+		if (subNum > 3 && AInfo['Waive Submittal Fee'] != 'CHECKED') {
 			addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'N');
 		}
 	}
