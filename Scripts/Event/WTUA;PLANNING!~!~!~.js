@@ -1,19 +1,19 @@
 //1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review'
-if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Public Notices")){
-	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-}
-if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Adjacents")){
-	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-}
-if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("IVR Message")){
-	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-}
-if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Sign Posting")){
-	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-}
-if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Maps")){
-	addAdHocTask("ADHOC_WORKFLOW","Maps","");
-}
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Public Notices")){
+		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	}
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Adjacents")){
+		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	}
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("IVR Message")){
+		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	}
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Sign Posting")){
+		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	}
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Maps")){
+		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	}
 //4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
 		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
@@ -31,48 +31,49 @@ if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Revi
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
-	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-}
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
-	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-}
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("IVR Message")){
-	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-}
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Sign Posting")){
-	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-}
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
-	addAdHocTask("ADHOC_WORKFLOW","Maps","");
-}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
+		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
+		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("IVR Message")){
+		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Sign Posting")){
+		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	}
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
+		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	}
 //9P When Workflow Task 'BOS Hearing' Status 'Deferred by BOS' or 'Deferred by Applicant' or 'Remanded' is submitted then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
-	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
-	addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("IVR Message")){
-	addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Sign Posting")){
-	addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
-	addAdHocTask("ADHOC_WORKFLOW","Maps","");
-}
+	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
+		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	}
+	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
+		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	}
+	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("IVR Message")){
+		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+	}
+	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Sign Posting")){
+		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+	}
+	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
+		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	}
 try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 	//still in process script 82p
 		
-		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Public Notice','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','Schoold Board','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
-		for (var i in workflowTasks) {
-			if (workflowTasks[i].getCompleteFlag() != "Y") {
-				for (var ind in taskAuditArray) {
+		var taskAuditArray = ['Public Notices','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','School Board','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		for (var ind in taskAuditArray) {
+			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+			for (var i in workflowTasks) {
+				if (workflowTasks[i].getActiveFlag() == 'Y') {
+					//logDebug('Task from Array =' + taskAuditArray[ind] + ' and the Task from Record =' + workflowTasks[i].getTaskDescription());
 					if (taskAuditArray[ind] == workflowTasks[i].getTaskDescription()) {
 						if (AInfo['Special Consideration'] == 'Expedited') {
 						editTaskDueDate(taskAuditArray,dateAdd(null,14));
