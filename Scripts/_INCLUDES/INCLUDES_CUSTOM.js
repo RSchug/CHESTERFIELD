@@ -32,7 +32,6 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
-| 07/19/2020 D Boucher added functions used in the Pageflow ACA before APO
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -3508,12 +3507,12 @@ function createCap_TPS() {
         }
         var appCreateResult = aa.cap.createApp(newAppTypeArray[0], newAppTypeArray[1], newAppTypeArray[2], newAppTypeArray[3], newCapName);
         if (!appCreateResult.getSuccess()) {
-            logDebug("**ERROR: creating CAP " + newAppTypeString + ": " + appCreateResult.getErrorMessage());
+            logDebug("**ERROR: creating " + newAppTypeString + " CAP: " + appCreateResult.getErrorMessage());
             return false;
         }
 
         var newCapId = appCreateResult.getOutput();
-        logDebug("CAP " + newAppTypeString + " created successfully ");
+        logDebug("Successfully created " + newAppTypeString + " CAP " + newCapId.getCustomID() + " (" + newCapId + ")");
         var newCapObj = aa.cap.getCap(newCapId).getOutput();	//Cap object
 
         // create Detail Record
@@ -3523,13 +3522,16 @@ function createCap_TPS() {
         aa.cap.createCapDetail(newCapDetailModel);
 
         if (newCapIdString) {   // Update Record ID
-            aa.cap.updateCapAltID(newCapId, newCapIdString);
+            var s_capResult = aa.cap.updateCapAltID(newCapId, newCapIdString);
+            if (!s_capResult.getSuccess() || !s_capResult.getOutput())
+                logDebug("ERROR: updating Cap ID " + newCapId.getCustomID() + " to " + newCapIdString + ": " + s_capResult.getErrorMessage());
             // get newCapId object with updated capId.
-            var s_capResult = aa.cap.getCapID(newCapId);
-            if (s_capResult.getSuccess() && s_capResult.getOutput())
-                newCapId = s_capResult.getOutput();
+            var s_capResult = aa.cap.getCapID(newCapId.getID1(), newCapId.getID2(), newCapId.getID3());
+            if (!s_capResult.getSuccess() || !s_capResult.getOutput())
+                logDebug("ERROR: getting Cap ID " + newCapIdString + " " + newCapId + ": " + s_capResult.getErrorMessage());
             else
-                logDebug("ERROR: updating Cap ID " + newCapId.getCustomID() + " to " + newCapIdString);
+                newCapId = s_capResult.getOutput();
+            newCapIdString = newCapId.getCustomID();
         } else {
             newCapIdString = newCapId.getCustomID();
         }
@@ -4275,6 +4277,42 @@ function feeAssess() {
 	return sucess;
 }
 
+//Function to look for open duplicate permits that are less than 6 months old at the same address.
+function findDuplicateOpenPermitsAtAddress(pCapArray, pPermitType) {
+	try {
+		var openPermitList = [];
+		for (var i in pCapArray) {
+			var splitArray = String(pCapArray[i]).split('-');
+			var capId = aa.cap.getCapID(splitArray[0], splitArray[1], splitArray[2]).getOutput();
+			var relcap = aa.cap.getCap(capId).getOutput();
+			var dDateObj = relcap.getFileDate();
+			var reltype = relcap.getCapType().toString();
+			if (pPermitType == reltype) {
+				var today = new Date();
+				var permitDate = new Date(String(dDateObj.getYear()), String(dDateObj.getMonth()) - 1, String(dDateObj.getDayOfMonth()));
+				var dateDiff = (today - permitDate) / (1000 * 60 * 60 * 24);
+				if (dateDiff < 183) { //6 months
+					//if(dateDiff < 1) {  //1 day test
+					relStatus = aa.cap.getStatusHistoryByCap(relcap.getCapID(), "APPLICATION", null);
+					var statusHistoryList = relStatus.getOutput();
+					if (statusHistoryList.length > -1) {
+						var statusHistory = statusHistoryList[0];
+						if (statusHistory.getStatus().indexOf("Close") == -1 && statusHistory.getStatus().indexOf("Withdrawn") == -1 && statusHistory.getStatus().indexOf("Abandon") == -1 && statusHistory.getStatus().indexOf("Cancelled") == -1) {
+							openPermitList.push(statusHistory);
+							//if (openPermitList.length > 0) {  //This code in in the ASA:
+								//return ("WARNING: There is a permit for " + pPermitType + " that has been opened within the last 6 months.");
+								//return (openPermitList.length); }
+						}
+					}
+				}
+			}
+		}
+		return openPermitList.length;
+	} catch (err) {
+		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+		return -1;
+	}
+}
 function generateSignPostingNumber(fieldName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
     //var ASIValue = getNextSequence(fieldName);
@@ -4519,37 +4557,7 @@ function compareInspResultDateDesc(a, b) {
     }
     return (a.getInspection().getActivity().getCompletionDate().getTime() < b.getInspection().getActivity().getCompletionDate().getTime());
 } 
-//Function to look for open duplicate permits that are less than 6 months old at the same address.
-function findDuplicateOpenPermitsAtAddress(pCapArray, pPermitType) {
-		var openPermitList = [];
-		for (var i in pCapArray) {
-			var splitArray = String(pCapArray[i]).split('-');
-			var capId = aa.cap.getCapID(splitArray[0], splitArray[1], splitArray[2]).getOutput();
-			var relcap = aa.cap.getCap(capId).getOutput();
-			var dDateObj = relcap.getFileDate();
-			var reltype = relcap.getCapType().toString();
-			if (pPermitType == reltype) {
-				var today = new Date();
-				var permitDate = new Date(String(dDateObj.getYear()), String(dDateObj.getMonth()) - 1, String(dDateObj.getDayOfMonth()));
-				var dateDiff = (today - permitDate) / (1000 * 60 * 60 * 24);
-				if (dateDiff < 183) { //6 months
-					//if(dateDiff < 1) {  //1 day test
-					relStatus = aa.cap.getStatusHistoryByCap(relcap.getCapID(), "APPLICATION", null);
-					var statusHistoryList = relStatus.getOutput();
-					if (statusHistoryList.length > -1) {
-						var statusHistory = statusHistoryList[0];
-						if (statusHistory.getStatus().indexOf("Close") == -1 && statusHistory.getStatus().indexOf("Withdrawn") == -1 && statusHistory.getStatus().indexOf("Abandon") == -1 && statusHistory.getStatus().indexOf("Cancelled") == -1) {
-							openPermitList.push(statusHistory);
-							//if (openPermitList.length > 0) {  //This code in in the ASA:
-								//return ("WARNING: There is a permit for " + pPermitType + " that has been opened within the last 6 months.");
-								//return (openPermitList.length);  }
-						}
-					}
-				}
-			}
-		}
-	return openPermitList.length;
-}
+
 function getInspectionComment(itemCap, inspectionId) {
 	           var comment = "No Comment";
                var inspResult = aa.inspection.getInspection(itemCap, inspectionId);
@@ -4751,6 +4759,48 @@ function getParentCapIDForReview(capid) {
 	}
 }
 
+
+function getParents_TPS(pAppType) {
+	// returns the capId array of all parent caps
+	//Dependency: appMatch function
+	//
+    var itemCap =(arguments.length > 1 && arguments[1]? arguments[1]:capId);
+
+	var i = 1;
+	while (true) {
+		if (!(aa.cap.getProjectParents(itemCap, i).getSuccess()))
+			break;
+
+		i += 1;
+	}
+	i -= 1;
+
+	getCapResult = aa.cap.getProjectParents(itemCap, i);
+	myArray = new Array();
+
+	if (getCapResult.getSuccess()) {
+		parentArray = getCapResult.getOutput();
+
+		if (parentArray.length) {
+			for (x in parentArray) {
+				if (pAppType != null) {
+					//If parent type matches apType pattern passed in, add to return array
+					if (appMatch(pAppType, parentArray[x].getCapID()))
+						myArray.push(parentArray[x].getCapID());
+				} else
+					myArray.push(parentArray[x].getCapID());
+			}
+
+			return myArray;
+		} else {
+			logDebug("**WARNING: GetParent found no project parent for this application");
+			return null;
+		}
+	} else {
+		logDebug("**WARNING: getting project parents:  " + getCapResult.getErrorMessage());
+		return null;
+	}
+} 
 
 function getRefFee(fsched, fcode) {
 	fdesc = (arguments.length > 2 && arguments[2]? arguments[2]:null);
@@ -5008,7 +5058,7 @@ function loadCustomScript(scriptName) {
         logDebug("<font color='red'><b>WARNING: Could not load script </b></font>" + scriptName + ". Verify the script in <font color='blue'>Classic Admin>Admin Tools>Events>Scripts</font>");
     }
 }
-//07-2020 Boucher added for Pageflow scripts
+
 function loadXAPOParcelAttributesTPS(thisArr) {
 	try {
 		// Modified version of the loadParcelAttributesTPS()
@@ -5383,6 +5433,83 @@ function taskHasStatus(capID,wfTask,wfStatus){
 		logDebug("Method name: taskHasStatus. Message: Error-" + err.message + ". CapID:" + capID);
 		return false;
 	}
+}
+
+function updateChildAltID(pcapId, ccapId, suffix) {
+    /*---------------------------------------------------------------------------------------------------------/
+    | Function Intent: 
+    | This function is designed to update the AltId (b1permit.b1_alt_id) of an child record (ccapId).
+    | The new AltId will be created using the AltId of its parent record (pcapId) plus the suffix variable
+    | provided. Finally the end of the new id will be the number of child records of that record type.
+    |
+    | Example:
+    | Parent AltId: 499-12-67872
+    | Child AltId: 499-12-67872-ELEC-01
+    |   499-12-67872-ELEC-02
+    |   499-12-67872-ELEC-03
+    |
+    | Returns:
+    | Outcome  Description   Return Type
+    | Success: New AltID of Childrecord AltID String
+    | Failure: Error    null null
+    |
+    | Call Example:
+    | updateChildAltID(pcapId, ccapId, "-ELEC-"); 
+    |
+    | 05/15/2012 - Ewylam
+    | Version 1 Created
+    |
+    | Required paramaters in order:
+    | pcapId - capId model of the parent record
+    | ccapId - capId model of the child record
+    | suffix - string that will be appended to the end of the parent AltId (ie. "-ELEC-")
+    |
+    /----------------------------------------------------------------------------------------------------------*/
+    var p_AltId = pcapId.getCustomID();
+    //For Omega record masks we need to remove the existing suffix from the parent AltId
+    //p_AltId = p_AltId.substring(0,13);
+    var c_AltId = ccapId.getCustomID();
+    var c_cap = aa.cap.getCap(ccapId).getOutput();
+    var c_appTypeResult = c_cap.getCapType();
+    var c_appTypeString = c_appTypeResult.toString();
+    var c_appTypeArray = c_appTypeString.split("/");
+    var childAppTypeString = (arguments.length > 3 && arguments[3] ? arguments[3] : c_appTypeArray[0] + "/*/" + c_appTypeArray[2] + "/*")
+
+    //Get the number of child records by type provided
+    var totChildren = getChildren(childAppTypeString, pcapId);
+    if (totChildren === null || totChildren.length === 0) { logDebug("**ERROR: getChildren function found no children"); return null; }
+    //Set the numeric suffic of the new AltId number to the actual number of child records that exists for the type.
+    var totalFound = totChildren.length;
+    var i = 0;
+
+    //When using the clone feature multiple records can be created at the same time. When this happens the AltIds of the
+    //children records are not set. To correctly set the AltIds we need to start with the last number and work backwards.
+    //This ensures all the new child records recieves a unique AltId.
+    for (i = 0; i <= totChildren.length; i++) {
+        //Add leading 0 if single digit
+        if (totalFound < 10) { totalFound = '0' + totalFound; }
+
+        var newAltId = p_AltId + suffix + totalFound + "";
+        var updateResult = aa.cap.updateCapAltID(ccapId, newAltId);
+        if (updateResult.getSuccess()) {
+            logDebug("Updated child record AltId to " + newAltId + ".");
+            break;
+        } else {
+            if (i == totalFound) {
+                logDebug("** ERROR: Failed to update the AltID for " + c_AltId + ". " + updateResult.getErrorType() + " : " + updateResult.getErrorMessage());
+                return null;
+            }
+            //Might be duplicate because of multiple clones, try the next lower number
+            totalFound = totChildren.length - (1 + i);
+            //Check for negitive. 
+            if (totalFound < 0) {
+                logDebug("**ERROR: Number used for AltID would be less than 0. Failed to update the AltID for " + c_AltId + ". ");
+                return null;
+            }
+            logDebug("** Attempting the next number: " + totalFound + ".");
+        }
+    }
+    return newAltId;
 }
 
 //S17 - In ACA or in AA the parent parent id could be added as ASI field so that the record can be related to its parent.

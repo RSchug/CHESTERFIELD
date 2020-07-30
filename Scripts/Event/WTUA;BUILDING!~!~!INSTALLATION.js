@@ -113,12 +113,12 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
             && AInfo["Commercial or Residential"] == "Commercial") {
             // Update Elevator Table on Structure
             // Get Commercial: Parent of Elevator Installation
-            var tableName = "Elevators";
+            var tableName = "CC-BLD-ELEVATOR";
             var tableElevators = loadASITable(tableName);
-            if (tableElevators) {
+            if (typeof (tableElevators) != "object") tableElevators = null;
+            if (tableElevators && tableElevators.length > 0) {  
                   var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
                   var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
-                  logDebug("capIdCommercial: " + capIdCommercial + br + describe_TPS(capIdCommercial));
                   logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
                   // Get Structure: Parent of Commercial.
                   var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
