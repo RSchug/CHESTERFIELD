@@ -45,6 +45,26 @@ if (wfStatus == 'Renewed') {
 			}
 		}
 
+		var tableName = "CC-BLD-ELEVATOR";
+		var tableElevators = loadASITable(tableName);
+		if (typeof (tableElevators) != "object") tableElevators = null;
+		if (tableElevators && tableElevators.length > 0) {
+			var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
+			var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
+			logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
+			// Get Structure: Parent of Commercial.
+			var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
+			var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
+			logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
+			if (capIdStructure) {
+				updateASITable_TPS(tableName, ["Name/ID#"], capIdStructure, capId);
+				// removeASITable(tableName, capIdStructure);
+				// addASITable(tableName, tableElevators, capIdStructure);
+			}
+		} else {
+			comment("Elevators missing")
+		}
+
         logDebug('Running WTUA4Renewal');
 		aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
 		logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
