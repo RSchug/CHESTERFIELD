@@ -7,7 +7,9 @@ var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
 if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
     addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
 }
-//    addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
+if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
+    addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
+}
 //Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
 //if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){
 //    addFee("SITEPLAN2","CC-PLANNING","FINAL",1,"N")}
