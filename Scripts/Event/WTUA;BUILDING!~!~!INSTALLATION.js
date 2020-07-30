@@ -125,8 +125,9 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
                   var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
                   logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
                   if (capIdStructure) {
-                        removeASITable(tableName, capIdStructure);
-                        addASITable(tableName, tableElevators, capIdStructure);
+                        updateASITable_TPS(tableName, ["Name/ID#"], capIdStructure, capId);
+                        // removeASITable(tableName, capIdStructure);
+                        // addASITable(tableName, tableElevators, capIdStructure);
                   }
             } else {
                   comment("Elevators missing")

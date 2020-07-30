@@ -19,7 +19,6 @@ if (tableElevators && tableElevators.length > 0) {
     var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
     logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
     if (capIdStructure && appMatch("Building/Structure/NA/NA", capIdStructure)){
-        removeASITable("Elevators", capIdStructure);
-        addASITable(tableName, tableElevators, capIdStructure);
+        updateASITable(tableName,["Name/ID#"], capIdStructure, capId);
     }
 }
