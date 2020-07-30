@@ -3,7 +3,8 @@ if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review C
     addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
 }
 //Erosion and Sediment Control Review and Enforcement Fees 8.2P
-if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (parseFloat(AInfo["Total Land Disturbance Acreage"]) <=.229){
+var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
+if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229) {
     addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
 }
 //    addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
