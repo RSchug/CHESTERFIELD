@@ -1,8 +1,13 @@
 //Site Plan - Initial Submittal Fee 8.1P
-if (wfTask == 'Application Submittal' && wfStatus == 'Accepted for First Glance Review') {
+if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
     addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
+}
 //Erosion and Sediment Control Review and Enforcement Fees 8.2P
+var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
+if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
     addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
+}
+if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
     addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
 }
 //Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
