@@ -36,6 +36,8 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
             && AInfo["Commercial or Residential"] == "Commercial") {
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
             newCapIdString = null;
+            copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+
             expField = 'Annual Quarter'
             expType = 'Annual'
             if (today.getMonth() < 3) {
@@ -107,6 +109,29 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       }
       // ******************END expiration Date code Options
       updateTask('Annual Status','In Service','','');
+      if (appMatch("Building/Permit/Elevator/Installation")
+            && AInfo["Commercial or Residential"] == "Commercial") {
+            // Update Elevator Table on Structure
+            // Get Commercial: Parent of Elevator Installation
+            var tableName = "Elevators";
+            var tableElevators = loadASITable(tableName);
+            if (tableElevators) {
+                  var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
+                  var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
+                  logDebug("capIdCommercial: " + capIdCommercial + br + describe_TPS(capIdCommercial));
+                  logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
+                  // Get Structure: Parent of Commercial.
+                  var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
+                  var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
+                  logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
+                  if (capIdStructure) {
+                        removeASITable(tableName, capIdStructure);
+                        addASITable(tableName, tableElevators, capIdStructure);
+                  }
+            } else {
+                  comment("Elevators missing")
+            }
+      }
 }
 
 // If setting the License status manually from the workflow
