@@ -14,8 +14,8 @@ function deactivateTasks_TPS() { // optional process name
 		var fTask = wfObj[i];
 		if (wfstr && !fTask.getTaskDescription().toUpperCase().equals(wfstr.toUpperCase())) continue;
 		if (processName && !fTask.getProcessCode().equals(processName)) continue;
+        if (wfstr && taskArrayExcept && exists(fTask.getTaskDescription(), taskArrayExcept)) continue;
 		if (!fTask.getActiveFlag().equals("Y")) continue;
-		if (wfstr && taskArrayExcept && exists(fTask.getTaskDescription(),taskArrayExcept)) continue;
 
 		var stepnumber = fTask.getStepNumber();
 		var processID = fTask.getProcessID();
