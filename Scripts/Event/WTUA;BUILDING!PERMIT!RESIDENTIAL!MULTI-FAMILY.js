@@ -13,6 +13,7 @@ if (wfTask == "Application Submitted" && exists(wfStatus,["Accepted - Plan Revie
         // branchTask("Application Submittal", "Accepted - Plan Review Not Required", "Issued as MultiUnit", "")
         capId = saveCapId;
     }
+    capId = saveCapId;
 }
 // 60B: When Review Consolidation is 'Approved' then create the Residential/NA Building Permit records for each Unit. Copy all information to the Building Permit.  Each Building Permit will be set to Application Submittal - Accepted - No Plan Review Required and at Permit Issuance workflow task. 
 if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
