@@ -22,6 +22,7 @@ function createCap_TPS() {
         var newCapIdString = (arguments.length > 2 && arguments[2] ? arguments[2] : null);
         // For new License typically use capIDString.substr(0, (capIDString.length - 1)) + 'L';
         var newCapRelation = (arguments.length > 3 && arguments[3] && exists(arguments[3], ["Child", "Parent"]) ? arguments[3] : null);
+        var srcCapId = (arguments.length > 4 && arguments[4] ? arguments[4] : capId);
         var copySections = (arguments.length > 5 && arguments[5] ? arguments[5] : null);
         // For new License typically use null, by default education is not copied.
         var initStatus = (arguments.length > 6 && arguments[6] ? arguments[6] : null);
@@ -32,7 +33,6 @@ function createCap_TPS() {
         // For new License use sysDateMMDDYYYY
         if (copySections == null) copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Comments, Detailed Description, Documents, Education, ContEducation, Examination
 
-        var srcCapId = (arguments.length > 4 && arguments[4] ? arguments[4] : capId);
         var srcCapModel = null,
             srcCapName = null,
             srcAppTypeAlias = null,
