@@ -47,7 +47,7 @@ function copyCapInfo(srcCapId,targetCapId) {
             for (var i in srcASI) {
                 var itemName = (useAppSpecificGroupName ? srcASI[i].getCheckboxType() : "") + srcASI[i].getCheckboxDesc();
                 var itemValue = srcASI[i].getChecklistComment();
-                editAppSpecific(itemName, itemValue, newCap);
+                editAppSpecific(itemName, itemValue, targetCapId);
             }
         }
     }
