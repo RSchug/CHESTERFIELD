@@ -9,10 +9,7 @@ try {
 			cancel = true;
 		}
 		//Before Workflow Task 'Permit Issuance' Status is 'Issued' IF Licensed Professional is 'TBD' then Error: Licensed Professional is Required before Permit Issuance//
-		var lpTBD = getLicenseProf(['TBD']);
-		var lps = getLicenseProf();
-		logDebug("Checking Licensed Professional: " + (lpTBD ? "TBD" :(lps && lps.length > 0 ? lps[0].getLicenseType():"None")));
-		if (lpTBD || !lps) {
+		if (getLicenseProf(null, ['TBD'])) {
 			showMessage = true;
 			comment('<font size=small><b>Licensed Professional is required prior to Issuance</b></font>');
 			cancel = true;
