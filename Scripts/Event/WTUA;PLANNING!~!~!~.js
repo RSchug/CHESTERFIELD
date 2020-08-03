@@ -118,7 +118,7 @@ try {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
 	}
-	if ((matches(wfTask,'Review Consolidation') & (matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting'))) && (AInfo['Submittal Count'] >= 3 && AInfo['Waive Submittal Fee'] != 'CHECKED')) {
+	if ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED'))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'N');
 	}
 //07-2020 Boucher 24p	
