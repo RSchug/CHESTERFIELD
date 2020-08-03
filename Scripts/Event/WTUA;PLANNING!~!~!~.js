@@ -117,9 +117,9 @@ try {
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
-		if (subNum > 3 && AInfo['Waive Submittal Fee'] != 'CHECKED') {
-			addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'N');
-		}
+	}
+	if ((matches(wfTask,'Review Consolidation') && (matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting'))) && (subNum > 3 && AInfo['Waive Submittal Fee'] != 'CHECKED')) {
+		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'N');
 	}
 //07-2020 Boucher 24p	
 	if (matches(wfTask,'CPC Meeting','CPC Hearing') & matches(wfStatus,'Deferred by Applicant')) {
