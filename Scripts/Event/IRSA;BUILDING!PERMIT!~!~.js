@@ -10,7 +10,7 @@ if (exists(inspResult,["Approved","Corrections Required"]) && inspType.indexOf("
 		editAppSpecific(expField, expDateNew, parentCapId);
 		var childRecs = getChildren("Building/Permit/*/*", parentCapId);
 	} else {
-		logDebug("Could not update " + expField + " on parent for " + capId.getCustomID());
+		logDebug("Could not update " + expField + ". No parent for " + capId.getCustomID());
 	}
 	for (var c in childRecs) {
 		var childCapId = childRecs[c];
