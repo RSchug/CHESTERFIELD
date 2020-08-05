@@ -1,5 +1,5 @@
 //Fees
-var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
+var TotalLDAcreage = parseFloat(AInfo['Disturbed Acreage']);
 if ((appMatch('EnvEngineering/Plan Review/Linear Project/NA') || appMatch('EnvEngineering/Plan Review/ESC Plan/NA')) && (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') && (TotalLDAcreage <=.229)) {
     addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
     }
