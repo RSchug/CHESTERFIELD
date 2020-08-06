@@ -6,7 +6,6 @@ if (workflowResult.getSuccess())
 else
      {
      logMessage("**ERROR","CAP # "+capId.getCustomID()+" Failed to get workflow object: " + workflowResult.getErrorMessage());
-     return false;
      }
 var fTask;
 var stepnumber;
