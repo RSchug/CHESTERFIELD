@@ -1,14 +1,19 @@
 // WTUA:Building/Permit/Residential/Multi-Family
 // 59B: When Application Submitted is 'Accepted - Plan Review Required' or 'Accepted - Plan Review Not Required' then create Unit Records under the Structure - which is associated by the count of Number of Units. And each Unit should have Address that are listed on the Multi-Family.
-if (wfTask == "Application Submitted" && exists(wfStatus,["Accepted - Plan Review Required","Accepted - Plan Review Not Required"]) && parentCapId){
+var units = parseInt(AInfo["Number of Units"]);
+if (isNaN(units)) units = 0;
+logDebug("Creating Units: " + units);
+logDebug("wfTask: " + wfTask + ", wfStatus: " + wfStatus + ", parentCapId: " + parentCapId);
+if (wfTask == "Application Submittal" && exists(wfStatus, ["Accepted - Plan Review Required", "Accepted - Plan Review Not Required"]) && parentCapId) {
     var units = parseInt(AInfo["Number of Units"]);
     if (isNaN(units)) units = 0;
+    logDebug("Creating Units: " + units);
     var saveCapId = capId;
     for (var uu = 0; uu < units; uu++) {
-        copySections = ["Addresses", "ASI", "ASIT", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Comments, Contacts, LPs, Detailed Description, Documents, Education, ContEducation, Examination
-        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " Unit " + uu, null, "Child", parentCapId, copySections);
+        copySections = ["Addresses", "ASI", "ASIT", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Comments, LPs, Detailed Description, Documents, Education, ContEducation, Examination
+        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " Unit " + uu, null, "Child", capId, copySections);
         comment("New child Building Unit[" + uu + "]: " + (newCapId ? newCapId.getCustomID() : newCapId)
-        + " for "+(parentCapId? parentCapId.getCustomID():parentCapId) );
+            + " for " + (capId ? capId.getCustomID() : capId));
         // capId = newChildID;
         // branchTask("Application Submittal", "Accepted - Plan Review Not Required", "Issued as MultiUnit", "")
         capId = saveCapId;
@@ -25,11 +30,13 @@ if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
     if (childArray == null || childArray == false) childArray = [];
     for (var uu in childArray) {
         capId = childArray[uu];
-        comment("Updating child Building Unit[" + uu + "]: " + (capId ? capId.getCustomID() : capId)
-            + " for " + (parentCapId ? parentCapId.getCustomID() : parentCapId));
+        copySections = ["Addresses", "ASI", "ASIT", "Cap Detail", "Cap Short Notes", "Detailed Description", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Comments, LPs, Documents, Education, ContEducation, Examination
+        var newCapId = createCap_TPS("Building/Permit/Residential/NA/NA", capName + " Unit " + uu, null, "Child", capId, copySections);
+        comment("New child Residential Building: " + (newCapId ? newCapId.getCustomID() : newCapId)
+            + " for Unit[" + uu + "]: " + (capId ? capId.getCustomID() : capId));
+        capId = newChildID;
         resultWorkflowTask("Application Submittal", "Accepted - Plan Review Not Required", "Approved as Mult-Family", "")
         capId = saveCapId;
     }
     capId = saveCapId;
 }
-
