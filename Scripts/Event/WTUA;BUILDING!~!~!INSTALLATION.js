@@ -27,6 +27,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       var expMonths = 12;
       var expDateField = "Permit Expiration Date";
       var expDate = null;
+      var capIdStructure = null;
       if (appMatch("Building/Permit/AmusementDevice/Installation")) {
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
             newCapIdString = null;
@@ -109,26 +110,46 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       }
       // ******************END expiration Date code Options
       updateTask('Annual Status','In Service','','');
-      if (appMatch("Building/Permit/Elevator/Installation")
+      if (newCapId && appMatch("Building/Permit/Elevator/Installation")
             && AInfo["Commercial or Residential"] == "Commercial") {
             // Update Elevator Table on Structure
             // Get Commercial: Parent of Elevator Installation
             var tableName = "CC-BLD-ELEVATOR";
             var tableElevators = loadASITable(tableName);
             if (typeof (tableElevators) != "object") tableElevators = null;
-            if (tableElevators && tableElevators.length > 0) {  
-                  var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
+            if (tableElevators && tableElevators.length > 0) {
+                  // Check for Commercial as parent of current
+                  var capIdsCommercial = (parentCapId && appMatch("Building/Permit/Commercial/NA", parentCapId) ? [parentCapId] : getParents_TPS("Building/Permit/Commercial/NA"));
                   var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
                   logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
-                  // Get Structure: Parent of Commercial.
-                  var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
+                  // Check for Structure as parent of current
+                  var capIdsStructure = (parentCapId && appMatch("Building/Structure/NA/NA", parentCapId) ? [parentCapId] : getParents_TPS("Building/Structure/NA/NA"));
                   var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
+                  if (!capIdStructure) {
+                        // Check for Structure as parent of Commercial
+                        var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA", capIdCommercial) : null);
+                        var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
+                  }
                   logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
                   if (capIdStructure) {
                         updateASITable_TPS(tableName, ["Name/ID#"], capIdStructure, capId);
                         // removeASITable(tableName, capIdStructure);
                         // addASITable(tableName, tableElevators, capIdStructure);
+                        // Make Structure parent of Master
+                        var linkResult = aa.cap.createAppHierarchy(capIdStructure, newCapId);
+                        if (linkResult.getSuccess()) 
+                              logDebug("Successfully linked to Parent Application : " + capIdStructure.getCustomID() + " of  " + newCapId.getCustomID());
+                        else
+                              logDebug("**ERROR: linking to Parent Application  : " + capIdStructure.getCustomID() + " of  " + newCapId.getCustomID() + ": " + linkResult.getErrorMessage());
+                        if (newCapId && capIdCommercial) { // Remove Install from Commercial if Master exists.
+                              var linkResult = aa.cap.removeAppHierarchy(capIdCommercial, capId);
+                              if (linkResult.getSuccess())
+                                    logDebug("Successfully removed linked to Parent Application : " + capIdCommercial.getCustomID());
+                              else
+                                    logDebug("**ERROR: removing linking to Parent Application  (" + capIdCommercial.getCustomID() + "): " + linkResult.getErrorMessage());
+                        }
                   }
+
             } else {
                   comment("Elevators missing")
             }
