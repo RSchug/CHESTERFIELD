@@ -5,7 +5,7 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
     var itemCap = arguments.length > 3 && arguments[3] ? arguments[3] : capId;
 
     var useProcess = processName != "" ? true : false;
-    var wfStatArray = wfstat && typeof (wfstat) == "string" ? [wfstat] : wfStat; // Convert to array
+    var wfStatArray = wfstat && typeof (wfstat) == "string" ? [wfstat] : wfstat; // Convert to array
     if (typeof (itemCap) == "string") {
         var result = aa.cap.getCapID(itemCap);
         if (result.getSuccess()) {
