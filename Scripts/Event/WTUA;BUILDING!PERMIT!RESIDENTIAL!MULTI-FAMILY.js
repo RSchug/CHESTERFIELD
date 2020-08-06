@@ -9,7 +9,7 @@ if (wfTask == "Application Submittal" && exists(wfStatus, ["Accepted - Plan Revi
     if (isNaN(units)) units = 0;
     logDebug("Creating Units: " + units);
     var saveCapId = capId;
-    for (var uu = 0; uu < units; uu++) {
+    for (var uu = 1; uu <= units; uu++) {
         copySections = ["Addresses", "ASI", "ASIT", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Comments, LPs, Detailed Description, Documents, Education, ContEducation, Examination
         var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " Unit " + uu, null, "Child", capId, copySections);
         comment("New child Building Unit[" + uu + "]: " + (newCapId ? newCapId.getCustomID() : newCapId)
