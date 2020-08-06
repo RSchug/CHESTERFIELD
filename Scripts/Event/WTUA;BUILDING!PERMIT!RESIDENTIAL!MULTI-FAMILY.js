@@ -14,7 +14,7 @@ if (wfTask == "Application Submittal" && exists(wfStatus, ["Accepted - Plan Revi
         var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " # " + uu, null, "Child", capId, copySections);
         comment("New child Building Unit[" + uu + "]: " + (newCapId ? newCapId.getCustomID() : newCapId)
             + " for " + (capId ? capId.getCustomID() : capId));
-        // capId = newChildID;
+        // capId = newCapId;
         // branchTask("Application Submittal", "Accepted - Plan Review Not Required", "Issued as MultiUnit", "")
         capId = saveCapId;
     }
@@ -36,7 +36,7 @@ if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
         var newCapId = createCap_TPS("Building/Permit/Residential/NA", newCapName, null, "Child", capId, copySections);
         comment("New child Residential Building: " + (newCapId ? newCapId.getCustomID() : newCapId)
             + " for Unit[" + uu + "]: " + (capId ? capId.getCustomID() : capId) + " " + newCapName);
-        capId = newChildID;
+        capId = newCapId;
         resultWorkflowTask("Application Submittal", "Accepted - Plan Review Not Required", "Approved as Mult-Family", "")
         capId = saveCapId;
     }
