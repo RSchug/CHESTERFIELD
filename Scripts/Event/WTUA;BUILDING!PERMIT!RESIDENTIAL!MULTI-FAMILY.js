@@ -11,7 +11,7 @@ if (wfTask == "Application Submittal" && exists(wfStatus, ["Accepted - Plan Revi
     var saveCapId = capId;
     for (var uu = 1; uu <= units; uu++) {
         copySections = ["Addresses", "ASI", "ASIT", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Comments, LPs, Detailed Description, Documents, Education, ContEducation, Examination
-        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " Unit " + uu, null, "Child", capId, copySections);
+        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " # " + uu, null, "Child", capId, copySections);
         comment("New child Building Unit[" + uu + "]: " + (newCapId ? newCapId.getCustomID() : newCapId)
             + " for " + (capId ? capId.getCustomID() : capId));
         // capId = newChildID;
@@ -31,9 +31,11 @@ if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
     for (var uu in childArray) {
         capId = childArray[uu];
         copySections = ["Addresses", "ASI", "ASIT", "Cap Detail", "Cap Short Notes", "Detailed Description", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Comments, LPs, Documents, Education, ContEducation, Examination
-        var newCapId = createCap_TPS("Building/Permit/Residential/NA/NA", capName + " Unit " + uu, null, "Child", capId, copySections);
+        cap = aa.cap.getCap(capId).getOutput();
+        newCapName = cap.getSpecialText();
+        var newCapId = createCap_TPS("Building/Permit/Residential/NA", newCapName, null, "Child", capId, copySections);
         comment("New child Residential Building: " + (newCapId ? newCapId.getCustomID() : newCapId)
-            + " for Unit[" + uu + "]: " + (capId ? capId.getCustomID() : capId));
+            + " for Unit[" + uu + "]: " + (capId ? capId.getCustomID() : capId) + " " + newCapName);
         capId = newChildID;
         resultWorkflowTask("Application Submittal", "Accepted - Plan Review Not Required", "Approved as Mult-Family", "")
         capId = saveCapId;
