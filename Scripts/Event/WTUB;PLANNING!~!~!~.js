@@ -74,6 +74,6 @@ if (wfTask == 'Sign Posting') {
 //86P
 if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (appStatus != 'Final Approval')){
 	showMessage = true;
-	comment('Sign Posting can not be removed');
+	comment('<font size=small><b>Sign Posting can not be removed');
 	cancel = true;
 }
