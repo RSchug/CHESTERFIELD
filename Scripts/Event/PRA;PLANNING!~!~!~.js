@@ -1,5 +1,5 @@
 //3P. Fee Balance = 0 THEN: closeTask = 'Fee Payment' and activate ad hocs (per the record types)
-if balanceDue = 0 {
+if (balanceDue = 0) {
     var workflowResult = aa.workflow.getTasks(capId);
 if (workflowResult.getSuccess())
     var wfObj = workflowResult.getOutput();
