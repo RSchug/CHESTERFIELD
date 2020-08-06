@@ -26,7 +26,7 @@ if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
     var units = parseInt(AInfo["Number of Units"]);
     if (isNaN(units)) units = 0;
     var saveCapId = capId;
-    var childArray = getChildren("Building/Unit/NA/NA", parentCapId);
+    var childArray = getChildren("Building/Unit/NA/NA", capId);
     if (childArray == null || childArray == false) childArray = [];
     for (var uu in childArray) {
         capId = childArray[uu];
