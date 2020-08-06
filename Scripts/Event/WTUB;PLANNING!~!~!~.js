@@ -71,3 +71,9 @@ if (wfTask == 'Sign Posting') {
 	showMessage = true;
 	comment('Message needs to be recorded before signs can be posted.');
 }
+//86P
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (appStatus != 'Final Approval')){
+	showMessage = true;
+	comment('Sign Posting can not be removed');
+	cancel = true;
+}
