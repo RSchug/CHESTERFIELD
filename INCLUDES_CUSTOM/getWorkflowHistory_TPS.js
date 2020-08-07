@@ -6,7 +6,7 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
 
     var useProcess = processName && processName != "" ? true : false;
     if (wfstat + "" == "") wfstat = null;
-    var wfStatArray = wfstat && typeof (wfstat) == "string" ? [wfstat] : wfstat; // Convert to array
+    var wfStatArray = wfstat && wfstat.split ? wfstat.split(",") : wfstat; // Convert to array
     if (typeof (itemCap) == "string") {
         var result = aa.cap.getCapID(itemCap);
         if (result.getSuccess()) {
@@ -24,34 +24,16 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
         return false;
     }
 
-    logDebug("Filter History by:"
-        + (processName ? " process: " + processName : "")
-        + (wfstr ? ", task: " + wfstr : "")
-        + (wfStatArray && wfStatArray.length > 0 ? ", status: {" + wfStatArray.join(",") + "} " + typeof (wfstat) : ""));
-
     var tasks = [];
     var wfObj = workflowResult.getOutput();
     for (var x = 0; x < wfObj.length; x++) {
         var fTask = wfObj[x];
-        var fReasons = [];
-        if (processName && !fTask.getProcessCode().equals(processName)) fReasons.push("Process: " + processName);
-        if (wfstr && !fTask.getTaskDescription().equals(wfstr)) fReasons.push("Task: " + wfstr);
-        if (wfStatArray && !exists(wfTask, fTask.getDisposition(), wfStatArray)) fReasons.push("Status: {" + wfStatArray.join(",") + "}");
-        if (fReasons.length > 0) {
-            logDebug("History[" + x + "]: # " + fTask.getProcessHistorySeq()
-                + ", Task: " + fTask.getProcessCode() + "." + fTask.getTaskDescription()
-                + ", Status: " + fTask.getDisposition() + " " + fTask.getStatusDate()
-                + ", Reasons: {" + fReasons.join(",") + "}"
-            );
-        }
-
-        if (useProcess && !fTask.getProcessCode().equals(processName)) continue;
+        if (processName && !fTask.getProcessCode().equals(processName)) continue;
         if (wfstr && !fTask.getTaskDescription().equals(wfstr)) continue;
-        if (wfStatArray && !exists(wfTask, fTask.getDisposition(), wfStatArray)) continue;
+        if (wfStatArray && !exists(fTask.getDisposition(), wfStatArray)) continue;
+        
         tasks.push(fTask);
         logDebug("History[" + x + "]: # " + fTask.getProcessHistorySeq()
-            + ", ID: " + fTask.getProcessID() + "." + fTask.getStepNumber()
-            + " , TaskID:" + fTask.getCurrentTaskID() + " - " + fTask.getNextTaskID()
             + ", Task: " + fTask.getProcessCode() + "." + fTask.getTaskDescription()
             + ", Status: " + fTask.getDisposition() + " " + fTask.getStatusDate()
             //  + br + describe_TPS(fTask)

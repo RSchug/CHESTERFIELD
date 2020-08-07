@@ -133,7 +133,6 @@ try {
 		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
 	
-	
 //Below is all code from previous implementer - Not sure if these work db
 /*
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",
