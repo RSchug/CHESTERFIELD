@@ -17,6 +17,12 @@ if (appMatch("Building/Permit/Residential/NA") && inspType.equals("Building Fina
 	}
 if (appMatch("Building/Permit/Residential/Demolition") && inspType.equals("Building Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
+	if (parentCapId && appMatch("Building/Structure/NA/NA", parentCapId)) {
+		logDebug("Updating Structure " + parentCapId.getCustomID() + " to Demolished");
+		updateAppStatus("Demolished", "Updated via script from " + capId.getCustomID(), parentCapId);
+		//logDebug("Deleting Structure " + parentCapId.getCustomID());
+		//deleteRecord(parentCapId);
+	}
 	}
 if (appMatch("Building/Permit/Commercial/NA") && inspType.equals("Building Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","CO Ready to Issue","Updated based on Completed Inspection Result","");
