@@ -1,11 +1,12 @@
 function getWorkflowHistory_TPS() { // Get Workflow History.
     var wfstr = arguments.length > 0 && arguments[0] ? arguments[0] : null;
     var wfstat = arguments.length > 1 && arguments[1] ? arguments[1] : null;
-    var processName = arguments.length > 2 && arguments[2] ? arguments[2] : "";
+    var processName = arguments.length > 2 && arguments[2] ? arguments[2] : null;
     var itemCap = arguments.length > 3 && arguments[3] ? arguments[3] : capId;
 
-    var useProcess = processName != "" ? true : false;
-    var wfStatArray = wfstat && typeof (wfstat) == "string" ? [wfstat] : wfstat; // Convert to array
+    var useProcess = processName && processName != "" ? true : false;
+    if (wfstat + "" == "") wfstat = null;
+    var wfStatArray = wfstat && wfstat.split ? wfstat.split(",") : wfstat; // Convert to array
     if (typeof (itemCap) == "string") {
         var result = aa.cap.getCapID(itemCap);
         if (result.getSuccess()) {
@@ -27,13 +28,12 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
     var wfObj = workflowResult.getOutput();
     for (var x = 0; x < wfObj.length; x++) {
         var fTask = wfObj[x];
-        if (useProcess && !fTask.getProcessCode().equals(processName)) continue;
+        if (processName && !fTask.getProcessCode().equals(processName)) continue;
         if (wfstr && !fTask.getTaskDescription().equals(wfstr)) continue;
-        if (wfStatArray && !exists(wfTask, fTask.getDisposition(), wfStatArray)) continue;
+        if (wfStatArray && !exists(fTask.getDisposition(), wfStatArray)) continue;
+        
         tasks.push(fTask);
         logDebug("History[" + x + "]: # " + fTask.getProcessHistorySeq()
-            + ", ID: " + fTask.getProcessID() + "." + fTask.getStepNumber()
-            + " , TaskID:" + fTask.getCurrentTaskID() + " - " + fTask.getNextTaskID()
             + ", Task: " + fTask.getProcessCode() + "." + fTask.getTaskDescription()
             + ", Status: " + fTask.getDisposition() + " " + fTask.getStatusDate()
             //  + br + describe_TPS(fTask)
