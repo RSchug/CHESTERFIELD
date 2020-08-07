@@ -4,7 +4,7 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
     var processName = arguments.length > 2 && arguments[2] ? arguments[2] : null;
     var itemCap = arguments.length > 3 && arguments[3] ? arguments[3] : capId;
 
-    var useProcess = processName != "" ? true : false;
+    var useProcess = processName && processName != "" ? true : false;
     if (wfstat + "" == "") wfstat = null;
     var wfStatArray = wfstat && typeof (wfstat) == "string" ? [wfstat] : wfstat; // Convert to array
     if (typeof (itemCap) == "string") {
@@ -34,7 +34,7 @@ function getWorkflowHistory_TPS() { // Get Workflow History.
     for (var x = 0; x < wfObj.length; x++) {
         var fTask = wfObj[x];
         var fReasons = [];
-        if (useProcess && !fTask.getProcessCode().equals(processName)) fReasons.push("Process: " + processName);
+        if (processName && !fTask.getProcessCode().equals(processName)) fReasons.push("Process: " + processName);
         if (wfstr && !fTask.getTaskDescription().equals(wfstr)) fReasons.push("Task: " + wfstr);
         if (wfStatArray && !exists(wfTask, fTask.getDisposition(), wfStatArray)) fReasons.push("Status: {" + wfStatArray.join(",") + "}");
         if (fReasons.length > 0) {
