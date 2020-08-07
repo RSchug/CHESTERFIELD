@@ -124,10 +124,13 @@ try {
 //07-2020 Boucher 24p
 	if (matches(wfTask, 'CPC Meeting', 'CPC Hearing') & matches(wfStatus, 'Deferred by Applicant')) {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
-		if (tasksHistory && tasksHistory.length > 1)
-			addFee('DEFERRALPC', 'CC-PLANNING', 'FINAL', 2, 'Y');
-		else
-			addFee('DEFERRALPC', 'CC-PLANNING', 'FINAL', 1, 'Y');
+		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
+		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALPC", feeQty = 1;
+		if (tasksHistory && tasksHistory.length > 1) {
+			feeQty = 2
+		}
+		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
+		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
 	
 	
