@@ -30,4 +30,9 @@ if (matches(wfTask,"CPC Hearing") && (matches(wfStatus,"Deferred by Applicant","
 }
 //Fees for Communication Tower
 if ((wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') && (AInfo["Request Type"] == "Conditional Use" && AInfo["Conditional Use and Conditional Use Planned Development Type"] == "Communication Tower")){
-    addFee("CTOWER","CC-PLANNING","FINAL",1,"N");}
+	addFee("CTOWER","CC-PLANNING","FINAL",1,"N");
+}
+// Add Fees
+if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+	addFees_ZoneCase();
+}
