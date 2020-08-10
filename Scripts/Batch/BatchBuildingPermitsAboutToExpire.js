@@ -13,7 +13,7 @@
 if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName","Test");
     aa.env.setValue("CurrentUserID", "ADMIN");
-    aa.env.setValue("maxRecords", 1);
+    aa.env.setValue("maxRecords", 100);
 }
 logDebug("batchJobName: " + aa.env.getValue("batchJobName"));
 logDebug("CurrentUserID: " + aa.env.getValue("CurrentUserID"));
@@ -51,10 +51,10 @@ var emailAddress2 = "";                                     // CC email address 
 var emailText = "";                                         // Email body
 //Parameter variables
 var paramsOK = true;
-var paramsAppGroup = "Building";                               // Group value of the Cap Type that the batch script is suppose to process.
-
-// Per Type of the Cap Type that the batch script should not process.
-var paramsAppType = "Permit";
+var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
+var paramsAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
+var paramsAppSubType = "*";      // Per SubType of the Cap Type that the batch script should process.
+var paramsAppCategory = "*";       // Per Category of the Cap Type that the batch script should process.
 
 // Cap Status that the batch script is suppose to process.
 var paramsAppStatusValid = ["Submitted", "Pending Applicant", "In Review", "Ready to Issue", "Issued", "Temporary CO Issued", "CO Ready to Issue", "Pending Certificate", "CO Issued", "Partial CO Issued", "Reinstated", "Extended", ""]
@@ -62,8 +62,13 @@ var paramsAppStatusValid = null;
 // Cap Status that the batch script is supposed to ignore.
 var paramsAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
 
-var paramsAppSubGroupName = "GENERAL";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
+var paramsAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
 var paramsAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
+
+//var paramsDateFrom = dateAdd(startDate, 150);
+//var paramsDateTo = dateAdd(paramsDateFrom, 30);
+var paramsDateFrom = dateAdd(startDate, 25);
+var paramsDateTo = dateAdd(paramsDateFrom, 5);
 
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
@@ -129,8 +134,11 @@ var showDebug = true;					                                  // Set to true to se
 /*------------------------------------------------------------------------------------------------------/
 | END: USER CONFIGURABLE PARAMETERS
 /------------------------------------------------------------------------------------------------------*/
-var paramsCapType = (paramsAppGroup && paramsAppGroup != "" ? paramsAppGroup : "*") + "/" 
-    + (paramsAppType && paramsAppType != "" ? paramsAppType:"*") + "/*/*";
+var paramsCapType = ""
+    + (paramsAppGroup && paramsAppGroup != "" ? paramsAppGroup : "*") + "/"
+    + (paramsAppType && paramsAppType != "" ? paramsAppType : "*") + "/"
+    + (paramsAppSubType && paramsAppSubType != "" ? paramsAppSubType : "*") + "/"
+    + (paramsAppCategory && paramsAppCategory != "" ? paramsAppCategory : "*");
 logDebug("paramsCapType: " + paramsCapType);
 logDebug("paramsAppStatusValid: " + paramsAppStatusValid);
 logDebug("paramsAppStatusInvalid: " + paramsAppStatusInvalid);
@@ -170,10 +178,6 @@ function mainProcess() {
     |       replace the following syntax dateAdd(null,-1) to a string date value
     |       in the following format "MM/DD/YYYY".
     */
-    //var paramsDateFrom = dateAdd(startDate, 150);
-    //var paramsDateTo = dateAdd(paramsDateFrom, 30);
-    var paramsDateFrom = dateAdd(startDate, -30);
-    var paramsDateTo = dateAdd(paramsDateFrom, 5);
     var dateFrom = aa.date.parseDate(paramsDateFrom);        // Start Date for the batch script to select ASI data on.
     var dateTo = aa.date.parseDate(paramsDateTo);               // End Date for the batch script to select ASI data on.
     logDebug("Looking for " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel + " with Date Range: " + paramsDateFrom + " - " + paramsDateTo);
@@ -209,6 +213,21 @@ function mainProcess() {
             capGroup = cap.getCapType().getGroup(); // Cap Type Group
             capType = cap.getCapType().getType(); // Cap Per Type
         }
+
+        var capIDsFiltered = [];
+        var filterReasons = [];
+        if (paramsCapType && !appMatch(paramsCapType)) filterReasons.push("CapType");
+        if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
+        if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) filterReasons.push("CapStatusValid");
+        if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
+        if (filterReasons && filterReasons.length > 0) {
+            logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
+                + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : "")
+                + " Reasons: " + filterReasons);
+            //capIDsFiltered[capId.getCustomID()]=filterReasons;
+            continue;
+        }
+
 
         if (paramsCapType && !appMatch(paramsCapType)) continue;
         if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) continue;
@@ -293,7 +312,6 @@ function logDebug(dstr) {
     }
 }
 
-
 function getCapGlobals(itemCap) {
     capId = null,
     cap = null,
@@ -371,5 +389,90 @@ function getCapGlobals(itemCap) {
         loadASITables();
     }
 
+}
+
+function convertDate(thisDate) {
+
+    if (typeof (thisDate) == "string") {
+        var retVal = new Date(String(thisDate));
+        if (!retVal.toString().equals("Invalid Date"))
+            return retVal;
+    }
+
+    if (typeof (thisDate) == "object") {
+
+        if (!thisDate.getClass) // object without getClass, assume that this is a javascript date already
+        {
+            return thisDate;
+        }
+
+        if (thisDate.getClass().toString().equals("class com.accela.aa.emse.dom.ScriptDateTime")) {
+            return new Date(thisDate.getMonth() + "/" + thisDate.getDayOfMonth() + "/" + thisDate.getYear());
+        }
+
+        if (thisDate.getClass().toString().equals("class com.accela.aa.emse.util.ScriptDateTime")) {
+            return new Date(thisDate.getMonth() + "/" + thisDate.getDayOfMonth() + "/" + thisDate.getYear());
+        }
+
+        if (thisDate.getClass().toString().equals("class java.util.Date")) {
+            return new Date(thisDate.getTime());
+        }
+
+        if (thisDate.getClass().toString().equals("class java.lang.String")) {
+            return new Date(String(thisDate));
+        }
+        if (thisDate.getClass().toString().equals("class java.sql.Timestamp")) {
+            return new Date(thisDate.getMonth() + "/" + thisDate.getDate() + "/" + thisDate.getYear());
+        }
+    }
+
+    if (typeof (thisDate) == "number") {
+        return new Date(thisDate);  // assume milliseconds
+    }
+
+    logDebug("**WARNING** convertDate cannot parse date : " + thisDate);
+    return null;
 
 }
+
+function dateAdd(td, amt)
+// perform date arithmetic on a string
+// td can be "mm/dd/yyyy" (or any string that will convert to JS date)
+// amt can be positive or negative (5, -3) days
+// if optional parameter #3 is present, use working days only
+{
+
+    var useWorking = false;
+    if (arguments.length == 3)
+        useWorking = true;
+
+    if (!td) dDate = new Date(aa.util.now());
+    else
+        dDate = convertDate(td);
+
+    var i = 0;
+    if (useWorking)
+        if (!aa.calendar.getNextWorkDay) {
+            logDebug("getNextWorkDay function is only available in Accela Automation 6.3.2 or higher.");
+            while (i < Math.abs(amt)) {
+                dDate.setDate(dDate.getDate() + parseInt((amt > 0 ? 1 : -1), 10));
+                if (dDate.getDay() > 0 && dDate.getDay() < 6)
+                    i++
+            }
+        } else {
+            while (i < Math.abs(amt)) {
+                if (amt > 0) {
+                    dDate = new Date(aa.calendar.getNextWorkDay(aa.date.parseDate(dDate.getMonth() + 1 + "/" + dDate.getDate() + "/" + dDate.getFullYear())).getOutput().getTime());
+                    i++;
+                } else {
+                    dDate = new Date(aa.calendar.getPreviousWorkDay(aa.date.parseDate(dDate.getMonth() + 1 + "/" + dDate.getDate() + "/" + dDate.getFullYear())).getOutput().getTime());
+                    i++;
+
+                }
+            }
+        }
+    else
+        dDate.setDate(dDate.getDate() + parseInt(amt, 10));
+
+    return (dDate.getMonth() + 1) + "/" + dDate.getDate() + "/" + dDate.getFullYear();
+} 
