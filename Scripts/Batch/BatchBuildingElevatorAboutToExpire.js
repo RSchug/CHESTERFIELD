@@ -19,14 +19,10 @@
 |   User can manually update the Elevator Master record based on filter above.  Contacts can be added,
 |    Elevator Table can be updated if Out of Service.
 /------------------------------------------------------------------------------------------------------*/
-function logDebug(dstr) {
-    aa.print(dstr);
-}
 if (aa.env.getValue("ScriptName") == "Test") {
-    aa.env.setValue("batchJobName", "Test");
+    aa.env.setValue("batchJobName","Test");
     aa.env.setValue("CurrentUserID", "ADMIN");
-    aa.env.setValue("maxRecords", 10);
-    aa.env.setValue("Quarter", "Q3 - September");
+    aa.env.setValue("maxRecords", 100);
 }
 logDebug("batchJobName: " + aa.env.getValue("batchJobName"));
 logDebug("CurrentUserID: " + aa.env.getValue("CurrentUserID"));
@@ -327,7 +323,7 @@ function mainProcess() {
         if (false && filterReasons && filterReasons.length > 0) {
             logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
                 + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : "")
-                + " Reasons: "+filterReasons);
+                + " Reasons: " + filterReasons);
             //capIDsFiltered[capId.getCustomID()]=filterReasons;
             continue;
         }
