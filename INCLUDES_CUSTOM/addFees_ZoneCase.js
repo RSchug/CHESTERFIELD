@@ -47,7 +47,7 @@ function addFees_ZoneCase() {
     if (typeof (sRows) != "object") srcRows = null;
     if (sRows && sRows.length > 0) {
         for (var eachRow in sRows) {
-            var sRow = sRows[EachRow];
+            var sRow = sRows[eachRow];
             var requestUseType = sRow["Request Type"]+"."+sRow["Conditional Use and Conditional Use Planned Development Type"];
             var acreage = sRow["Acreage"];
             var feeCode = null;
