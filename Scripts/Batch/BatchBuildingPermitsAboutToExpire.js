@@ -2,7 +2,7 @@
 | Program: BatchBuildingPermitsAboutToExpire  Trigger: Batch    
 | Client : Chesterfield County
 |
-| Version 1.0 - Keith Hobday - TruePoint Solutions
+| Version 1.0 - Ray Schug - TruePoint Solutions
 |
 |   Building/Permit/~/~
 |   30 days before Permit Expiration 
@@ -35,6 +35,7 @@ var currentUserID = aa.env.getValue("CurrentUserID");   		// Current User
 var sysDate = aa.date.getCurrentDate();
 var batchJobID = aa.batchJob.getJobID().getOutput();
 var batchJobName = "" + aa.env.getValue("batchJobName");
+var agencyName = aa.getServiceProviderCode();
 
 //Global variables
 var startDate = new Date(aa.util.now());
@@ -45,10 +46,27 @@ var partialProcessCompletion = false;                                           
 
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
-var senderEmailAddr = "noreply@accela.com";                 // Email address of the sender
+var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
 var emailAddress = "rschug@truepointsolutions.com";         // Email address of the person who will receive the batch script log information
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
+
+if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
+    var batchEngineObj = aa.proxyInvoker.newInstance("com.accela.v360.batchjob.BatchEngineBusiness");
+    if (batchEngineObj.getSuccess()) {
+        logDebug("agencyName:" + agencyName + " batchJobName:" + batchJobName);
+        var batchJob = batchEngineObj.getOutput().getBatchJobByName(agencyName, batchJobName);
+        if (batchJob != null) {
+            var jobEmailID = batchJob.getEmailID();
+            logDebug("fetch email from job details:" + jobEmailID)
+            if (!isEmptyOrNull(jobEmailID)) {
+                emailAddress = jobEmailID;
+            }
+        }
+    }
+}
+
+
 //Parameter variables
 var paramsOK = true;
 var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
@@ -156,8 +174,10 @@ if (paramsOK) {
     logDebug("End of " + batchJobName + " Batch Job, Elapsed Time : " + elapsed() + " Seconds.");
 }
 
-if (emailAddress.length)
+if (emailAddress.length) {
+    logDebug("Sending " + batchJobName + " Results to " + emailAddress);
     aa.sendMail(senderEmailAddr, emailAddress, emailAddress2, batchJobName + " Results", emailText);
+}
 
 aa.print("emailText: " + emailText);
 /*------------------------------------------------------------------------------------------------------/
@@ -213,6 +233,7 @@ function mainProcess() {
             capGroup = cap.getCapType().getGroup(); // Cap Type Group
             capType = cap.getCapType().getType(); // Cap Per Type
         }
+        count["cap"]++;
 
         var capIDsFiltered = [];
         var filterReasons = [];
@@ -220,7 +241,7 @@ function mainProcess() {
         if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
         if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) filterReasons.push("CapStatusValid");
         if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
-        if (filterReasons && filterReasons.length > 0) {
+        if (false && filterReasons && filterReasons.length > 0) {
             logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
                 + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : "")
                 + " Reasons: " + filterReasons);
@@ -286,6 +307,10 @@ function isNull(pTestValue, pNewValue) {
         return pNewValue;
     else
         return pTestValue;
+}
+
+function isEmptyOrNull(value) {
+    return value == null || value === undefined || String(value) == "";
 }
 
 function logMessage(etype, edesc) {
