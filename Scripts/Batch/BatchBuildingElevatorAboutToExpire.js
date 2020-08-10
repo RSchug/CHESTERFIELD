@@ -1,14 +1,23 @@
 /*------------------------------------------------------------------------------------------------------/
-| Program: BatchBuildingPermitsAboutToExpire  Trigger: Batch    
+| Program: BatchBuildingElevatorAboutToExpire  Trigger: Batch
 | Client : Chesterfield County
 |
-| Version 1.0 - Keith Hobday - TruePoint Solutions
+| Version 1.0 - Ray Schug - TruePoint Solutions
 |
-|   Building/Permit/~/~
-|   30 days before Permit Expiration 
-|       if Record Status is not 'Issued' then add Adhoc Task 'Inactive Application',
-|       if Record Status is 'Issued' then add Adhoc Task 'Inactive Permit'.
+|   On Building/Permit/Elevator/Master Records based on Quarter:
+|       Quarter 1 (Q1 - March) runs on what Dec 1 of every year.
+|   	Quarter 2 (Q2 - June) runs on March 1 of every year.
+|       Quarter 3 (Q3 - September) runs on June 1 of every year.
+|       Quarter 4 (Q4 - December) runs on Sept 1 of every year.
+|   When Building/Permit/Elevator/Master Records 'Quarter' field matches date run above then
+|       Set the Workflow Task 'Annual Status' to Status of 'Annual Renewal'.
+|       Set the Record Status to 'Active-Pending Renewal'.
 |
+|   A new Task Management Filter will be available to select 'Annual Renewal' Elevators.
+|   A new Record List Filter will be available to select 'Active-Pending Renewal' Elevators.
+|
+|   User can manually update the Elevator Master record based on filter above.  Contacts can be added,
+|    Elevator Table can be updated if Out of Service.
 /------------------------------------------------------------------------------------------------------*/
 function logDebug(dstr) {
     aa.print(dstr);
@@ -17,6 +26,7 @@ if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName", "Test");
     aa.env.setValue("CurrentUserID", "ADMIN");
     aa.env.setValue("maxRecords", 10);
+    aa.env.setValue("Quarter", "Q3 - September");
 }
 logDebug("batchJobName: " + aa.env.getValue("batchJobName"));
 logDebug("CurrentUserID: " + aa.env.getValue("CurrentUserID"));
@@ -34,10 +44,12 @@ if (maxRecords) maxRecords = parseInt(maxRecords);
 
 var currentUserID = aa.env.getValue("CurrentUserID");   		// Current User
 
+
 //Variables needed to log parameters below in eventLog
 var sysDate = aa.date.getCurrentDate();
 var batchJobID = aa.batchJob.getJobID().getOutput();
 var batchJobName = "" + aa.env.getValue("batchJobName");
+var agencyName = aa.getServiceProviderCode();
 
 //Global variables
 var startDate = new Date(aa.util.now());
@@ -48,10 +60,27 @@ var partialProcessCompletion = false;                                           
 
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
-var senderEmailAddr = "noreply@accela.com";                 // Email address of the sender
+var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
 var emailAddress = "rschug@truepointsolutions.com";         // Email address of the person who will receive the batch script log information
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
+
+if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
+    var batchEngineObj = aa.proxyInvoker.newInstance("com.accela.v360.batchjob.BatchEngineBusiness");
+    if (batchEngineObj.getSuccess()) {
+        logDebug("agencyName:" + agencyName + " batchJobName:" + batchJobName);
+        var batchJob = batchEngineObj.getOutput().getBatchJobByName(agencyName, batchJobName);
+        if (batchJob != null) {
+            var jobEmailID = batchJob.getEmailID();
+            logDebug("fetch email from job details:" + jobEmailID)
+            if (!isEmptyOrNull(jobEmailID)) {
+                emailAddress = jobEmailID;
+            }
+        }
+    }
+}
+
+
 //Parameter variables
 var paramsOK = true;
 var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
@@ -81,18 +110,24 @@ var paramsDateTo = "01/01/2022"
 var capSearchBy = "ASIField";
 var paramsAppSubGroupName = "CC-BLD-CV-WD";               // ASI Subgroup Name that the ASI field is associated to.
 var paramsAppSpecInfoLabel = "Annual Quarter";            // ASI field name that the batch script is to search.
-var paramsAppSpecInfoValue = null;
-if (startDate.getMonth() < 3) {
-    paramsAppSpecInfoValue = "Q1 - March";
-} else if (startDate.getMonth() < 3) {
-    paramsAppSpecInfoValue = "Q2 - June";
-} else if (startDate.getMonth() < 3) {
-    paramsAppSpecInfoValue = "Q3 - September";
-} else if (startDate.getMonth() < 3) {
-    paramsAppSpecInfoValue = "Q4 - December";
+var paramsAppSpecInfoValue = aa.env.getValue("Quarter");
+if (paramsAppSpecInfoValue == "") paramsAppSpecInfoValue = null;
+if (paramsAppSpecInfoValue == null) { // Default based on start Date
+    // On Building / Permit / Elevator / Master Records based on Quarter:
+    // Quarter 1(Q1 - March) runs on what Dec 1 of every year.
+    // Quarter 2(Q2 - June) runs on March 1 of every year.
+    // Quarter 3(Q3 - September) runs on June 1 of every year.
+    // Quarter 4(Q4 - December) runs on Sept 1 of every year.
+    if (startDate.getMonth() == 2) { // March
+        paramsAppSpecInfoValue = "Q2 - June";
+    } else if (startDate.getMonth() == 5) { // June
+        paramsAppSpecInfoValue = "Q3 - September";
+    } else if (startDate.getMonth() == 8) { // Sept
+        paramsAppSpecInfoValue = "Q4 - December";
+    } else if (startDate.getMonth() == 11) { // Dec
+        paramsAppSpecInfoValue = "Q1 - March";
+    }
 }
-paramsAppSpecInfoValue = "Q3 - September";
-
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
 /------------------------------------------------------------------------------------------------------*/
@@ -179,8 +214,10 @@ if (paramsOK) {
     logDebug("End of " + batchJobName + " Batch Job, Elapsed Time : " + elapsed() + " Seconds.");
 }
 
-if (emailAddress.length)
+if (emailAddress.length) {
+    logDebug("Sending " + batchJobName + " Results to " + emailAddress);
     aa.sendMail(senderEmailAddr, emailAddress, emailAddress2, batchJobName + " Results", emailText);
+}
 
 aa.print("emailText: " + emailText);
 /*------------------------------------------------------------------------------------------------------/
@@ -238,7 +275,7 @@ function mainProcess() {
             + " with " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel
             + " Date Range: " + paramsDateFrom + " - " + paramsDateTo);
         var capIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(paramsAppSubGroupName, paramsAppSpecInfoLabel, dateFrom, dateTo);
-    } else if (capSearchBy == "ASIField") {
+    } else if (capSearchBy == "ASIField" && paramsAppSpecInfoValue) {
         logDebug("Looking for "
             + (paramsAppGroup ? paramsAppGroup : "*") + "/"
             + (paramsAppType ? paramsAppType : "*") + "/"
@@ -313,7 +350,11 @@ function mainProcess() {
         var capStatusNew = "Active-Pending Renewal";
         if (wfTask) {
             if (wfStatus && wfStatus != "" && wfStatus != taskStatus(wfTask))
-                updateTask(wfTask, wfStatus, wfTaskComment, wfNote)
+                updateTask(wfTask, wfStatus, wfTaskComment, wfNote);
+            cap = aa.cap.getCap(capId).getOutput();
+            capStatus = cap.getCapStatus();
+            if (capStatus != capStatusNew)
+                updateAppStatus(capStatusNew, wfTaskComment);
         }
     }
     return count["cap"];
@@ -349,6 +390,11 @@ function isNull(pTestValue, pNewValue) {
     else
         return pTestValue;
 }
+
+function isEmptyOrNull(value) {
+    return value == null || value === undefined || String(value) == "";
+}
+
 
 function logMessage(etype, edesc) {
     aa.eventLog.createEventLog(etype, "Batch Process", batchJobName, sysDate, sysDate, "", edesc, batchJobID);
