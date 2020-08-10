@@ -23,6 +23,7 @@ if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName","Test");
     aa.env.setValue("CurrentUserID", "ADMIN");
     aa.env.setValue("maxRecords", 100);
+    aa.env.setValue("Quarter", "Q3 - September");
 }
 logDebug("batchJobName: " + aa.env.getValue("batchJobName"));
 logDebug("CurrentUserID: " + aa.env.getValue("CurrentUserID"));
@@ -283,7 +284,9 @@ function mainProcess() {
     } else {
         var capIdResult = false;
     }
-    if (capIdResult && !capIdResult.getSuccess()) {
+    if (!capIdResult) {
+        return false;
+    } else if (!capIdResult.getSuccess()) {
         logDebug("**ERROR: Retreiving Cap Id's by Application Specific field date range: " + capIdResult.getErrorMessage() + ".");
         return false;
     }
