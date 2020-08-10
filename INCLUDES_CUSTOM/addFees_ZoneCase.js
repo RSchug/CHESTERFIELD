@@ -2,7 +2,7 @@ function addFees_ZoneCase() {
     var tableName = "CC-LU-ZC-TYPE";
     var requestUseFeeMap = {        // Maps Request Type & Use Type to Fee Code.
         // Request Type: Amend Prior Case
-        "Amend Prior Case.All Others": null,
+        "Amend Prior Case.All Others": 'AMEND4',
         "Amend Prior Case.Recreational Facility and Grounds Primarily Serving Surrounding Residential Community": "AMEND2",
         "Amend Prior Case.Use Incidental to Principal Dwelling to include Family Day Care Home or Resource Prot Area SFD": "AMEND1",
         // Request Type: Conditional Use
@@ -23,7 +23,7 @@ function addFees_ZoneCase() {
         // Request Type: Rezoning
         "Rezoning.Not Applicable": "REZONING",
         // Request Type: Utility Waiver
-        "Utility Waiver.Not Applicable": null
+        "Utility Waiver.Not Applicable": "UTILITY"
     /*  // Request Types
             "Amend Prior Case": null,
             "Conditional Use": null,
@@ -55,7 +55,7 @@ function addFees_ZoneCase() {
             var feeCode = requestUseFeeMap[requestUseType];
             if (!feeCode) continue;
             if (typeof (feeQty[feeCode]) == "undefined") feeQty[feeCode] = 0;
-            if (exists(feeCode, ["AMEND1","AMEND2","DAYCARE","RECFACILITY"])) // Fees not based on acreage.
+            if (exists(feeCode, ["AMEND1","AMEND2","DAYCARE","RECFACILITY","AMEND4","UTILITY"])) // Fees not based on acreage.
                 feeQty[feeCode] = 1;
             else
                 feeQty[feeCode] += acreage;
