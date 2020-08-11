@@ -107,21 +107,23 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     // After the Submit button is selected an Administrative Fee with a Qty of 1 and Fee of $57 will automatically be added
     // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Elevators that are ‘In Service’ as the Qty. 
     // Get Number of 'In Service' Elevators
-    var elevatorsCount = 0;
-    var tableName = "CC-BLD-ELEVATOR";
-    var tableElevators = loadASITable(tableName);
-    if (typeof (tableElevators) != "object") tableElevators = null;
-    if (tableElevators && tableElevators.length > 0) {
-        for (xx in tableElevators) {
-            var tableRow = tableElevators[xx];
-            logDebug(tableName + "[" + xx + "]: Name/ID#: " + tableRow["Name/ID#"] + " Elevator Type: " + tableRow["Elevator Type"] + " Out of Service: " + tableRow["Out of Service"]);
-            if (tableRow["Out of Service"] && exists(tableRow["Out of Service"], ["CHECKED"])) continue;
-            elevatorsCount++;
+    if (newCapId) {
+        var elevatorsCount = 0;
+        var tableName = "CC-BLD-ELEVATOR";
+        var tableElevators = loadASITable(tableName);
+        if (typeof (tableElevators) != "object") tableElevators = null;
+        if (tableElevators && tableElevators.length > 0) {
+            for (xx in tableElevators) {
+                var tableRow = tableElevators[xx];
+                logDebug(tableName + "[" + xx + "]: Name/ID#: " + tableRow["Name/ID#"] + " Elevator Type: " + tableRow["Elevator Type"] + " Out of Service: " + tableRow["Out of Service"]);
+                if (tableRow["Out of Service"] && exists(tableRow["Out of Service"], ["CHECKED"])) continue;
+                elevatorsCount++;
+            }
         }
-    }
-    if (elevatorsCount > 0) {
-        logDebug("Adding CC-BLD_ELEVATOR.ELEVATOR fee for Qty: " + elevatorsCount);
-        addFee("ELEVATOR", "CC-BLD-ELEVATOR", "FINAL", elevatorsCount, "Y");
+        if (elevatorsCount > 0) {
+            logDebug("Adding CC-BLD_ELEVATOR.ELEVATOR fee for Qty: " + elevatorsCount);
+            addFee("ELEVATOR", "CC-BLD-ELEVATOR", "FINAL", elevatorsCount, "Y", newCapId);
+        }
     }
 }
 
