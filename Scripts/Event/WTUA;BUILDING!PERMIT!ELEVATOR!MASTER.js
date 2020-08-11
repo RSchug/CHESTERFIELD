@@ -14,7 +14,7 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     logDebug("Checking what License to Create");
     var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Renewal";
     var newCapName = capName;
-    var newCapIdString = null; // capIDString.substr(0, (capIDString.length - 1)) + 'L';
+    var newCapIdString = null; // capIDString.substr(0, (capIDString.length() - 1)) + 'L';
     if (newCapIdString) logDebug("newCapIdString: " + newCapIdString);
     var newCapRelation = "Child";
     var srcCapId = capId;
@@ -53,12 +53,15 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     }
     var newCapIdString = null;
     if (newCapId) {
+        newCapIdString = newCapId.getCustomID();
         // This code gives the License the same # as tha APP 
         // Get Exp Year 
-        var expYear = (new Date()).getFullYear(), expDateJS = convertDate(expDate);
-        if (expDateJS) expYear = expDate.getFullYear();
-        newCapIdString = newCapId.getCustomID();
-        var editIdString = capIDString.substr(0, 14) + 'R' + (expYear + "").substr(-2);
+        var expYear = (new Date()).getFullYear();
+        if (expDate) {
+            var expDateJS = convertDate(expDate);
+            if (expDateJS) expYear = expDate.getFullYear();
+        }
+        var editIdString = capIDString.substr(0, (capIDString.length() - 1)) + 'R' + (expYear + "").substr(-2);
         logDebug("newCapId: " + newCapId + ", newCapIdString: " + newCapIdString + ", editIdString: " + editIdString);
         if (editIdString) {   // Update Record ID
             aa.cap.updateCapAltID(newCapId, editIdString);
@@ -108,7 +111,7 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     // ******************END expiration Date code Options
     //updateTask('Annual Status', 'In Service', '', '');
     // After the Submit button is selected an Administrative Fee with a Qty of 1 and Fee of $57 will automatically be added
-    // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Elevators that are ‘In Service’ as the Qty. 
+    // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Elevators that are 'In Service' as the Qty. 
     // Get Number of 'In Service' Elevators
     if (newCapId) {
         var elevatorsCount = 0;
