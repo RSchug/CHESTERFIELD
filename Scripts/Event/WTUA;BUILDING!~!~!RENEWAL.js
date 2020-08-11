@@ -2,11 +2,9 @@
 
 //Alex Charlton added for Renewal of Conveyance Permit.
 if (wfStatus == 'Renewed') {
-	saveId = capId;
 	var parentLicenseCapID = getParentCapIDForReview(capId);
 	logDebug('ParentLic CAPID = ' + parentLicenseCapID);
 	if (parentLicenseCapID) {
-		capId = parentLicenseCapID;
 		var pCapIdSplit = String(parentLicenseCapID).split('-');
 		var pCapIdObj = aa.cap.getCapID(pCapIdSplit[0], pCapIdSplit[1], pCapIdSplit[2]).getOutput();
 		var parentLicenseCustomID = pCapIdObj.getCustomID();
