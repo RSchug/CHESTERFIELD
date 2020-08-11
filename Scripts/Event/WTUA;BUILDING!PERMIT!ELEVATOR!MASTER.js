@@ -1,8 +1,4 @@
 // WTUA:Building/Permit/Elevator/Master
-// After the Submit button is selected an Administrative Fee with a Qty of 1 and Fee of $57 will automatically be added
-addFee("NEWINSTALL","CC-BLD-ELEVATOR","FINAL",1,"Y");
-//Alex Charlton added for renewals 092619
-//RS Fixed for all installation records ()
 // 8B: For Elevator Installation Record when Workflow Task 'Certificate of Inspection' is 'Completed' then create a related 'Building/Permit/Elevator/Annual' Record as the Parent.
 var newCapId = null, newCapAppType = null;
 today = new Date(aa.util.now());
@@ -100,7 +96,25 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
 
     }
     // ******************END expiration Date code Options
-    updateTask('Annual Status', 'In Service', '', '');
+    //updateTask('Annual Status', 'In Service', '', '');
+    // After the Submit button is selected an Administrative Fee with a Qty of 1 and Fee of $57 will automatically be added
+    // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Elevators that are ‘In Service’ as the Qty. 
+    // Get Number of 'In Service' Elevators
+    var elevatorsCount = 0;
+    var tableName = "CC-BLD-ELEVATOR";
+    var tableElevators = loadASITable(tableName);
+    if (typeof (tableElevators) != "object") tableElevators = null;
+    if (tableElevators && tableElevators.length > 0) {  
+        for (xx in tableElevators) {
+            var tableRow = tableElevators[xx];
+            logDebug(tableName + "[" + xx + "]: Name/ID#: " + tableRow["Name/ID#"] + " Elevator Type: " + tableRow["Elevator Type"] + " Out of Service: " + tableRow["Out of Service"]);
+            if (tableRow["Out of Service"] && !exists(tableRow["Out of Service"], ["CHECKED"])) continue;
+            elevatorsCount++;
+        }
+    }
+    if (elevatorsCount > 0){
+        addFee("ELEVATOR", "CC-BLD-ELEVATOR", "FINAL", elevatorsCount, "Y");
+    }
 }
 
 // If setting the License status manually from the workflow

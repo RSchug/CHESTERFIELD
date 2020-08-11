@@ -6,6 +6,7 @@ if (wfStatus == 'Renewed') {
 	var parentLicenseCapID = getParentCapIDForReview(capId);
 	logDebug('ParentLic CAPID = ' + parentLicenseCapID);
 	if (parentLicenseCapID) {
+		capId = parentLicenseCapID;
 		var pCapIdSplit = String(parentLicenseCapID).split('-');
 		var pCapIdObj = aa.cap.getCapID(pCapIdSplit[0], pCapIdSplit[1], pCapIdSplit[2]).getOutput();
 		var parentLicenseCustomID = pCapIdObj.getCustomID();
@@ -17,9 +18,9 @@ if (wfStatus == 'Renewed') {
 		var expDateField = "Permit Expiration Date";
 		var expDate = getAppSpecific(expDateField, parentLicenseCapID);
 		if (appMatch("Building/Permit/AmusementDevice/Renewal")) {
-			resultWorkflowTask("Annual Status", "In Service", wfCommentParent, "");
+			updateTask("Annual Status", "In Service", wfCommentParent, "", "", parentLicenseCapID);
 		} else if (appMatch("Building/Permit/Elevator/Renewal")) {
-			resultWorkflowTask("Annual Status", "In Service", wfCommentParent, "");
+			updateTask("Annual Status", "In Service", wfCommentParent, "", "", parentLicenseCapID);
 		}
 		updateAppStatus('Active', wfCommentParent, parentLicenseCapID);
 
@@ -68,6 +69,6 @@ if (wfStatus == 'Renewed') {
         logDebug('Running WTUA4Renewal');
 		aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
 		logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
-	} 
+	}
 }
 //commented out as this is included in lines above aa.runScript("WORKFLOWTASKUPDATEAFTER4RENEW");
