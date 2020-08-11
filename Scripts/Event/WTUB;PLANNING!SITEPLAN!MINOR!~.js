@@ -1,4 +1,4 @@
-//36P 
+//36P if Adjacents Workflow Task Status Date of 'Create List' Status is less than 15 days display error when updating Case Complete task.
 try {
     if (wfTask == 'Case Complete' && wfStatus == 'Closed') 
 {
