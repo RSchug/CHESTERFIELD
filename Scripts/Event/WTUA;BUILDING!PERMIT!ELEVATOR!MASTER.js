@@ -20,11 +20,12 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     var srcCapId = capId;
     var copySections = null; // Use Default (most common sections).
     var initStatus = null;
-    var expField = null;
-    var expFieldValue = null;
+    var expField = null, expFieldValue = null;
     var expMonths = 12;
     var expDateField = "Permit Expiration Date";
-    var expDate = null;
+    var expStatus = null, expDate = null;
+    // var expStatus = "Active";
+
     if (appMatch("Building/Permit/AmusementDevice/Installation")) {
         newCapRelation = "Parent";
     } else if (appMatch("Building/Permit/Elevator/Installation")) {
@@ -72,28 +73,34 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
 
         // ************START expiration Date code Options 
         logDebug("Setting expiration info");
+        logDebug("expField: " + expField + ", value: " + expFieldValue);
         if (expField) { // Update expiration field: Annual Quarter or License Duration
             editAppSpecific(expField, expFieldValue, newCapId)
         }
         var expFieldValue = getAppSpecific(expField, newCapId);
 
-        if (expDate) {              // set the expiration date
-            if (expDateField) {     // set custom field with expiration date
-                editAppSpecific(expDateField, expDate, newCapId)
-            } else {                // set expiration Info
-                try {
-                    logDebug("NEW expiration Status: Active, Date: " + expDate);
-                    var thisLic = new licenseObject(newCapIdString, newCapId);
-                    if (thisLic) {
-                        thisLic.setStatus("Active");
-                        thisLic.setExpiration(dateAdd(expDate, 0));
-                    }
-                } catch (err) {
-                    logDebug("ERROR: Updating expiration Status: Active, Date: " + expDate + ": " + err);
+        logDebug("expiration" + (expDateField ? " field: " + expDateField:":")
+            + (expStatus ? " Status: " + expStatus : "")
+            + " Date: " + expDate);
+        if (expDate && expDateField) {      // set custom field with expiration date
+            editAppSpecific(expDateField, expDate, newCapId)
+        } else if (expStatus && expDate) {  // set expiration Info
+            try {
+                logDebug("NEW expiration"
+                    + (expStatus ? " Status: " + expStatus : "")
+                    + (expDate ? " Date: " + expDate : ""));
+                var thisLic = new licenseObject(newCapIdString, newCapId);
+                if (thisLic) {
+                    if (expStatus) thisLic.setStatus("expStatus");
+                    if (expDate) thisLic.setExpiration(dateAdd(expDate, 0));
                 }
+            } catch (err) {
+                logDebug("ERROR: NEW expiration"
+                    + (expStatus ? " Status: " + expStatus : "")
+                    + (expDate ? " Date: " + expDate : "")
+                    + ": " + err);
             }
         }
-
     }
     // ******************END expiration Date code Options
     //updateTask('Annual Status', 'In Service', '', '');
@@ -120,13 +127,23 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
 
 // If setting the License status manually from the workflow
 if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
+    var expStatus = null, expDate = null;
+    // var expStatus = "About to Expire";
     try {
-        logDebug("Updating expiration Status: About to Expire");
-        var thisLic = new licenseObject(capIDString);
-        if (thisLic) {
-            thisLic.setStatus("About to Expire");
+        if (expStatus || expDate) {         // set the expiration
+            logDebug("Updating expiration" 
+                + (expStatus? " Status: " + expStatus:"") 
+                + (expDate? " Date: " + expDate:""));
+            var thisLic = new licenseObject(capIDString);
+            if (thisLic) {
+                if (expStatus) thisLic.setStatus("expStatus");
+                if (expDate) thisLic.setExpiration(dateAdd(expDate, 0));
+            }
         }
     } catch (err) {
-        logDebug("ERROR: Updating expiration Status: Active, Date: " + expDate + ": " + err);
+        logDebug("ERROR: Updating expiration"
+            + (expStatus ? " Status: " + expStatus : "")
+            + (expDate ? " Date: " + expDate : "")
+            + ": " + err);
     }
 }
