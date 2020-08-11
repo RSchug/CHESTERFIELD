@@ -1,19 +1,29 @@
 /*------------------------------------------------------------------------------------------------------/
-| Program: BatchBuildingPermitsAboutToExpire  Trigger: Batch    
+| Program: BatchBuildingElevatorAboutToExpire  Trigger: Batch
 | Client : Chesterfield County
 |
 | Version 1.0 - Ray Schug - TruePoint Solutions
 |
-|   Building/Permit/~/~
-|   30 days before Permit Expiration 
-|       if Record Status is not 'Issued' then add Adhoc Task 'Inactive Application',
-|       if Record Status is 'Issued' then add Adhoc Task 'Inactive Permit'.
+|   On Building/Permit/Elevator/Master Records based on Quarter:
+|       Quarter 1 (Q1 - March) runs on what Dec 1 of every year.
+|   	Quarter 2 (Q2 - June) runs on March 1 of every year.
+|       Quarter 3 (Q3 - September) runs on June 1 of every year.
+|       Quarter 4 (Q4 - December) runs on Sept 1 of every year.
+|   When Building/Permit/Elevator/Master Records 'Quarter' field matches date run above then
+|       Set the Workflow Task 'Annual Status' to Status of 'Annual Renewal'.
+|       Set the Record Status to 'Active-Pending Renewal'.
 |
+|   A new Task Management Filter will be available to select 'Annual Renewal' Elevators.
+|   A new Record List Filter will be available to select 'Active-Pending Renewal' Elevators.
+|
+|   User can manually update the Elevator Master record based on filter above.  Contacts can be added,
+|    Elevator Table can be updated if Out of Service.
 /------------------------------------------------------------------------------------------------------*/
 if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName","Test");
     aa.env.setValue("CurrentUserID", "ADMIN");
     aa.env.setValue("maxRecords", 100);
+    aa.env.setValue("Quarter", "Q3 - September");
 }
 logDebug("batchJobName: " + aa.env.getValue("batchJobName"));
 logDebug("CurrentUserID: " + aa.env.getValue("CurrentUserID"));
@@ -30,6 +40,7 @@ if (maxRecords == "" || isNaN(maxRecords)) maxRecords = null;
 if (maxRecords) maxRecords = parseInt(maxRecords);
 
 var currentUserID = aa.env.getValue("CurrentUserID");   		// Current User
+
 
 //Variables needed to log parameters below in eventLog
 var sysDate = aa.date.getCurrentDate();
@@ -71,23 +82,49 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
 var paramsOK = true;
 var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
 var paramsAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
-var paramsAppSubType = "*";      // Per SubType of the Cap Type that the batch script should process.
-var paramsAppCategory = "*";       // Per Category of the Cap Type that the batch script should process.
+var paramsAppSubType = "Elevator";      // Per SubType of the Cap Type that the batch script should process.
+var paramsAppCategory = "Master";       // Per Category of the Cap Type that the batch script should process.
 
-// Cap Status that the batch script is suppose to process.
-var paramsAppStatusValid = ["Submitted", "Pending Applicant", "In Review", "Ready to Issue", "Issued", "Temporary CO Issued", "CO Ready to Issue", "Pending Certificate", "CO Issued", "Partial CO Issued", "Reinstated", "Extended", ""]
-var paramsAppStatusValid = null;
+var paramsAppStatusValid = ["Active", "Active-Pending Renewal"]
 // Cap Status that the batch script is supposed to ignore.
-var paramsAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
+var paramsAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn", "Revoked", "Suspended"];
 
-var paramsAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
-var paramsAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
+var paramsAppSpecInfoLabel = null;
+var paramsAppSpecInfoValue = null;
 
+/*
+var capSearchBy = "CapModel";
+var paramsAppStatus = "Active";         // Cap Status that the batch script is suppose to process.
+var capSearchBy = "ASIDate";
+var paramsAppSubGroupName = "GENERAL INFORMATION";                      // ASI Subgroup Name that the ASI field is associated to.
+var paramsAppSpecInfoLabel = "Permit Expiration Date";      // ASI field name that the batch script is to search.
 //var paramsDateFrom = dateAdd(startDate, 150);
 //var paramsDateTo = dateAdd(paramsDateFrom, 30);
-var paramsDateFrom = dateAdd(startDate, 25);
+var paramsDateFrom = dateAdd(startDate, -35);
 var paramsDateTo = dateAdd(paramsDateFrom, 5);
-
+var paramsDateTo = "01/01/2022"
+*/
+var capSearchBy = "ASIField";
+var paramsAppSubGroupName = "CC-BLD-CV-WD";               // ASI Subgroup Name that the ASI field is associated to.
+var paramsAppSpecInfoLabel = "Annual Quarter";            // ASI field name that the batch script is to search.
+var paramsAppSpecInfoValue = aa.env.getValue("Quarter");
+if (paramsAppSpecInfoValue == "") paramsAppSpecInfoValue = null;
+if (paramsAppSpecInfoValue == null) { // Default based on start Date
+    // On Building / Permit / Elevator / Master Records based on Quarter:
+    // Quarter 1(Q1 - March) runs on what Dec 1 of every year.
+    // Quarter 2(Q2 - June) runs on March 1 of every year.
+    // Quarter 3(Q3 - September) runs on June 1 of every year.
+    // Quarter 4(Q4 - December) runs on Sept 1 of every year.
+    if (startDate.getMonth() == 2) { // March
+        paramsAppSpecInfoValue = "Q2 - June";
+    } else if (startDate.getMonth() == 5) { // June
+        paramsAppSpecInfoValue = "Q3 - September";
+    } else if (startDate.getMonth() == 8) { // Sept
+        paramsAppSpecInfoValue = "Q4 - December";
+    } else if (startDate.getMonth() == 11) { // Dec
+        paramsAppSpecInfoValue = "Q1 - March";
+    }
+}
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
 /------------------------------------------------------------------------------------------------------*/
@@ -198,17 +235,63 @@ function mainProcess() {
     |       replace the following syntax dateAdd(null,-1) to a string date value
     |       in the following format "MM/DD/YYYY".
     */
-    var dateFrom = aa.date.parseDate(paramsDateFrom);        // Start Date for the batch script to select ASI data on.
-    var dateTo = aa.date.parseDate(paramsDateTo);               // End Date for the batch script to select ASI data on.
-    logDebug("Looking for " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel + " with Date Range: " + paramsDateFrom + " - " + paramsDateTo);
+    if (capSearchBy == "CapModel") {
+        capTypeModel = aa.cap.getCapTypeModel().getOutput();
+        capTypeModel.setGroup("ODA");
+        capTypeModel.setType("Pre App");
+        capTypeModel.setSubType("NA");
+        capTypeModel.setCategory("NA");
+        // Getting Cap Model
+        capModel = aa.cap.getCapModel().getOutput();
+        capModel.setCapType(capTypeModel);
 
-    var getCapIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(paramsAppSubGroupName, paramsAppSpecInfoLabel, dateFrom, dateTo);
-    if (!getCapIdResult.getSuccess()) {
-        logDebug("**ERROR: Retreiving Cap Id's by Application Specific field date range: " + getCapIdResult.getErrorMessage() + ".");
+        var capTypeModel = aa.cap.getCapTypeModel().getOutput();
+        if (paramsAppGroup) capTypeModel.setGroup(paramsAppGroup);
+        if (paramsAppType) capTypeModel.setType(paramsAppType);
+        if (paramsAppSubType) capTypeModel.setSubType(paramsAppSubType);
+        if (paramsAppCategory) capTypeModel.setCategory(paramsAppCategory);
+        var capModel = aa.cap.getCapModel().getOutput();
+        capModel.setCapType(capTypeModel);
+        if (paramsAppStatus) capModel.setCapStatus(paramsAppStatus);
+        var capIdResult = aa.cap.getCapIDListByCapModel(capModel);
+        //var capIdResult = aa.cap.getByAppType(paramsAppGroup, paramsAppType,paramsAppSubType,paramsAppCategory);
+        logDebug("Looking for "
+            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
+            + (paramsAppType ? paramsAppType : "*") + "/"
+            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
+            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
+            + " with Status: " + paramsAppStatus);
+    } else if (capSearchBy == "ASIDate") {
+        var dateFrom = aa.date.parseDate(paramsDateFrom);        // Start Date for the batch script to select ASI data on.
+        var dateTo = aa.date.parseDate(paramsDateTo);               // End Date for the batch script to select ASI data on.
+        logDebug("Looking for "
+            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
+            + (paramsAppType ? paramsAppType : "*") + "/"
+            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
+            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
+            + " with " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel
+            + " Date Range: " + paramsDateFrom + " - " + paramsDateTo);
+        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(paramsAppSubGroupName, paramsAppSpecInfoLabel, dateFrom, dateTo);
+    } else if (capSearchBy == "ASIField" && paramsAppSpecInfoValue) {
+        logDebug("Looking for "
+            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
+            + (paramsAppType ? paramsAppType : "*") + "/"
+            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
+            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
+            + " with " + paramsAppSpecInfoLabel
+            + " of " + paramsAppSpecInfoValue);
+        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoField(paramsAppSpecInfoLabel, paramsAppSpecInfoValue);
+    } else {
+        var capIdResult = false;
+    }
+    if (!capIdResult) {
+        return false;
+    } else if (!capIdResult.getSuccess()) {
+        logDebug("**ERROR: Retreiving Cap Id's by Application Specific field date range: " + capIdResult.getErrorMessage() + ".");
         return false;
     }
 
-    var capIdArray = getCapIdResult.getOutput(); //Array of CapIdScriptModel Objects
+    var capIdArray = capIdResult.getOutput(); //Array of CapIdScriptModel Objects
     logDebug("capIdArray.length: " + capIdArray.length);
 
     for (i in capIdArray) {
@@ -238,7 +321,6 @@ function mainProcess() {
         var capIDsFiltered = [];
         var filterReasons = [];
         if (paramsCapType && !appMatch(paramsCapType)) filterReasons.push("CapType");
-        if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
         if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) filterReasons.push("CapStatusValid");
         if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
         if (false && filterReasons && filterReasons.length > 0) {
@@ -253,26 +335,25 @@ function mainProcess() {
         if (paramsCapType && !appMatch(paramsCapType)) continue;
         if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) continue;
         if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) continue;
-        logDebug("Processing Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", " + paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel]);
+        logDebug("Processing Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
+            + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : ""));
         count["cap"]++;
 
-        //Expire Building Caps that have a Cap Status of "Issued".
-        var adHocProcess = "ADHOC_WORKFLOW";
-        var adHocTask = "Inactive Application";
-        if (capStatus == "Issued") adHocTask = "Inactive Permit";
-        var adHocNote = "";
-        var adHocTaskStatus = "About to Expire";
-//        var adHocTaskStatus = null;
-        var adHocTaskComment = "Updated via batch script";
-        // If adHocTask does not exist add it.
-        if (adHocTask) {
-            var tasks = loadTasks(capId);
-            if (typeof (tasks[adHocTask]) == "undefined") {
-                logDebug("Adding Workflow Task " + adHocTask);
-                addAdHocTask(adHocProcess, adHocTask, adHocNote);
-            }
-            if (adHocTaskStatus && adHocTaskStatus != "" && adHocTaskStatus != taskStatus(adHocTask))
-                updateTask(adHocTask, adHocTaskStatus, adHocTaskComment, adHocNote)
+        //Set the Workflow Task 'Annual Status' to Status of 'Annual Renewal'.
+        //Set the Record Status to 'Active-Pending Renewal'.
+
+        var wfTask = "Annual Status";
+        var wfStatus = "Annual Renewal";
+        var wfTaskComment = "Updated via Batch Script";
+        var wfNote = "";
+        var capStatusNew = "Active-Pending Renewal";
+        if (wfTask) {
+            if (wfStatus && wfStatus != "" && wfStatus != taskStatus(wfTask))
+                updateTask(wfTask, wfStatus, wfTaskComment, wfNote);
+            cap = aa.cap.getCap(capId).getOutput();
+            capStatus = cap.getCapStatus();
+            if (capStatus != capStatusNew)
+                updateAppStatus(capStatusNew, wfTaskComment);
         }
     }
     return count["cap"];
@@ -313,6 +394,7 @@ function isEmptyOrNull(value) {
     return value == null || value === undefined || String(value) == "";
 }
 
+
 function logMessage(etype, edesc) {
     aa.eventLog.createEventLog(etype, "Batch Process", batchJobName, sysDate, sysDate, "", edesc, batchJobID);
     aa.print(etype + " : " + edesc);
@@ -339,30 +421,30 @@ function logDebug(dstr) {
 
 function getCapGlobals(itemCap) {
     capId = null,
-    cap = null,
-    capIDString = "",
-    appTypeResult = null,
-    appTypeAlias = "",
-    appTypeString = "",
-    appTypeArray = new Array(),
-    capName = null,
-    capStatus = null,
-    fileDateObj = null,
-    fileDate = null,
-    fileDateYYYYMMDD = null,
-    parcelArea = 0,
-    estValue = 0,
-    calcValue = 0,
-    houseCount = 0,
-    feesInvoicedTotal = 0,
-    balanceDue = 0,
-    houseCount = 0,
-    feesInvoicedTotal = 0,
-    capDetail = "",
-    AInfo = new Array(),
-    partialCap = false,
-    feeFactor = "",
-    parentCapId = null;
+        cap = null,
+        capIDString = "",
+        appTypeResult = null,
+        appTypeAlias = "",
+        appTypeString = "",
+        appTypeArray = new Array(),
+        capName = null,
+        capStatus = null,
+        fileDateObj = null,
+        fileDate = null,
+        fileDateYYYYMMDD = null,
+        parcelArea = 0,
+        estValue = 0,
+        calcValue = 0,
+        houseCount = 0,
+        feesInvoicedTotal = 0,
+        balanceDue = 0,
+        houseCount = 0,
+        feesInvoicedTotal = 0,
+        capDetail = "",
+        AInfo = new Array(),
+        partialCap = false,
+        feeFactor = "",
+        parentCapId = null;
 
     capId = itemCap;
     if (capId && capId.getCustomID() == null) {
@@ -413,6 +495,7 @@ function getCapGlobals(itemCap) {
         loadParcelAttributes(AInfo);
         loadASITables();
     }
+
 
 }
 
