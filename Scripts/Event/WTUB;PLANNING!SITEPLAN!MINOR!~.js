@@ -4,7 +4,8 @@ try {
         var tasks = loadTasks(capId);
         if (tasks[wfTask] && tasks[wfTask].status == 'Create List') {
             var wfTaskStatusDateLast = tasks[wfTask].statusdate;
-            if (wfTaskStatusDateLast) wfTaskStatusDateLast = (new Date(wfTaskStatusDateLast) + 15);
+            if (wfTaskStatusDateLast) wfTaskStatusDateLast = new Date(dateAdd(wfTaskStatusDateLast, 15));
+            logDebug("Last Status: " + tasks[wfTask].status + " , Date: " + tasks[wfTask].statusdate + " , Date + 15: " + wfTaskStatusDateLast);
             if (wfTaskStatusDateLast && wfTaskStatusDateLast.getTime() > startDate.getTime()) {
                 showMessage = true;
                 comment('<font size=small><b>Need to assure that residential neighbors have had 15 days of notification</b></font>');
