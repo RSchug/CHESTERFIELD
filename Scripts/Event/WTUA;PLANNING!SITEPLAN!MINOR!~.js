@@ -2,4 +2,4 @@
 var expDateField = "Expiration Date";
 var expDate = jsDateToASIDate(new Date(dateAdd(null, 1825)));
 if (wfTask == 'Review Consolidation' && wfStatus == 'Approved'){
-    editAppSpecific(expDateField, expDate, newCapId);}
+    editAppSpecific(expDateField, expDate);}
