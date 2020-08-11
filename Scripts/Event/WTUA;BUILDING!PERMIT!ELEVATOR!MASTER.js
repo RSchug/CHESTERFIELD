@@ -54,8 +54,11 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     var newCapIdString = null;
     if (newCapId) {
         // This code gives the License the same # as tha APP 
+        // Get Exp Year 
+        var expYear = (new Date()).getFullYear(), expDateJS = convertDate(expDate);
+        if (expDateJS) expYear = expDate.getFullYear();
         newCapIdString = newCapId.getCustomID();
-        var editIdString = capIDString.substr(0, 14) + 'R';
+        var editIdString = capIDString.substr(0, 14) + 'R' + (expYear + "").substr(-2);
         logDebug("newCapId: " + newCapId + ", newCapIdString: " + newCapIdString + ", editIdString: " + editIdString);
         if (editIdString) {   // Update Record ID
             aa.cap.updateCapAltID(newCapId, editIdString);
