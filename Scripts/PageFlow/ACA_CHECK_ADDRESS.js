@@ -37,7 +37,7 @@ if (aa.env.getValue("ScriptName") == "Test") { 	// Setup parameters for Script T
 	aa.print("capModel:" + capModel);
 	cap = capModel;
 }
-var debugEmailTo = "dboucher@truepointsolutions.com";
+var debugEmailTo = "";
 /*------------------------------------------------------------------------------------------------------/
 | START User Configurable Parameters
 |
@@ -60,11 +60,13 @@ var message = ""; // Message String
 var debug = ""; // Debug String
 var br = "<BR>"; // Break Tag
 
+var useAppSpecificGroupName = false;
+
+var SCRIPT_VERSION = 9.0;
+var useCustomScriptFile = true;  // if true, use Events->Custom Script and Master Scripts, else use Events->Scripts->INCLUDES_*
 var useSA = false;
 var SA = null;
 var SAScript = null;
-
-
 var bzr = aa.bizDomain.getBizDomainByValue("MULTI_SERVICE_SETTINGS", "SUPER_AGENCY_FOR_EMSE");
 if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") {
 	useSA = true;
@@ -75,15 +77,24 @@ if (bzr.getSuccess() && bzr.getOutput().getAuditStatus() != "I") {
 	}
 }
 
+var controlFlagStdChoice = "EMSE_EXECUTE_OPTIONS";
+var bzr = aa.bizDomain.getBizDomain(controlFlagStdChoice).getOutput().size() > 0;
+if (bzr) {
+	var bvr3 = aa.bizDomain.getBizDomainByValue(controlFlagStdChoice, "USE_MASTER_INCLUDES");
+	if (bvr3.getSuccess()) { if (bvr3.getOutput().getDescription() == "No") useCustomScriptFile = false };
+}
+
 if (SA) {
-	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", SA));
+	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", SA, useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", SA, useCustomScriptFile));
 	eval(getScriptText(SAScript, SA));
 } else {
-	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS"));
+	eval(getScriptText("INCLUDES_ACCELA_FUNCTIONS", null, useCustomScriptFile));
+	eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
 }
 
 eval(getScriptText("INCLUDES_CUSTOM", null, useCustomScriptFile));
-eval(getScriptText("INCLUDES_PAGEFLOW", null, useCustomScriptFile));
+eval(getScriptText("INCLUDES_PAGEFLOW"));
 
 function getScriptText(vScriptName, servProvCode, useProductScripts) {
 	if (!servProvCode)
@@ -111,6 +122,29 @@ var AInfo = new Array(); // Create array for tokenized variables
 var capId = cap.getCapID();
 //var capId = null; // needed for next call
 loadAppSpecific4ACA(AInfo); // Add AppSpecific Info
+
+var serverName = java.net.InetAddress.getLocalHost().getHostName(); // Host Name
+
+// Get Public User Email Address
+var publicUserEmail = "";
+if (publicUserID) {
+	var publicUserModelResult = aa.publicUser.getPublicUserByPUser(publicUserID);
+	if (publicUserModelResult.getSuccess() || !publicUserModelResult.getOutput()) {
+		publicUserEmail = publicUserModelResult.getOutput().getEmail();
+		logDebug("publicUserEmail: " + publicUserEmail + " for " + publicUserID)
+	} else {
+		publicUserEmail = null;
+		logDebug("publicUserEmail: " + publicUserEmail);
+	}
+}
+if (publicUserEmail) publicUserEmail = publicUserEmail.replace("TURNED_OFF","").toLowerCase();
+logDebug("publicUserEmail: " + publicUserEmail);
+// Set Debug User if TPS User.
+if (publicUserEmail && debugEmailTo == "") {
+	//if (publicUserEmail.indexOf("@truepointsolutions.com") > 0) 	debugEmailTo = publicUserEmail;
+	//if (exists(publicUserEmail,['rschug@truepointsolutions.com']))	debugEmailTo = publicUserEmail;
+}
+logDebug("debugEmailTo: " + debugEmailTo);
 
 // page flow custom code begin
 try {
@@ -151,9 +185,18 @@ try {
 } catch (err) {
     showDebug = false;
     logDebug("Error in pageflow ACA_CHECK_ADDRESS, err: " + err + ". " + err.stack);
-aa.sendMail("bushatos@gmail.com", debugEmailTo, "", "Log", "Debug: <br>" + debug + "<br>Message: <br>" + message);
+	debugEmailSubject = "";
+	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - ERROR";
+	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 }
 
+// Send Debug Email
+if (debugEmailTo && debugEmailTo != "") {
+	debugEmailSubject = "";
+	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - Debug";
+	logDebug("Sending Debug Message to "+debugEmailTo);
+	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+}
 // page flow custom code end
 
 if (debug.indexOf("**ERROR") > 0) {
