@@ -1,11 +1,11 @@
 try {
 // Error message when Fee item selected with wrong status
-	if (inspResult == "Approved") {  //&& Overtime == 'CHECKED'
+/*	if (inspResult == "Approved") {  //&& Overtime == 'CHECKED'
 			showMessage = true;
 			comment('<font size=small><b>Not Ready Fee must be Corrections Required status</b></font>');
 			cancel = true;
 	}
-	/*if (inspResult == "Cancelled" && (Overtime == 'CHECKED' || Billable == 'CHECKED')) {
+	if (inspResult == "Cancelled" && (Overtime == 'CHECKED' || Billable == 'CHECKED')) {
 			showMessage = true;
 			comment('<font size=small><b>Fees are not allowed for Cancelled Status</b></font>');
 			cancel = true;
