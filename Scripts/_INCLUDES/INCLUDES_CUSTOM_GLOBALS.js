@@ -14,7 +14,7 @@
 feeEstimate=false;
 if(vEventName.equals("FeeEstimateAfter4ACA")) 
 	feeEstimate=true;
-//db added 05-2020
+/*db added 05-2020
 sendDebugEmail = false;                         // Used for debugging ACA Scripts by emailing debug output.
 debugEmailAddress = "";                         // Used for sending out debug Emails for testing purposes.
 if (matches(publicUserID, "PUBLICUSER1182", "PUBLICUSER1202")) {
@@ -25,7 +25,7 @@ if (matches(publicUserID, "PUBLICUSER1182", "PUBLICUSER1202")) {
         debugEmailAddress = publicUserEmail;
         logDebug("debugEmailAddress: " + debugEmailAddress);
     }
-}
+}*/
 
 showDebug = false;
 if (currentUserID == "ADMIN") showDebug = true;
