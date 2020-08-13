@@ -117,10 +117,10 @@ if (publicUserEmail && debugEmailTo == "") {
 	//if (exists(publicUserEmail,['rschug@truepointsolutions.com']))	debugEmailTo = publicUserEmail;
 }
 logDebug("debugEmailTo: " + debugEmailTo);
+if (debugEmailTo && debugEmailTo != "") showDebug = true;
 
 // page flow custom code begin
 try {
-	showDebug = true;
 	logDebug("Begin Custom Code");
 
 	var addressModel = cap.getAddressModel();
@@ -150,11 +150,11 @@ try {
 	}
 	logDebug("End Custom Code")
 } catch (err) {
-    showDebug = false;
     logDebug("Error in pageflow ACA_CHECK_ADDRESS, err: " + err + ". " + err.stack);
 	debugEmailSubject = "";
 	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - ERROR";
 	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+	showDebug = false;
 }
 
 // Send Debug Email
@@ -162,9 +162,15 @@ if (debugEmailTo && debugEmailTo != "") {
 	debugEmailSubject = "";
 	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - Debug";
 	logDebug("Sending Debug Message to "+debugEmailTo);
-	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: \r" + br + debug);
+	showDebug = false;
 }
 // page flow custom code end
+
+if (aa.env.getValue("ScriptName") == "Test") { 	// Print Debug
+	var z = debug.replace(/<BR>/g, "\r"); aa.print(">>> DEBUG: \r" + z);
+	showDebug = true;
+}
 
 if (debug.indexOf("**ERROR") > 0) {
 	aa.env.setValue("ErrorCode", "1");
@@ -183,10 +189,6 @@ if (debug.indexOf("**ERROR") > 0) {
 		if (showDebug)
 			aa.env.setValue("ErrorMessage", debug);
 	}
-}
-
-if (aa.env.getValue("ScriptName") == "Test") { 	// Print Debug
-	var z = debug.replace(/<BR>/g, "\r"); aa.print(">>> DEBUG: \r" + z);
 }
 
 function filterCapIds(capIdsArray,capType) {
