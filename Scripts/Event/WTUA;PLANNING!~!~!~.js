@@ -21,13 +21,7 @@
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
-		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Sign Posting")){
-		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Maps")){
+		if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
@@ -36,12 +30,6 @@
 	}
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("IVR Message")){
-		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Sign Posting")){
-		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 	}
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
@@ -52,12 +40,6 @@
 	}
 	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-	}
-	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("IVR Message")){
-		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
-	}
-	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Sign Posting")){
-		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 	}
 	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
