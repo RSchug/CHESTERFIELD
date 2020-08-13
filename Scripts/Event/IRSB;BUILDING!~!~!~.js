@@ -1,3 +1,4 @@
+try {
 	var inspBillable = inspObj.getInspection().getActivity().getInspBillable();
 	logDebug("Inspection Billable checkbox = " + inspBillable + ". And Inspection Result = " + inspResult);
 	var inspOvertime = inspObj.getInspection().getActivity().getOvertime();
@@ -13,3 +14,6 @@ if (inspResult == "Approved" && inspOvertime == "Y") {
 			comment('<font size=small><b>Fees are not allowed for Cancelled Status</b></font>');
 			cancel = true;
 	}
+} catch (err) {
+	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
