@@ -25,25 +25,25 @@
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
-		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
-		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
-		addAdHocTask("ADHOC_WORKFLOW","Maps","");
-	}
+//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
+//		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+//	}
+//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
+//		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+//	}
+//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
+//		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+//	}
 //9P When Workflow Task 'BOS Hearing' Status 'Deferred by BOS' or 'Deferred by Applicant' or 'Remanded' is submitted then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
-		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-	}
-	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
-		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-	}
-	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
-		addAdHocTask("ADHOC_WORKFLOW","Maps","");
-	}
+//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
+//		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+//	}
+//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
+//		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+//	}
+//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
+//		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+//	}
 try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
