@@ -1,5 +1,7 @@
 	var inspBillable = inspObj.getInspection().getActivity().getInspBillable();
+	logDebug("Inspection Billable checkbox = " + inspBillable + ". And Inspection Result = " + inspResult);
 	var inspOvertime = inspObj.getInspection().getActivity().getOvertime();
+	logDebug("Inspection Not Ready (Overtime) checkbox = " + inspOvertime + ". And Inspection Result = " + inspResult);
 // Error message when Fee item selected with wrong status
 if (inspResult == "Approved" && inspOvertime == "Y") {
 			showMessage = true;
