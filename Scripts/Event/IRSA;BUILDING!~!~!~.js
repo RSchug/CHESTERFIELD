@@ -75,3 +75,19 @@ if (inspType.equals("Elevator Final") && inspResult.equals("Approved")){
 if (inspType.equals("Sign Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
 	}
+// Error message when Fee item selected with wrong status
+	if (inspResult == "Approved" && inspOvertime == "Y") {
+				showMessage = true;
+				comment('<font size=small><b>Not Ready Fee must be Corrections Required status. Fee will not be added until Status is changed to Corrections Required.</b></font>');
+				cancel = true;
+		}
+		if (inspResult == "Cancelled" && inspBillable =="Y") {
+				showMessage = true;
+				comment('<font size=small><b>Fees are not allowed for Cancelled Status and will not be added.</b></font>');
+				cancel = true;
+		}
+		if (inspResult == "Cancelled" && inspOvertime =="Y") {
+			showMessage = true;
+			comment('<font size=small><b>Fees are not allowed for Cancelled Status and will not be added.</b></font>');
+			cancel = true;
+	}
