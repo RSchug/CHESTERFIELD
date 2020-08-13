@@ -9,36 +9,7 @@
 |
 | Notes   : 08-2020 Boucher updated for CC enhancement/issue #11
 |
-/------------------------------------------------------------------------------------------------------*/
-if (aa.env.getValue("ScriptName") == "Test") { 	// Setup parameters for Script Test.
-	var CurrentUserID = "PUBLICUSER548433"; // Public User ID: rschug (rschug@truepointsolutions.com)
-	var capIDString = "20PR0041";		// Test Record from AA.
-	var capIDString = "20PS0010";
-//	var capIDString = "19TMP-007173";			// Test Temp Record from ACA.
-	//  var capIDString = "2019-LOG-0000239";
-	aa.env.setValue("ScriptCode", "Test");
-	aa.env.setValue("CurrentUserID", CurrentUserID); 	// Current User
-	sca = capIDString.split("-");
-	if (sca.length == 3 && sca[1] == "00000") { // Real capId
-		var capID = aa.cap.getCapID(sca[0], sca[1], sca[2]).getOutput();
-		aa.print("capID: " + capID + ", capIDString: " + sca.join("-") + " sca");
-	} else { // Alt capId
-		capID = aa.cap.getCapID(capIDString).getOutput();
-		aa.print("capID: " + capID + ", capIDString: " + capIDString);
-	}
-	capModel = aa.cap.getCapViewBySingle4ACA(capID);
-	var itemCap = capModel;
-	aa.print("itemCap: " + itemCap + (itemCap ? " " + itemCap.getClass() : ""));
-
-	aa.env.setValue("CapModel", capModel);
-	aa.print("CurrentUserID:" + CurrentUserID);
-	aa.print("capIDString:" + capIDString);
-	aa.print("capID:" + capID);
-	aa.print("capModel:" + capModel);
-	cap = capModel;
-}
-var debugEmailTo = "";
-/*------------------------------------------------------------------------------------------------------/
+/------------------------------------------------------------------------------------------------------/
 | START User Configurable Parameters
 |
 |     Only variables in the following section may be changed.  If any other section is modified, this
@@ -51,6 +22,7 @@ var useAppSpecificGroupName = false; // Use Group name when populating App Speci
 var useTaskSpecificGroupName = false; // Use Group name when populating Task Specific Info Values
 var cancel = false;
 var useCustomScriptFile = true; // if true, use Events->Custom Script, else use Events->Scripts->INCLUDES_CUSTOM
+var debugEmailTo = "";
 /*------------------------------------------------------------------------------------------------------/
 | END User Configurable Parameters
 /------------------------------------------------------------------------------------------------------*/
@@ -141,7 +113,7 @@ if (publicUserEmail) publicUserEmail = publicUserEmail.replace("TURNED_OFF","").
 logDebug("publicUserEmail: " + publicUserEmail);
 // Set Debug User if TPS User.
 if (publicUserEmail && debugEmailTo == "") {
-	//if (publicUserEmail.indexOf("@truepointsolutions.com") > 0) 	debugEmailTo = publicUserEmail;
+	if (publicUserEmail.indexOf("@truepointsolutions.com") > 0) 	debugEmailTo = publicUserEmail;
 	//if (exists(publicUserEmail,['rschug@truepointsolutions.com']))	debugEmailTo = publicUserEmail;
 }
 logDebug("debugEmailTo: " + debugEmailTo);
@@ -150,8 +122,6 @@ logDebug("debugEmailTo: " + debugEmailTo);
 try {
 	showDebug = true;
 	logDebug("Begin Custom Code");
-	//var addArray = new Array();
-	//loadAddressAttributes4ACA(addArray);
 
 	var addressModel = cap.getAddressModel();
 	var addressLine = '';
@@ -163,17 +133,14 @@ try {
 	}
 	logDebug("capId: " + capId + (capId? " "+capId.getCustomID():"") + " at " + addressLine);
 	var capIdsFound = null;
-	if (addressModel && appMatch('Planning/*/*/*')) {
-		//var hseNum = addArray['AddressAttribute.HouseNumberStart'];
-		//var streetName = addArray['AddressAttribute.StreetName'];
-		//var capAddResult = aa.cap.getCapListByDetailAddress(streetName, hseNum, null, null, null, null);
+	if (addressModel && appMatch('eReview/Planning/NA/NA')) {
 
 		logDebug("looking for Records at " + addressLine);
-		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName(), addressModel.getHouseNumberStart(), addressModel.getStreetSuffix(), null, addressModel.getStreetDirection(), null);
+		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName(), addressModel.getHouseNumberStart(), null, null, null, null);
 		if (capAddResult.getSuccess()) {
 			var capIdsArray = capAddResult.getOutput();
 			logDebug("Address Associated Records: " + capIdsArray.length);
-			var capIdsFound = filterCapIds(capIdsArray, "Planning/*/*/*");
+			var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
 			logDebug("Planning Records: " + capIdsFound.length);
 		}
 		if (capIdsFound && capIdsFound.length > 0) {
@@ -247,4 +214,3 @@ function filterCapIds(capIdsArray,capType) {
 	}
 	return capIdsArrayReturn;
 }
-
