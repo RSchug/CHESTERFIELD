@@ -5,10 +5,11 @@
 | Version 1.0 - Ray Schug - TruePoint Solutions
 |
 |   Building/Permit/~/~
-|   30 days before Permit Expiration 
+|   0 days before Permit Expiration 
 |       if Record Status is not 'Issued' then add Adhoc Task 'Inactive Application',
 |       if Record Status is 'Issued' then add Adhoc Task 'Inactive Permit'.
-|
+|           Update task status to "Expired"
+|       Update Record status to "Expired"
 /------------------------------------------------------------------------------------------------------*/
 if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName","Test");
