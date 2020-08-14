@@ -69,24 +69,24 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
 
 //Parameter variables
 var paramsOK = true;
-var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
-var paramsAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
-var paramsAppSubType = "*";      // Per SubType of the Cap Type that the batch script should process.
-var paramsAppCategory = "*";       // Per Category of the Cap Type that the batch script should process.
+var searchAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
+var searchAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
+var searchAppSubType = "*";      // Per SubType of the Cap Type that the batch script should process.
+var searchAppCategory = "*";       // Per Category of the Cap Type that the batch script should process.
 
 // Cap Status that the batch script is suppose to process.
-var paramsAppStatusValid = ["Submitted", "Pending Applicant", "In Review", "Ready to Issue", "Issued", "Temporary CO Issued", "CO Ready to Issue", "Pending Certificate", "CO Issued", "Partial CO Issued", "Reinstated", "Extended", ""]
-var paramsAppStatusValid = null;
+var searchAppStatusValid = ["Submitted", "Pending Applicant", "In Review", "Ready to Issue", "Issued", "Temporary CO Issued", "CO Ready to Issue", "Pending Certificate", "CO Issued", "Partial CO Issued", "Reinstated", "Extended", ""]
+var searchAppStatusValid = null;
 // Cap Status that the batch script is supposed to ignore.
-var paramsAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
+var searchAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
 
-var paramsAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
-var paramsAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
+var searchAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
+var searchAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
 
-//var paramsDateFrom = dateAdd(startDate, 150);
-//var paramsDateTo = dateAdd(paramsDateFrom, 30);
-var paramsDateFrom = dateAdd(startDate, 25);
-var paramsDateTo = dateAdd(paramsDateFrom, 5);
+//var searchDateFrom = dateAdd(startDate, 150);
+//var searchDateTo = dateAdd(searchDateFrom, 30);
+var searchDateFrom = dateAdd(startDate, 25);
+var searchDateTo = dateAdd(searchDateFrom, 5);
 
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
@@ -152,14 +152,14 @@ var showDebug = true;					                                  // Set to true to se
 /*------------------------------------------------------------------------------------------------------/
 | END: USER CONFIGURABLE PARAMETERS
 /------------------------------------------------------------------------------------------------------*/
-var paramsCapType = ""
-    + (paramsAppGroup && paramsAppGroup != "" ? paramsAppGroup : "*") + "/"
-    + (paramsAppType && paramsAppType != "" ? paramsAppType : "*") + "/"
-    + (paramsAppSubType && paramsAppSubType != "" ? paramsAppSubType : "*") + "/"
-    + (paramsAppCategory && paramsAppCategory != "" ? paramsAppCategory : "*");
-logDebug("paramsCapType: " + paramsCapType);
-logDebug("paramsAppStatusValid: " + paramsAppStatusValid);
-logDebug("paramsAppStatusInvalid: " + paramsAppStatusInvalid);
+var searchCapType = ""
+    + (searchAppGroup && searchAppGroup != "" ? searchAppGroup : "*") + "/"
+    + (searchAppType && searchAppType != "" ? searchAppType : "*") + "/"
+    + (searchAppSubType && searchAppSubType != "" ? searchAppSubType : "*") + "/"
+    + (searchAppCategory && searchAppCategory != "" ? searchAppCategory : "*");
+logDebug("searchCapType: " + searchCapType);
+logDebug("searchAppStatusValid: " + searchAppStatusValid);
+logDebug("searchAppStatusInvalid: " + searchAppStatusInvalid);
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Main=Loop================>
@@ -168,9 +168,14 @@ logDebug("paramsAppStatusInvalid: " + paramsAppStatusInvalid);
 if (paramsOK) {
     logDebug("Start of " + batchJobName + " Batch Job.");
 
+    //Initialize Counters
+    var counts = [];
+
     mainProcess();
 
-    logDebug("Number of Records processed: " + count["cap"] + ".");
+    for (cc in counts) {
+        logDebug("Number of Records " + cc + ": " + counts[cc]);
+    }
     logDebug("End of " + batchJobName + " Batch Job, Elapsed Time : " + elapsed() + " Seconds.");
 }
 
@@ -188,94 +193,155 @@ aa.print("emailText: " + emailText);
 | <===========External Functions (used by Action entries)
 /------------------------------------------------------------------------------------------------------*/
 function mainProcess() {
-    //Initialize Counters
-    count = [];
-    count["cap"] = 0;
-
+    counts["found"] = 0;
+    counts["filtered"] = 0;
+    counts["processed"] = 0;
+    counts["already processed"] = 0;
+    counts["Child"] = 0;
     /*
     | Note: Start Date and End Date are defaulted to use the current System Date.
     |       To set the Start Date and End Date to specific values for a manual run
     |       replace the following syntax dateAdd(null,-1) to a string date value
     |       in the following format "MM/DD/YYYY".
     */
-    var dateFrom = aa.date.parseDate(paramsDateFrom);        // Start Date for the batch script to select ASI data on.
-    var dateTo = aa.date.parseDate(paramsDateTo);               // End Date for the batch script to select ASI data on.
-    logDebug("Looking for " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel + " with Date Range: " + paramsDateFrom + " - " + paramsDateTo);
-
-    var getCapIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(paramsAppSubGroupName, paramsAppSpecInfoLabel, dateFrom, dateTo);
-    if (!getCapIdResult.getSuccess()) {
-        logDebug("**ERROR: Retreiving Cap Id's by Application Specific field date range: " + getCapIdResult.getErrorMessage() + ".");
+    var dateFrom = aa.date.parseDate(searchDateFrom);        // Start Date for the batch script to select ASI data on.
+    var dateTo = aa.date.parseDate(searchDateTo);               // End Date for the batch script to select ASI data on.
+    var searchMsg = searchAppSubGroupName + "." + searchAppSpecInfoLabel + " with Date Range: " + searchDateFrom + " - " + searchDateTo;
+    logDebug("Looking for Caps with " + searchMsg);
+    var capIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(searchAppSubGroupName, searchAppSpecInfoLabel, dateFrom, dateTo);
+    if (!capIdResult.getSuccess()) {
+        logDebug("**ERROR: Retrieving Caps with " + searchMsg + ": " + capIdResult.getErrorMessage());
         return false;
     }
 
-    var capIdArray = getCapIdResult.getOutput(); //Array of CapIdScriptModel Objects
+    var capIdArray = capIdResult.getOutput(); //Array of CapIdScriptModel Objects
     logDebug("capIdArray.length: " + capIdArray.length);
-
+    counts["found"] = capIdArray.length;
     for (i in capIdArray) {
         if (maxSeconds && elapsed() > maxSeconds) { // Only continue if time hasn't expired
             logDebug("WARNING: Partial completion of this process caused by script timeout.  Please re-run.  " + elapsed() + " seconds elapsed, " + maxSeconds + " allowed.");
             partialProcessCompletion = true;
             break;
         }
-        if (maxRecords && count["cap"] >= maxRecords) { // Only continue if max # of records hasn't been reached.
-            logDebug("WARNING: Partial Completion of this process because maximum records reached.  Please re-run.  " + count["cap"] + " records, " + maxRecords + " allowed.");
+        if (maxRecords && counts["processed"] >= maxRecords) { // Only continue if max # of records hasn't been reached.
+            logDebug("WARNING: Partial Completion of this process because maximum records reached.  Please re-run.  " + counts["processed"] + " records, " + maxRecords + " allowed.");
             partialProcessCompletion = true;
             break;
         }
 
         capId = capIdArray[i].getCapID(); // CapIDModel Object
         if (capId == null) continue;
-        capGroup = null;
-        capType = null;
-        getCapGlobals(capId);
-        //eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
-        if (capId != null) {
-            capGroup = cap.getCapType().getGroup(); // Cap Type Group
-            capType = cap.getCapType().getType(); // Cap Per Type
-        }
-        count["cap"]++;
+        servProvCode = capId.getServiceProviderCode();
+        capIDString = capId.getCustomID();
+        customId = capId.getCustomID(); // Alternate Cap ID string
+        cap = aa.cap.getCap(capId).getOutput();
+        appTypeResult = cap.getCapType();
+        appTypeAlias = appTypeResult.getAlias();
+        appTypeString = appTypeResult.toString();
+        appTypeArray = appTypeString.split("/");
+        capName = cap.getSpecialText();
+        capStatus = cap.getCapStatus();
 
         var capIDsFiltered = [];
         var filterReasons = [];
-        if (paramsCapType && !appMatch(paramsCapType)) filterReasons.push("CapType");
+        if (searchCapType && !appMatch(searchCapType)) filterReasons.push("CapType");
         if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
-        if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) filterReasons.push("CapStatusValid");
-        if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
-        if (false && filterReasons && filterReasons.length > 0) {
-            logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
-                + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : "")
-                + " Reasons: " + filterReasons);
-            //capIDsFiltered[capId.getCustomID()]=filterReasons;
+        if (searchAppStatusValid && !exists(capStatus, searchAppStatusValid)) filterReasons.push("CapStatusValid");
+        if (searchAppStatusInvalid && exists(capStatus, searchAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
+        if (filterReasons && filterReasons.length > 0) {
+            //logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: " + filterReasons);
+            capIDsFiltered[capId.getCustomID()] = filterReasons;
+            counts["filtered"]++;
             continue;
         }
 
-
-        if (paramsCapType && !appMatch(paramsCapType)) continue;
-        if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) continue;
-        if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) continue;
-        logDebug("Processing Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", " + paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel]);
-        count["cap"]++;
-
-        //Expire Building Caps that have a Cap Status of "Issued".
         var adHocProcess = "ADHOC_WORKFLOW";
         var adHocTask = "Inactive Application";
         if (capStatus == "Issued") adHocTask = "Inactive Permit";
-        var adHocNote = "";
         var adHocTaskStatus = "About to Expire";
-//        var adHocTaskStatus = null;
+        if (adHocTaskStatus && adHocTaskStatus == "") adHocTaskStatus = null;
         var adHocTaskComment = "Updated via batch script";
+        var adHocNote = "";
+        var capStatusNew = null; // "About to Expire";
+
+        //eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
+        getCapGlobals(capId);
+
+        // Check if already processed
+        // logDebug("Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", parentCapId: " + parentCapId);
+        if (!parentCapId) { 
+            //parentCapId = getParent(); 
+            getCapResult = aa.cap.getProjectParents(capId, 1);
+            if (getCapResult.getSuccess()) {
+                parentArray = getCapResult.getOutput();
+                if (parentArray.length)
+                    parentCapId = parentArray[0].getCapID();
+            }
+        }
+        //if (!parentCapId) { parentCapId = getParent(); }
+        //if (!parentCapId) { parentCapId = getParentLicenseCapID(capId); }
+
+        if (parentCapId) {
+            parentCap = aa.cap.getCap(parentCapId).getOutput();
+            parentAppTypeResult = parentCap.getCapType();
+            parentAppTypeAlias = parentAppTypeResult.getAlias();
+            parentAppTypeString = parentAppTypeResult.toString();
+            parentCapStatus = cap.getCapStatus();
+            parentExpDate = getAppSpecific(searchAppSpecInfoLabel, parentCapId);
+            logDebug("Checking Parent: " + parentCapId.getCustomID() + " " + parentAppTypeString + ", Status: " + parentCapStatus + ", " + searchAppSpecInfoLabel + ": " + parentExpDate);
+
+//          && (appMatch("Building/Permit/Commercial/*") || appMatch("Building/Permit/Residential/*"))
+            if (!(appMatch("Building/Permit/*/NA") || appMatch("Building/Permit/*/Multi-Family"))) {
+                parentCap = aa.cap.getCap(parentCapId).getOutput();
+                parentAppTypeResult = parentCap.getCapType();
+                parentAppTypeAlias = parentAppTypeResult.getAlias();
+                parentAppTypeString = parentAppTypeResult.toString();
+                parentCapStatus = cap.getCapStatus();
+                parentExpDate = getAppSpecific(searchAppSpecInfoLabel, parentCapId);
+
+                //var tasks = loadTasks(parentCapId);
+                logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: Child of " + parentCapId.getCustomID() + " " + parentAppTypeString + ", Status: " + parentCapStatus + ", " + searchAppSpecInfoLabel + ": " + parentExpDate);
+                counts["Child"]++;
+                capIDsFiltered[capId.getCustomID()] = ["Child"];
+                continue;
+            }
+        }
+
+        var tasks = loadTasks(capId);
+        if (adHocTask && typeof (tasks[adHocTask]) != "undefined") {
+            if (adHocTaskStatus && adHocTaskStatus == tasks[adHocTask].status && tasks[adHocTask].active == "Y") {
+                logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: already processed. "
+                + (tasks[adHocTask].active == "Y" ? "Active" : "") + " " + adHocTask + " " + tasks[adHocTask].status + ": " + tasks[adHocTask].statusdate);
+                counts["already processed"]++;
+                capIDsFiltered[capId.getCustomID()] = ["already processed"];
+                continue;
+            }
+        }
+
+        logDebug("Processing Record: " + capIDString
+            + ", appType: " + appTypeString + ", capStatus: " + capStatus
+            + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : ""));
+        counts["processed"]++;
+
+        //Expire Building Caps that have a Cap Status of "Issued".
         // If adHocTask does not exist add it.
         if (adHocTask) {
-            var tasks = loadTasks(capId);
             if (typeof (tasks[adHocTask]) == "undefined") {
                 logDebug("Adding Workflow Task " + adHocTask);
                 addAdHocTask(adHocProcess, adHocTask, adHocNote);
+                var tasks = loadTasks(capId);
             }
-            if (adHocTaskStatus && adHocTaskStatus != "" && adHocTaskStatus != taskStatus(adHocTask))
-                updateTask(adHocTask, adHocTaskStatus, adHocTaskComment, adHocNote)
+            if (adHocTaskStatus && adHocTaskStatus != tasks[adHocTask].status) {
+                updateTask(adHocTask, adHocTaskStatus, adHocTaskComment, adHocNote);
+            }
+            if (tasks[adHocTask].active != "Y") {
+                activateTask(adHocTask);
+            }
+            if (capStatusNew)
+                updateAppStatus(capStatusNew);
         }
     }
-    return count["cap"];
+    return counts["processed"];
 }
 
 /*------------------------------------------------------------------------------------------------------/
@@ -411,7 +477,7 @@ function getCapGlobals(itemCap) {
         loadAppSpecific(AInfo);
         loadTaskSpecific(AInfo);
         loadParcelAttributes(AInfo);
-        loadASITables();
+        // loadASITables();
     }
 
 }
