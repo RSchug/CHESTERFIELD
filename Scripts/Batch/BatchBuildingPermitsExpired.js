@@ -1,14 +1,15 @@
 /*------------------------------------------------------------------------------------------------------/
-| Program: BatchBuildingPermitsAboutToExpire  Trigger: Batch    
+| Program: BatchBuildingPermitsExpired  Trigger: Batch    
 | Client : Chesterfield County
 |
 | Version 1.0 - Ray Schug - TruePoint Solutions
 |
 |   Building/Permit/~/~
-|   30 days before Permit Expiration 
+|   0 days before Permit Expiration 
 |       if Record Status is not 'Issued' then add Adhoc Task 'Inactive Application',
 |       if Record Status is 'Issued' then add Adhoc Task 'Inactive Permit'.
-|
+|           Update task status to "Expired"
+|       Update Record status to "Expired"
 /------------------------------------------------------------------------------------------------------*/
 if (aa.env.getValue("ScriptName") == "Test") {
     aa.env.setValue("batchJobName","Test");
@@ -85,7 +86,9 @@ var searchAppSpecInfoLabel = "Permit Expiration Date";                          
 
 //var searchDateFrom = dateAdd(startDate, 150);
 //var searchDateTo = dateAdd(searchDateFrom, 30);
-var searchDateFrom = dateAdd(startDate, 25);
+var searchDateFrom = dateAdd(startDate, -5);
+var searchDateTo = dateAdd(searchDateFrom, 5);
+var searchDateFrom = dateAdd(startDate, 30);
 var searchDateTo = dateAdd(searchDateFrom, 5);
 
 /*------------------------------------------------------------------------------------------------------/
@@ -170,11 +173,14 @@ if (paramsOK) {
 
     //Initialize Counters
     var counts = [];
+    counts["found"] = 0;
+    counts["filtered"] = 0;
+    counts["processed"] = 0;
 
     mainProcess();
 
     for (cc in counts) {
-        logDebug("Number of Records " + cc + ": " + counts[cc]);
+        logDebug("Number of Records "+cc+": " + counts[cc]);
     }
     logDebug("End of " + batchJobName + " Batch Job, Elapsed Time : " + elapsed() + " Seconds.");
 }
@@ -198,12 +204,23 @@ function mainProcess() {
     counts["processed"] = 0;
     counts["already processed"] = 0;
     counts["Child"] = 0;
+
     /*
     | Note: Start Date and End Date are defaulted to use the current System Date.
     |       To set the Start Date and End Date to specific values for a manual run
     |       replace the following syntax dateAdd(null,-1) to a string date value
     |       in the following format "MM/DD/YYYY".
     */
+
+    //20200805-071: Building/Permit/Residential/Boiler
+    //20200804-007: Building/Permit/Elevator/Renewal
+    //20200724-059: Building/Permit/Residential/Boiler
+    //20200717-007: Building/Permit/Residential/Boiler
+    var searchCapStatus = "About to Expire";
+    var searchTaskProcess = "ADHOC_WORKFLOW";
+    var searchTaskName = "Inactive Application";
+    var searchTaskName = "Inactive Permit";
+    var searchTaskStatus = "About to Expire";
     var dateFrom = aa.date.parseDate(searchDateFrom);        // Start Date for the batch script to select ASI data on.
     var dateTo = aa.date.parseDate(searchDateTo);               // End Date for the batch script to select ASI data on.
     var searchMsg = searchAppSubGroupName + "." + searchAppSpecInfoLabel + " with Date Range: " + searchDateFrom + " - " + searchDateTo;
@@ -258,18 +275,17 @@ function mainProcess() {
         var adHocProcess = "ADHOC_WORKFLOW";
         var adHocTask = "Inactive Application";
         if (capStatus == "Issued") adHocTask = "Inactive Permit";
-        var adHocTaskStatus = "About to Expire";
-        if (adHocTaskStatus && adHocTaskStatus == "") adHocTaskStatus = null;
+        var adHocTaskStatus = "Expired";
         var adHocTaskComment = "Updated via batch script";
         var adHocNote = "";
-        var capStatusNew = null; // "About to Expire";
+        var capStatusNew = "Expired"; // "About to Expire";
 
         //eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
         getCapGlobals(capId);
 
         // Check if already processed
         // logDebug("Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", parentCapId: " + parentCapId);
-        if (!parentCapId) { 
+        if (!parentCapId) {
             //parentCapId = getParent(); 
             getCapResult = aa.cap.getProjectParents(capId, 1);
             if (getCapResult.getSuccess()) {
@@ -290,7 +306,7 @@ function mainProcess() {
             parentExpDate = getAppSpecific(searchAppSpecInfoLabel, parentCapId);
             logDebug("Checking Parent: " + parentCapId.getCustomID() + " " + parentAppTypeString + ", Status: " + parentCapStatus + ", " + searchAppSpecInfoLabel + ": " + parentExpDate);
 
-//          && (appMatch("Building/Permit/Commercial/*") || appMatch("Building/Permit/Residential/*"))
+            //          && (appMatch("Building/Permit/Commercial/*") || appMatch("Building/Permit/Residential/*"))
             if (!(appMatch("Building/Permit/*/NA") || appMatch("Building/Permit/*/Multi-Family"))) {
                 parentCap = aa.cap.getCap(parentCapId).getOutput();
                 parentAppTypeResult = parentCap.getCapType();
@@ -307,11 +323,12 @@ function mainProcess() {
             }
         }
 
+        // Check if already processed
         var tasks = loadTasks(capId);
         if (adHocTask && typeof (tasks[adHocTask]) != "undefined") {
             if (adHocTaskStatus && adHocTaskStatus == tasks[adHocTask].status && tasks[adHocTask].active == "Y") {
                 logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: already processed. "
-                + (tasks[adHocTask].active == "Y" ? "Active" : "") + " " + adHocTask + " " + tasks[adHocTask].status + ": " + tasks[adHocTask].statusdate);
+                    + (tasks[adHocTask].active == "Y" ? "Active" : "") + " " + adHocTask + " " + tasks[adHocTask].status + ": " + tasks[adHocTask].statusdate);
                 counts["already processed"]++;
                 capIDsFiltered[capId.getCustomID()] = ["already processed"];
                 continue;
@@ -323,10 +340,11 @@ function mainProcess() {
             + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : ""));
         counts["processed"]++;
 
-        //Expire Building Caps that have a Cap Status of "Issued".
-        // If adHocTask does not exist add it.
         if (adHocTask) {
-            if (typeof (tasks[adHocTask]) == "undefined") {
+            var taskName1 = "Inactive Application";
+            var taskName2 = "Inactive Permit";
+            logDebug(taskName1 + ": " + (tasks[taskName1] ? tasks[taskName1].status + " " + tasks[taskName1].statusdate : "null") + ", " + taskName2 + ": " + (tasks[taskName2] ? tasks[taskName2].status + " " + tasks[taskName2].statusdate : "null"));
+            if (typeof (tasks[adHocTask]) == "undefined") { // If adHocTask does not exist add it.
                 logDebug("Adding Workflow Task " + adHocTask);
                 addAdHocTask(adHocProcess, adHocTask, adHocNote);
                 var tasks = loadTasks(capId);
@@ -341,7 +359,7 @@ function mainProcess() {
                 updateAppStatus(capStatusNew);
         }
     }
-    return counts["processed"];
+    return counts;
 }
 
 /*------------------------------------------------------------------------------------------------------/
@@ -567,3 +585,4 @@ function dateAdd(td, amt)
 
     return (dDate.getMonth() + 1) + "/" + dDate.getDate() + "/" + dDate.getFullYear();
 } 
+
