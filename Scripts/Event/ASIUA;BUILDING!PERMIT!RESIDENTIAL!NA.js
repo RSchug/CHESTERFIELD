@@ -47,7 +47,7 @@ if (AInfo["Nature of Work"] == "Pool barrier fences (if permitted separately fro
 addFee("POOLBARRIER","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Shed 150-256 square feet, including prefab sheds on skids and pole sheds" && !feeExists("SHED")){
+if (AInfo["Nature of Work"] == "Shed > 256'" && !feeExists("SHED")){
 addFee("SHED","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
