@@ -291,3 +291,27 @@ if (wfTask == 'Sign Posting') {
 	showMessage = true;
 	comment('Message needs to be recorded before signs can be posted.');
 }
+
+// 44P: When Adhoc Workflow Task "Sign Posting" Status 'Signs Removed' is submitted, lookup the Record ID from the Standard Choice list, and then remove the Record ID.
+// Makes the 3 digit number available again.This is related to what was done for 10P:
+//	On Record Creation: Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
+// Sign Posting field should be auto generated number 100 - 999. when a case is active that number should be skipped - no duplicates.The sign post number is a number is related to the IVR prompt that will be recorded so that callers may get case information from calling the number.There is a specific and finite group of numbers that have been identified for the 2 case types. Accela is to provide the next available number from the list.
+if (wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') {
+	var seqName = "Sign Posting Number";
+	var fieldName = null;
+	if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA")) {
+		fieldName = seqName;
+	} else if (appMatch("Planning/LandUse/*/*")
+		&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialExceptions", "HistoricPreservation", "SubstantialAccord", "Utilities Waiver", "ZoningCase"])) {
+		fieldName = seqName;
+	} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA")) {
+		fieldName = seqName;
+	} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
+		fieldName = seqName;
+	}
+	
+	if (fieldName && typeof (AInfo[fieldName]) != "undefined") {
+		logDebug("Releasing " + fieldName + " " + AInfo[fieldName]);
+		editAppSpecific(fieldName, null);
+	}
+}
