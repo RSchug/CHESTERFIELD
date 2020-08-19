@@ -48,7 +48,8 @@ var partialProcessCompletion = false;                                           
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
 var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
-var emailAddress = "rschug@truepointsolutions.com";         // Email address of the person who will receive the batch script log information
+var emailAddress = "";         // Email address of the person who will receive the batch script log information
+//var emailAddress = "rschug@truepointsolutions.com";
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
 
@@ -70,10 +71,12 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
 
 //Parameter variables
 var paramsOK = true;
-var searchAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
-var searchAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
-var searchAppSubType = "*";      // Per SubType of the Cap Type that the batch script should process.
-var searchAppCategory = "*";       // Per Category of the Cap Type that the batch script should process.
+var searchCapType = "Building/Permit/*/*" // Cap Type(s) that should be processed.
+var sCapTypeArray = searchCapType.split("/");
+var searchAppGroup = (sCapTypeArray.length > 0 && sCapTypeArray[0] != "*" ? sCapTypeArray[0] : null);
+var searchAppType = (sCapTypeArray.length > 1 && sCapTypeArray[1] != "*" ? sCapTypeArray[1] : null);
+var searchAppSubType = (sCapTypeArray.length > 2 && sCapTypeArray[2] != "*" ? sCapTypeArray[2] : null);
+var searchAppCategory = (sCapTypeArray.length > 3 && sCapTypeArray[3] != "*" ? sCapTypeArray[3] : null);
 
 // Cap Status that the batch script is suppose to process.
 var searchAppStatusValid = ["Submitted", "Pending Applicant", "In Review", "Ready to Issue", "Issued", "Temporary CO Issued", "CO Ready to Issue", "Pending Certificate", "CO Issued", "Partial CO Issued", "Reinstated", "Extended", ""]
@@ -88,8 +91,7 @@ var searchAppSpecInfoLabel = "Permit Expiration Date";                          
 //var searchDateTo = dateAdd(searchDateFrom, 30);
 var searchDateFrom = dateAdd(startDate, -5);
 var searchDateTo = dateAdd(searchDateFrom, 5);
-var searchDateFrom = dateAdd(startDate, 30);
-var searchDateTo = dateAdd(searchDateFrom, 5);
+var capStatusNew = "Expired"; // "About to Expire";
 
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
@@ -155,11 +157,6 @@ var showDebug = true;					                                  // Set to true to se
 /*------------------------------------------------------------------------------------------------------/
 | END: USER CONFIGURABLE PARAMETERS
 /------------------------------------------------------------------------------------------------------*/
-var searchCapType = ""
-    + (searchAppGroup && searchAppGroup != "" ? searchAppGroup : "*") + "/"
-    + (searchAppType && searchAppType != "" ? searchAppType : "*") + "/"
-    + (searchAppSubType && searchAppSubType != "" ? searchAppSubType : "*") + "/"
-    + (searchAppCategory && searchAppCategory != "" ? searchAppCategory : "*");
 logDebug("searchCapType: " + searchCapType);
 logDebug("searchAppStatusValid: " + searchAppStatusValid);
 logDebug("searchAppStatusInvalid: " + searchAppStatusInvalid);
@@ -278,7 +275,6 @@ function mainProcess() {
         var adHocTaskStatus = "Expired";
         var adHocTaskComment = "Updated via batch script";
         var adHocNote = "";
-        var capStatusNew = "Expired"; // "About to Expire";
 
         //eval(getScriptText("INCLUDES_ACCELA_GLOBALS", null, useCustomScriptFile));
         getCapGlobals(capId);
