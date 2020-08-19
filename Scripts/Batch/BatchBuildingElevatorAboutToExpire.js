@@ -58,7 +58,8 @@ var partialProcessCompletion = false;                                           
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
 var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
-var emailAddress = "rschug@truepointsolutions.com";         // Email address of the person who will receive the batch script log information
+var emailAddress = "";         // Email address of the person who will receive the batch script log information
+//var emailAddress = "rschug@truepointsolutions.com";
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
 
@@ -80,24 +81,30 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
 
 //Parameter variables
 var paramsOK = true;
-var paramsAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
-var paramsAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
-var paramsAppSubType = "Elevator";      // Per SubType of the Cap Type that the batch script should process.
-var paramsAppCategory = "Master";       // Per Category of the Cap Type that the batch script should process.
+var searchCapType = "Building/Permit/Elevator/Master" // Cap Type(s) that should be processed.
+var sCapTypeArray = searchCapType.split("/");
+var searchAppGroup = (sCapTypeArray.length > 0 && sCapTypeArray[0] != "*" ? sCapTypeArray[0] : null);
+var searchAppType = (sCapTypeArray.length > 1 && sCapTypeArray[1] != "*" ? sCapTypeArray[1] : null);
+var searchAppSubType = (sCapTypeArray.length > 2 && sCapTypeArray[2] != "*" ? sCapTypeArray[2] : null);
+var searchAppCategory = (sCapTypeArray.length > 3 && sCapTypeArray[3] != "*" ? sCapTypeArray[3] : null);
+var searchAppGroup = "Building";        // Per Group value of the Cap Type that the batch script should process.
+var searchAppType = "Permit";           // Per Type of the Cap Type that the batch script should process.
+var searchAppSubType = "Elevator";      // Per SubType of the Cap Type that the batch script should process.
+var searchAppCategory = "Master";       // Per Category of the Cap Type that the batch script should process.
 
-var paramsAppStatusValid = ["Active", "Active-Pending Renewal"]
+var searchAppStatusValid = ["Active", "Active-Pending Renewal"]
 // Cap Status that the batch script is supposed to ignore.
-var paramsAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn", "Revoked", "Suspended"];
+var searchAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn", "Revoked", "Suspended"];
 
-var paramsAppSpecInfoLabel = null;
-var paramsAppSpecInfoValue = null;
+var searchAppSpecInfoLabel = null;
+var searchAppSpecInfoValue = null;
 
 /*
 var capSearchBy = "CapModel";
-var paramsAppStatus = "Active";         // Cap Status that the batch script is suppose to process.
+var searchAppStatus = "Active";         // Cap Status that the batch script is suppose to process.
 var capSearchBy = "ASIDate";
-var paramsAppSubGroupName = "GENERAL INFORMATION";                      // ASI Subgroup Name that the ASI field is associated to.
-var paramsAppSpecInfoLabel = "Permit Expiration Date";      // ASI field name that the batch script is to search.
+var searchAppSubGroupName = "GENERAL INFORMATION";                      // ASI Subgroup Name that the ASI field is associated to.
+var searchAppSpecInfoLabel = "Permit Expiration Date";      // ASI field name that the batch script is to search.
 //var paramsDateFrom = dateAdd(startDate, 150);
 //var paramsDateTo = dateAdd(paramsDateFrom, 30);
 var paramsDateFrom = dateAdd(startDate, -35);
@@ -105,26 +112,32 @@ var paramsDateTo = dateAdd(paramsDateFrom, 5);
 var paramsDateTo = "01/01/2022"
 */
 var capSearchBy = "ASIField";
-var paramsAppSubGroupName = "CC-BLD-CV-WD";               // ASI Subgroup Name that the ASI field is associated to.
-var paramsAppSpecInfoLabel = "Annual Quarter";            // ASI field name that the batch script is to search.
-var paramsAppSpecInfoValue = aa.env.getValue("Quarter");
-if (paramsAppSpecInfoValue == "") paramsAppSpecInfoValue = null;
-if (paramsAppSpecInfoValue == null) { // Default based on start Date
+var searchAppSubGroupName = "CC-BLD-CV-WD";               // ASI Subgroup Name that the ASI field is associated to.
+var searchAppSpecInfoLabel = "Annual Quarter";            // ASI field name that the batch script is to search.
+var searchAppSpecInfoValue = aa.env.getValue("Quarter");
+if (searchAppSpecInfoValue == "") searchAppSpecInfoValue = null;
+if (searchAppSpecInfoValue == null) { // Default based on start Date
     // On Building / Permit / Elevator / Master Records based on Quarter:
     // Quarter 1(Q1 - March) runs on what Dec 1 of every year.
     // Quarter 2(Q2 - June) runs on March 1 of every year.
     // Quarter 3(Q3 - September) runs on June 1 of every year.
     // Quarter 4(Q4 - December) runs on Sept 1 of every year.
     if (startDate.getMonth() == 2) { // March
-        paramsAppSpecInfoValue = "Q2 - June";
+        searchAppSpecInfoValue = "Q2 - June";
     } else if (startDate.getMonth() == 5) { // June
-        paramsAppSpecInfoValue = "Q3 - September";
+        searchAppSpecInfoValue = "Q3 - September";
     } else if (startDate.getMonth() == 8) { // Sept
-        paramsAppSpecInfoValue = "Q4 - December";
+        searchAppSpecInfoValue = "Q4 - December";
     } else if (startDate.getMonth() == 11) { // Dec
-        paramsAppSpecInfoValue = "Q1 - March";
+        searchAppSpecInfoValue = "Q1 - March";
     }
 }
+var wfTask = "Annual Status";
+var wfStatus = "Annual Renewal";
+var wfTaskComment = "Updated via Batch Script";
+var wfNote = "";
+var capStatusNew = "Active-Pending Renewal";
+
 /*------------------------------------------------------------------------------------------------------/
 | BEGIN Includes
 /------------------------------------------------------------------------------------------------------*/
@@ -189,14 +202,9 @@ var showDebug = true;					                                  // Set to true to se
 /*------------------------------------------------------------------------------------------------------/
 | END: USER CONFIGURABLE PARAMETERS
 /------------------------------------------------------------------------------------------------------*/
-var paramsCapType = ""
-    + (paramsAppGroup && paramsAppGroup != "" ? paramsAppGroup : "*") + "/"
-    + (paramsAppType && paramsAppType != "" ? paramsAppType : "*") + "/"
-    + (paramsAppSubType && paramsAppSubType != "" ? paramsAppSubType : "*") + "/"
-    + (paramsAppCategory && paramsAppCategory != "" ? paramsAppCategory : "*");
-logDebug("paramsCapType: " + paramsCapType);
-logDebug("paramsAppStatusValid: " + paramsAppStatusValid);
-logDebug("paramsAppStatusInvalid: " + paramsAppStatusInvalid);
+logDebug("searchCapType: " + searchCapType);
+logDebug("searchAppStatusValid: " + searchAppStatusValid);
+logDebug("searchAppStatusInvalid: " + searchAppStatusInvalid);
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Main=Loop================>
@@ -246,41 +254,41 @@ function mainProcess() {
         capModel.setCapType(capTypeModel);
 
         var capTypeModel = aa.cap.getCapTypeModel().getOutput();
-        if (paramsAppGroup) capTypeModel.setGroup(paramsAppGroup);
-        if (paramsAppType) capTypeModel.setType(paramsAppType);
-        if (paramsAppSubType) capTypeModel.setSubType(paramsAppSubType);
-        if (paramsAppCategory) capTypeModel.setCategory(paramsAppCategory);
+        if (searchAppGroup) capTypeModel.setGroup(searchAppGroup);
+        if (searchAppType) capTypeModel.setType(searchAppType);
+        if (searchAppSubType) capTypeModel.setSubType(searchAppSubType);
+        if (searchAppCategory) capTypeModel.setCategory(searchAppCategory);
         var capModel = aa.cap.getCapModel().getOutput();
         capModel.setCapType(capTypeModel);
-        if (paramsAppStatus) capModel.setCapStatus(paramsAppStatus);
+        if (searchAppStatus) capModel.setCapStatus(searchAppStatus);
         var capIdResult = aa.cap.getCapIDListByCapModel(capModel);
-        //var capIdResult = aa.cap.getByAppType(paramsAppGroup, paramsAppType,paramsAppSubType,paramsAppCategory);
+        //var capIdResult = aa.cap.getByAppType(searchAppGroup, searchAppType,searchAppSubType,searchAppCategory);
         logDebug("Looking for "
-            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
-            + (paramsAppType ? paramsAppType : "*") + "/"
-            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
-            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
-            + " with Status: " + paramsAppStatus);
+            + (searchAppGroup ? searchAppGroup : "*") + "/"
+            + (searchAppType ? searchAppType : "*") + "/"
+            + (searchAppSubType ? searchAppSubType : "*") + "/"
+            + (searchAppCategory ? searchAppCategory : "*") + " CAPS"
+            + " with Status: " + searchAppStatus);
     } else if (capSearchBy == "ASIDate") {
         var dateFrom = aa.date.parseDate(paramsDateFrom);        // Start Date for the batch script to select ASI data on.
         var dateTo = aa.date.parseDate(paramsDateTo);               // End Date for the batch script to select ASI data on.
         logDebug("Looking for "
-            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
-            + (paramsAppType ? paramsAppType : "*") + "/"
-            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
-            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
-            + " with " + paramsAppSubGroupName + "." + paramsAppSpecInfoLabel
+            + (searchAppGroup ? searchAppGroup : "*") + "/"
+            + (searchAppType ? searchAppType : "*") + "/"
+            + (searchAppSubType ? searchAppSubType : "*") + "/"
+            + (searchAppCategory ? searchAppCategory : "*") + " CAPS"
+            + " with " + searchAppSubGroupName + "." + searchAppSpecInfoLabel
             + " Date Range: " + paramsDateFrom + " - " + paramsDateTo);
-        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(paramsAppSubGroupName, paramsAppSpecInfoLabel, dateFrom, dateTo);
-    } else if (capSearchBy == "ASIField" && paramsAppSpecInfoValue) {
+        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoDateRange(searchAppSubGroupName, searchAppSpecInfoLabel, dateFrom, dateTo);
+    } else if (capSearchBy == "ASIField" && searchAppSpecInfoValue) {
         logDebug("Looking for "
-            + (paramsAppGroup ? paramsAppGroup : "*") + "/"
-            + (paramsAppType ? paramsAppType : "*") + "/"
-            + (paramsAppSubType ? paramsAppSubType : "*") + "/"
-            + (paramsAppCategory ? paramsAppCategory : "*") + " CAPS"
-            + " with " + paramsAppSpecInfoLabel
-            + " of " + paramsAppSpecInfoValue);
-        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoField(paramsAppSpecInfoLabel, paramsAppSpecInfoValue);
+            + (searchAppGroup ? searchAppGroup : "*") + "/"
+            + (searchAppType ? searchAppType : "*") + "/"
+            + (searchAppSubType ? searchAppSubType : "*") + "/"
+            + (searchAppCategory ? searchAppCategory : "*") + " CAPS"
+            + " with " + searchAppSpecInfoLabel
+            + " of " + searchAppSpecInfoValue);
+        var capIdResult = aa.cap.getCapIDsByAppSpecificInfoField(searchAppSpecInfoLabel, searchAppSpecInfoValue);
     } else {
         var capIdResult = false;
     }
@@ -320,33 +328,28 @@ function mainProcess() {
 
         var capIDsFiltered = [];
         var filterReasons = [];
-        if (paramsCapType && !appMatch(paramsCapType)) filterReasons.push("CapType");
-        if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) filterReasons.push("CapStatusValid");
-        if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
+        if (searchCapType && !appMatch(searchCapType)) filterReasons.push("CapType");
+        if (searchAppStatusValid && !exists(capStatus, searchAppStatusValid)) filterReasons.push("CapStatusValid");
+        if (searchAppStatusInvalid && exists(capStatus, searchAppStatusInvalid)) filterReasons.push("CapStatusInvalid");
         if (false && filterReasons && filterReasons.length > 0) {
             logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
-                + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : "")
+                + (searchAppSpecInfoLabel ? searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "")
                 + " Reasons: " + filterReasons);
             //capIDsFiltered[capId.getCustomID()]=filterReasons;
             continue;
         }
 
 
-        if (paramsCapType && !appMatch(paramsCapType)) continue;
-        if (paramsAppStatusValid && !exists(capStatus, paramsAppStatusValid)) continue;
-        if (paramsAppStatusInvalid && exists(capStatus, paramsAppStatusInvalid)) continue;
+        if (searchCapType && !appMatch(searchCapType)) continue;
+        if (searchAppStatusValid && !exists(capStatus, searchAppStatusValid)) continue;
+        if (searchAppStatusInvalid && exists(capStatus, searchAppStatusInvalid)) continue;
         logDebug("Processing Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + ", "
-            + (paramsAppSpecInfoLabel ? paramsAppSpecInfoLabel + ": " + AInfo[paramsAppSpecInfoLabel] : ""));
+            + (searchAppSpecInfoLabel ? searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : ""));
         count["cap"]++;
 
         //Set the Workflow Task 'Annual Status' to Status of 'Annual Renewal'.
         //Set the Record Status to 'Active-Pending Renewal'.
 
-        var wfTask = "Annual Status";
-        var wfStatus = "Annual Renewal";
-        var wfTaskComment = "Updated via Batch Script";
-        var wfNote = "";
-        var capStatusNew = "Active-Pending Renewal";
         if (wfTask) {
             if (wfStatus && wfStatus != "" && wfStatus != taskStatus(wfTask))
                 updateTask(wfTask, wfStatus, wfTaskComment, wfNote);
