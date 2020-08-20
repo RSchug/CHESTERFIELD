@@ -7,3 +7,8 @@ if (wfStatus == 'Invoice Issued' && !feeExists("CC-ENF-ZON")) {
     comment('No Abatement Fee Assessed');
     cancel = true;
 }
+if (wfStatus == 'Invoice Issued' && feeExists("CC-ENF-ZON","NEW")) {
+    showMessage = true;
+    comment('No Abatement Fee Assessed');
+    cancel = true;
+}
