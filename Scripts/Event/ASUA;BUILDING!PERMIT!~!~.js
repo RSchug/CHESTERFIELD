@@ -1,42 +1,56 @@
-/*------------------------------------------------------------------------------------------------------/
-/ Program : ASUA;Building!Permit!~!~.js
-/ Event   : ApplicationSpecificInfoUpdateAfter
-/
-/ Initial Version: ddejesus 2016.12.23
-/------------------------------------------------------------------------------------------------------*/
-
-var appTypeArr = appTypeString.split("/");
-
-if (appTypeArr && appTypeArr[2].toUpperCase().equals("COMMERCIAL")) {
-
-	if (feeExists("CC-BLD-001"))
-		calcFee_CC_BLD_COMM_CC_BLD_001();
-
-	if (feeExists("CC_BLD_04"))
-		calcFee_CC_BLD_COMM_CC_BLD_04();
-
-	if (feeExists("CC_BLD_06"))
-		calcFee_CC_BLD_COMM_CC_BLD_06();
-
-	if (feeExists("CC-BLDCAE-03"))
-		calcFee_CC_BLD_COMM_AE_CC_BLDCAE_03();
-
-	if (feeExists("CC-BLD-CAG01"))
-		calcFee_CC_BLD_COMM_AG_CC_BLD_CAG01();
-
-	if (feeExists("CC-BLD-CAB01"))
-		calcFee_CC_BLD_COMM_AUX_BOILER_CC_BLD_CAB01();
-
-	if (feeExists("CC-BLD-CAF01"))
-		calcFee_CC_BLD_COMM_AUX_FIRE_CC_BLD_CAF01();
-
-	if (feeExists("CC-BLD-CAM01"))
-		calcFee_CC_BLD_COMM_AUX_MECH_CC_BLD_CAM01();
-
-	if (feeExists("CC-BLD-CAP01"))
-		calcFee_CC_BLD_COMM_AUX_PLUMBING_CC_BLD_CAP01();
+try {
+    if (matches(appStatus, "Cancelled", "Withdrawn")) {
+		taskCloseAllActive('Closed','Per Record Status Update');
+		//var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		//for (var i in workflowTasks) {
+		//		var wfbTask = workflowTasks[i];
+		//		if (wfbTask.getActiveFlag() == 'Y') {
+		//			closeTask('*','Per Record Status Update');  closeTask(wfbTask.getDescription(), "Completed", "Updated based on Completed Inspection Result", "");
+    }
+} catch (err) {
+    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-if(matches(appStatus,"Cancelled","Withdrawn"))
-{taskCloseAllExcept("Cancelled","Closed due to Record Status update","Application Submittal");
-deactivateTask("Review Distribution");
-}
+
+function taskCloseAllActive(pStatus,pComment)
+ {
+ // Closes all active tasks in CAP with specified status and comment
+ // Function is a copy of the taskCloseAllExcept function.
+
+ var workflowResult = aa.workflow.getTasks(capId);
+ if (workflowResult.getSuccess())
+    var wfObj = workflowResult.getOutput();
+ else
+     {
+     logMessage("**ERROR","CAP # "+capId.getCustomID()+" Failed to get workflow object: " + workflowResult.getErrorMessage());
+     return false;
+     }
+
+ var fTask;
+ var stepnumber;
+ var processID;
+ var dispositionDate = aa.date.getCurrentDate();
+ var wfnote = " ";
+ var wftask;
+
+ for (i in wfObj)
+     {
+     fTask = wfObj[i];
+     wftask = fTask.getTaskDescription();
+     stepnumber = fTask.getStepNumber();
+     processID = fTask.getProcessID();
+     if (fTask.getActiveFlag().equals("Y"))
+        {
+        //aa.workflow.handleDisposition(capId,stepnumber,processID,pStatus,dispositionDate,wfnote,pComment,systemUserObj,"Y");
+        aa.workflow.handleDisposition(capId,stepnumber,pStatus,dispositionDate,wfnote,pComment,systemUserObj,"U");
+        logMessage("INFO","Completed Workflow Task: " + wftask + " with a status of: " + pStatus + " for CAP # " + capId.getCustomID());
+
+        wfObj[i].setCompleteFlag("Y");
+	var fTaskModel = wfObj[i].getTaskItem();
+	var tResult = aa.workflow.adjustTaskWithNoAudit(fTaskModel);
+	    if (tResult.getSuccess())
+	       logMessage("INFO","Completed Workflow Task: " + wftask + ", for CAP # " + capId.getCustomID());
+            else
+	        logMessage("**ERROR","CAP # "+capId.getCustomID()+" Failed to complete workflow task: " + tResult.getErrorMessage());
+        }
+     }
+ }
