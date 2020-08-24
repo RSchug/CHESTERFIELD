@@ -6,6 +6,7 @@ function addFees_ZoneCase() {
         "Amend Prior Case.Recreational Facility and Grounds Primarily Serving Surrounding Residential Community": "AMEND2",
         "Amend Prior Case.Use Incidental to Principal Dwelling to include Family Day Care Home or Resource Prot Area SFD": "AMEND1",
         // Request Type: Conditional Use
+        "Conditional Use.Adult Business": "ADULT",
         "Conditional Use.All Others": "CONDUSEOTHER",
         "Conditional Use.Communication Tower": "CTOWER",
         "Conditional Use.Computer Controlled Variable Message Electronic (EMC) Sign": null, // Disabled: "EMCSIGN",
