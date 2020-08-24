@@ -9,7 +9,36 @@
 |
 | Notes   : 08-2020 Boucher updated for CC enhancement/issue #11
 |
-/------------------------------------------------------------------------------------------------------/
+/------------------------------------------------------------------------------------------------------*/
+if (aa.env.getValue("ScriptName") == "Test") { 	// Setup parameters for Script Test.
+	var CurrentUserID = "PUBLICUSER548433"; // Public User ID: rschug (rschug@truepointsolutions.com)
+	var capIDString = "20PR0041";		// Test Record from AA.
+	var capIDString = "20PS0010";
+//	var capIDString = "19TMP-007173";			// Test Temp Record from ACA.
+	//  var capIDString = "2019-LOG-0000239";
+	aa.env.setValue("ScriptCode", "Test");
+	aa.env.setValue("CurrentUserID", CurrentUserID); 	// Current User
+	sca = capIDString.split("-");
+	if (sca.length == 3 && sca[1] == "00000") { // Real capId
+		var capID = aa.cap.getCapID(sca[0], sca[1], sca[2]).getOutput();
+		aa.print("capID: " + capID + ", capIDString: " + sca.join("-") + " sca");
+	} else { // Alt capId
+		capID = aa.cap.getCapID(capIDString).getOutput();
+		aa.print("capID: " + capID + ", capIDString: " + capIDString);
+	}
+	capModel = aa.cap.getCapViewBySingle4ACA(capID);
+	var itemCap = capModel;
+	aa.print("itemCap: " + itemCap + (itemCap ? " " + itemCap.getClass() : ""));
+
+	aa.env.setValue("CapModel", capModel);
+	aa.print("CurrentUserID:" + CurrentUserID);
+	aa.print("capIDString:" + capIDString);
+	aa.print("capID:" + capID);
+	aa.print("capModel:" + capModel);
+	cap = capModel;
+}
+var debugEmailTo = "";
+/*------------------------------------------------------------------------------------------------------/
 | START User Configurable Parameters
 |
 |     Only variables in the following section may be changed.  If any other section is modified, this
@@ -22,7 +51,6 @@ var useAppSpecificGroupName = false; // Use Group name when populating App Speci
 var useTaskSpecificGroupName = false; // Use Group name when populating Task Specific Info Values
 var cancel = false;
 var useCustomScriptFile = true; // if true, use Events->Custom Script, else use Events->Scripts->INCLUDES_CUSTOM
-var debugEmailTo = "";
 /*------------------------------------------------------------------------------------------------------/
 | END User Configurable Parameters
 /------------------------------------------------------------------------------------------------------*/
@@ -93,6 +121,7 @@ var appTypeArray = appTypeString.split("/"); // Array of application type string
 var AInfo = new Array(); // Create array for tokenized variables
 var capId = cap.getCapID();
 //var capId = null; // needed for next call
+loadAppSpecific4ACA(AInfo); // Add AppSpecific Info
 
 var serverName = java.net.InetAddress.getLocalHost().getHostName(); // Host Name
 
@@ -112,28 +141,18 @@ if (publicUserEmail) publicUserEmail = publicUserEmail.replace("TURNED_OFF","").
 logDebug("publicUserEmail: " + publicUserEmail);
 // Set Debug User if TPS User.
 if (publicUserEmail && debugEmailTo == "") {
-	if (publicUserEmail.indexOf("@truepointsolutions.com") > 0) 	debugEmailTo = publicUserEmail;
+	//if (publicUserEmail.indexOf("@truepointsolutions.com") > 0) 	debugEmailTo = publicUserEmail;
 	//if (exists(publicUserEmail,['rschug@truepointsolutions.com']))	debugEmailTo = publicUserEmail;
 }
 logDebug("debugEmailTo: " + debugEmailTo);
-if (debugEmailTo && debugEmailTo != "") showDebug = true;
 
 // page flow custom code begin
 try {
+	showDebug = true;
 	logDebug("Begin Custom Code");
-	
-//check for same Project Name - for Planning Record Type Only	
-	var gaName = cap.getSpecialText();
-	if (appNameIsUnique('eReview','Planning',gaName) == false) {
-		showMessage = true;
-		comment('<B><Font Color=RED>Error: There is an existing Planning Record with the same Project Name: ' + gaName + '.</B></Font>');
-	}
-//Checking for A=Matching Address and Planning Record Type
-	//ASI in the intake
-	var AInfo = [];
-	loadAppSpecific4ACA(AInfo); // Add AppSpecific Info
-	var intakeASI = AInfo['Planning Record Type'];
-	//address in the intake
+	//var addArray = new Array();
+	//loadAddressAttributes4ACA(addArray);
+
 	var addressModel = cap.getAddressModel();
 	var addressLine = '';
 	if (addressModel) {
@@ -144,36 +163,31 @@ try {
 	}
 	logDebug("capId: " + capId + (capId? " "+capId.getCustomID():"") + " at " + addressLine);
 	var capIdsFound = null;
-	if (addressModel && appMatch('eReview/Planning/NA/NA')) {
+	if (addressModel && appMatch('Planning/*/*/*')) {
+		//var hseNum = addArray['AddressAttribute.HouseNumberStart'];
+		//var streetName = addArray['AddressAttribute.StreetName'];
+		//var capAddResult = aa.cap.getCapListByDetailAddress(streetName, hseNum, null, null, null, null);
+
 		logDebug("looking for Records at " + addressLine);
-		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName(), addressModel.getHouseNumberStart(), null, null, null, null);
+		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName(), addressModel.getHouseNumberStart(), addressModel.getStreetSuffix(), null, addressModel.getStreetDirection(), null);
 		if (capAddResult.getSuccess()) {
 			var capIdsArray = capAddResult.getOutput();
 			logDebug("Address Associated Records: " + capIdsArray.length);
-			var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
+			var capIdsFound = filterCapIds(capIdsArray, "Planning/*/*/*");
 			logDebug("Planning Records: " + capIdsFound.length);
-			for (y in capIdsArray) {
-				var itemCapId = capIdsArray[y].getCapID();
-				var fldVal = getAppSpecific('Planning Record Type', itemCapId);
-				if (fldVal == intakeASI) {
-					var capRecTypeisSame = true;
-				}
-				else { var capRecTypeisSame = false; }
-			}
 		}
-		if (capIdsFound && capIdsFound.length > 0 && capRecTypeisSame == true) {
+		if (capIdsFound && capIdsFound.length > 0) {
 			showMessage = true;
-			comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing ' + intakeASI + ' Planning Record(s) at this address ' + addressLine + '.</B></Font>');
+			comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing Planning Record(s) at this address ' + addressLine + '.</B></Font>');
 		}
 	}
-
 	logDebug("End Custom Code")
 } catch (err) {
+    showDebug = false;
     logDebug("Error in pageflow ACA_CHECK_ADDRESS, err: " + err + ". " + err.stack);
 	debugEmailSubject = "";
 	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - ERROR";
 	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
-	showDebug = false;
 }
 
 // Send Debug Email
@@ -181,15 +195,9 @@ if (debugEmailTo && debugEmailTo != "") {
 	debugEmailSubject = "";
 	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - Debug";
 	logDebug("Sending Debug Message to "+debugEmailTo);
-	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: \r" + br + debug);
-	showDebug = false;
+	aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 }
 // page flow custom code end
-
-if (aa.env.getValue("ScriptName") == "Test") { 	// Print Debug
-	var z = debug.replace(/<BR>/g, "\r"); aa.print(">>> DEBUG: \r" + z);
-	showDebug = true;
-}
 
 if (debug.indexOf("**ERROR") > 0) {
 	aa.env.setValue("ErrorCode", "1");
@@ -210,6 +218,10 @@ if (debug.indexOf("**ERROR") > 0) {
 	}
 }
 
+if (aa.env.getValue("ScriptName") == "Test") { 	// Print Debug
+	var z = debug.replace(/<BR>/g, "\r"); aa.print(">>> DEBUG: \r" + z);
+}
+
 function filterCapIds(capIdsArray,capType) {
 	var capStatuses = (arguments.length > 2 && arguments[2]? arguments[2]:null);
 	var capNames = (arguments.length > 3 && arguments[3] ? arguments[3] : null);
@@ -220,8 +232,7 @@ function filterCapIds(capIdsArray,capType) {
 		var itemCapType =  itemCap.getCapType();
 		var itemCapTypeString = itemCapType.toString();
 		var itemCapStatus = itemCap.getCapStatus();
-		var itemCapName = itemCap.getSpecialText(); 
-		var fldVal = getAppSpecific('Planning Record Type', itemCapId); //db added this in for the AInfo filter
+		var itemCapName = itemCap.getSpecialText(); //For Now...this may end up being stored in an ASI field instead
 		var filterDetails = [];
 		if (capId + "" == itemCapId + "") filterDetails.push("capId: " + (itemCapId ? itemCapId.getCustomID() : itemCapId));
 		if (!appMatch(capType, itemCapId)) filterDetails.push("capType: " + itemCapTypeString);
@@ -231,8 +242,9 @@ function filterCapIds(capIdsArray,capType) {
 //			logDebug("Filtered CapId: " + itemCapId.getCustomID() + ", Name: " + itemCapName + " for " + filterDetails.join(","));
 			continue;
 		}
-		logDebug("Found CapId: " + itemCapId.getCustomID() + ", CapType: " + itemCapTypeString + ", Status: " + itemCapStatus + ", Name: " + itemCapName + ", Record Type: " + fldVal);
+		logDebug("Found CapId: " + itemCapId.getCustomID() + ", CapType: " + itemCapTypeString + ", Status: " + itemCapStatus + ", Name: " + itemCapName);
 		capIdsArrayReturn.push(itemCapId);
 	}
 	return capIdsArrayReturn;
 }
+

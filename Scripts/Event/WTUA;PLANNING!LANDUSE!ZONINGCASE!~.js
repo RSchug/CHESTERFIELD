@@ -1,6 +1,6 @@
 try {
-    // Create Conditions from proffers on Zoning Case Record
-	if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Approved')) {
+    // Create Conditions from proffers on Zoning Case Record - 59p
+	if (wfTask == 'BOS Hearing' && matches(wfStatus, 'Create Conditions and Close Case')) {
 
 		var sum = 0;
 		var tempAsit = loadASITable("PROFFER CONDITIONS");
