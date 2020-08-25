@@ -152,11 +152,13 @@ try {
 			logDebug("Address Associated Records: " + capIdsArray.length);
 			var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
 			logDebug("Planning Records: " + capIdsFound.length);
+			var capIdsFiltered = [];
 			for (y in capIdsArray) {
 				var itemCapId = capIdsArray[y].getCapID();
 				var fldVal = getAppSpecific('Planning Record Type', itemCapId);
 				if (fldVal == intakeASI) {
 					var capRecTypeisSame = true;
+					capIdsFiltered.push(itemCapId);
 				}
 				else { var capRecTypeisSame = false; }
 			}
@@ -174,11 +176,13 @@ try {
 				logDebug("Address Associated Records: " + capIdsArray.length);
 				var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
 				logDebug("Planning Records: " + capIdsFound.length);
+				var capIdsFiltered = [];
 				for (y in capIdsArray) {
 					var itemCapId = capIdsArray[y].getCapID();
 					var fldVal = getAppSpecific('Planning Record Type', itemCapId);
 					if (fldVal == intakeASI) {
 						var capRecTypeisSame = true;
+						capIdsFiltered.push(itemCapId);
 					}
 					else { var capRecTypeisSame = false; }
 				}
