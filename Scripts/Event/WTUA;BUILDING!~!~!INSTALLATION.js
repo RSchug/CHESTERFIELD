@@ -14,6 +14,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       var newCapId = null, newAppTypeString = null, newAppTypeArray = null;
       logDebug("Checking what License to Create");
       var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "License";
+      var newAppTypeString = null;
       var newCapName = capName;
       var newCapIdString = null; // capIDString.substr(0, (capIDString.length - 1)) + 'L';
       if (newCapIdString) logDebug("newCapIdString: " + newCapIdString);
@@ -28,11 +29,21 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       var expDateField = "Permit Expiration Date";
       var expDate = null;
       var capIdStructure = null;
-      if (appMatch("Building/Permit/AmusementDevice/Installation")) {
+      var newInspectionType = null;
+      var newInspectionDate = null;
+      if (appMatch("Building/Permit/AmusementDevice/Installation")
+            && AInfo["Permanent Installation"] == "Yes") {
+            // When the Workflow Task 'Certificate of Inspection' Status is updated to 'Completed' and the Custom Data Field ‘Permanent Installation' is 'Yes' then a script will automatically do the following
+            // 1. Create a related 'Building/Permit/Amusement Device/Master' Record as the Parent with the Address, Parcel, Owner, Project Names, List of Devices and Permit Expiration Date field.
+            //    a.Update Workflow Task 'Annual Status' to 'In Service' and Record Status to 'Active'.
+            //    b.Add Amusement Inspection and Schedule for 6 months out.
+            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
+            copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+            var expMonths = 6;
             newCapIdString = null;
-            newCapRelation = "Parent";
-            annualQuarter = null;
+            newInspectionType = "Amusement Final"
+            newInspectionDate = dateAddMonths(null, 6);
       } else if (appMatch("Building/Permit/Elevator/Installation")
             && AInfo["Commercial or Residential"] == "Commercial") {
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
@@ -109,7 +120,14 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
 
       }
       // ******************END expiration Date code Options
-      updateTask('Annual Status','In Service','','');
+      if (newCapId)
+            updateTask('Annual Status','In Service','','',newCapId);
+      if (newCapId && newInspectionType && newInspectionDate) {
+            var sv_CapId = capId;
+            capId = newCapId;
+            scheduleInspectDate(newInspectionType, newInspectionDate)
+            capId = sv_CapId;
+      }
       if (newCapId && appMatch("Building/Permit/Elevator/Installation")
             && AInfo["Commercial or Residential"] == "Commercial") {
             // Update Elevator Table on Structure
