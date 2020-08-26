@@ -40,6 +40,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
             copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+            var expType = "Semi-annual";
             var expMonths = 6;
             newCapIdString = null;
             newInspectionType = "Amusement Final"
