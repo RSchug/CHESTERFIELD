@@ -46,7 +46,7 @@
 //	}
 try {
 //07-2020 Boucher 11p	
-	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review')) {
+	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 	//07-2020 Boucher script 82p
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
@@ -73,7 +73,7 @@ try {
 		}
 	}
 //07-2020 Boucher 21p
-	if (matches(wfTask,'Review Consolidation') & matches(wfStatus,'Move to CPC')) {
+	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move to CPC')) {
 		var tsi = []
 		loadTaskSpecific(tsi);
 		
@@ -96,7 +96,7 @@ try {
 		}
 	}
 //07-2020 Boucher 40p
-	if (matches(wfTask,'Review Distribution') & matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
+	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
 	}
