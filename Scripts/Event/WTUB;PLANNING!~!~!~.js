@@ -82,9 +82,10 @@ try {
 }
 //20P When AdHoc Task 'Signs Posted' Status is updated to any value and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
 if (wfTask == 'Sign Posting') {
+	if (wfTask == 'IVR Message' && wfStatus !='Message Recorded'){
 	showMessage = true;
-	comment('Message needs to be recorded before signs can be posted.');
-}
+	comment('Sign cannot be removed until the record status has Final Action.');
+}}
 //86P
 if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Final Approval')){
 	showMessage = true;
