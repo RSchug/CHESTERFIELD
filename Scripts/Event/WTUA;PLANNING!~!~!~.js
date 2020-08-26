@@ -134,7 +134,7 @@ try {
 	}
 	//When 'BZA Hearing' is "Deferred by Applicant" add DEFERRALBZA fee with 1
 	if (matches(wfTask, 'BZA Hearing') && matches(wfStatus, 'Deferred by Applicant')
-		&& (appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/SpecialException/NA" || appMatch("Planning/LandUse/Appeal/NA"))) {
+		&& (appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/SpecialException/NA") || appMatch("Planning/LandUse/Appeal/NA"))) {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
 		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
 		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBZA", feeQty = 1;
