@@ -87,22 +87,7 @@ if (wfTask == 'Sign Posting') {
 	comment('Message needs to be recorded before signs can be posted.');
 }}
 //86P
-if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Final Approval')){
-	showMessage = true;
-	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
-	cancel = true;
-}
-if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Approved')){
-	showMessage = true;
-	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
-	cancel = true;
-}
-if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Denied')){
-	showMessage = true;
-	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
-	cancel = true;
-}
-if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Withdrawn')){
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capStatus,'Final Approval','Approved','Denied','Withdrawn'))){
 	showMessage = true;
 	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
 	cancel = true;
