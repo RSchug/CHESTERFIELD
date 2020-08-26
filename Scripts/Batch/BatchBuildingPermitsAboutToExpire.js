@@ -59,7 +59,7 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
         var batchJob = batchEngineObj.getOutput().getBatchJobByName(agencyName, batchJobName);
         if (batchJob != null) {
             var jobEmailID = batchJob.getEmailID();
-            logDebug("fetch email from job details:" + jobEmailID)
+            //logDebug("fetch email from job details:" + jobEmailID)
             if (!isEmptyOrNull(jobEmailID)) {
                 emailAddress = jobEmailID;
             }
@@ -158,7 +158,8 @@ var showDebug = true;					                                  // Set to true to se
 | END: USER CONFIGURABLE PARAMETERS
 /------------------------------------------------------------------------------------------------------*/
 logDebug("searchCapType: " + searchCapType);
-logDebug("searchAppStatusValid: " + searchAppStatusValid);
+if (searchAppStatusValid) 
+    logDebug("searchAppStatusValid: " + searchAppStatusValid);
 logDebug("searchAppStatusInvalid: " + searchAppStatusInvalid);
 
 /*------------------------------------------------------------------------------------------------------/
@@ -194,9 +195,9 @@ aa.print("emailText: " + emailText);
 /------------------------------------------------------------------------------------------------------*/
 function mainProcess() {
     counts["found"] = 0;
-    counts["filtered"] = 0;
+    //counts["filtered"] = 0;
     counts["processed"] = 0;
-    counts["already processed"] = 0;
+    //counts["already processed"] = 0;
     counts["Child"] = 0;
     /*
     | Note: Start Date and End Date are defaulted to use the current System Date.
@@ -215,7 +216,7 @@ function mainProcess() {
     }
 
     var capIdArray = capIdResult.getOutput(); //Array of CapIdScriptModel Objects
-    logDebug("capIdArray.length: " + capIdArray.length);
+    //logDebug("capIdArray.length: " + capIdArray.length);
     counts["found"] = capIdArray.length;
     for (i in capIdArray) {
         if (maxSeconds && elapsed() > maxSeconds) { // Only continue if time hasn't expired
@@ -251,7 +252,7 @@ function mainProcess() {
         if (filterReasons && filterReasons.length > 0) {
             //logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: " + filterReasons);
             capIDsFiltered[capId.getCustomID()] = filterReasons;
-            counts["filtered"]++;
+            //counts["filtered"]++;
             continue;
         }
 
@@ -311,7 +312,7 @@ function mainProcess() {
             if (adHocTaskStatus && adHocTaskStatus == tasks[adHocTask].status && tasks[adHocTask].active == "Y") {
                 logDebug("Skipped Record: " + capIDString + ", appType: " + appTypeString + ", capStatus: " + capStatus + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : "") + ", Reasons: already processed. "
                 + (tasks[adHocTask].active == "Y" ? "Active" : "") + " " + adHocTask + " " + tasks[adHocTask].status + ": " + tasks[adHocTask].statusdate);
-                counts["already processed"]++;
+                //counts["already processed"]++;
                 capIDsFiltered[capId.getCustomID()] = ["already processed"];
                 continue;
             }
