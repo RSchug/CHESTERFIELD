@@ -28,12 +28,13 @@ try {
 
 	var fieldName = "Sign Posting Number";
 	var seqName = null;
-	if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA")) {
+	if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA")) {
 		seqName = "Sign Posting Number";
 	} else if (appMatch("Planning/LandUse/*/*") 
-		&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialExceptions", "HistoricPreservation","SubstantialAccord","Utilities Waiver","ZoningCase"])) {
+		&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialException", "HistoricPreservation","SubstantialAccord","Utilities Waiver","ZoningCase"])) {
 		seqName = "Sign Posting Number";
-	} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA")) {
+	} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA") || appMatch("Planning/Subdivision/OverallConceptualPlan/NA")
+				|| appMatch("Planning/Subdivision/ConstructionPlan/NA")) {
 		seqName = "Sign Posting Number";
 	} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
 		seqName = "Sign Posting Number";

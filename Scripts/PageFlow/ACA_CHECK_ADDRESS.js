@@ -152,11 +152,13 @@ try {
 			logDebug("Address Associated Records: " + capIdsArray.length);
 			var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
 			logDebug("Planning Records: " + capIdsFound.length);
+			var capIdsFiltered = [];
 			for (y in capIdsArray) {
 				var itemCapId = capIdsArray[y].getCapID();
 				var fldVal = getAppSpecific('Planning Record Type', itemCapId);
 				if (fldVal == intakeASI) {
 					var capRecTypeisSame = true;
+					capIdsFiltered.push(itemCapId);
 				}
 				else { var capRecTypeisSame = false; }
 			}
@@ -164,6 +166,31 @@ try {
 		if (capIdsFound && capIdsFound.length > 0 && capRecTypeisSame == true) {
 			showMessage = true;
 			comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing ' + intakeASI + ' Planning Record(s) at this address ' + addressLine + '.</B></Font>');
+		}
+		if (addressModel.getStreetName() && addressModel.getStreetName() != addressModel.getStreetName().toUpperCase()) { // Check Upper Case
+			var addressLine = addressLine.toUpperCase();
+			logDebug("looking for Records at " + addressLine);
+			var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName().toUpperCase(), addressModel.getHouseNumberStart(), null, null, null, null);
+			if (capAddResult.getSuccess()) {
+				var capIdsArray = capAddResult.getOutput();
+				logDebug("Address Associated Records: " + capIdsArray.length);
+				var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
+				logDebug("Planning Records: " + capIdsFound.length);
+				var capIdsFiltered = [];
+				for (y in capIdsArray) {
+					var itemCapId = capIdsArray[y].getCapID();
+					var fldVal = getAppSpecific('Planning Record Type', itemCapId);
+					if (fldVal == intakeASI) {
+						var capRecTypeisSame = true;
+						capIdsFiltered.push(itemCapId);
+					}
+					else { var capRecTypeisSame = false; }
+				}
+			}
+			if (capIdsFound && capIdsFound.length > 0 && capRecTypeisSame == true) {
+				showMessage = true;
+				comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing ' + intakeASI + ' Planning Record(s) at this address ' + addressLine + '.</B></Font>');
+			}
 		}
 	}
 

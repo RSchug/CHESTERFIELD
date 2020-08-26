@@ -110,7 +110,7 @@ try {
 		addFee('CONSTPLAN2','CC-PLANNING','FINAL',1,'Y');
 	}
 //07-2020 Boucher 24p
-	if (matches(wfTask, 'CPC Meeting', 'CPC Hearing') & matches(wfStatus, 'Deferred by Applicant')) {
+	if (matches(wfTask, 'CPC Meeting', 'CPC Hearing') && matches(wfStatus, 'Deferred by Applicant')) {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
 		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
 		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALPC", feeQty = 1;
@@ -120,7 +120,30 @@ try {
 		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
 		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
-	
+
+	//When 'BOS Hearing' is "Deferred by Applicant" add DEFERRALBOS fee with 1 for first and 2 for each after first
+	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Deferred by Applicant')) {
+		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
+		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
+		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBOS", feeQty = 1;
+		if (tasksHistory && tasksHistory.length > 1) {
+			feeQty = 2
+		}
+		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
+		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
+	}
+	//When 'BZA Hearing' is "Deferred by Applicant" add DEFERRALBZA fee with 1
+	if (matches(wfTask, 'BZA Hearing') && matches(wfStatus, 'Deferred by Applicant')
+		&& (appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/SpecialException/NA" || appMatch("Planning/LandUse/Appeal/NA"))) {
+		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
+		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
+		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBZA", feeQty = 1;
+		if (tasksHistory && tasksHistory.length > 1) {
+			feeQty = 2
+		}
+		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
+		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
+	}
 //Below is all code from previous implementer - Not sure if these work db
 /*
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",

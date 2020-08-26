@@ -40,11 +40,10 @@ try {
 
 				var numberOfPlots = getAppSpecific(NUMBER_OF_LOTS_NAME, relatedFinalPlatCapId);
 				if (isNaN(numberOfPlots) || numberOfPlots == null) {
-					aa.print("**YAZAN Invalid 'Number of Plots' value= " + numberOfPlots);
-
 					cancel = true;
 					showMessage = true;
-					comment("**YAZAN Invalid 'Number of Plots' value= " + numberOfPlots);
+					comment("**YAZAN Invalid 'Number of Plots' value= " + numberOfPlots
+						+ ", capID: " + (relatedFinalPlatCapId ? relatedFinalPlatCapId.getCustomID() : relatedFinalPlatCapId));
 
 					continue;
 				}
