@@ -1,17 +1,17 @@
 //1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review'
-	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Public Notices")){
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Public Notices")){
 		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Adjacents")){
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("IVR Message")){
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("IVR Message")){
 		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Sign Posting")){
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Sign Posting")){
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review')) && !isTaskActive("Maps")){
+	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
