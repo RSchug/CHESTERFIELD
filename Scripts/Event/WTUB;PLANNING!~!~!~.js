@@ -84,11 +84,26 @@ try {
 if (wfTask == 'Sign Posting') {
 	if (wfTask == 'IVR Message' && wfStatus !='Message Recorded'){
 	showMessage = true;
-	comment('Sign cannot be removed until the record status has Final Action.');
+	comment('Message needs to be recorded before signs can be posted.');
 }}
 //86P
 if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Final Approval')){
 	showMessage = true;
-	comment('<font size=small><b>Sign Posting can not be removed');
+	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
+	cancel = true;
+}
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Approved')){
+	showMessage = true;
+	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
+	cancel = true;
+}
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Denied')){
+	showMessage = true;
+	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
+	cancel = true;
+}
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (capStatus != 'Withdrawn')){
+	showMessage = true;
+	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
 	cancel = true;
 }
