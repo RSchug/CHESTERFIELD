@@ -72,7 +72,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       logDebug("New Expiration Date: " + expDate);
 
       if (newAppTypeString) newAppTypeArray = newAppTypeString.split("/");
-      if (newAppTypeArray.length == 4) {
+      if (newAppTypeArray && newAppTypeArray.length == 4) {
             var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections, initStatus, sysDateMMDDYYYY, sysDateMMDDYYYY);
       }
       var newCapIdString = null;
