@@ -6,7 +6,7 @@
 	var tableName = "SURETIES";
 	logDebug("Loading " + tableName);
 	var	wfUpdate = true;
-	var tableArray = loadASITable(tableName,feeCapId);
+	var tableArray = loadASITable(tableName,capId);
 	if (!tableArray) tableArray = [];
 	for (xx in tableArray) {
 		var tableRow = tableArray[xx];
