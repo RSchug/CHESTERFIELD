@@ -13,10 +13,10 @@ if (tempAsit) {
     var countParcels = 0;
 	for (a in tempAsit) {
         if (!isNaN(tempAsit[a]["Parcel Acreage"])) {
-            parcelAcreage += parseInt(tempAsit[a]["Parcel Acreage"]);
+            parcelAcreage += float_num(tempAsit[a]["Parcel Acreage"]).toFixed(2);
         }
         if (!isNaN(tempAsit[a]["Revised Acreage"])) {
-            revisedAcreage += parseInt(tempAsit[a]["Revised Acreage"]);
+            revisedAcreage += float_num(tempAsit[a]["Revised Acreage"]).toFixed(2);
         }
         countParcels++;
 	}//for all rows
@@ -25,3 +25,4 @@ if (tempAsit) {
     editAppSpecific("Total application acreage", revisedAcreage);
     editAppSpecific("Total number of parcels", countParcels);
 }
+//revisedAcreage += parseInt(tempAsit[a]["Revised Acreage"]);
