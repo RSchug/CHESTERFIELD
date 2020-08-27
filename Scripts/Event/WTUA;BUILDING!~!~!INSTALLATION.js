@@ -31,14 +31,17 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       var capIdStructure = null;
       var newInspectionType = null;
       var newInspectionDate = null;
+      logDebug("appTypeArray: " + appTypeArray.join("/") + " " + appMatch("Building/Permit/AmusementDevice/Installation"));
+      logDebug("Permanent installation?: " + AInfo["Permanent installation?"] + " " + (AInfo["Permanent installation?"] == "Yes"));
       if (appMatch("Building/Permit/AmusementDevice/Installation")
-            && AInfo["Permanent Installation"] == "Yes") {
-            // When the Workflow Task 'Certificate of Inspection' Status is updated to 'Completed' and the Custom Data Field ‘Permanent Installation' is 'Yes' then a script will automatically do the following
+            && AInfo["Permanent installation?"] == "Yes") {
+            // When the Workflow Task 'Certificate of Inspection' Status is updated to 'Completed' and the Custom Data Field 'Permanent installation?' is 'Yes' then a script will automatically do the following
             // 1. Create a related 'Building/Permit/Amusement Device/Master' Record as the Parent with the Address, Parcel, Owner, Project Names, List of Devices and Permit Expiration Date field.
             //    a.Update Workflow Task 'Annual Status' to 'In Service' and Record Status to 'Active'.
             //    b.Add Amusement Inspection and Schedule for 6 months out.
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
+            logDebug("AmusementDevice Installation")
             copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
             var expType = "Semi-annual";
             var expMonths = 6;
@@ -67,6 +70,7 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
                   expDate = "12/31/" + thisYear; //nextYear
             }
       }
+      logDebug("newAppTypeString: " + newAppTypeString);
       logDebug("Expiration Date: " + expDate);
       expDate = (expMonths ? dateAddMonths(expDate, expMonths) : expDate);
       logDebug("New Expiration Date: " + expDate);
