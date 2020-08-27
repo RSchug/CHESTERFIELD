@@ -10,3 +10,7 @@ if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to BOS")
 	activateTask("CPC Staff Report")
 	deactivateTask("Review Consolidation")
 	}
+//90P
+if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Ready for BZA"))){
+	activateTask("BZA Hearing");
+	}
