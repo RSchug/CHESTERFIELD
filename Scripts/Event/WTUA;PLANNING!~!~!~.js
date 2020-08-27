@@ -1,8 +1,7 @@
 //1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review'
 	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Public Notices")){
-	//	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-	activateTask("Public Notices");
-	}
+	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+		}
 	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 	}
@@ -17,34 +16,34 @@
 	}
 //4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
-		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+		activateTask("Public Notices");
 	}
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Adjacents")){
-		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+		activateTask("Adjacents");
 	}
 		if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Maps")){
-		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+		activateTask("Maps");
 	}
 //5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
-//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
-//		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-//	}
-//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
-//		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-//	}
-//	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
-//		addAdHocTask("ADHOC_WORKFLOW","Maps","");
-//	}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Public Notices")){
+	activateTask("Public Notices");
+	}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Adjacents")){
+	activateTask("Adjacents");
+	}
+if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
+	activateTask("Maps");
+	}
 //9P When Workflow Task 'BOS Hearing' Status 'Deferred by BOS' or 'Deferred by Applicant' or 'Remanded' is submitted then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
-//		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-//	}
-//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
-//		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-//	}
-//	if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
-//		addAdHocTask("ADHOC_WORKFLOW","Maps","");
-//	}
+if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
+	activateTask("Public Notices");
+	}
+if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
+	activateTask("Adjacents");
+	}
+if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Maps")){
+	activateTask("Maps");
+	}
 try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review')) {
