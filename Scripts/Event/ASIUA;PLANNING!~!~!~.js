@@ -13,10 +13,10 @@ if (tempAsit) {
     var countParcels = 0;
 	for (a in tempAsit) {
         if (!isNaN(tempAsit[a]["Parcel Acreage"])) {
-            parcelAcreage += parseFloat(tempAsit[a]["Parcel Acreage"]).toFixed(2);
+            parcelAcreage += parseFloat((tempAsit[a]["Parcel Acreage"]);
         }
         if (!isNaN(tempAsit[a]["Revised Acreage"])) {
-            revisedAcreage += parseFloat(tempAsit[a]["Revised Acreage"]).toFixed(2);
+            revisedAcreage += parseFloat(tempAsit[a]["Revised Acreage"]);
         }
         countParcels++;
 	}//for all rows
