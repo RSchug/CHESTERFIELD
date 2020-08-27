@@ -65,4 +65,5 @@ if (wfStatus == 'Amendment Submitted') {
         var expDate = jsDateToASIDate(new Date(dateAdd(null, 180)));
         editAppSpecific(expDateField, expDate, newCapId);
     }
+    addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 }
