@@ -1,6 +1,7 @@
 //1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review'
 	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Public Notices")){
-		addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	//	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+	activateTask("ADHOC_WORKFLOW","Public Notices","");
 	}
 	if ((matches(wfTask,'Review Distribution') && matches (wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
