@@ -10,7 +10,7 @@
 	if (!tableArray) tableArray = [];
 	for (xx in tableArray) {
 		var tableRow = tableArray[xx];
-        logDebug(tableName + "[" + xx + "]: Surety Status: " + tableRow["Surety Status"] + " Surety Number: " + tableRow["Surety Number"] + " Surety Type: " + tableRow["Surety Type"] + " Surety Purpose: " + tableRow["Surety Purpose"]);
+        logDebug(tableName + "[" + xx + "]: Surety Status: " + tableRow["Surety Status"] + ", Number: " + tableRow["Surety Number"] + ", Type: " + tableRow["Surety Type"] + " Surety Purpose: " + tableRow["Surety Purpose"]);
         if (tableRow["Surety Status"] && exists(tableRow["Surety Status"],["Released", "Replaced"])) continue;
         wfUpdate = false;
     }
