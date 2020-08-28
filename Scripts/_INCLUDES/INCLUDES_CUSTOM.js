@@ -4338,6 +4338,91 @@ function generateSignPostingNumber(fieldName) {
     return ASIValue;
 }
 
+function generateCommunityCode(ComCodeName) {
+    var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
+
+    for (var i = 32; i < 1000; i++) {
+        var ASIValue1 = i + "";
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, ASIValue1);
+        if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
+        var apsArray = getCapResult.getOutput();
+        for (aps in apsArray) {
+            var myCapId = apsArray[aps].getCapID();
+            var myCap = aa.cap.getCap(myCapId).getOutput();
+            var myCapStatus = myCap.getCapStatus();
+            if (inActiveCapStatuses && exists(myCapStatus, inActiveCapStatuses)) continue; // skip inactive record.
+            logDebug("Found " + ComCodeName + ": " + ASIValue1 + " " + myCap.getCapID().getCustomID() + " " + myCapStatus);
+            ASIValue1 = null;
+            break; // Active record found so get next number
+        }
+        if (ASIValue1 != null) break
+    }
+    return ASIValue1;
+}
+function generateSubdivCode(SubCodeName) {
+    var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
+
+    for (var i = 10; i < 1000; i++) {
+        var ASIValue2 = i + "";
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SubCodeName, ASIValue2);
+        if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
+        var apsArray = getCapResult.getOutput();
+        for (aps in apsArray) {
+            var myCapId = apsArray[aps].getCapID();
+            var myCap = aa.cap.getCap(myCapId).getOutput();
+            var myCapStatus = myCap.getCapStatus();
+            if (inActiveCapStatuses && exists(myCapStatus, inActiveCapStatuses)) continue; // skip inactive record.
+            logDebug("Found " + SubCodeName + ": " + ASIValue2 + " " + myCap.getCapID().getCustomID() + " " + myCapStatus);
+            ASIValue2 = null;
+            break; // Active record found so get next number
+        }
+        if (ASIValue2 != null) break
+    }
+    return ASIValue2;
+}
+function generateDevCode(DevCodeName) {
+    var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
+
+    for (var i = 10; i < 1000; i++) {
+        var ASIValue3 = i + "";
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, ASIValue3);
+        if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
+        var apsArray = getCapResult.getOutput();
+        for (aps in apsArray) {
+            var myCapId = apsArray[aps].getCapID();
+            var myCap = aa.cap.getCap(myCapId).getOutput();
+            var myCapStatus = myCap.getCapStatus();
+            if (inActiveCapStatuses && exists(myCapStatus, inActiveCapStatuses)) continue; // skip inactive record.
+            logDebug("Found " + DevCodeName + ": " + ASIValue3 + " " + myCap.getCapID().getCustomID() + " " + myCapStatus);
+            ASIValue3 = null;
+            break; // Active record found so get next number
+        }
+        if (ASIValue3 != null) break
+    }
+    return ASIValue3;
+}
+function generateSecCode(SecCodeName) {
+    var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
+
+    for (var i = 10; i < 1000; i++) {
+        var ASIValue4 = i + "";
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SecCodeName, ASIValue4);
+        if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
+        var apsArray = getCapResult.getOutput();
+        for (aps in apsArray) {
+            var myCapId = apsArray[aps].getCapID();
+            var myCap = aa.cap.getCap(myCapId).getOutput();
+            var myCapStatus = myCap.getCapStatus();
+            if (inActiveCapStatuses && exists(myCapStatus, inActiveCapStatuses)) continue; // skip inactive record.
+            logDebug("Found " + SecCodeName + ": " + ASIValue4 + " " + myCap.getCapID().getCustomID() + " " + myCapStatus);
+            ASIValue4 = null;
+            break; // Active record found so get next number
+        }
+        if (ASIValue4 != null) break
+    }
+    return ASIValue4;
+}
+
 // FA this method returns all the related caps for given cap, it excludes the given cap in the array
 function getAllRelatedCaps(capID)
 {

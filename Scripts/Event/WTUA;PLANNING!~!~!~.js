@@ -144,6 +144,75 @@ try {
 		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
 		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
+	
+// 56p Community/Subdivision/Development/Section Codes are generated here at time of Fees Received or Fees Waived - logic based on CODE SchemaDesign for GIS spreadsheet.
+// Number should be generate 001 - 999.  No duplicates number for another active record.For: Planning/Subdivision/ Preliminary - OverallConceptualPlan - ConstructionPlan 
+//  and Planning/SitePlan/ -> Schematics - Major - Minor
+
+	var ComCodeName = "Community Code";
+	var seq1CodeName = null;
+	if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/SitePlan/Major/*')) {
+		seq1CodeName = "Community Code";
+		
+		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+		
+			if (seq1CodeName && typeof (AInfo[ComCodeName]) != "undefined") {
+				
+				AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
+				logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
+				editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
+			}
+		}
+	}
+	
+	var SubCodeName = "Subdivision Code";
+	var seq2CodeName = null;
+	if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/SitePlan/Major/*')) {
+		seq2CodeName = "Subdivision Code";
+		
+		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+		
+			if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
+				
+				AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
+				logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
+				editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
+			}
+		}
+	}
+	
+	var DevCodeName = "Development Code";
+	var seq3CodeName = null;
+	if (appMatch('*/SitePlan/Minor/*') || appMatch('*/SitePlan/Major/*')) {
+		seq3CodeName = "Development Code";
+		
+		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+		
+			if (seq3CodeName && typeof (AInfo[DevCodeName]) != "undefined") {
+				
+				AInfo[DevCodeName] = generateDevCode(DevCodeName);
+				logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
+				editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
+			}
+		}
+	}
+
+	var SecCodeName = "Section Code";
+	var seq4CodeName = null;
+	if (appMatch('*/Subdivision/ConstructionPlan/*')) {
+		seq4CodeName = "Section Code";
+		
+		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+		
+			if (seq4CodeName && typeof (AInfo[SecCodeName]) != "undefined") {
+				
+				AInfo[SecCodeName] = generateSecCode(SecCodeName);
+				logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
+				editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
+			}
+		}
+	}
+	
 //Below is all code from previous implementer - Not sure if these work db
 /*
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",
