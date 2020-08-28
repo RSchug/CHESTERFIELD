@@ -68,11 +68,11 @@ try {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 //20P When AdHoc Task 'Signs Posted' Status is updated to any value and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
-if ((wfTask == 'Sign Posting') && (wfStatus == 'Signs Posted')) {
-	if (wfTask == 'IVR Message' && wfStatus !='Message Recorded'){
-	showMessage = true;
-	comment('Message needs to be recorded before signs can be posted.');
-}}
+//if ((wfTask == 'Sign Posting') && (wfStatus == 'Signs Posted')) {
+//	if (wfTask == 'IVR Message' && wfStatus !='Message Recorded'){
+//	showMessage = true;
+//	comment('Message needs to be recorded before signs can be posted.');
+//}}
 //86P
 if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capStatus,'Final Approval','Approved','Denied','Withdrawn'))){
 	showMessage = true;
