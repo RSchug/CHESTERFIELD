@@ -27,19 +27,19 @@ try {
 	//  Planning/LandUse/Variance/*/* or Planning/LandUse/AdminVariance/* or Planning/LandUse/SpecialExceptions/* or Planning/Subdivision/ExceptiontoPreliminary/NA or Planning/Subdivision/Preliminary/NA or Planning/SitePlan/Schematics/NA or Planning/SitePlan/Major/NA or Planning/LandUse/HistoricPreservation/NA or Planning/LandUse/SubstantialAccord/NA or Planning/LandUse/Utilities Waiver/NA or Planning/LandUse/ZoningCase/NA
 
 	var fieldName = "Sign Posting Number";
-	var seqName = null;
-	if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA")) {
-		seqName = "Sign Posting Number";
-	} else if (appMatch("Planning/LandUse/*/*") 
-		&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialException", "HistoricPreservation","SubstantialAccord","Utilities Waiver","ZoningCase"])) {
-		seqName = "Sign Posting Number";
-	} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA") || appMatch("Planning/Subdivision/OverallConceptualPlan/NA")
-				|| appMatch("Planning/Subdivision/ConstructionPlan/NA")) {
-		seqName = "Sign Posting Number";
-	} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
-		seqName = "Sign Posting Number";
-	} 
-	if (seqName && typeof (AInfo[fieldName]) != "undefined") {
+	//var seqName = null;
+	//if (appMatch("Planning/*/*/*") || appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA")) {
+	//	seqName = "Sign Posting Number";
+	//} else if (appMatch("Planning/LandUse/*/*") 
+	//	&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialException", "HistoricPreservation","SubstantialAccord","Utilities Waiver","ZoningCase"])) {
+	//	seqName = "Sign Posting Number";
+	//} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA") || appMatch("Planning/Subdivision/OverallConceptualPlan/NA")
+	//			|| appMatch("Planning/Subdivision/ConstructionPlan/NA")) {
+	//	seqName = "Sign Posting Number";
+	//} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
+	//	seqName = "Sign Posting Number";
+	//} 
+	if ((AInfo[fieldName]) != "undefined") {
 		//AInfo[fieldName] = getNextSequence(seqName);
 		AInfo[fieldName] = generateSignPostingNumber(fieldName);
 		logDebug(fieldName + ": " + AInfo[fieldName]);
