@@ -379,12 +379,11 @@ function getContactsListByType(ContactType) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 //20P When AdHoc Task 'Signs Posted' Status is 'Signs Posted' and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
-if (wfTask == 'Sign Posting' && wfStatus == 'Signs Posted') {
-	if (wfTask == 'IVR Message' && wfStatus != 'Message Recorded')
-	showMessage = true;
-	comment('Task status has updated. WARNING: IVR message should be recorded before signs are posted.');
-}
-
+//if (wfTask == 'Sign Posting' && wfStatus == 'Signs Posted') {
+//	if (wfTask == 'IVR Message' && wfStatus != 'Message Recorded')
+//	showMessage = true;
+//	comment('Task status has updated. WARNING: IVR message should be recorded before signs are posted.');
+//}
 // 44P: When Adhoc Workflow Task "Sign Posting" Status 'Signs Removed' is submitted, lookup the Record ID from the Standard Choice list, and then remove the Record ID.
 // Makes the 3 digit number available again.This is related to what was done for 10P:
 //	On Record Creation: Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
