@@ -1,6 +1,6 @@
 try {
 // CPC Hearing Results required for Subdivisions
-if ((appmatch('*/*/ConstructionPlan/NA')|| appmatch('*/*/OverallConceptualPlan/NA')|| appmatch('*/*/Preliminary/NA')){
+if (appmatch('*/*/ConstructionPlan/NA')|| appmatch('*/*/OverallConceptualPlan/NA')|| appmatch('*/*/Preliminary/NA')){
 	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'CPC Approved','CPC Approved with Admin Review','CPC Denied')) {
 			if (AInfo['Conditions'] == null || AInfo['Approved Time Limit'] == null || AInfo['Expiration Date'] == null) {
 				showMessage = true;
