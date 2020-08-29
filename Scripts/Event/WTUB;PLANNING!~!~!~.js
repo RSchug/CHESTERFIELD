@@ -5,8 +5,7 @@ Description:
 PLEASE BE ADVISED - This code also exist in the WTUB:Building for these proffer conditions on the parcels
  */
 //Constants:
-
-try {
+//try {
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) {
 		if ((appMatch('*/*/RPAException/*') || appMatch('*/*/ManufacturedHomes/*') || appMatch('*/*/SubstantialAccord/*') || appMatch('*/*/HistoricPreservation/*')) &&
 			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
@@ -27,7 +26,6 @@ try {
 			cancel = true;
 		}
 	}
-
 	if (matches(wfTask, 'Case Complete') && matches(wfStatus, 'Closed')) {
 		if ((appMatch('*/*/Preliminary/*') || appMatch('*/*/ConstructionPlan/*') || appMatch('*/*/ParcelAcreage/*') || appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*') || appMatch('*/*/Minor/*') || appMatch('*/*/Major/*')) && 
 			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
@@ -53,19 +51,11 @@ try {
 				cancel = true;
 		}
 	}
-// 07-2020 Boucher 41p and 42p check that Custom data is filled in before moving to next step
-	if (appMatch('*/*/Major/*')) {
-		if (matches(wfTask, 'CPC Meeting','CPC Hearing','BOS Hearing') && matches(wfStatus, 'Recommend Approval','Recommend Denial','CPC Approved','CPC Approved with Admin Review','CPC Denied','Approved','Denied')) {
-			if (AInfo['Approved time limit'] == null || AInfo['Conditions'] == null || AInfo['Number of Town House Units Approved'] == null || AInfo['Non-Residential Gross Building Square Feet'] == null
-			|| AInfo['Expiration Date'] == null || AInfo['Number of Single Family Units Approved'] == null || AInfo['Number of Multi Family Units Approved'] == null) {
-				showMessage = true;
-				comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
-				cancel = true;
-			}
-		}
-	}
-} catch (err) {
-	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+//86P
+if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capStatus,'Final Approval','Approved','Denied','Withdrawn'))){
+	showMessage = true;
+	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
+	cancel = true;
 }
 //20P When AdHoc Task 'Signs Posted' Status is updated to any value and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
 //if ((wfTask == 'Sign Posting') && (wfStatus == 'Signs Posted')) {
@@ -73,9 +63,3 @@ try {
 //	showMessage = true;
 //	comment('Message needs to be recorded before signs can be posted.');
 //}}
-//86P
-if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capStatus,'Final Approval','Approved','Denied','Withdrawn'))){
-	showMessage = true;
-	comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
-	cancel = true;
-}
