@@ -61,5 +61,6 @@ if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capSt
 //if ((wfTask == 'Sign Posting') && (wfStatus == 'Signs Posted')) {
 //	if (wfTask == 'IVR Message' && wfStatus !='Message Recorded'){
 //	showMessage = true;
-//	comment('Message needs to be recorded before signs can be posted.');
+//	comment('<font size=small><b>Message needs to be recorded before signs can be posted.');
+//cancel = false;
 //}}

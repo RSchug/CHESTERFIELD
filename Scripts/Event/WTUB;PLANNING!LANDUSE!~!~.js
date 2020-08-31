@@ -1,6 +1,6 @@
 try {
 // Variances BZA
-if (appMatch('Planning/LandUse/AdminVariance/NA','Planning/LandUse/Variance/NA','Planning/LandUse/SpecialException/NA')){    
+if (appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA')){    
     if (matches(wfTask, 'BZA Hearing') && matches(wfStatus,'Approved','Denied')) {
 		if (AInfo['Conditions'] == null || AInfo['Approved time limit'] == null || AInfo['Expiration date'] == null) {
 			showMessage = true;
@@ -10,7 +10,7 @@ if (appMatch('Planning/LandUse/AdminVariance/NA','Planning/LandUse/Variance/NA',
 	}
 }
 // 42.4P Manufactured Homes and RPA Exception
-if (appMatch('Planning/LandUse/ManufacturedHomes/NA','Planning/LandUse/RPAException/NA')){    
+if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){    
     if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved','Denied')) {
 		if (AInfo['BOS Conditions'] == null || AInfo['BOS Proffered conditions'] == null || AInfo['BOS Cash proffers'] == null || AInfo['BOS Complies with plan'] == null || AInfo['BOS Approved time limit'] == null || AInfo['BOS Expiration date'] == null) {
 			showMessage = true;
