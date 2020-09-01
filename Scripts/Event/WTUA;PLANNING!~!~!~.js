@@ -1,17 +1,17 @@
 //1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review' - 8/2020 change, add 'Manual Routing'.
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) && !isTaskActive("Public Notices")){
+	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Public Notices")){
 	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 		}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) && !isTaskActive("Adjacents")){
+	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Adjacents")){
 		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) && !isTaskActive("IVR Message")){
+	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("IVR Message")){
 		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) && !isTaskActive("Sign Posting")){
+	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Sign Posting")){
 		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) && !isTaskActive("Maps")){
+	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Maps")){
 		addAdHocTask("ADHOC_WORKFLOW","Maps","");
 	}
 //4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
@@ -46,7 +46,7 @@ if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferr
 	}
 try {
 //07-2020 Boucher 11p	
-	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Review')) {
+	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
 		editTaskDueDate('Sign Posting',dateAdd(null,7));
 	//07-2020 Boucher script 82p
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
