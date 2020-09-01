@@ -1,6 +1,6 @@
 try {
     // Set the Reviewers Tasks per the wfStatus choosen per REVIEW DEPTS FOR ELM Spreadsheet scritp# 60p
-	if (appmatch('*/*/Variance/*') || appmatch('*/*/SpecialException/*') || appmatch('*/*/AdminVariance/*')) {
+	if (appMatch('*/*/Variance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/AdminVariance/*')) {
 		if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
 			activateTask("CDOT Review");
 			activateTask("Environmental Engineering Review");
