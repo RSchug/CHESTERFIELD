@@ -128,7 +128,7 @@ try {
 		showMessage = true;
 		comment('<B><Font Color=RED>Error: There is an existing Planning Record with the same Project Name: ' + gaName + '.</B></Font>');
 	}
-//Checking for A=Matching Address and Planning Record Type
+//Checking for matching Address and Planning Record Type
 	//ASI in the intake
 	var AInfo = [];
 	loadAppSpecific4ACA(AInfo); // Add AppSpecific Info
