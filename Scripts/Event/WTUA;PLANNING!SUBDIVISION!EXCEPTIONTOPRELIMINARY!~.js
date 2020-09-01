@@ -4,21 +4,10 @@ try {
 		activateTask("CDOT Review");
 		activateTask("Environmental Engineering Review");
 		activateTask("Fire and Life Safety Review");
-		activateTask("Parks and Recreation Review");
 		activateTask("Planning Review");
-		activateTask("Police Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
-		activateTask("GIS-IST Review");
-		activateTask("Assessor Review");
-		activateTask("School Research and Planning Review");
 		activateTask("Water Quality Review");
-	}
-	
-	//FEE
-	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-		addFee("OVERALLPLAN","CC-PLANNING","FINAL",1,"N");
-		addFee("OCPLAN","CC-PLANNING","FINAL",1,"Y");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
