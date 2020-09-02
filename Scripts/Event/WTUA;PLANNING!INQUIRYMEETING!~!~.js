@@ -10,6 +10,7 @@ try {
 		activateTask("Police Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Inquiry Meeting");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
