@@ -67,3 +67,7 @@ try {
 if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
 	addFees_ZoneCase();
 }
+//99P
+ if (wfTask == 'Community Meeting' && wfStatus == 'CPC Staff Report') {
+	activateTask("CPC Hearing");
+ }
