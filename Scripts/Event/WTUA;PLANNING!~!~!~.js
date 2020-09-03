@@ -407,3 +407,10 @@ if (wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') {
 		editAppSpecific(fieldName, null);
 	}
 }
+//33.1P In progress
+//if (appMatch('Planning/LandUse/ManufacturedHomes/NA') && (capStatus('Approved')) {
+//var ApprovedTimeLimit = "BOS Approved time limit";
+//var Years = need to see how to multiply by 365
+//var ExpirationDate = jsDateToASIDate(new Date(dateAdd(null,Years)));
+//	editAppSpecific(AInfo['BOS Expiration date'],ExpirationDate);
+//}
