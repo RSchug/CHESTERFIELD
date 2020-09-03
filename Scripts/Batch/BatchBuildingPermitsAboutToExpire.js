@@ -88,8 +88,8 @@ var searchAppSpecInfoLabel = "Permit Expiration Date";                          
 
 //var searchDateFrom = dateAdd(startDate, 150);
 //var searchDateTo = dateAdd(searchDateFrom, 30);
-var searchDateFrom = dateAdd(startDate, 25);
-var searchDateTo = dateAdd(searchDateFrom, 5);
+var searchDateFrom = dateAdd(startDate, 30);
+var searchDateTo = dateAdd(searchDateFrom, 0);
 var capStatusNew = null; // "About to Expire";
 
 
