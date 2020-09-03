@@ -19,7 +19,7 @@ if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to BOS")
 	deactivateTask("Review Consolidation");
 	}
 //6.1P
-if (appMatch('Planning/LandUse/ManufacturedHome/NA') || appMatch('Planning/LandUse/RPAException/NA')){
+if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){
 if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Review Complete"))){
 	activateTask("BOS Hearing");
 	}}
