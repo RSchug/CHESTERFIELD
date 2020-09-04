@@ -12,7 +12,7 @@ if (appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/
 // 42.4P Manufactured Homes and RPA Exception
 if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){    
     if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved','Denied')) {
-		if (AInfo['Conditions'] == null || AInfo['Proffered Conditions'] == null || AInfo['Cash Proffers'] == null || AInfo['Complies with Plan'] == null {
+		if (AInfo['Conditions'] == null || AInfo['Proffered Conditions'] == null || AInfo['Cash Proffers'] == null || AInfo['Complies with Plan'] == null ){
 			showMessage = true;
 			comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 			cancel = true;
