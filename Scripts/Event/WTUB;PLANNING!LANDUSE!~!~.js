@@ -2,7 +2,7 @@ try {
 // Variances BZA
 if (appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA')){    
     if (matches(wfTask, 'BZA Hearing') && matches(wfStatus,'Approved','Denied')) {
-		if (AInfo['Conditions'] == null || AInfo['Approved time limit'] == null || AInfo['Expiration date'] == null) {
+		if (AInfo['Conditions'] == null || AInfo['Approved Time Limit'] == null || AInfo['Expiration Date'] == null) {
 			showMessage = true;
 			comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 			cancel = true;
