@@ -1,6 +1,6 @@
 try {
 // Variances BZA
-if (appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA')){    
+if (appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA') || appMatch('Planning/LandUse/Appeal/NA')){    
     if (matches(wfTask, 'BZA Hearing') && matches(wfStatus,'Approved','Denied')) {
 		if (AInfo['Conditions'] == null || AInfo['Approved Time Limit'] == null || AInfo['Expiration Date'] == null) {
 			showMessage = true;
