@@ -22,7 +22,7 @@ if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/Land
 if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){   
 if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved','Denied')) {
 	if (AInfo['No BOS Time Limit'] != 'CHECKED'){
-		if (AInfo['BOS Approved Time Limit'] == null || AInfo['BOS Expiration Date'] == null) {
+		if (AInfo['Approved Time Limit'] == null || AInfo['Expiration Date'] == null) {
 		showMessage = true;
 		comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 		cancel = true;
