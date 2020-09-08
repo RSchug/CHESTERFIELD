@@ -38,6 +38,9 @@ try {
 		activateTask("General Services");
 		activateTask("Radio Shop");
 	}
+	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
+		deactivateTask('Default');
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

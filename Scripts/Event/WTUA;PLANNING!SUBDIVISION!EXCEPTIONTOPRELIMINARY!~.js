@@ -8,6 +8,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Water Quality Review");
+		deactivateTask("Default");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

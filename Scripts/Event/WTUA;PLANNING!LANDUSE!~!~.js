@@ -10,6 +10,7 @@ try {
 			activateTask("Utilities Review");
 			activateTask("VDOT Review");
 			activateTask("Real Property Review");
+			deactivateTask("Default");
 		}
 	}
 //6P

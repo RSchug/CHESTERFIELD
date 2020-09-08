@@ -13,6 +13,7 @@ try {
 		activateTask("Assessor Review");
 		activateTask("School Research and Planning Review");
 		activateTask("Water Quality Review");
+		deactivateTask("Default");
 	}
 //FEE
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
