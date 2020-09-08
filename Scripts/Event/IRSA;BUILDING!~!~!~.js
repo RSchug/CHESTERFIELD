@@ -44,9 +44,9 @@ if (inspType.equals("Rental Inspection") && inspResult.equals("Approved")){
 	closeTask("Inspections","Approved","Updated based on Completed Inspection Result","");
 	}
 //If Inspection Result is "Approved" for Inspection Type "Amusement Final" close the Inspections Workflow Task.//
-if (inspType.equals("Amusement Final") && inspResult.equals("Approved")){
-	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
-	}
+//if (inspType.equals("Amusement Final") && inspResult.equals("Approved")){
+//	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
+//	}
 //If Inspection Result is "Approved" for Inspection Type "Boiler" close the Inspections Workflow Task.//
 if (inspType.equals("Boiler") && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
