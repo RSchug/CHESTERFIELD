@@ -26,6 +26,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Distribution' && (wfStatus == 'Routed for Residential and Commercial' || wfStatus == 'Routed for Residential Review')) {
 		activateTask("Budget Review");
@@ -43,6 +44,7 @@ try {
 		if (wfStatus == 'Routed for Residential and Commercial') {
 			activateTask("General Services");
 		}
+		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Towers Review') {
 		activateTask("Airport Review");
@@ -55,8 +57,6 @@ try {
 		activateTask("VDOT Review");
 		activateTask("General Services");
 		activateTask("Radio Shop");
-	}
-	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
 		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Consolidation' && wfStatus == 'Move to BOS') {
