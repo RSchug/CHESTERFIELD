@@ -2,13 +2,13 @@ logDebug("Entering IRSA:BUILDING/*/*/*");
 var inspBillable = inspObj.getInspection().getActivity().getInspBillable();
 logDebug("Inspection Billable checkbox = " + inspBillable + ". And Inspection Result = " + inspResult);
 if (inspBillable == "Y" && matches(inspResult,"Corrections Required","Approved")) {
-	addFeeWithExtraData("REINSPECTION","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" ("+Math.round(inspTotalTime)+")");
+	addFeeWithExtraData("REINSPECTION","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" Insp.Seq# "+Math.round(inspTotalTime)+"");
 }
 //52B:If Inspection Result = Corrections Required, and 'Not Ready Fee' is checked, then add Not Ready Fee("CC-BLD-ADMIN", "NOTREADY"). Inspection Detail Page field is called 'Overtime'
 var inspOvertime = inspObj.getInspection().getActivity().getOvertime();
 logDebug("Inspection Not Ready (Overtime) checkbox = " + inspOvertime + ". And Inspection Result = " + inspResult);
 if (matches(inspResult, "Corrections Required") && inspOvertime == "Y") {
-	addFeeWithExtraData("NOTREADY","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" Seq# "+Math.round(inspTotalTime)+"");
+	addFeeWithExtraData("NOTREADY","CC-BLD-ADMIN","FINAL",1,"Y",capId,inspType+" Insp.Seq# "+Math.round(inspTotalTime)+"");
 }
 //If Inspection Result is "Approved" for Inspection Type "Building Final" close the Inspections Workflow Task.//
 if (appMatch("Building/Permit/Residential/NA") && inspType.equals("Building Final") && inspResult.equals("Approved")){
