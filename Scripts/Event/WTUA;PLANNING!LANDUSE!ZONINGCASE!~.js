@@ -60,17 +60,16 @@ try {
 		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Consolidation' && wfStatus == 'Move to BOS') {
-		activateTask("BOS Staff Report");
-		deactivateTask("Review Consolidation");
+		addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
+	}
+// Add Fees
+	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+		addFees_ZoneCase();
+	}
+//99P
+	if (wfTask == 'Community Meeting' && wfStatus == 'Move to CPC') {
+		addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-// Add Fees
-if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
-	addFees_ZoneCase();
-}
-//99P
- if (wfTask == 'Community Meeting' && wfStatus == 'CPC Staff Report') {
-	activateTask("CPC Hearing");
- }
