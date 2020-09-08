@@ -35,14 +35,9 @@ if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','
 //	activateTask("Maps");
 //	}
 //9P When Workflow Task 'BOS Hearing' Status 'Deferred by BOS' or 'Deferred by Applicant' or 'Remanded' is submitted then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Public Notices")){
-	activateTask("Public Notices");
-	}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("Adjacents")){
-	activateTask("Adjacents");
-	}
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant')) && !isTaskActive("IVR Message")){
-	activateTask("IVR Message");
+if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant','Remanded'))){
+	activateTask("BOS Staff Report");
+	activateTask("BOS Hearing");
 	}
 try {
 //07-2020 Boucher 11p	
