@@ -29,27 +29,24 @@ try {
 		}
 	}
 	if (matches(wfTask, 'Case Complete') && matches(wfStatus, 'Closed')) {
-		if ((appMatch('*/*/Preliminary/*') || appMatch('*/*/ConstructionPlan/*') || appMatch('*/*/ParcelAcreage/*') || appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*') || appMatch('*/*/Minor/*') || appMatch('*/*/Major/*')) &&
-			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
-				parcelHasConditiontrue_TPS('EE', 'Applied') ||
-				parcelHasConditiontrue_TPS('Fire', 'Applied') ||
-				parcelHasConditiontrue_TPS('Health', 'Applied') ||
-				parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
-				parcelHasConditiontrue_TPS('Planning', 'Applied') ||
-				parcelHasConditiontrue_TPS('Utilities', 'Applied') ||
-				parcelHasConditiontrue_TPS('VDOT', 'Applied'))) {
+		if (appMatch('*/*/Preliminary/*') && parcelHasConditiontrue_TPS('Preliminary', 'Applied')) {
 			showMessage = true;
-			comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
+			comment('The Parcel(s) seem to have still applied Preliminary Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		if (appMatch('*/*/Preliminary/*') && parcelHasConditiontrue_TPS('School Plan', 'Applied')) {
+		else if (appMatch('*/*/ConstructionPlan/*') && parcelHasConditiontrue_TPS('Construction', 'Applied')) {
 			showMessage = true;
-			comment('The Parcel(s) still have an applied School Plan Condition. Someone will need to update the Condition Status to Condition Met to proceed in the workflow');
+			comment('The Parcel(s) seem to have still applied Construction Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		if ((appMatch('*/*/ConstructionPlan/*') || appMatch('*/*/ParcelAcreage/*') || appMatch('*/*/Minor/*') || appMatch('*/*/Major/*')) && parcelHasConditiontrue_TPS('Real Property', 'Applied')) {
+		else if (appMatch('*/*/ParcelAcreage/*') && parcelHasConditiontrue_TPS('Acreage', 'Applied')) {
 			showMessage = true;
-			comment('The Parcel(s) still have an applied Real Property Condition. Someone will need to update the Condition Status to Condition Met to proceed in the workflow');
+			comment('The Parcel(s) seem to have still applied Parcel Acreage Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if ((appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*')) && parcelHasConditiontrue_TPS('Variance', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
