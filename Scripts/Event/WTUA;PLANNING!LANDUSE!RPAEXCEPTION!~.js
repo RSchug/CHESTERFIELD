@@ -7,6 +7,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("Real Property Review");
 		activateTask("Water Quality Review");
+		deactivateTask("Default");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

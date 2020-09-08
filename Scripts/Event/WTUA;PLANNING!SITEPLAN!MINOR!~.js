@@ -12,7 +12,7 @@ try {
 		activateTask("Real Property Review");
 		activateTask("GIS-IST Review");
 		activateTask("Water Quality Review");
-		activateTask("Staff and Developer Meeting");
+		deactivateTask("Default");
 	}
 	
 //33P set the Expiration Date to 1825 days 

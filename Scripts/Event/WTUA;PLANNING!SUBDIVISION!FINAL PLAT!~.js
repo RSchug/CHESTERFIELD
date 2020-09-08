@@ -13,6 +13,7 @@ try {
 		activateTask("Assessor Review");
 		activateTask("Water Quality Review");
 		activateTask("GIS-EDM Utilities Review");
+		deactivateTask("Default");
 	}
 	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
 	//49P Final Plat Fee
