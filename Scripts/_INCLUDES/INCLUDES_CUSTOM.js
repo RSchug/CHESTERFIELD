@@ -5216,7 +5216,7 @@ function ownerExistsOnCap() {
 }
 
 function parcelHasConditiontrue_TPS(pType,pStatus)
-// for the Parcel Conditions, checks all parcels, and if any have an Applied Condition, returns true
+// for the Parcel Conditions, checks all parcels, and if any have an Applied Conditions with the record name in it, returns true
 {
 	var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
 	if (!capParcelResult.getSuccess())
@@ -5230,7 +5230,7 @@ function parcelHasConditiontrue_TPS(pType,pStatus)
 			{ logDebug("**WARNING: error getting parcel conditions : " + pcResult.getErrorMessage()) ; return false }
 		pcs = pcResult.getOutput();
 		for (pc1 in pcs)
-			if (pcs[pc1].getConditionType().equals(pType) && pcs[pc1].getConditionStatus().equals(pStatus)) 
+			if (pcs[pc1].getConditionDescription().indexOf(pType) && pcs[pc1].getConditionStatus().equals(pStatus)) 
 				return true;
 		}
 }
