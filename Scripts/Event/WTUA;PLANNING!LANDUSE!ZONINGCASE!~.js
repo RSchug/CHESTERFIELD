@@ -56,6 +56,9 @@ try {
 		activateTask("General Services");
 		activateTask("Radio Shop");
 	}
+	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
+		deactivateTask("Default");
+	}
 	if (wfTask == 'Review Consolidation' && wfStatus == 'Move to BOS') {
 		activateTask("BOS Staff Report");
 		deactivateTask("Review Consolidation");

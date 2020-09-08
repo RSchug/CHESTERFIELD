@@ -12,6 +12,7 @@ try {
 		activateTask("Real Property Review");
 		activateTask("GIS-IST Review");
 		activateTask("Water Quality Review");
+		deactivateTask("Default");
 	}
 	
 //Site Plan - Initial Submittal Fee 8.1P

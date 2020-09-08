@@ -15,6 +15,7 @@ try {
 		activateTask("VDOT Review");
 		activateTask("Real Property Review");
 		activateTask("Chesterfield Historical Society Review");
+		deactivateTask("Technical Review Committee");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
