@@ -72,9 +72,9 @@ if (inspType.equals("Building Final") && inspResult.equals("Approved")
 	}
 }
 //31B update for Residential Fire to close out Inspections Workflow
-if (appMatch("Building/Permit/Residential/Fire") && (matches(inspType,"Final Alarm","Final Clean Agent","Final Hood Suppression","Final Pump Test","Final Sprinkler","Final Standpipe System","Final Underground Inspection")) && inspResult.equals("Approved")){
-	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
+if (appMatch("Building/Permit/Residential/Fire") && (matches(inspType,"Spk Final Inspection","UGD Final Inspection")) && inspResult.equals("Approved")){
+	closeTask("Inspections","Completed","Updated based on Approved Inspection Result","");
 }
-if (appMatch("Building/Permit/Commercial/Fire") && (matches(inspType,"Final Alarm","Final Clean Agent","Final Hood Suppression","Final Pump Test","Final Sprinkler","Final Standpipe System","Final Underground Inspection")) && inspResult.equals("Approved")){
-	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
+if (appMatch("Building/Permit/Commercial/Fire") && (matches(inspType,"Alm Final Inspection","Cln Agt Final Inspection","Hood Suppression Final","Spk Final Inspection","UGD Final Inspection")) && inspResult.equals("Approved")){
+	closeTask("Inspections","Completed","Updated based on Approved Inspection Result","");
 }
