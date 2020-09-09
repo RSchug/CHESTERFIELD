@@ -40,7 +40,7 @@ if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferr
 try {
 //07-2020 Boucher 11p	
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		editTaskDueDate('Sign Posting',dateAdd(null,7));
+		editTaskDueDate('Sign Posting',dateAdd(null,7,true));
 	//07-2020 Boucher script 82p
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Public Notices','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
@@ -52,14 +52,14 @@ try {
 					//logDebug('Task from Array = ' + wfaTask + ' and the Task from Record = ' + wfbTask.getTaskDescription());
 					if (wfaTask == wfbTask.getTaskDescription()) {
 						if (AInfo['Special Consideration'] == 'Expedited') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,14));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,14,true));
 						} else if (AInfo['Special Consideration'] == 'Fast Track') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7,true));
 						} else if (AInfo['Special Consideration'] == 'Regular') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21,true));
 						}
 					else
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21,true));
 					}
 				}
 			}
