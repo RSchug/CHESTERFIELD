@@ -32,6 +32,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
+| 09/08/2020 Boucher updated addParcelStdCondition_TPS so status would be set correctly
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -287,7 +288,7 @@ function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComm
 				for (i = 0; i < standardConditions.length; i++) {
 					standardCondition = standardConditions[i];
 					//var cStatus = "Active", cStatusType = "Active";
-					var addParcelCondResult = aa.parcelCondition.addParcelCondition(Parcels[zz].getParcelNumber(), standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), addParcelCondResult.setConditionStatus("Applied"), sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
+					var addParcelCondResult = aa.parcelCondition.addParcelCondition(Parcels[zz].getParcelNumber(), standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), systemUserObj, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
 					if (addParcelCondResult.getSuccess()) {
 						logDebug("Successfully added condition to Parcel " + Parcels[zz].getParcelNumber() + ":  " + cDesc);
 					}
@@ -302,10 +303,8 @@ function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComm
 		var standardConditions = aa.capCondition.getStandardConditions(cType,cDesc).getOutput();
 		for (i = 0; i < standardConditions.length; i++) {
 			standardCondition = standardConditions[i];
-			//var cStatus = "Active", cStatusType = "Active";
-			var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNum, standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), addParcelCondResult.setConditionStatus("Applied"), sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
+			var addParcelCondResult = aa.parcelCondition.addParcelCondition(parcelNum, standardCondition.getConditionType(), standardCondition.getConditionDesc(), (cShortComment? cShortComment:standardCondition.getConditionComment()), null, null, standardCondition.getImpactCode(), systemUserObj, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj, "Notice", standardCondition.getDisplayConditionNotice(), standardCondition.getIncludeInConditionName(), standardCondition.getIncludeInShortDescription(), standardCondition.getInheritable(), (cLongComment? cLongComment:standardCondition.getLongDescripton()), standardCondition.getPublicDisplayMessage(), standardCondition.getResolutionAction(), standardCondition.getConditionGroup(), standardCondition.getDisplayNoticeOnACA(), standardCondition.getDisplayNoticeOnACAFee(), standardCondition.getPriority()); 
 			if (addParcelCondResult.getSuccess()) {
-//				logMessage("Successfully added condition to Parcel " + parcelNum + ":  " + cDesc);
 				logDebug("Successfully added condition to Parcel " + parcelNum + ":  " + cDesc);
 			}
 			else {
