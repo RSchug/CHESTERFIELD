@@ -408,12 +408,7 @@ if (wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') {
 //	editAppSpecific(AInfo['BOS Expiration date'],ExpirationDate);
 //}
 //95P
-if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA')) && !isTaskActive("Public Notices")){
-	activateTask("Public Notices");
-}
-if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA')) && !isTaskActive("Adjacents")){
-	activateTask("Adjacents");
-}
-	if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA')) && !isTaskActive("IVR Message")){
-	activateTask("IVR Message");
+if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA'))){
+	activateTask("BZA Staff Report");
+	activateTask("BZA Hearing");
 }
