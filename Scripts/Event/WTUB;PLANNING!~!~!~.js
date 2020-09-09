@@ -56,12 +56,11 @@ try {
 		comment('<font size=small><b>Sign cannot be removed until the record status has Final Action.');
 		cancel = true;
 	}
-	//20P When AdHoc Task 'Signs Posted' Status is updated to any value and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
-	if ((wfTask == 'Sign Posting') && (wfStatus == 'Signs Posted')) {
+	//20P When AdHoc Task 'Signs Posted' Status is updated to Signs Posted and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
+	if (wfTask == 'Sign Posting' && wfStatus == 'Signs Posted') {
 		if (wfTask == 'IVR Message' && wfStatus != 'Message Recorded') {
 			showMessage = true;
 			comment('<font size=small><b>Message needs to be recorded before signs can be posted.</b></font>');
-			cancel = false;
 		}
 	}
 } catch (err) {
