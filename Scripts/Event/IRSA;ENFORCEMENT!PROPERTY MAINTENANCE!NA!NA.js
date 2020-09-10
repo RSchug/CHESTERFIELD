@@ -43,3 +43,18 @@ if((matches(inspResult,"Abated - Owner") && inspType.equals("Follow-up")) && isT
 if((matches(inspResult,"Abated - Owner") && inspType.equals("Follow-up")) && isTaskActive("Follow-Up Investigation")){
 	closeTask("Follow-Up Investigation","Violation Corrected","Updated based on Abated - Owner Follow-up Inspection","");
 	}
+if(matches(inspResult,"In Violation") && inspType.equals("Follow-up")){
+	scheduleInspection("Follow-up",1,currentUserID,null,"Auto Scheduled");
+	}
+if(matches(inspResult,"10 Day In Violation") && inspType.equals("Follow-up")){
+	scheduleInspection("Follow-up",13,currentUserID,null,"Auto Scheduled");
+	}
+if(matches(inspResult,"14 Day In Violation") && inspType.equals("Follow-up")){
+	scheduleInspection("Follow-up",17,currentUserID,null,"Auto Scheduled");
+	}
+if(matches(inspResult,"30 Day In Violation") && inspType.equals("Follow-up")){
+	scheduleInspection("Follow-up",33,currentUserID,null,"Auto Scheduled");
+	}
+if(matches(inspResult,"60 Day In Violation") && inspType.equals("Follow-up")){
+	scheduleInspection("Follow-up",63,currentUserID,null,"Auto Scheduled");
+	}
