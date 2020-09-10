@@ -549,3 +549,9 @@ function getContactsListByType(ContactType) {
 
 	return false;  }
 */
+if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Approval')) {
+	var ApprovedTimeLimit = "Approved Time Limit";
+	var BlankExpireDate = "Expiration Date";
+	var NewExpireDate = jsDateToASIDate(new Date(dateAddMonths(BlankExpireDate,12*ApprovedTimeLimit)));
+    editAppSpecific(BlankExpireDate,NewExpireDate)
+}
