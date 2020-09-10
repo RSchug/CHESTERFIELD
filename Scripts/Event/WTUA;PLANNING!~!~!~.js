@@ -1,18 +1,198 @@
-//1P Activate Adhoc Tasks that are already not Active based on Workflow 'Review Distribution' Status of 'Routed for Review' - 8/2020 change, add 'Manual Routing'.
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Public Notices")){
-	addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+try {
+//07-2020 Boucher 11p  and 82p - updated per Word Doc on 9-2020
+// for all Planning records - updating the Reviewers Due date based on the Special Consideration field, only those active Reviews (can get overwritten by TRC Set Hearing Date)
+	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		for (var ind in taskAuditArray) {
+			var wfaTask = taskAuditArray[ind];
+			for (var i in workflowTasks) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						if (AInfo['Special Consideration'] == 'Expedited') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
+						} else if (AInfo['Special Consideration'] == 'Fast Track') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
+						} else if (AInfo['Special Consideration'] == 'Regular') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,25,true));
+						}
+					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
+					}
+				}
+			}
 		}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Adjacents")){
-		addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+	//1P Activate Adhoc Tasks that are not Active based on above Rev Distribution Status - 8/2020 change, add 'Manual Routing' and chuncked it up into Record groupings
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
+			
+			if (!isTaskActive("Public Notices")) {
+				addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+			}	
+			if (!isTaskActive("Adjacents")){
+				addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+			}
+			if (!isTaskActive("IVR Message")){
+				addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+			}
+			if (!isTaskActive("Sign Posting")){
+				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+			}
+			if (!isTaskActive("Maps")){
+				addAdHocTask("ADHOC_WORKFLOW","Maps","");
+			}
+			if (!isTaskActive("CPC Staff Report")){
+				addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+			}
+			if (!isTaskActive("BOS Staff Report")){
+				addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
+			}
+		}
+		else if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
+		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+				  
+			if (!isTaskActive("Public Notices")) {
+				addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+			}	
+			if (!isTaskActive("Adjacents")){
+				addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+			}
+			if (!isTaskActive("IVR Message")){
+				addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+			}
+			if (!isTaskActive("Sign Posting")){
+				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+			}
+			if (!isTaskActive("Maps")){
+				addAdHocTask("ADHOC_WORKFLOW","Maps","");
+			}
+			if (!isTaskActive("CPC Staff Report")){
+				addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+			}
+		}
+	//09-2020 Boucher per the Word Doc and chart for these record types update ad hoc due dates - and based on Rev Dist. and Routed from above
+		if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*')) {
+			
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),3,true));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),5,true));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
+			}
+		}
+		else if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+			
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
+			}
+		}
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("IVR Message")){
-		addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
+//09-2020 Boucher per the Word Doc ELM Planning DueDates for any record with TRC
+	if (wfTask =='Technical Review Committe' && wfStatus == 'Set Hearing Date') {
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		for (var ind in taskAuditArray) {
+			var wfaTask = taskAuditArray[ind];
+			for (var i in workflowTasks) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Technical Review Committe'),3));
+					}
+				}
+			}
+		}
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Sign Posting")){
-		addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
+//07-2020 Boucher 21p  using Word Doc for setting Due Dates on Ad Hocs
+	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Set Hearing Date')) {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*') {
+			if (isTaskActive('Maps')) {
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),35));
+			}
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),34));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),28));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),23));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),22));
+			}
+			if (isTaskActive('CPC Staff Report')) {
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),15));
+			}
+		}
+	//are these the same as above ??
+		else if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
+		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+			if (isTaskActive('Maps')) {
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),35));
+			}
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),34));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),28));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),23));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),22));
+			}
+			if (isTaskActive('CPC Staff Report')) {
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),15));
+			}
+		}
+			  
 	}
-	if ((matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) && !isTaskActive("Maps")){
-		addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*') {
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),1));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),2));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),5));
+			}
+			if (isTaskActive('BOS Staff Report')) {
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-2));
+			}
+		}
+		else if (appMatch('*/LandUse/ManufacturedHomes/*') || appMatch('*/LandUse/RPAException/*')) {
+			if (isTaskActive('Maps')) {
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BOS Hearing'),35));
+			}
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),30));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),28));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),23));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),22));
+			}
+			if (isTaskActive('BOS Staff Report')) {
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-2));
+			}
+				
+		}
 	}
 //4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
@@ -24,75 +204,19 @@
 		if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
 		activateTask("IVR Message");
 	}
-//5P When Workflow Task  'CPC Hearing' Status 'Deferred by Applicant' or 'Deferred by CPC' is submitted, then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'
-if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC'))){
-	activateTask("CPC Staff Report");
-	activateTask("CPC Hearing");
+
+//95P  -  Variance, SE, and Appeal
+	if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA'))){
+		activateTask("BZA Staff Report");
+		activateTask("BZA Hearing");
 	}
-//if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by CPC')) && !isTaskActive("Maps")){
-//	activateTask("Maps");
-//	}
-//9P When Workflow Task 'BOS Hearing' Status 'Deferred by BOS' or 'Deferred by Applicant' or 'Remanded' is submitted then Re-Activate the Adhoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-if ((matches(wfTask,'BOS Hearing') && matches(wfStatus,'Deferred by BOS','Deferred by Applicant','Remanded'))){
-	activateTask("BOS Staff Report");
-	activateTask("BOS Hearing");
-	}
-try {
-//07-2020 Boucher 11p	
-	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		editTaskDueDate('Sign Posting',dateAdd(null,7,true));
-	//07-2020 Boucher script 82p
-		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Public Notices','Adjacents','IVR Message','Maps','Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
-		for (var ind in taskAuditArray) {
-			var wfaTask = taskAuditArray[ind];
-			for (var i in workflowTasks) {
-				var wfbTask = workflowTasks[i];
-				if (wfbTask.getActiveFlag() == 'Y') {
-					//logDebug('Task from Array = ' + wfaTask + ' and the Task from Record = ' + wfbTask.getTaskDescription());
-					if (wfaTask == wfbTask.getTaskDescription()) {
-						if (AInfo['Special Consideration'] == 'Expedited') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,14,true));
-						} else if (AInfo['Special Consideration'] == 'Fast Track') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7,true));
-						} else if (AInfo['Special Consideration'] == 'Regular') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21,true));
-						}
-					else
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,21,true));
-					}
-				}
-			}
-		}
-	}
-//07-2020 Boucher 21p
-	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move to CPC')) {
-		var tsi = []
-		loadTaskSpecific(tsi);
-		
-		if (tsi["CPC Due Date"] != null) {
-			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices',tsi["CPC Due Date"]);
-			}
-			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents',tsi["CPC Due Date"]);
-			}
-			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message',tsi["CPC Due Date"]);
-			}
-			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting',tsi["CPC Due Date"]);
-			}
-			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps',tsi["CPC Due Date"]);
-			}
-		}
-	}
-//07-2020 Boucher 40p
+//07-2020 Boucher 40p - Land use Record do not have submittal count
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
 		var subNum = parseInt(AInfo['Submittal Count']) + 1;
 		editAppSpecific('Submittal Count',subNum);
 	}
+	
+// -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
 	}
@@ -102,6 +226,7 @@ try {
 	if ((appMatch("Planning/Subdivision/ConstructionPlan/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('CONSTPLAN2','CC-PLANNING','FINAL',1,'Y');
 	}
+
 //07-2020 Boucher 24p
 	if (matches(wfTask, 'CPC Meeting', 'CPC Hearing') && matches(wfStatus, 'Deferred by Applicant')) {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
@@ -205,7 +330,63 @@ try {
 			}
 		}
 	}
-	
+
+// 44P: When Adhoc Workflow Task "Sign Posting" Status 'Signs Removed' is submitted, lookup the Record ID from the Standard Choice list, and then remove the Record ID.
+// Makes the 3 digit number available again.This is related to what was done for 10P:
+//	On Record Creation: Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
+// Sign Posting field should be auto generated number 100 - 999. when a case is active that number should be skipped - no duplicates.The sign post number is a number is related to the IVR prompt that will be recorded so that callers may get case information from calling the number.There is a specific and finite group of numbers that have been identified for the 2 case types. Accela is to provide the next available number from the list.
+	if (wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') {
+		var seqName = "Sign Posting Number";
+		var fieldName = null;
+		if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA")) {
+			fieldName = seqName;
+		} else if (appMatch("Planning/LandUse/*/*")
+			&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialExceptions", "HistoricPreservation", "SubstantialAccord", "Utilities Waiver", "ZoningCase"])) {
+			fieldName = seqName;
+		} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA")) {
+			fieldName = seqName;
+		} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
+			fieldName = seqName;
+		}
+		if (fieldName && typeof (AInfo[fieldName]) != "undefined") {
+			logDebug("Releasing " + fieldName + " " + AInfo[fieldName]);
+			editAppSpecific(fieldName, null);
+		}
+	}
+} catch (err) {
+	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
+
+//33.1P In progress
+//if (appMatch('Planning/LandUse/ManufacturedHomes/NA') && (capStatus('Approved')) {
+//var ApprovedTimeLimit = "BOS Approved time limit";
+//var Years = need to see how to multiply by 365
+//var ExpirationDate = jsDateToASIDate(new Date(dateAdd(null,Years)));
+//	editAppSpecific(AInfo['BOS Expiration date'],ExpirationDate);
+//}
+
+/*07-2020 Boucher old 21p 
+	if (matches(wfTask,'Review Consolidation','Community Meeting') && matches(wfStatus,'Move to CPC')) {
+		var tsi = []
+		loadTaskSpecific(tsi);
+		if (tsi["CPC Due Date"] != null) {
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting',tsi["CPC Due Date"]);
+			}
+			if (isTaskActive('Maps')) {
+				editTaskDueDate('Maps',tsi["CPC Due Date"]);
+			}
+		}
+	}*/
 //Below is all code from previous implementer - Not sure if these work db
 /*
 var recordTypesArray = new Array("Planning/Subdivision/ConstructionPlan", "Planning/Subdivision/Preliminary", "Planning/Subdivision/Overall",
@@ -368,47 +549,3 @@ function getContactsListByType(ContactType) {
 
 	return false;  }
 */
-} catch (err) {
-	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-//20P When AdHoc Task 'Signs Posted' Status is 'Signs Posted' and Adhoc Task 'IVR Message' current Status is not "Message Recorded" Then display error 'Message needs to be recorded before signs can be posted'. Do not stop the workflow, just show Message to end user.
-//if (wfTask == 'Sign Posting' && wfStatus == 'Signs Posted') {
-//	if (wfTask == 'IVR Message' && wfStatus != 'Message Recorded')
-//	showMessage = true;
-//	comment('Task status has updated. WARNING: IVR message should be recorded before signs are posted.');
-//}
-// 44P: When Adhoc Workflow Task "Sign Posting" Status 'Signs Removed' is submitted, lookup the Record ID from the Standard Choice list, and then remove the Record ID.
-// Makes the 3 digit number available again.This is related to what was done for 10P:
-//	On Record Creation: Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
-// Sign Posting field should be auto generated number 100 - 999. when a case is active that number should be skipped - no duplicates.The sign post number is a number is related to the IVR prompt that will be recorded so that callers may get case information from calling the number.There is a specific and finite group of numbers that have been identified for the 2 case types. Accela is to provide the next available number from the list.
-if (wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') {
-	var seqName = "Sign Posting Number";
-	var fieldName = null;
-	if (appMatch("Planning/LandUse/ManufacturedHomes/NA") || appMatch("Planning/LandUse/RPAException/NA")) {
-		fieldName = seqName;
-	} else if (appMatch("Planning/LandUse/*/*")
-		&& exists(appTypeArray[2], ["Variance", "AdminVariance", "SpecialExceptions", "HistoricPreservation", "SubstantialAccord", "Utilities Waiver", "ZoningCase"])) {
-		fieldName = seqName;
-	} else if (appMatch("Planning/Subdivision/ExceptiontoPreliminary/NA") || appMatch("Planning/Subdivision/Preliminary/NA")) {
-		fieldName = seqName;
-	} else if (appMatch("Planning/SitePlan/Schematics/NA") || appMatch("Planning/SitePlan/Major/NA")) {
-		fieldName = seqName;
-	}
-	
-	if (fieldName && typeof (AInfo[fieldName]) != "undefined") {
-		logDebug("Releasing " + fieldName + " " + AInfo[fieldName]);
-		editAppSpecific(fieldName, null);
-	}
-}
-//33.1P In progress
-//if (appMatch('Planning/LandUse/ManufacturedHomes/NA') && (capStatus('Approved')) {
-//var ApprovedTimeLimit = "BOS Approved time limit";
-//var Years = need to see how to multiply by 365
-//var ExpirationDate = jsDateToASIDate(new Date(dateAdd(null,Years)));
-//	editAppSpecific(AInfo['BOS Expiration date'],ExpirationDate);
-//}
-//95P
-if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA'))){
-	activateTask("BZA Staff Report");
-	activateTask("BZA Hearing");
-}
