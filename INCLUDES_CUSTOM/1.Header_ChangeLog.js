@@ -17,5 +17,6 @@
 | 05/21/2020 Ray Schug Added wasCapStatus, wasTaskStatus_TPS, isTaskStatus_TPS
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
+| 09/08/2020 Boucher updated addParcelStdCondition_TPS so status would be set correctly
 |
 /------------------------------------------------------------------------------------------------------*/

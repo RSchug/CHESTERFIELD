@@ -59,16 +59,9 @@ try {
 		activateTask("Radio Shop");
 		deactivateTask("Default");
 	}
-	if (wfTask == 'Review Consolidation' && wfStatus == 'Move to BOS') {
-		addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
-	}
 // Add Fees
 	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
 		addFees_ZoneCase();
-	}
-//99P
-	if (wfTask == 'Community Meeting' && wfStatus == 'Move to CPC') {
-		addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
