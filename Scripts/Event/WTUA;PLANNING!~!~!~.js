@@ -113,7 +113,7 @@ try {
 	}
 //07-2020 Boucher 21p  using Word Doc for setting Due Dates on Ad Hocs
 	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Set Hearing Date')) {
-		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*') {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Maps')) {
 				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),35));
 			}
@@ -158,7 +158,7 @@ try {
 			  
 	}
 	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
-		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*') {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Public Notices')) {
 				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),1));
 			}
@@ -201,12 +201,12 @@ try {
 	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Adjacents")){
 		activateTask("Adjacents");
 	}
-		if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
-		activateTask("IVR Message");
+	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
+	activateTask("IVR Message");
 	}
 
 //95P  -  Variance, SE, and Appeal
-	if ((matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA'))){
+	if (matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA')){
 		activateTask("BZA Staff Report");
 		activateTask("BZA Hearing");
 	}
