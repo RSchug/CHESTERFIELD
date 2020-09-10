@@ -13,3 +13,5 @@ if (AInfo["Is a contractor to be determined?"] == "Yes") {
 var lpType = "Contractor", lpId = "TBD", lpBoard = null, lpExpirDate = null, lpFirstName = "", lpLastName = "To Be Determined";
 createLP(lpId, lpType, capId, lpBoard, lpExpirDate, lpFirstName, null, lpLastName);
 }
+
+if (!publicUser) assignCap(currentUserID);
