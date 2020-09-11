@@ -551,9 +551,9 @@ function getContactsListByType(ContactType) {
 */
 //In progress 33.1p DO NOT DELETE
 if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Approval')) {
-	var ApprovedTimeLimit = "Approved Time Limit";
-	var BlankExpireDate = "Expiration Date";
-	var months = 12*Number(ApprovedTimeLimit);
+	var ApprovedTimeLimit = AInfo['Approved Time Limit'];
+	var BlankExpireDate = AInfo['Expiration Date'];
+	var months = 12 * Number(ApprovedTimeLimit);
 	var NewExpireDate = dateAddMonths(BlankExpireDate,months);
 	editAppSpecific(BlankExpireDate,NewExpireDate);
 }
