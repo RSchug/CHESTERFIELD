@@ -46,6 +46,7 @@ if (inspType.equals("Rental Inspection") && inspResult.equals("Approved")){
 //If Inspection Result is "Approved" for Inspection Type "Amusement Final" close the Inspections Workflow Task.//
 if (inspType.equals("Amusement Final") && inspResult.equals("Approved") && (AInfo["Permanent installation?"] == "Yes")){
 	closeTask("Inspections","Completed (Annual)","Updated based on Completed Inspection Result","");
+	activateTask("Certificate of Inspection");
 	}
 if (inspType.equals("Amusement Final") && inspResult.equals("Approved") && (AInfo["Permanent installation?"] != "Yes")){
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
