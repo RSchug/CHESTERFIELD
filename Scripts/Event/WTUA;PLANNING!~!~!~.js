@@ -550,10 +550,10 @@ function getContactsListByType(ContactType) {
 	return false;  }
 */
 //In progress 33.1p DO NOT DELETE
-//if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Approval')) {
-//	var ApprovedTimeLimit = "Approved Time Limit";
-//	var BlankExpireDate = "Expiration Date";
-// var months = 12*Number(ApprovedTimeLimit);
-//	var NewExpireDate = dateAddMonths(BlankExpireDate,months);
-//  editAppSpecific(BlankExpireDate,NewExpireDate)
-//}
+if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Approval')) {
+	var ApprovedTimeLimit = "Approved Time Limit";
+	var BlankExpireDate = "Expiration Date";
+	var months = 12*Number(ApprovedTimeLimit);
+	var NewExpireDate = dateAddMonths(BlankExpireDate,months);
+	editAppSpecific(BlankExpireDate,NewExpireDate)
+}
