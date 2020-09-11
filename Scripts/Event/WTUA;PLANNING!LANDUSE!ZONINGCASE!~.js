@@ -26,6 +26,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Distribution' && (wfStatus == 'Routed for Residential and Commercial' || wfStatus == 'Routed for Residential Review')) {
@@ -41,6 +42,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("School Research and Planning Review");
+		activateTask("Technical Review Committee");
 		if (wfStatus == 'Routed for Residential and Commercial') {
 			activateTask("General Services");
 		}
@@ -57,6 +59,7 @@ try {
 		activateTask("VDOT Review");
 		activateTask("General Services");
 		activateTask("Radio Shop");
+		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}
 // Add Fees
