@@ -549,8 +549,8 @@ function getContactsListByType(ContactType) {
 
 	return false;  }
 */
-//In progress 33.1p DO NOT DELETE
-if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Approval')) {
+//33.1p
+if (matches(wfTask, 'Administrative Approval','BZA Hearing','BOS Hearing','Administrative Outcome','CPC Hearing') && matches(wfStatus, 'Final Approval','Approved','Denied','CPC Approved','CPC Approved with Admin Review','CPC Denied')) {
 	var ApprovedTimeLimit = AInfo['Approved Time Limit'];
 	var BlankExpireDate = AInfo['Expiration Date'];
 	var months = 12 * Number(ApprovedTimeLimit);
