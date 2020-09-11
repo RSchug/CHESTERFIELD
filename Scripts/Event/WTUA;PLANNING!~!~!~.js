@@ -3,7 +3,7 @@ try {
 // for all Planning records - updating the Reviewers Due date based on the Special Consideration field, only those active Reviews (can get overwritten by TRC Set Hearing Date)
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committee','Staff and Developer Meeting'];
 		for (var ind in taskAuditArray) {
 			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
@@ -15,7 +15,7 @@ try {
 						} else if (AInfo['Special Consideration'] == 'Fast Track') {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
 						} else if (AInfo['Special Consideration'] == 'Regular') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,25,true));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true));
 						}
 					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
 					}
@@ -96,16 +96,16 @@ try {
 		}
 	}
 //09-2020 Boucher per the Word Doc ELM Planning DueDates for any record with TRC
-	if (wfTask =='Technical Review Committe' && wfStatus == 'Set Hearing Date') {
+	if (wfTask =='Technical Review Committee' && wfStatus == 'Set Meeting Date') {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committe','Staff and Developer Meeting'];
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committee','Staff and Developer Meeting'];
 		for (var ind in taskAuditArray) {
 			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Technical Review Committe'),3));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Technical Review Committee'),3));
 					}
 				}
 			}
@@ -115,50 +115,50 @@ try {
 	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Set Hearing Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),35));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),34));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),28));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),23));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),22));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22));
 			}
 			if (isTaskActive('CPC Staff Report')) {
-				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),15));
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15));
 			}
 		}
-	//are these the same as above ??
+	//These Due Date timing are the same as above, but split out so if there is any changes
 		else if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
 		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),35));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),34));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),28));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),23));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),22));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22));
 			}
 			if (isTaskActive('CPC Staff Report')) {
-				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),15));
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15));
 			}
-		}
-			  
+		}	  
 	}
 	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
+			
 			if (isTaskActive('Public Notices')) {
 				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),1));
 			}
@@ -174,19 +174,19 @@ try {
 		}
 		else if (appMatch('*/LandUse/ManufacturedHomes/*') || appMatch('*/LandUse/RPAException/*')) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BOS Hearing'),35));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BOS Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),30));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),28));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),23));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),22));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),-22));
 			}
 			if (isTaskActive('BOS Staff Report')) {
 				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-2));
