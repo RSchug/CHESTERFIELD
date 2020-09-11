@@ -555,5 +555,5 @@ if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Appro
 	var BlankExpireDate = "Expiration Date";
 	var months = 12*Number(ApprovedTimeLimit);
 	var NewExpireDate = dateAddMonths(BlankExpireDate,months);
-	editAppSpecific(BlankExpireDate,NewExpireDate)
+	editAppSpecific(BlankExpireDate,NewExpireDate);
 }
