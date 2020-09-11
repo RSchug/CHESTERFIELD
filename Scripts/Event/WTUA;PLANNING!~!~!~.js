@@ -554,6 +554,13 @@ if (matches(wfTask, 'Administrative Approval') && matches(wfStatus, 'Final Appro
 	var ApprovedTimeLimit = AInfo['Approved Time Limit'];
 	var BlankExpireDate = AInfo['Expiration Date'];
 	var months = 12 * Number(ApprovedTimeLimit);
+	if(BlankExpireDate == null || BlankExpireDate == "")
+	{
+	var NewExpireDate = dateAddMonths(dateAdd(null,0),months);
+	}
+	if(BlankExpireDate != null && BlankExpireDate != "")
+	{
 	var NewExpireDate = dateAddMonths(BlankExpireDate,months);
-	editAppSpecific(BlankExpireDate,NewExpireDate);
+	}
+	editAppSpecific("Expiration Date",NewExpireDate);
 }
