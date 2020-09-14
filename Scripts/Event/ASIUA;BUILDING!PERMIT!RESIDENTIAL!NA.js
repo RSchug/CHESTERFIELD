@@ -47,7 +47,7 @@ if (AInfo["Nature of Work"] == "Pool barrier fences (if permitted separately fro
 addFee("POOLBARRIER","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Shed > 256'" && !feeExists("SHED")){
+if (AInfo["Nature of Work"] == "Shed > 256sqft." && !feeExists("SHED")){
 addFee("SHED","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
@@ -122,3 +122,6 @@ addFee("PLANNING","CC-BLD-RES","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "Industrialized Building"  && !feeExists("PLANNING")){
 addFee("PLANNING","CC-BLD-RES","FINAL",1,"Y")}
+
+if (AInfo["Nature of Work"] == "Administrative"  && !feeExists("ADMIN")){
+    addFee("ADMIN","CC-BLD-ADMIN","FINAL",1,"Y")}
