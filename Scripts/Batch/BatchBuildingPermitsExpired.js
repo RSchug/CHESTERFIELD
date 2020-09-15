@@ -48,7 +48,7 @@ var partialProcessCompletion = false;                                           
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
 var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
-var emailAddress = "";         // Email address of the person who will receive the batch script log information
+var emailAddress = "mbouquin@truepointsolutions.com";         // Email address of the person who will receive the batch script log information
 //var emailAddress = "rschug@truepointsolutions.com";
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
@@ -89,8 +89,8 @@ var searchAppSpecInfoLabel = "Permit Expiration Date";                          
 
 //var searchDateFrom = dateAdd(startDate, 150);
 //var searchDateTo = dateAdd(searchDateFrom, 30);
-var searchDateFrom = dateAdd(startDate, -5);
-var searchDateTo = dateAdd(searchDateFrom, 5);
+var searchDateFrom = dateAdd(startDate, 0);
+var searchDateTo = dateAdd(searchDateFrom, 0);
 var capStatusNew = "Expired"; // "About to Expire";
 
 /*------------------------------------------------------------------------------------------------------/
