@@ -350,7 +350,7 @@ try {
 		}
 		if (fieldName && typeof (AInfo[fieldName]) != "undefined") {
 			logDebug("Releasing " + fieldName + " " + AInfo[fieldName]);
-			editAppSpecific(fieldName, null);
+			editAppSpecific(fieldName, "Removed " + AInfo[fieldName]);
 		}
 	}
 } catch (err) {

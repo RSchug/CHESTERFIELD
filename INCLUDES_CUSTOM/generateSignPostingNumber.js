@@ -1,9 +1,14 @@
 function generateSignPostingNumber(fieldName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
-    //var ASIValue = getNextSequence(fieldName);
-    //if (ASIValue) ASIValue = ASIValue+"";
+    var ASIValueStart = 100;
+    var ASIValue = getNextSequence(fieldName);
+    if (ASIValue && !isNaN(ASIValue)) {
+        ASIValueStart = parseInt(ASIValue);
+        logDebug("Using " + fieldName + " sequence: " + ASIValueStart);
+    }
 
-    for (var i = 100; i < 1000; i++) {
+    // Check if Sign Posting Number is in use.
+    for (var i = ASIValueStart; i < 1000; i++) {
         var ASIValue = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(fieldName, ASIValue);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
