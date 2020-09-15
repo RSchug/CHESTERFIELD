@@ -5,7 +5,7 @@ function generateSignPostingNumber(fieldName) {
         var ASIValue = getNextSequence(fieldName);
         if (ASIValue && !isNaN(ASIValue)) {
             ASIValue = parseInt(ASIValue);
-            logDebug("Checking " + fieldName + " sequence: " + ASIValueStart);
+            logDebug("Checking " + fieldName + " sequence: " + ASIValue);
         } else {
             continue;
         }
