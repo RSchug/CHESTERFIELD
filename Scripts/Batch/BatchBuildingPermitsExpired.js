@@ -255,9 +255,11 @@ function mainProcess() {
         appTypeArray = appTypeString.split("/");
         capName = cap.getSpecialText();
         capStatus = cap.getCapStatus();
+        partialCap = !cap.isCompleteCap();
 
         var capIDsFiltered = [];
         var filterReasons = [];
+        if (partialCap) filterReasons.push("Partial Cap");
         if (searchCapType && !appMatch(searchCapType)) filterReasons.push("CapType");
         if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
         if (searchAppStatusValid && !exists(capStatus, searchAppStatusValid)) filterReasons.push("CapStatusValid");
