@@ -47,10 +47,13 @@ var partialProcessCompletion = false;                                           
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
 var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
-var emailAddress = "";         // Email address of the person who will receive the batch script log information
+var emailAddress = "";                                      // Email address of the person who will receive the batch script log information
 //var emailAddress = "rschug@truepointsolutions.com";
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information
 var emailText = "";                                         // Email body
+var emailAddressSummary = "";                               // Email address of the person who will receive the batch script summary
+//var emailAddressSummary = "rschug@truepointsolutions.com";
+var emailTextSummary = "";                                  // Email body for staff summary
 
 if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
     var batchEngineObj = aa.proxyInvoker.newInstance("com.accela.v360.batchjob.BatchEngineBusiness");
@@ -62,6 +65,7 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
             //logDebug("fetch email from job details:" + jobEmailID)
             if (!isEmptyOrNull(jobEmailID)) {
                 emailAddress = jobEmailID;
+                emailAddressSummary = jobEmailID;
             }
         }
     }
@@ -86,8 +90,8 @@ var searchAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
 var searchAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
 var searchAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
 
-//var searchDateFrom = dateAdd(startDate, 150);
-//var searchDateTo = dateAdd(searchDateFrom, 30);
+var searchDateFrom = dateAdd(startDate, -90);
+var searchDateTo = dateAdd(startDate, 30);
 var searchDateFrom = dateAdd(startDate, 30);
 var searchDateTo = dateAdd(searchDateFrom, 0);
 var capStatusNew = null; // "About to Expire";
@@ -185,7 +189,16 @@ if (emailAddress.length) {
     aa.sendMail(senderEmailAddr, emailAddress, emailAddress2, batchJobName + " Results", emailText);
 }
 
-aa.print("emailText: " + emailText);
+// Send Summary Email
+if (emailAddressSummary.length) {
+    logDebug("Sending " + batchJobName + " Results to " + emailAddressSummary);
+    aa.sendMail(senderEmailAddr, emailAddressSummary, "", batchJobName + " Summary Results", (emailTextSummary? emailTextSummary:"No Records Processed"));
+}
+
+
+aa.print(">> emailText: \r" + emailText.replace(/<br>/g,"\r"));
+aa.print(">> emailTextSummary: \r" + emailTextSummary.replace(/<BR>/g, "\r"));
+
 /*------------------------------------------------------------------------------------------------------/
 | <===========END=Main=Loop================>
 /------------------------------------------------------------------------------------------------------*/
@@ -242,9 +255,11 @@ function mainProcess() {
         appTypeArray = appTypeString.split("/");
         capName = cap.getSpecialText();
         capStatus = cap.getCapStatus();
+        partialCap = !cap.isCompleteCap();
 
         var capIDsFiltered = [];
         var filterReasons = [];
+        if (partialCap) filterReasons.push("Partial Cap");
         if (searchCapType && !appMatch(searchCapType)) filterReasons.push("CapType");
         if (appMatch("Building/Permit/Elevator/Master")) filterReasons.push("Elevator Master");
         if (searchAppStatusValid && !exists(capStatus, searchAppStatusValid)) filterReasons.push("CapStatusValid");
@@ -259,6 +274,23 @@ function mainProcess() {
         var adHocProcess = "ADHOC_WORKFLOW";
         var adHocTask = "Inactive Application";
         if (capStatus == "Issued") adHocTask = "Inactive Permit";
+        var adHocTaskAssignID = null;
+        if (appMatch("Building/Permit/*/Amendment") || appMatch("Building/Permit/*/AmendmentTrade") || appMatch("Building/Permit/*/Renewal")) {
+            var adHocTaskAssignID = null;
+
+        } else if (appMatch("Building/Permit/Residential/*")) { // Residential Building, Residential Trades, Residential Elevator 
+            if (capStatus == "Issued") {
+                adHocTaskAssignID = "BROOKSJ"; // Jeff Brooks
+            } else {
+                adHocTaskAssignID = "EUTSEYM"; // Mike Eutsey
+            }
+        } else { // Commercial Building, Commercial Trade, Commercial Elevator installation, Signs, Amusements 
+            if (capStatus == "Issued") {
+                adHocTaskAssignID = "CONDREYC"; // Craig Condrey
+            } else {
+                adHocTaskAssignID = "SLATER"; // Rodger Slate
+            }
+        }
         var adHocTaskStatus = "About to Expire";
         if (adHocTaskStatus && adHocTaskStatus == "") adHocTaskStatus = null;
         var adHocTaskComment = "Updated via batch script";
@@ -323,22 +355,39 @@ function mainProcess() {
             + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel] : ""));
         counts["processed"]++;
 
+        var emailAddressSummary = "";                                 // Email address of the person who will receive the batch script summary
+        emailTextSummary += (emailTextSummary == ""? "Processed these records":"") + br
+            + "Record: " + capIDString
+            + ", appType: " + appTypeString + ", capStatus: " + capStatus
+            + (searchAppSpecInfoLabel ? ", " + searchAppSpecInfoLabel + ": " + AInfo[searchAppSpecInfoLabel]:"")
+        //  + (adHocTask ? ", task: " + adHocTask 
+        //  + (adHocTaskStatus ? " with status: " + adHocTaskStatus : "") 
+        //  + (adHocTaskAssignID? " assigned to " + adHocTaskAssignID:""):"");
+
         //Expire Building Caps that have a Cap Status of "Issued".
         // If adHocTask does not exist add it.
-        if (adHocTask) {
-            if (typeof (tasks[adHocTask]) == "undefined") {
-                logDebug("Adding Workflow Task " + adHocTask);
-                addAdHocTask(adHocProcess, adHocTask, adHocNote);
-                var tasks = loadTasks(capId);
+        try {
+            if (adHocTask) {
+                if (typeof (tasks[adHocTask]) == "undefined") {
+                    logDebug("Adding Workflow Task " + adHocTask + ", capId: " + capId + " " + capId.getCustomID());
+                    addAdHocTask(adHocProcess, adHocTask, adHocNote);
+                    var tasks = loadTasks(capId);
+                }
+                if (adHocTaskStatus && adHocTaskStatus != tasks[adHocTask].status) {
+                    updateTask(adHocTask, adHocTaskStatus, adHocTaskComment, adHocNote);
+                }
+                if (tasks[adHocTask].active != "Y") {
+                    activateTask(adHocTask);
+                }
+                if (adHocTaskAssignID)
+                    assignTask(adHocTask,adHocTaskAssignID);
+                if (capStatusNew)
+                    updateAppStatus(capStatusNew);
             }
-            if (adHocTaskStatus && adHocTaskStatus != tasks[adHocTask].status) {
-                updateTask(adHocTask, adHocTaskStatus, adHocTaskComment, adHocNote);
-            }
-            if (tasks[adHocTask].active != "Y") {
-                activateTask(adHocTask);
-            }
-            if (capStatusNew)
-                updateAppStatus(capStatusNew);
+        } catch (err) {
+            var context = "mainProcess()"
+            logDebug("ERROR: " + err.message + " In " + context + " Line " + err.lineNumber);
+            logDebug("Stack: " + err.stack);
         }
     }
     return counts["processed"];
