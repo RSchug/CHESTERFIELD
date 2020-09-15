@@ -64,7 +64,7 @@ if (isEmptyOrNull(emailAddress) && !isEmptyOrNull(batchJobName)) {
             var jobEmailID = batchJob.getEmailID();
             //logDebug("fetch email from job details:" + jobEmailID)
             if (!isEmptyOrNull(jobEmailID)) {
-                emailAddress = jobEmailID;
+                //emailAddress = jobEmailID;
                 emailAddressSummary = jobEmailID;
             }
         }
