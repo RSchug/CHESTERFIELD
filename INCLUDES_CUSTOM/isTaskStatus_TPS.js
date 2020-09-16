@@ -7,7 +7,7 @@ function isTaskStatus_TPS(wfstr, wfstat) {// optional process name
 		useProcess = true;
 	}
 	var itemCap = arguments.length > 3 && arguments[3]? arguments[3]:capId;
-	var wfStatArray = (wfStat && typeof(wfStat) == "string"? [wfStat]:wfStat); // Convert to array
+	var wfStatArray = (wfstat && typeof(wfstat) == "string"? [wfstat]:wfstat); // Convert to array
 
 	var workflowResult = aa.workflow.getTaskItems(capId, wfstr, processName, null, wfstat, null);
 	if (workflowResult.getSuccess())
@@ -20,7 +20,7 @@ function isTaskStatus_TPS(wfstr, wfstat) {// optional process name
 	for (i in wfObj) {
 		fTask = wfObj[i];
 		if (useProcess && !fTask.getProcessCode().equals(processName)) continue;
-		if (wfStr && !fTask.getTaskDescription().toUpperCase().equals(wfstr.toUpperCase())) continue;
+		if (wfstr && !fTask.getTaskDescription().toUpperCase().equals(wfstr.toUpperCase())) continue;
 		if (fTask.getDisposition() == null) continue;
 		if (wfStatArray && !exist(fTask.getDisposition(),wfStatArray)) continue;
 		return true;
