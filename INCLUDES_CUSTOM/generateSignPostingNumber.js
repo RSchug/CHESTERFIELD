@@ -9,7 +9,7 @@ function generateSignPostingNumber(fieldName) {
         } else {
             continue;
         }
-        var ASIValue = j + "";
+        var ASIValue = ASIValue + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(fieldName, ASIValue);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
