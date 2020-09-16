@@ -98,7 +98,7 @@ try {
 //09-2020 Boucher per the Word Doc ELM Planning DueDates for any record with TRC
 	if (wfTask =='Technical Review Committee' && wfStatus == 'Set Meeting Date') {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Technical Review Committee','Staff and Developer Meeting'];
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
 			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
@@ -131,6 +131,9 @@ try {
 			}
 			if (isTaskActive('CPC Staff Report')) {
 				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15));
+			}
+			if (appMatch('*/LandUse/HistoricPreservation/*') && isTaskActive('HPC Hearing')) {
+				editTaskDueDate('HPC Hearing', dateAdd(getTaskDueDate('CPC Hearing'),0));
 			}
 		}
 	//These Due Date timing are the same as above, but split out so if there is any changes
@@ -194,21 +197,18 @@ try {
 				
 		}
 	}
-//4.1P When Workflow Task 'CPC Hearing' Status' 'Recommend Denial' or 'Recommend Approval' is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message', 'Sign Posting' and 'Maps'.
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Public Notices")){
-		activateTask("Public Notices");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("Adjacents")){
-		activateTask("Adjacents");
-	}
-	if ((matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Denial','Recommend Approval')) && !isTaskActive("IVR Message")){
-	activateTask("IVR Message");
-	}
-
-//95P  -  Variance, SE, and Appeal
-	if (matches(wfTask,'BZA Hearing') && matches(wfStatus,'Deferred by Applicant','Deferred by BZA')){
-		activateTask("BZA Staff Report");
-		activateTask("BZA Hearing");
+//4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message'.
+	if ((matches(wfTask,'CPC Hearing') || matches(wfTask,'BOS Hearing') || matches(wfTask,'BZA Hearing')) 
+		&& matches(wfStatus,'Recommend Denial','Recommend Approval','Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
+		if (!isTaskActive("Public Notices")) {
+			activateTask("Public Notices");
+		}
+		if (!isTaskActive("Adjacents")) {
+			activateTask("Adjacents");
+		}
+		if (!isTaskActive("IVR Message")){
+			activateTask("IVR Message");
+		}
 	}
 //07-2020 Boucher 40p - Land use Record do not have submittal count
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Revisions Received') && AInfo['Submittal Count'] != null) {
@@ -357,13 +357,6 @@ try {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 
-//33.1P In progress
-//if (appMatch('Planning/LandUse/ManufacturedHomes/NA') && (capStatus('Approved')) {
-//var ApprovedTimeLimit = "BOS Approved time limit";
-//var Years = need to see how to multiply by 365
-//var ExpirationDate = jsDateToASIDate(new Date(dateAdd(null,Years)));
-//	editAppSpecific(AInfo['BOS Expiration date'],ExpirationDate);
-//}
 
 /*07-2020 Boucher old 21p 
 	if (matches(wfTask,'Review Consolidation','Community Meeting') && matches(wfStatus,'Move to CPC')) {
