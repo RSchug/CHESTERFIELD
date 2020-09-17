@@ -40,14 +40,14 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
             //    a.Update Workflow Task 'Annual Status' to 'In Service' and Record Status to 'Active'.
             //    b.Add Amusement Inspection and Schedule for 6 months out.
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
-            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
+//Renamed Amusement to Master on 9/15/2020            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
             logDebug("AmusementDevice Installation")
             copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
             var expType = "Semi-annual";
             var expMonths = 6;
             newCapIdString = null;
-            newInspectionType = "Amusement Final"
-            newInspectionDate = dateAddMonths(null, 6);
+//Removed on 9/15/2020            newInspectionType = "Amusement Final"
+//Removed on 9/15/2020             newInspectionDate = dateAddMonths(null, 6);
       } else if (appMatch("Building/Permit/Elevator/Installation")
             && AInfo["Commercial or Residential"] == "Commercial") {
             newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
@@ -127,12 +127,12 @@ if (wfTask == 'Certificate of Inspection' && wfStatus == 'Completed') {
       // ******************END expiration Date code Options
       if (newCapId)
             updateTask('Annual Status','In Service','','',newCapId);
-      if (newCapId && newInspectionType && newInspectionDate) {
-            var sv_CapId = capId;
-            capId = newCapId;
-            scheduleInspectDate(newInspectionType, newInspectionDate)
-            capId = sv_CapId;
-      }
+//      if (newCapId && newInspectionType && newInspectionDate) {
+//            var sv_CapId = capId;
+//            capId = newCapId;
+//            scheduleInspectDate(newInspectionType, newInspectionDate)
+//            capId = sv_CapId;
+//      }
       if (newCapId && appMatch("Building/Permit/Elevator/Installation")
             && AInfo["Commercial or Residential"] == "Commercial") {
             // Update Elevator Table on Structure
