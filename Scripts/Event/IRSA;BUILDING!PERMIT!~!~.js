@@ -39,6 +39,10 @@ if (inspType.equals("Amusement Final") && inspResult.equals("Approved")){
 if (inspType.equals("BI Erosion Control") && inspResult.equals("Corrections Required")) {
 	scheduleInspection("E and SC", 2, currentUserID, null, "Auto Scheduled from BI Erosion Control Status of Corrections Required");
 }
+//When Framing Inspection Type is approved, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
+if (inspType.equals("Framing") && inspResult.equals("Approved")) {
+	scheduleInspection("VSMP", 1, currentUserID, null, "Auto Scheduled from Framing Approved Inspection.");
+}
 //If Inspection Result is "Extended" for Inspection Type "E and SC" schedule another E and SC Inspection 2 days out assigned to EE Inspector.//
 if (inspType.equals("E and SC") && inspResult.equals("Extended")) {
 	scheduleInspection("E and SC", 2, currentUserID, null, "Auto Scheduled from E and SC Status of Extended");
