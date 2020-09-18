@@ -101,7 +101,7 @@ try {
 	//09-2020 Boucher per the ELM Planning DueDate Doc and in chart for Admin Review and these record types update ad hoc due dates - and based on Rev Dist. and Routed from above
 		if (AInfo['Review Type'] == 'Administrative Review') {
 			
-			if ((appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*')) {
+			if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*')) {
 				if (isTaskActive('Public Notices')) {
 					editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),3,true));
 				}
