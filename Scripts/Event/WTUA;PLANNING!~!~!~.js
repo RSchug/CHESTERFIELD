@@ -24,8 +24,8 @@ try {
 				}
 			}
 		}
-	//1P Activate Adhoc Tasks that are not Active based on above Rev Distribution Status - 8/2020 change, add 'Manual Routing' and chuncked it up into Record groupings
-		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
+	//1P and 6p Activate Adhoc Tasks that are not Active based on above Rev Distribution Status - 8/2020 change, add 'Manual Routing' and chuncked it up into Record groupings
+		if (appMatch('*/LandUse/*/*') && !appMatch('*/LandUse/CertificateofAppropriateness/*') && !appMatch('*/LandUse/WrittenDetermination/*') && !appMatch('*/LandUse/ZoningOpinion/*')) {
 			
 			if (!isTaskActive("Public Notices")) {
 				addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
@@ -39,65 +39,94 @@ try {
 			if (!isTaskActive("Sign Posting")){
 				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 			}
-			if (!isTaskActive("Maps")){
-				addAdHocTask("ADHOC_WORKFLOW","Maps","");
+	//Only AdminVariance does not have Maps ad hoc		
+			if (!appMatch('*/*/AdminVariance/*')) {
+				if (!isTaskActive("Maps")){
+					addAdHocTask("ADHOC_WORKFLOW","Maps","");
+				}
 			}
-			if (!isTaskActive("CPC Staff Report")){
-				addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+			if (appMatch('*/*/ZoningCase/*') || appMatch('*/*/SubstantialAccord/*') || appMatch('*/*/HistoricPreservation/*')) {
+				if (!isTaskActive("CPC Staff Report")){
+					addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+				}
+				if (!isTaskActive("BOS Staff Report")){
+					addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
+				}
 			}
-			if (!isTaskActive("BOS Staff Report")){
-				addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
+			if (appMatch('*/*/ManufacturedHomes/*') || appMatch('*/*/RPAException/*')) {
+				if (!isTaskActive("BOS Staff Report")){
+					addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
+				}
+			}
+			if (appMatch('*/*/Appeal/*') || appMatch('*/*/Variance/*') || appMatch('*/*/SpecialException/*')) {
+				if (!isTaskActive("BZA Staff Report") && !isTaskActive("BZA Hearing")){
+					activateTask("BZA Staff Report");
+					activateTask("BZA Hearing");
+				}
 			}
 		}
 		else if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
 		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
 				  
-			if (!isTaskActive("Public Notices")) {
-				addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
-			}	
-			if (!isTaskActive("Adjacents")){
-				addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
-			}
 			if (!isTaskActive("IVR Message")){
 				addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 			}
 			if (!isTaskActive("Sign Posting")){
 				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 			}
-			if (!isTaskActive("Maps")){
-				addAdHocTask("ADHOC_WORKFLOW","Maps","");
+			if (appMatch('*/SitePlan/*/*') && AInfo['Review Type'] == 'Administrative Review') {
+				if (!isTaskActive("Public Notices")) {
+					addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+				}	
+				if (!isTaskActive("Adjacents")){
+					addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+				}
 			}
-			if (!isTaskActive("CPC Staff Report")){
-				addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+			else if (AInfo['Review Type'] == 'Planning Commission Public Hearing') {
+				if (!isTaskActive("Public Notices")) {
+					addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
+				}	
+				if (!isTaskActive("Adjacents")){
+					addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
+				}
+				if (!isTaskActive("Maps")){
+					addAdHocTask("ADHOC_WORKFLOW","Maps","");
+				}
+				if (!isTaskActive("CPC Staff Report")){
+					addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
+				}
 			}
 		}
-	//09-2020 Boucher per the Word Doc and chart for these record types update ad hoc due dates - and based on Rev Dist. and Routed from above
-		if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*')) {
+	
+	//09-2020 Boucher per the ELM Planning DueDate Doc and in chart for Admin Review and these record types update ad hoc due dates - and based on Rev Dist. and Routed from above
+		if (AInfo['Review Type'] == 'Administrative Review') {
 			
-			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),3,true));
+			if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*')) {
+				if (isTaskActive('Public Notices')) {
+					editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),3,true));
+				}
+				if (isTaskActive('Adjacents')) {
+					editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),5,true));
+				}
+				if (isTaskActive('IVR Message')) {
+					editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
+				}
+				if (isTaskActive('Sign Posting')) {
+					editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
+				}
 			}
-			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),5,true));
-			}
-			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
-			}
-			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
-			}
-		}
-		else if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
-			
-			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
-			}
-			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
+			else if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+				if (isTaskActive('IVR Message')) {
+					editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),6,true));
+				}
+				if (isTaskActive('Sign Posting')) {
+					editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),7,true));
+				}
 			}
 		}
 	}
-//09-2020 Boucher per the Word Doc ELM Planning DueDates for any record with TRC
+
+//09-2020 Boucher per ELM Planning DueDates for any record with TRC
 	if (wfTask =='Technical Review Committee' && wfStatus == 'Set Meeting Date') {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
@@ -113,7 +142,8 @@ try {
 			}
 		}
 	}
-//07-2020 Boucher 21p  using Word Doc for setting Due Dates on Ad Hocs
+
+//07-2020 Boucher 21p  using ELM Planning Due Date Doc for setting Due Dates on Ad Hocs
 	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Set Hearing Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Maps')) {
@@ -161,7 +191,7 @@ try {
 			}
 		}	  
 	}
-//per the ELM Planning Due Dates
+//per the ELM Planning Due Dates Doc
 	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			
@@ -172,10 +202,10 @@ try {
 				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),2));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),5));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),6));
 			}
 			if (isTaskActive('BOS Staff Report')) {
-				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-2));
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),6));
 			}
 		}
 		else if (appMatch('*/LandUse/ManufacturedHomes/*') || appMatch('*/LandUse/RPAException/*')) {
@@ -195,7 +225,7 @@ try {
 				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),-22));
 			}
 			if (isTaskActive('BOS Staff Report')) {
-				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-2));
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),6));
 			}
 				
 		}

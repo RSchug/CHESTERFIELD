@@ -1,6 +1,1 @@
-//48P
-	if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to CPC"))){
-	activateTask("CPC Hearing");
-	activateTask("CPC Staff Report");
-	deactivateTask("Review Consolidation");
-	}
+//48P - Moved to WTUA:Planning and workflow takes care of it

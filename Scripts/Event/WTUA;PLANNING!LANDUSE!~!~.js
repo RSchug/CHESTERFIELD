@@ -13,27 +13,14 @@ try {
 			deactivateTask("Default");
 		}
 	}
-//6P
-if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to BOS"))){
-	activateTask("BOS Hearing");
-	activateTask("BOS Staff Report");
-	deactivateTask("Review Consolidation");
-	}
-//6.1P
-if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){
-if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Review Complete"))){
-	activateTask("BOS Hearing");
-	}}
-//48P
-	if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to CPC"))){
-	activateTask("CPC Hearing");
-	activateTask("CPC Staff Report");
-	deactivateTask("Review Consolidation");
-	}
-//90P
-if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Ready for BZA"))){
-	activateTask("BZA Hearing");
-	}
+//6P  moved to WTUA:Planning
+
+//6.1P Not Needed - fixed in workflow
+
+//48P  Not Needed - fixed in workflow
+
+//90P  Not Needed - fixed in workflow
+
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
