@@ -17,11 +17,7 @@ try {
 		activateTask("Chesterfield Historical Society Review");
 		deactivateTask("Default");
 	}
-	//94P
-	if ((matches(wfTask,"Review Consolidation")) && (matches(wfStatus,"Move to CPC"))){
-		activateTask("CPC Hearing");
-		activateTask("HPC Hearing");
-		}
+	//94P Not needed updated with workflow
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
