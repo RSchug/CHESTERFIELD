@@ -90,8 +90,8 @@ var searchAppStatusInvalid = ["Completed", "Cancelled", "Expired", "Withdrawn"];
 var searchAppSubGroupName = "GENERAL INFORMATION";                                      // Application Spec Info Subgroup Name that the ASI field is associated to.
 var searchAppSpecInfoLabel = "Permit Expiration Date";                                   // ASI field name that the batch script is to search.
 
-var searchDateFrom = dateAdd(startDate, -90);
-var searchDateTo = dateAdd(startDate, 30);
+//var searchDateFrom = dateAdd(startDate, -90);
+//var searchDateTo = dateAdd(startDate, 30);
 var searchDateFrom = dateAdd(startDate, 30);
 var searchDateTo = dateAdd(searchDateFrom, 0);
 var capStatusNew = null; // "About to Expire";
