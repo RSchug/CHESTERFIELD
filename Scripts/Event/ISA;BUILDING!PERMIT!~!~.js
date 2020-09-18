@@ -16,9 +16,9 @@ if (getLastInspectioncomment(inspType) != "No Comments") {
 	}
 }
 //When Framing Inspection Type is scheduled, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
-if (matches(inspType, "Framing")) {
-	scheduleInspectDate("VSMP", dateAdd(inspSchedDate, 1), currentUserID, null, "Auto Scheduled from Scheduled Framing Inspection");
-}
+//if (matches(inspType, "Framing")) {
+//	scheduleInspectDate("VSMP", dateAdd(inspSchedDate, 1), currentUserID, null, "Auto Scheduled from Scheduled Framing Inspection");
+//}
 
 
 //var isInspectionRemove = false;
