@@ -40,7 +40,7 @@ try {
 				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 			}
 	//Only AdminVariance does not have Maps ad hoc		
-			if (!appMatch('*/*/AdminVariance/*') {
+			if (!appMatch('*/*/AdminVariance/*')) {
 				if (!isTaskActive("Maps")){
 					addAdHocTask("ADHOC_WORKFLOW","Maps","");
 				}
