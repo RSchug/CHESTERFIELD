@@ -6,7 +6,7 @@ try {
 				comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 				cancel = true;
 			}
-        }
+		}
 //    if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved','Denied')) {
 //		if (AInfo['BOS Conditions'] == null || AInfo['BOS Proffered Conditions'] == null || AInfo['BOS Cash Proffers'] == null || AInfo['BOS Complies with Plan'] == null || AInfo['BOS Approved Time Limit'] == null || AInfo['BOS Expiration Date'] == null
 //		|| AInfo['BOS Residential - Single Family Unit Approved'] == null || AInfo['BOS Residential - Mulit Family Unit Approved'] == null || AInfo['BOS Age Restricted Units'] == null) {
