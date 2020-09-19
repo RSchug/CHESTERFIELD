@@ -290,6 +290,7 @@ try {
 	
 //33.1p
 	if (matches(wfTask, 'Administrative Approval','BZA Hearing','BOS Hearing','Administrative Outcome','CPC Hearing') && matches(wfStatus, 'Final Approval','Approved','Denied','CPC Approved','CPC Approved with Admin Review','CPC Denied')) {
+		if (AInfo['No Time Limit'] != 'CHECKED'){
 		var ApprovedTimeLimit = AInfo['Approved Time Limit'];
 		var BlankExpireDate = AInfo['Expiration Date'];
 		var months = 12 * Number(ApprovedTimeLimit);
@@ -301,7 +302,7 @@ try {
 			}
 			editAppSpecific("Expiration Date",NewExpireDate);
 	}
-	
+	}	
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
