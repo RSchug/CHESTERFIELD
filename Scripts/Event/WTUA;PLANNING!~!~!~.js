@@ -222,19 +222,19 @@ try {
 				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35),true);
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34,true);
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34,true));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28,true);
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28,true));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23,true);
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23,true));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22,true);
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22,true));
 			}
 			if (isTaskActive('CPC Staff Report')) {
-				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15,true);
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15,true));
 			}
 			if (appMatch('*/LandUse/HistoricPreservation/*') && isTaskActive('HPC Hearing')) {
 				editTaskDueDate('HPC Hearing', dateAdd(getTaskDueDate('CPC Hearing'),0,true));
