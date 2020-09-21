@@ -124,19 +124,43 @@ try {
 				}
 			}
 		}
+		if (appMatch("*/*/AdminVariance/*")) {	
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),14));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),14));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),14));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),14));
+			}
+		}
 	}
 
 //09-2020 Boucher per ELM Planning DueDates for any record with TRC
-	if (wfTask =='Technical Review Committee' && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
+	if (matches(wfTask,'Technical Review Committee','Pre-Applicaiton Meeting','Staff and Developer Meeting' && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
 			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
 				var wfbTask = workflowTasks[i];
-				if (wfbTask.getActiveFlag() == 'Y') {
+				if (wfbTask.getActiveFlag() == 'Y' && wfTask == 'Technical Review Committee') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Technical Review Committee'),3));
+					}
+				}
+				else if (wfbTask.getActiveFlag() == 'Y' && wfTask == 'Pre-Applicaiton Meeting') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Pre-Applicaiton Meeting'),-1));
+					}
+				}
+				else if (wfbTask.getActiveFlag() == 'Y' && wfTask == 'Staff and Developer Meeting') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Staff and Developer Meeting'),-1));
 					}
 				}
 			}
@@ -227,6 +251,44 @@ try {
 			if (isTaskActive('BOS Staff Report')) {
 				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),6));
 			}	
+		}
+	}
+	
+//per the ELM Planning Due Dates Doc
+	if (matches(wfTask,'BZA Hearing') && matches(wfStatus,'Set Hearing Date')) {
+		if ((appMatch("*/*/Variance/*") || appMatch("*/*/SpecialException/*") || appMatch("*/*/Appeal/*")) {
+			if (isTaskActive('Maps')) {
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BZA Hearing'),-35));
+			}
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),-26));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),-22));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),-26));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),-22));
+			}
+			if (isTaskActive('BZA Staff Report')) {
+				editTaskDueDate('BZA Staff Report', dateAdd(getTaskDueDate('BZA Hearing'),-12));
+			}
+		}
+		else if (appMatch("*/*/AdminVariance/*")) {
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),14));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),14));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),14));
+			}
+			if (isTaskActive('Sign Posting')) {
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),14));
+			}
 		}
 	}
 //per the ELM Planning Due Dates Doc for Final Plat and Parcel Acreage
@@ -339,7 +401,7 @@ try {
 	}
 	//When 'BZA Hearing' is "Deferred by Applicant" add DEFERRALBZA fee with 1
 	if (matches(wfTask, 'BZA Hearing') && matches(wfStatus, 'Deferred by Applicant')
-		&& (appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/SpecialException/NA") || appMatch("Planning/LandUse/Appeal/NA"))) {
+		&& (appMatch("*/*/Variance/*") || appMatch("*/*/SpecialException/*") || appMatch("*/*/Appeal/*"))) {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
 		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
 		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBZA", feeQty = 1;
