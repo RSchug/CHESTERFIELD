@@ -366,25 +366,12 @@ try {
 		}
 	}
 
-//4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then re-activate AdHoc Tasks; 'Public Notices', 'Adjacents', 'IVR Message'.
-	if ((matches(wfTask,'CPC Hearing') || matches(wfTask,'BOS Hearing') || matches(wfTask,'BZA Hearing')) 
-		&& matches(wfStatus,'Recommend Denial','Recommend Approval','Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
-		if (!isTaskActive("Public Notices")) {
-			activateTask("Public Notices");
-		}
-		if (!isTaskActive("Adjacents")) {
-			activateTask("Adjacents");
-		}
-		if (!isTaskActive("IVR Message")){
-			activateTask("IVR Message");
-		}
-	}
-//09-2020 ELM Planning Due Dates Doc for ALL RECORDS that are deferred at Review Distribution
-	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) { 
+//4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
+	if (matches(wfTask,'CPC Hearing','BOS Hearing','BZA Hearing') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
 		if (capStatus == 'Deferred from CPC' && !isTaskActive("CPC Hearing")) {
 			activateTask("CPC Hearing");
 		}
-		else if (capStatus == 'Deferred from BOS' && !isTaskActive("BOS Hearing")) {
+		else if ((capStatus == 'Deferred from BOS' || capStatus == 'Remanded from BOS') && !isTaskActive("BOS Hearing")) {
 			activateTask("BOS Hearing");
 		}
 		else if (capStatus == 'Deferred from BZA' && !isTaskActive("BZA Hearing")){

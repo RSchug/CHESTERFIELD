@@ -64,24 +64,7 @@ try {
 			cancel = true;
 		}
 	}
-	//5p When the Record status is Deferred from ... re-activate the Hearing task - doing here as the record status might get updated when review is distributed
-	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		if (capStatus == 'Deferred from CPC') {
-			if (!isTaskActive('CPC Hearing')) {
-				activateTask('CPC Hearing');
-			}
-		}
-		else if (capStatus == 'Deferred from BOS') {
-			if (!isTaskActive('BOS Hearing')) {
-				activateTask('BOS Hearing');
-			}
-		}
-		else if (capStatus == 'Deferred from BZA') {
-			if (!isTaskActive('BZA Hearing')) {
-				activateTask('BZA Hearing');
-			}
-		}
-	}
+
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
