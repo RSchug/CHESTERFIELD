@@ -256,7 +256,7 @@ try {
 	
 //per the ELM Planning Due Dates Doc
 	if (matches(wfTask,'BZA Hearing') && matches(wfStatus,'Set Hearing Date')) {
-		if ((appMatch("*/*/Variance/*") || appMatch("*/*/SpecialException/*") || appMatch("*/*/Appeal/*")) {
+		if (appMatch("*/*/Variance/*") || appMatch("*/*/SpecialException/*") || appMatch("*/*/Appeal/*")) {
 			if (isTaskActive('Maps')) {
 				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BZA Hearing'),-35));
 			}
