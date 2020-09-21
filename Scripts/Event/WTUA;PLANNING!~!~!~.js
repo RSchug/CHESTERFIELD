@@ -30,25 +30,25 @@ try {
 			if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 				addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 			}
-			if (isTaskComplete_TPS("Public Notices") {
+			if (isTaskComplete_TPS("Public Notices")) {
 				activateTask("Public Notices");
 			}
 			if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
 				addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 			}
-			if (isTaskComplete_TPS("Adjacents") {
+			if (isTaskComplete_TPS("Adjacents")) {
 				activateTask("Adjacents");
 			}
 			if (!isTaskActive("IVR Message") && !isTaskComplete_TPS("IVR Message")){
 				addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 			}
-			if (isTaskComplete_TPS("IVR Message") {
+			if (isTaskComplete_TPS("IVR Message")) {
 				activateTask("IVR Message");
 			}			
 			if (!isTaskActive("Sign Posting") && !isTaskComplete_TPS("Sign Posting")){
 				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 			}
-			if (isTaskComplete_TPS("Sign Posting") {
+			if (isTaskComplete_TPS("Sign Posting")) {
 				activateTask("Sign Posting");
 			}
 	//Only AdminVariance does not have Maps ad hoc		
@@ -56,7 +56,7 @@ try {
 				if (!isTaskActive("Maps") && !isTaskComplete_TPS("Maps")){
 					addAdHocTask("ADHOC_WORKFLOW","Maps","");
 				}
-				if (isTaskComplete_TPS("Maps") {
+				if (isTaskComplete_TPS("Maps")) {
 					activateTask("Maps");
 				}
 			}
@@ -64,13 +64,13 @@ try {
 				if (!isTaskActive("CPC Staff Report") && !isTaskComplete_TPS("CPC Staff Report")){
 					addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
 				}
-				if (isTaskComplete_TPS("CPC Staff Report") {
+				if (isTaskComplete_TPS("CPC Staff Report")) {
 					activateTask("CPC Staff Report");
 				}
 				if (!isTaskActive("BOS Staff Report") && !isTaskComplete_TPS("BOS Staff Report")){
 					addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
 				}
-				if (isTaskComplete_TPS("BOS Staff Report") {
+				if (isTaskComplete_TPS("BOS Staff Report")) {
 					activateTask("BOS Staff Report");
 				}
 			}
@@ -78,7 +78,7 @@ try {
 				if (!isTaskActive("BOS Staff Report") && !isTaskComplete_TPS("BOS Staff Report")){
 					addAdHocTask("ADHOC_WORKFLOW","BOS Staff Report","");
 				}
-				if (isTaskComplete_TPS("BOS Staff Report") {
+				if (isTaskComplete_TPS("BOS Staff Report")) {
 					activateTask("BOS Staff Report");
 				}
 			}
@@ -95,26 +95,26 @@ try {
 			if (!isTaskActive("IVR Message") && !isTaskComplete_TPS("IVR Message")){
 				addAdHocTask("ADHOC_WORKFLOW","IVR Message","");
 			}
-			if (isTaskComplete_TPS("IVR Message") {
+			if (isTaskComplete_TPS("IVR Message")) {
 				activateTask("IVR Message");
 			}
 			if (!isTaskActive("Sign Posting") && !isTaskComplete_TPS("Sign Posting")){
 				addAdHocTask("ADHOC_WORKFLOW","Sign Posting","");
 			}
-			if (isTaskComplete_TPS("Sign Posting") {
+			if (isTaskComplete_TPS("Sign Posting")) {
 				activateTask("Sign Posting");
 			}
 			if (appMatch('*/SitePlan/*/*') && AInfo['Review Type'] == 'Administrative Review') {
 				if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 					addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 				}
-				if (isTaskComplete_TPS("Public Notices") {
+				if (isTaskComplete_TPS("Public Notices")) {
 					activateTask("Public Notices");
 				}				
 				if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
 					addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 				}
-				if (isTaskComplete_TPS("Adjacents") {
+				if (isTaskComplete_TPS("Adjacents")) {
 					activateTask("Adjacents");
 				}
 			}
@@ -122,25 +122,25 @@ try {
 				if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 					addAdHocTask("ADHOC_WORKFLOW","Public Notices","");
 				}
-				if (isTaskComplete_TPS("Public Notices") {
+				if (isTaskComplete_TPS("Public Notices")) {
 					activateTask("Public Notices");
 				}				
 				if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
 					addAdHocTask("ADHOC_WORKFLOW","Adjacents","");
 				}
-				if (isTaskComplete_TPS("Adjacents") {
+				if (isTaskComplete_TPS("Adjacents")) {
 					activateTask("Adjacents");
 				}
 				if (!isTaskActive("Maps") && !isTaskComplete_TPS("Maps")){
 					addAdHocTask("ADHOC_WORKFLOW","Maps","");
 				}
-				if (isTaskComplete_TPS("Maps") {
+				if (isTaskComplete_TPS("Maps")) {
 					activateTask("Maps");
 				}
 				if (!isTaskActive("CPC Staff Report") !isTaskComplete_TPS("CPC Staff Report")){
 					addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
 				}
-				if (isTaskComplete_TPS("CPC Staff Report") {
+				if (isTaskComplete_TPS("CPC Staff Report")) {
 					activateTask("CPC Staff Report");
 				}
 			}
