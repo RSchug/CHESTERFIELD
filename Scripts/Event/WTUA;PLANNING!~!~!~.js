@@ -137,7 +137,7 @@ try {
 				if (isTaskComplete_TPS("Maps")) {
 					activateTask("Maps");
 				}
-				if (!isTaskActive("CPC Staff Report") !isTaskComplete_TPS("CPC Staff Report")){
+				if (!isTaskActive("CPC Staff Report") && !isTaskComplete_TPS("CPC Staff Report")){
 					addAdHocTask("ADHOC_WORKFLOW","CPC Staff Report","");
 				}
 				if (isTaskComplete_TPS("CPC Staff Report")) {
