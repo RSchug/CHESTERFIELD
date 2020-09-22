@@ -22,6 +22,15 @@ try {
 			}
 		}
 	}
+	if (appMatch('*/*/Final Plat/NA')){
+		if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Ready for County Signatures')) {
+			if (AInfo['Sidewalks'] == null || AInfo['Sidewalk Width'] == null || AInfo['Pedestrian Trails'] == null || AInfo['Pedestrian Width'] == null || AInfo['Shared Use Path'] == null || AInfo['Shared Use Path Width'] == null || AInfo['Total Pedestrian Paths'] == null){
+					showMessage = true;
+					comment('You cannot advance this workflow until the Pedestrian paths Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
+					cancel = true;
+				}
+			}
+		}
 	} catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 	}
