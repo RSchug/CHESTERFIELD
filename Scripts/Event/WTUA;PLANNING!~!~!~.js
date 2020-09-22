@@ -219,47 +219,47 @@ try {
 	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35),true);
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22));
 			}
 			if (isTaskActive('CPC Staff Report')) {
-				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15,true));
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15));
 			}
 			if (appMatch('*/LandUse/HistoricPreservation/*') && isTaskActive('HPC Hearing')) {
-				editTaskDueDate('HPC Hearing', dateAdd(getTaskDueDate('CPC Hearing'),0,true));
+				editTaskDueDate('HPC Hearing', dateAdd(getTaskDueDate('CPC Hearing'),0));
 			}
 		}
 	//These Due Date timing are the same as above, but split out so if there is any changes
 		else if ((appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
 		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) && AInfo['Review Type'] == 'Planning Commission Public Hearing') {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35,true));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('CPC Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),-34));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('CPC Hearing'),-22));
 			}
 			if (isTaskActive('CPC Staff Report')) {
-				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15,true));
+				editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),-15));
 			}
 		}	  
 	}
@@ -268,36 +268,36 @@ try {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),1,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('CPC Hearing'),1));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),2,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('CPC Hearing'),2));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),6,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('CPC Hearing'),6));
 			}
 			if (isTaskActive('BOS Staff Report')) {
-				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),6,true));
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('CPC Hearing'),6));
 			}
 		}
 		else if (appMatch('*/LandUse/ManufacturedHomes/*') || appMatch('*/LandUse/RPAException/*')) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BOS Hearing'),-35,true));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BOS Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),-28,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),-28));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),-23,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),-23));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),-22,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BOS Hearing'),-22));
 			}
 			if (isTaskActive('BOS Staff Report')) {
-				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),6,true));
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),6));
 			}	
 		}
 	}
@@ -306,22 +306,22 @@ try {
 	if (matches(wfTask,'BZA Hearing') && matches(wfStatus,'Set Hearing Date')) {
 		if (appMatch("*/*/Variance/*") || appMatch("*/*/SpecialException/*") || appMatch("*/*/Appeal/*")) {
 			if (isTaskActive('Maps')) {
-				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BZA Hearing'),-35,true));
+				editTaskDueDate('Maps', dateAdd(getTaskDueDate('BZA Hearing'),-35));
 			}
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),-26,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),-26));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),-22,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),-22));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),-26,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),-26));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),-22,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),-22));
 			}
 			if (isTaskActive('BZA Staff Report')) {
-				editTaskDueDate('BZA Staff Report', dateAdd(getTaskDueDate('BZA Hearing'),-12,true));
+				editTaskDueDate('BZA Staff Report', dateAdd(getTaskDueDate('BZA Hearing'),-12));
 			}
 		}
 		else if (appMatch("*/*/AdminVariance/*")) {
@@ -514,7 +514,7 @@ try {
 			}
 		}
 	}
-	//Still need data from GIS to finish this requirement
+	//Still need data from GIS to finish this requirement - not sure why this is not generating...
 	var SubIDName = "Subdivision ID";
 	var seq5CodeName = null;
 	if (appMatch('*/Subdivision/Final Plat/*')) {
