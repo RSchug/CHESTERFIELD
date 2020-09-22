@@ -463,6 +463,7 @@ try {
 				AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
 				if (AInfo[ComCodeName] < 100) {
 					AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
+				}
 				logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
 				editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
 			}
