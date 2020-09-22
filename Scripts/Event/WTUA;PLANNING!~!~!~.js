@@ -461,7 +461,10 @@ try {
 			if (seq1CodeName && typeof (AInfo[ComCodeName]) != "undefined") {
 				
 				AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
-				if (AInfo[ComCodeName] < 100) {
+				if (AInfo[ComCodeName] < 10) {
+					AInfo[ComCodeName] = '00'+AInfo[ComCodeName];
+				}
+				else if (AInfo[ComCodeName] < 100) {
 					AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
 				}
 				logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
@@ -480,6 +483,15 @@ try {
 			if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
 				
 				AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
+				if (AInfo[SubCodeName] < 100) {
+					AInfo[SubCodeName] = '000'+AInfo[SubCodeName];
+				}
+				else if (AInfo[SubCodeName] < 1000) {
+					AInfo[SubCodeName] = '00'+AInfo[SubCodeName];
+				}
+				else if (AInfo[SubCodeName] < 10000) {
+					AInfo[SubCodeName] = '0'+AInfo[SubCodeName];
+				}
 				logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
 				editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
 			}
@@ -496,6 +508,15 @@ try {
 			if (seq3CodeName && typeof (AInfo[DevCodeName]) != "undefined") {
 				
 				AInfo[DevCodeName] = generateDevCode(DevCodeName);
+				if (AInfo[DevCodeName] < 100) {
+					AInfo[DevCodeName] = '000'+AInfo[DevCodeName];
+				}
+				else if (AInfo[DevCodeName] < 1000) {
+					AInfo[DevCodeName] = '00'+AInfo[DevCodeName];
+				}
+				else if (AInfo[DevCodeName] < 10000) {
+					AInfo[DevCodeName] = '0'+AInfo[DevCodeName];
+				}
 				logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
 				editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
 			}
@@ -512,6 +533,12 @@ try {
 			if (seq4CodeName && typeof (AInfo[SecCodeName]) != "undefined") {
 				
 				AInfo[SecCodeName] = generateSecCode(SecCodeName);
+				if (AInfo[SecCodeName] < 100) {
+					AInfo[SecCodeName] = '00'+AInfo[SecCodeName];
+				}
+				else if (AInfo[SecCodeName] < 1000) {
+					AInfo[SecCodeName] = '0'+AInfo[SecCodeName];
+				}
 				logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
 				editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
 			}

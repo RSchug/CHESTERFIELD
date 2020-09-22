@@ -4382,7 +4382,7 @@ function generateSubdivCode(SubCodeName) {
 function generateDevCode(DevCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
-    for (var i = 10; i < 1000; i++) {
+    for (var i = 10; i < 100000; i++) {
         var ASIValue3 = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, ASIValue3);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
@@ -4403,7 +4403,7 @@ function generateDevCode(DevCodeName) {
 function generateSecCode(SecCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
-    for (var i = 10; i < 1000; i++) {
+    for (var i = 10; i < 10000; i++) {
         var ASIValue4 = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SecCodeName, ASIValue4);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
