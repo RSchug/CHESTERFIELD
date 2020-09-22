@@ -1,7 +1,7 @@
 function generateSubdivCode(SubCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
-    for (var i = 10; i < 1000; i++) {
+    for (var i = 1000; i < 100000; i++) {
         var ASIValue2 = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SubCodeName, ASIValue2);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }

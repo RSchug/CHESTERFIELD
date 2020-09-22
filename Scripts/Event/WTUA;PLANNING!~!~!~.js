@@ -448,7 +448,7 @@ try {
 	}
 	
 // 56p Community/Subdivision/Development/Section Codes are generated here at time of Fees Received or Fees Waived - logic based on CODE SchemaDesign for GIS spreadsheet.
-// Number should be generate 001 - 999.  No duplicates number for another active record.For: Planning/Subdivision/ Preliminary - OverallConceptualPlan - ConstructionPlan 
+// Number should be generate, with padded 0 at the beginning.  No duplicates number for another active record.For: Planning/Subdivision/ Preliminary - OverallConceptualPlan - ConstructionPlan 
 //  and Planning/SitePlan/ -> Schematics - Major - Minor
 
 	var ComCodeName = "Community Code";
@@ -511,6 +511,22 @@ try {
 				AInfo[SecCodeName] = generateSecCode(SecCodeName);
 				logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
 				editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
+			}
+		}
+	}
+	//Still need data from GIS to finish this requirement
+	var SubIDName = "Subdivision ID";
+	var seq5CodeName = null;
+	if (appMatch('*/Subdivision/Final Plat/*')) {
+		seq5CodeName = "Subdividion ID";
+		
+		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+		
+			if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
+				
+				AInfo[SubIDName] = 'ComCode-SubCode-' + AInfo['ParcelAttribute.CensusTract'];
+				logDebug(SubIDName + ": " + AInfo[SubIDName]);
+				editAppSpecific(SubIDName, AInfo[SubIDName]);	
 			}
 		}
 	}
