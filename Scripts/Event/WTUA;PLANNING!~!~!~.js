@@ -522,12 +522,12 @@ try {
 		
 		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
 		
-			if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
+			//if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
 				
 				AInfo[SubIDName] = 'ComCode-SubCode-' + AInfo['ParcelAttribute.CensusTract'];
 				logDebug(SubIDName + ": " + AInfo[SubIDName]);
 				editAppSpecific(SubIDName, AInfo[SubIDName]);	
-			}
+			//}
 		}
 	}
 
