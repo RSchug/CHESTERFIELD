@@ -7,7 +7,7 @@ try {
 				cancel = true;
 			}
 		}
-    if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved','Denied')) {
+    if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved')) { //Denied removed on 9/23/2020 per request
 		if (AInfo['BOS Conditions'] == null || AInfo['BOS Proffered Conditions'] == null || AInfo['BOS Cash Proffers'] == null || AInfo['BOS Complies with Plan'] == null 
 		|| AInfo['BOS Residential - Single Family Unit Approved'] == null || AInfo['BOS Residential - Mulit Family Unit Approved'] == null || AInfo['BOS Age Restricted Units'] == null) {
 			showMessage = true;
@@ -25,7 +25,7 @@ try {
 			}
 		}
 	}
-	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved','Denied')) {
+	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved',)) { //Denied removed on 9/23/2020 per request
 		if (AInfo['No BOS Time Limit'] != 'CHECKED'){
 			if (AInfo['BOS Approved Time Limit'] == null || AInfo['BOS Expiration Date'] == null) {
 			showMessage = true;
