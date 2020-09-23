@@ -25,7 +25,7 @@ try {
 			}
 		}
 	}
-	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved',)) { //Denied removed on 9/23/2020 per request
+	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) { //Denied removed on 9/23/2020 per request
 		if (AInfo['No BOS Time Limit'] != 'CHECKED'){
 			if (AInfo['BOS Approved Time Limit'] == null || AInfo['BOS Expiration Date'] == null) {
 			showMessage = true;
