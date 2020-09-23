@@ -6,7 +6,7 @@ try {
     comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
         cancel = true;}
             }
-    if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved','Denied')) {
+    if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) { //Denied removed on 9/23/2020 per request
     if (AInfo['BOS Conditions'] == null ) {
         showMessage = true;
     comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
