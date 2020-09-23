@@ -2,7 +2,7 @@ try {
 //07-2020 Boucher 11p  and 82p - updated per Word Doc on 9-2020
 // for all Planning records - updating the Reviewers Due date based on the Special Consideration field, only those active Reviews (can get overwritten by TRC Set Hearing Date)
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		if (appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) {
+		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/SitePlan/Minor/*')) {
 			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 			for (var ind in taskAuditArray) {
