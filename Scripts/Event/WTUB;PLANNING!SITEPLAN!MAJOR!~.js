@@ -1,5 +1,5 @@
 // Results and Ped Info required 
-if (matches(wfTask, 'CPC Hearing') && matches(wfStatus, 'CPC Approved','CPC Approved with Admin Review','CPC Denied')) {
+if (matches(wfTask, 'CPC Hearing') && matches(wfStatus, 'CPC Approved','CPC Approved with Admin Review')) { //Denied removed on 9/23/2020 per request
     if (AInfo['No Time Limit'] != 'CHECKED'){
         if (AInfo['Approved Time Limit'] == null || AInfo['Conditions'] == null || AInfo['Number of Town House Units Approved'] == null || AInfo['Non-Residential Gross Building Square Feet'] == null
         || AInfo['Number of Single Family Units Approved'] == null || AInfo['Number of Multi Family Units Approved'] == null || AInfo['Total Pedestrian Paths'] == null || AInfo['Shared Use Path Width'] == null
