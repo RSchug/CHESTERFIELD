@@ -19,6 +19,17 @@ try {
 	//49P Final Plat Fee
 		addFee("FINALPLAT1","CC-PLANNING","FINAL",1,"N");
 	}
+	if (matches(wfTask, 'Review Consolidation') && matches(wfStatus, 'Revisions Requested','Submit Signed Plat')) {
+		var BlankExpireDate = AInfo['Expiration Date'];
+		var months = 12 ;
+			if(BlankExpireDate == null || BlankExpireDate == "") {
+				var NewExpireDate = dateAddMonths(dateAdd(null,0),months);
+			}
+			if(BlankExpireDate != null && BlankExpireDate != "") {
+				var NewExpireDate = dateAddMonths(BlankExpireDate,months);
+			}
+			editAppSpecific("Expiration Date",NewExpireDate);
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
