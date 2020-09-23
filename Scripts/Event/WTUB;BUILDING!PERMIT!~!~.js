@@ -48,7 +48,7 @@ try {
 			parcelHasConditiontrue_TPS('Planning', 'Applied') ||
 			parcelHasConditiontrue_TPS('Utilities', 'Applied'))) {
 				showMessage = true;
-				comment('The Parcel(s) seem to have still applied Conditions? You will need to update the Condition Status to Condition Met to proceed in the workflow');
+				comment('<font size=small><b>The Parcel(s) seem to have still applied Conditions?</b> You will need to update the Condition Status to Condition Met to proceed in the workflow </font>');
 				cancel = true;
 		}
 	}
@@ -61,7 +61,7 @@ try {
 		}
 		if (!parcelExistsOnCap()) {             // Check if address exists
 			showMessage = true;
-			comment('<font size=small><b>Parcel is required /b></font>');
+			comment('<font size=small><b>Parcel is required </b></font>');
 			cancel = true;
 		}
 		if (!ownerExistsOnCap()) {            // Check if address exists
