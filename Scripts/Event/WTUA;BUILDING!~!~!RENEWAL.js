@@ -2,7 +2,12 @@
 
 //Alex Charlton added for Renewal of Conveyance Permit.
 if (wfStatus == 'Renewed') {
+	logDebug('Running WTUA4Renewal');
+	aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
+	logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
+
 	var parentLicenseCapID = getParentCapIDForReview(capId);
+	if (parentLicenseCapID == null) parentLicenseCapID = parentCapId;
 	logDebug('ParentLic CAPID = ' + parentLicenseCapID);
 	if (parentLicenseCapID) {
 		var pCapIdSplit = String(parentLicenseCapID).split('-');
@@ -83,11 +88,5 @@ if (wfStatus == 'Renewed') {
 				comment("Elevators missing")
 			}
 		}
-
-
-        logDebug('Running WTUA4Renewal');
-		aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
-		logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
 	}
 }
-//commented out as this is included in lines above aa.runScript("WORKFLOWTASKUPDATEAFTER4RENEW");
