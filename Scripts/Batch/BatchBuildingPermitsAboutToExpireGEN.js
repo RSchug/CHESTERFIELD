@@ -271,7 +271,7 @@ function mainProcess() {
             continue;
         }
 
-        var adHocProcess = "ADHOC_WORKFLOW";
+        var adHocProcess = "ADHOC_WF";
         var adHocTask = "Inactive Application";
         if (capStatus == "Issued") adHocTask = "Inactive Permit";
         var adHocTaskAssignID = null;
