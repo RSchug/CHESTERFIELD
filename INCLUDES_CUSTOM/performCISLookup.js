@@ -1,6 +1,6 @@
 
 function performCISLookup() {
-    itempCap = capId;
+    itemCap = capId;
     if (arguments.length > 0) itemCap = arguments[0];
 
     dataServiceURL = lookup("CIS Lookup Service", "dataServiceURL");
