@@ -56,3 +56,5 @@ function fillAddressParts() {
 		streetNumber = AddressModel.getHouseNumberStart();
 	}
 }
+
+performCISLookup();
