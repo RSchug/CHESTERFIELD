@@ -1,2 +1,2 @@
-var ParcelZoning = AInfo["ParcelAttribute.Zoning"];
-editAppSpecific("ZONING",ParcelZoning);
+var ParcelZoning = AInfo["ParcelAttribute.ZONING"];
+editAppSpecific("Zoning",ParcelZoning);
