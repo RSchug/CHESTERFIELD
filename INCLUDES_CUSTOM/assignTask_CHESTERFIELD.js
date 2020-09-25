@@ -18,7 +18,7 @@ function assignTask_CHESTERFIELD(wfstr, username) {
     var gisLayerName = null, gisLayerAbbr = null, gisLayerField = null;
     if (typeof (gisMapService) == "undefined") gisMapService = null; // Check for global.
     if (userDiscipline == "Enforcement") {
-        userDistrict = AInfo["ParcelAttribute.CouncilDist"];
+        userDistrict = AInfo["ParcelAttribute.CouncilDistrict"];
         gisLayerName = "Enforcement Boundaries";
         gisLayerField = "InspectorID";
         logDebug("Using userDiscipline: " + userDiscipline + ", param");
@@ -32,7 +32,7 @@ function assignTask_CHESTERFIELD(wfstr, username) {
         if (appMatch("Enforcement/*/*/*")) {
             logDebug("Using userDiscipline: " + userDiscipline + " appTypeArray[0]");
             userDiscipline = "Enforcement";
-            userDistrict = AInfo["ParcelAttribute.CouncilDist"];
+            userDistrict = AInfo["ParcelAttribute.CouncilDistrict"];
             gisLayerName = "Enforcement Boundaries";
             gisLayerField = "InspectorID";
             logDebug("Using userDiscipline: " + userDiscipline + ", appType: Enforcement");
