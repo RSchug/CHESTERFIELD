@@ -39,3 +39,15 @@ if (wfStatus == 'Temporary CO Issued' && appMatch("Building/Permit/Commercial/NA
 	addFee("TEMPCO","CC-BLD-ADMIN","FINAL",1,"Y");
 	editAppSpecific(tempcoexpdate,tempcoexpdatenew);
 }
+//Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
+var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
+//var InspAssignment = lookup("InspectionAssignmentEnvEngineering", ParcelInspectorEnvEng);
+var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
+var InspAssignment = null;
+if (iInspector && iInspector.getGaUserID())
+    InspAssignment = iInspector.getGaUserID();
+
+if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
+	if isTaskActive("Environmental Engineering Review") {
+    assignTask("Environmental Engineering Review",InspAssignment);
+}}
