@@ -2,7 +2,12 @@
 
 //Alex Charlton added for Renewal of Conveyance Permit.
 if (wfStatus == 'Renewed') {
+	logDebug('Running WTUA4Renewal');
+	aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
+	logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
+
 	var parentLicenseCapID = getParentCapIDForReview(capId);
+	if (parentLicenseCapID == null) parentLicenseCapID = parentCapId;
 	logDebug('ParentLic CAPID = ' + parentLicenseCapID);
 	if (parentLicenseCapID) {
 		var pCapIdSplit = String(parentLicenseCapID).split('-');
@@ -44,29 +49,44 @@ if (wfStatus == 'Renewed') {
 			}
 		}
 
-		var tableName = "CC-BLD-ELEVATOR";
-		var tableElevators = loadASITable(tableName);
-		if (typeof (tableElevators) != "object") tableElevators = null;
-		if (tableElevators && tableElevators.length > 0) {
-			var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
-			var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
-			logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
-			// Get Structure: Parent of Commercial.
-			var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
-			var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
-			logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
-			if (capIdStructure) {
-				updateASITable_TPS(tableName, ["Name/ID#"], capIdStructure, capId);
-				// removeASITable(tableName, capIdStructure);
-				// addASITable(tableName, tableElevators, capIdStructure);
+		if (appMatch("Building/Permit/AmusementDevice/Renewal")) {
+			updateTask("Annual Status", "In Service", wfCommentParent, "", "", parentLicenseCapID);
+			var tableName = "CC-BLD-AD-DL";
+			var tableDevices = loadASITable(tableName);
+			if (typeof (tableDevices) != "object") tableDevices = null;
+			if (tableDevices && tableDevices.length > 0) {
+				for (xx in tableDevices) {
+					var tableRow = tableDevices[xx];
+					logDebug(tableName + "[" + xx + "]: Device Name: " + tableRow["Device name"] + " Device Type: " + tableRow["Device Type"] + " Out of Service: " + tableRow["Out of Service"]);
+					if (tableRow["Out of Service"] && exists(tableRow["Out of Service"], ["CHECKED"])) continue;
+				}
+				updateASITable_TPS(tableName, ["Device name"], parentLicenseCapID, capId);
+				// removeASITable(tableName, parentLicenseCapID);
+				// addASITable(tableName, tableDevices, parentLicenseCapID);
+			} else {
+				comment("Elevators missing")
 			}
-		} else {
-			comment("Elevators missing")
+		} else if (appMatch("Building/Permit/Elevator/Renewal")) {
+			updateTask("Annual Status", "In Service", wfCommentParent, "", "", parentLicenseCapID);
+			var tableName = "CC-BLD-ELEVATOR";
+			var tableElevators = loadASITable(tableName);
+			if (typeof (tableElevators) != "object") tableElevators = null;
+			if (tableElevators && tableElevators.length > 0) {
+				var capIdsCommercial = getParents_TPS("Building/Permit/Commercial/NA");
+				var capIdCommercial = (capIdsCommercial && capIdsCommercial.length > 0 ? capIdsCommercial[0] : null);
+				logDebug("capIdCommercial: " + (capIdCommercial ? " " + capIdCommercial.getCustomID() : capIdCommercial));
+				// Get Structure: Parent of Commercial.
+				var capIdsStructure = (capIdCommercial ? getParents_TPS("Building/Structure/NA/NA") : null);
+				var capIdStructure = (capIdsStructure && capIdsStructure.length > 0 ? capIdsStructure[0] : null);
+				logDebug("capIdStructure: " + (capIdStructure ? " " + capIdStructure.getCustomID() : capIdStructure));
+				if (capIdStructure) {
+					updateASITable_TPS(tableName, ["Name/ID#"], capIdStructure, capId);
+					// removeASITable(tableName, capIdStructure);
+					// addASITable(tableName, tableElevators, capIdStructure);
+				}
+			} else {
+				comment("Elevators missing")
+			}
 		}
-
-        logDebug('Running WTUA4Renewal');
-		aa.runScript('WORKFLOWTASKUPDATEAFTER4RENEW');
-		logDebug('Messages in WTUA4Renewal:<br>' + aa.env.getValue('ScriptReturnMessage'));
 	}
 }
-//commented out as this is included in lines above aa.runScript("WORKFLOWTASKUPDATEAFTER4RENEW");

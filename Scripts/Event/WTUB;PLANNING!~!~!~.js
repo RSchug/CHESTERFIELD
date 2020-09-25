@@ -7,44 +7,44 @@ PLEASE BE ADVISED - This code also exist in the WTUB:Building for these proffer 
 //Constants:
 try {
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) {
-		if (appMatch('*/*/RPAException/*') && parcelHasConditiontrue_TPS('RPA', 'Applied')) {
+		if (appMatch('*/*/RPAException/*') && parcelHasCondition_TPS('RPA', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied RPA Exception Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ManufacturedHomes/*') && parcelHasConditiontrue_TPS('Manufactured', 'Applied')) {
+		else if (appMatch('*/*/ManufacturedHomes/*') && parcelHasCondition_TPS('Manufactured', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Manufactured Home Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/SubstantialAccord/*') && parcelHasConditiontrue_TPS('Substantial', 'Applied')) {
+		else if (appMatch('*/*/SubstantialAccord/*') && parcelHasCondition_TPS('Substantial', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Substantial Accord Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/HistoricPreservation/*') && parcelHasConditiontrue_TPS('Historic', 'Applied')) {
+		else if (appMatch('*/*/HistoricPreservation/*') && parcelHasCondition_TPS('Historic', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Historic Preservation Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
 	if (matches(wfTask, 'Case Complete') && matches(wfStatus, 'Closed')) {
-		if (appMatch('*/*/Preliminary/*') && parcelHasConditiontrue_TPS('Preliminary', 'Applied')) {
+		if (appMatch('*/*/Preliminary/*') && parcelHasCondition_TPS('Preliminary', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Preliminary Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ConstructionPlan/*') && parcelHasConditiontrue_TPS('Construction', 'Applied')) {
+		else if (appMatch('*/*/ConstructionPlan/*') && parcelHasCondition_TPS('Construction', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Construction Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ParcelAcreage/*') && parcelHasConditiontrue_TPS('Acreage', 'Applied')) {
+		else if (appMatch('*/*/ParcelAcreage/*') && parcelHasCondition_TPS('Acreage', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Parcel Acreage Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if ((appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*')) && parcelHasConditiontrue_TPS('Variance', 'Applied')) {
+		else if ((appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*')) && parcelHasCondition_TPS('Variance', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;

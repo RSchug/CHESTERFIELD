@@ -1,4 +1,4 @@
-// WTUA:Building/Permit/Elevator/Master
+// WTUA:Building/Permit/AmusementDevice/Master
 // 8B: For Elevator Installation Record when Workflow Task 'Certificate of Inspection' is 'Completed' then create a related 'Building/Permit/Elevator/Annual' Record as the Parent.
 var newCapId = null, newCapAppType = null;
 today = new Date(aa.util.now());
@@ -97,25 +97,68 @@ if (wfTask == 'Annual Status' && wfStatus == 'Pending Renewal') {
     // ******************END expiration Date code Options
     //updateTask('Annual Status', 'In Service', '', '');
     // After the Submit button is selected an Administrative Fee with a Qty of 1 and Fee of $57 will automatically be added
-    // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Elevators that are 'In Service' as the Qty. 
-    // Get Number of 'In Service' Elevators
+    // 6B: The Annual Certificate of Compliance Fee will automatically be added to the Renewal record based on Number of Devices that are 'In Service' as the Qty.
+    // Get Number of 'In Service' Devices
     if (newCapId) {
-        var elevatorsCount = 0;
+        deviceFeeMap = {
+            "Small Mechanical or Inflatable": "SMALL",
+            "Circular/Flat": "CIRCULAR",
+            "Spectacular": "SPECTACULAR",
+            "Coasters": "COASTER",
+            "Other": null,
+            "Small mechanical ride or inflatable amusement device": "SMALL",
+            "Circular or flat rides less than 20' in height": "CIRCULAR",
+            "Spectacular Rides": "SPECTACULAR",
+            "Rollercoasters more than 30 feet in height": "COASTER",
+            "SMALL": "SMALL25",
+            "CIRCULAR": "CIRCULAR25",
+            "SPECTACULAR": "SPECTACUL25",
+            "COASTER": "COASTER25"
+        }
+        // Count Devices by Type.
+        var deviceCounts = [];
         var tableName = "CC-BLD-AD-DL";  
-        var tableElevators = loadASITable(tableName);
-        if (typeof (tableElevators) != "object") tableElevators = null;
-        if (tableElevators && tableElevators.length > 0) {
-            for (xx in tableElevators) {
-                var tableRow = tableElevators[xx];
+        var tableDevices = loadASITable(tableName);
+        if (typeof (tableDevices) != "object") tableDevices = null;
+        if (tableDevices && tableDevices.length > 0) {
+            for (xx in tableDevices) {
+                var tableRow = tableDevices[xx];
                 logDebug(tableName + "[" + xx + "]: Device Name: " + tableRow["Device name"] + " Device Type: " + tableRow["Device Type"] + " Out of Service: " + tableRow["Out of Service"]);
                 if (tableRow["Out of Service"] && exists(tableRow["Out of Service"], ["CHECKED"])) continue;
-                elevatorsCount++;
+                var deviceType = tableRow["Device Type"];
+                logDebug("deviceType: " + deviceType + " mapped: " + deviceFeeMap[deviceType]);
+                if (typeof (deviceFeeMap[deviceType]) == "undefined") {
+                    logDebug("No fee associated with Device Type: " + deviceType);
+                    continue;
+                }
+                feeType = deviceFeeMap[deviceType];
+                if (typeof (deviceCounts[feeType]) == "undefined") 
+                    deviceCounts[feeType] = 0;
+                deviceCounts[feeType]++;
             }
         }
-        if (elevatorsCount > 0) {
-            logDebug("Adding CC-BLD_AD-DL.LIST OF DEVICES fee for Qty: " + elevatorsCount);
-            addFee("ELEVATOR", "CC-BLD-ELEVATOR", "FINAL", elevatorsCount, "Y", newCapId);
+        var capIdChild = capId; // Default to current capId if Installation not found.
+        var childIdsArray = getChildren("Building/Permit/AmusementDevice/Installation", capId);
+        for (var c in childIdsArray) {
+            var capIdChild = childIdsArray[c];
+            logDebug("Found Installation: " + (capIdChild ? " " + capIdChild.getCustomID() : capIdChild));
         }
+        var svCapId = capId;
+        capId = capIdChild;         // Required for feeExists.
+        for (deviceFeeType in deviceCounts) {
+            feeType1 = deviceFeeType;
+            feeType2 = deviceFeeMap[feeType];
+            if (feeExists(feeType1, "INVOICED"))      // Check if Fee exists on Installation
+                feeType = feeType1
+            else if (feeExists(feeType2, "INVOICED")) // Check if Alternate Fee exists on Installation
+                feeType = feeType2
+            else // New Device Type
+                feeType = feeType1;
+
+            logDebug("Adding CC-BLD_AD-DL.LIST OF DEVICES " + feeType + " fee for Qty: " + deviceCounts[deviceFeeType] + "; " + deviceFeeType);
+            addFee(feeType, "CC-BLD-AMUSEMENT", "FINAL", deviceCounts[deviceFeeType], "Y", newCapId);
+        }
+        capId = svCapId;
     }
 }
 

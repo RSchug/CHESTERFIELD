@@ -213,7 +213,7 @@ function mainProcess() {
     //20200724-059: Building/Permit/Residential/Boiler
     //20200717-007: Building/Permit/Residential/Boiler
     var searchCapStatus = "About to Expire";
-    var searchTaskProcess = "ADHOC_WORKFLOW";
+    var searchTaskProcess = "ADHOC_WF";
     var searchTaskName = "Inactive Application";
     var searchTaskName = "Inactive Permit";
     var searchTaskStatus = "About to Expire";

@@ -41,12 +41,12 @@ try {
 			logDebug("Checking parcel conditions");
 		}
 		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))  && 
-			(parcelHasConditiontrue_TPS('CDOT', 'Applied') ||
-			parcelHasConditiontrue_TPS('EE', 'Applied') ||
-			parcelHasConditiontrue_TPS('Fire', 'Applied') ||
-			parcelHasConditiontrue_TPS('Parks and Rec', 'Applied') ||
-			parcelHasConditiontrue_TPS('Planning', 'Applied') ||
-			parcelHasConditiontrue_TPS('Utilities', 'Applied'))) {
+			(parcelHasCondition_TPS('CDOT', 'Applied') ||
+			parcelHasCondition_TPS('EE', 'Applied') ||
+			parcelHasCondition_TPS('Fire', 'Applied') ||
+			parcelHasCondition_TPS('Parks and Rec', 'Applied') ||
+			parcelHasCondition_TPS('Planning', 'Applied') ||
+			parcelHasCondition_TPS('Utilities', 'Applied'))) {
 				showMessage = true;
 				comment('<font size=small><b>The Parcel(s) seem to have still applied Conditions?</b> You will need to update the Condition Status to Condition Met to proceed in the workflow </font>');
 				cancel = true;

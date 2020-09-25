@@ -214,7 +214,7 @@ function mainProcess() {
     //20200724-059: Building/Permit/Residential/Boiler
     //20200717-007: Building/Permit/Residential/Boiler
     var searchCapStatus = "About to Expire";
-    var searchTaskProcess = "ADHOC_WORKFLOW";
+    var searchTaskProcess = "ADHOC_WF";
     var searchTaskName = "Inactive Application";
     var searchTaskName = "Inactive Permit";
     var searchTaskStatus = "About to Expire";
@@ -271,7 +271,7 @@ function mainProcess() {
             continue;
         }
 
-        var adHocProcess = "ADHOC_WORKFLOW";
+        var adHocProcess = "ADHOC_WF";
         var adHocTask = "Inactive Application";
         if (capStatus == "Issued") adHocTask = "Inactive Permit";
         var adHocTaskStatus = "Expired";
