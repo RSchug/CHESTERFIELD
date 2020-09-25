@@ -23,7 +23,7 @@ try {
 				comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 				cancel = true;
 			}
-			if (AInfo['No BOS Time Limit'] != 'CHECKED') && AInfo['Approved Time Limit'] == null) {
+			if (AInfo['No BOS Time Limit'] != 'CHECKED' && AInfo['Approved Time Limit'] == null) {
 				showMessage = true;
 				comment('You cannot advance this workflow if the <b>No BOS Time Limit</b> is checked and there is nothing filled in for the <b>Approved Time Limit</b>.');
 				cancel = true;
