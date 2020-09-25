@@ -175,16 +175,16 @@ try {
 		}
 		if (appMatch("*/*/AdminVariance/*")) {	
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),14));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),14));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),14));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),14));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 		}
 	}
@@ -322,16 +322,16 @@ try {
 		}
 		else if (appMatch("*/*/AdminVariance/*")) {
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),14));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BZA Hearing'),13));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),14));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BZA Hearing'),13));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),14));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BZA Hearing'),13));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),14));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('BZA Hearing'),13));
 			}
 		}
 	}
