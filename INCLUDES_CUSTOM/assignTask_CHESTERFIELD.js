@@ -4,7 +4,6 @@ function assignTask_CHESTERFIELD(wfstr, username) {
     var processName = (arguments.length > 2 && arguments[2] != null ? arguments[2] : "");
     var itemCapId = (arguments.length > 3 && arguments[3] != null ? arguments[3] : capId);
     var userDiscipline = (arguments.length > 4 && arguments[4] != null ? arguments[4] : null);
-    logDebug("assignTask_CHESTERFIELD" + ", task: " + wfstr + ", username: " + username + ", processName: " + processName + ", itemCapId: " + itemCapId + ", userDiscipline: " + userDiscipline);
 
     if (arguments.length > 3 && arguments[3] != null) {
         var itemCap = aa.cap.getCap(itemCapId).getOutput();
