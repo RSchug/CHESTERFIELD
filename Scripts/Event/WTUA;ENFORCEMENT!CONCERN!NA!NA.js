@@ -73,6 +73,6 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'KCB Workorder'){
 //Variables for the CE Inspector based on Parcel field "Council Dist" and Standard Choice
 if (wfTask == 'Concern Intake' && matches(wfStatus,"Referred","KCB Work Order")) {
 	if (isTaskActive("Community Enhancement")) {
-		assignInspection_CHESTERFIELD("Community Enhancement",iInspector);
+	assignTask_CHESTERFIELD("Community Enhancement", null, null, null, "Enforcement");
 	}
 }
