@@ -77,6 +77,7 @@ try {
 			if (appMatch('*/*/ManufacturedHomes/*') || appMatch('*/*/RPAException/*')) {
 				if (!isTaskActive("BOS Staff Report") && !isTaskComplete_TPS("BOS Staff Report")){
 					addAdHocTask("ADHOC_WF","BOS Staff Report","");
+					activateTask("BOS Hearing");
 				}
 				if (isTaskComplete_TPS("BOS Staff Report")) {
 					activateTask("BOS Staff Report");
