@@ -29,10 +29,10 @@ try {
 				cancel = true;
 			}
 		}
-		if (matches(wfTask,'BOS Staff Report','Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
+		if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
 			showMessage = true;
 			comment('Just stopping the workflow because the BOS Hearing is already Active with a Hearing Date. The BOS Staff Report is Complete, and you are OK to continue.');
-			closeTask("BOS Staff Report","Complete","");
+			closeTask("Review Consolidation","Complete","");
 			cancel = true;
 		}
 	}
