@@ -32,6 +32,7 @@ function assignInspection_CHESTERFIELD(inspId) {
     if (typeof (gisMapService) == "undefined") gisMapService = null; // Check for global.
     if (appMatch("Enforcement/*/*/*")) {
         inspDiscipline = "Enforcement";
+        inspDistrict = AInfo["ParcelAttribute.CouncilDist"];
         gisLayerName = "Enforcement Boundaries";
         gisLayerField = "InspectorID";
     } else if (appMatch("EnvEngineering/*/*/*")) {
