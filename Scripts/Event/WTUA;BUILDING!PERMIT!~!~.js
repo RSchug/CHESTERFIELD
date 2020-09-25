@@ -48,6 +48,6 @@ if (iInspector && iInspector.getGaUserID())
     InspAssignment = iInspector.getGaUserID();
 
 if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
-	if isTaskActive("Environmental Engineering Review") {
+	if (isTaskActive("Environmental Engineering Review")) {
     assignTask("Environmental Engineering Review",InspAssignment);
 }}
