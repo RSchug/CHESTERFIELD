@@ -9,12 +9,9 @@ try {
 			}
 		}
 		if (matches(wfTask,'BZA Staff Report','Review Consolidation') && matches(wfStatus,'Complete','Ready for BZA') && isTaskActive('BZA Hearing')) {
-			if (isTaskActive('BZA Staff Report')) {
-				closeTask("BZA Staff Report","Complete","");  //put the cancel in the WTUA
-			}
-			if (isTaskActive('Review Consolidation')) {
-				closeTask("Review Consolidation","Complete","");
-			}
+			showMessage = true;
+			comment('Just stopping the workflow because the BZA Hearing is already Active with a Hearing Date. You are OK to continue.');
+			cancel = true;
 		}
 	}
 	// 42.4P Manufactured Homes and RPA Exception
@@ -32,7 +29,9 @@ try {
 			}
 		}
 		if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
-			closeTask("Review Consolidation","Complete","");
+			showMessage = true;
+			comment('Just stopping the workflow because the BOS Hearing is already Active with a Hearing Date. You are OK to continue.');
+			cancel = true;
 		}
 	}
 	if (appMatch('Planning/LandUse/AdminVariance/NA')){    
