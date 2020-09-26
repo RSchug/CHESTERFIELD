@@ -8,11 +8,6 @@ try {
 				cancel = true;
 			}
 		}
-		if (matches(wfTask,'BZA Staff Report','Review Consolidation') && matches(wfStatus,'Complete','Ready for BZA') && isTaskActive('BZA Hearing')) {
-			showMessage = true;
-			comment('Just stopping the workflow because the BZA Hearing is already Active with a Hearing Date. You are OK to continue.');
-			cancel = true;
-		}
 	}
 	// 42.4P Manufactured Homes and RPA Exception
 	if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){    
@@ -27,11 +22,6 @@ try {
 				comment('You cannot advance this workflow if the <b>No BOS Time Limit</b> is checked and there is nothing filled in for the <b>Approved Time Limit</b>.');
 				cancel = true;
 			}
-		}
-		if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
-			showMessage = true;
-			comment('Just stopping the workflow because the BOS Hearing is already Active with a Hearing Date. You are OK to continue.');
-			cancel = true;
 		}
 	}
 	if (appMatch('Planning/LandUse/AdminVariance/NA')){    
