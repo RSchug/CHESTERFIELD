@@ -37,6 +37,17 @@ try {
 			deactivateTask("Default");
 		}
 	}
+	if ((appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA') || appMatch('Planning/LandUse/Appeal/NA')) &&
+		matches(wfTask,'Review Consolidation','BZA Staff Report') && matches(wfStatus,'Ready for BZA','Complete') && isTaskActive('BZA Hearing')) {
+			showMessage = true;
+			comment('Just stopping the workflow because the BZA Hearing is already Active with a Hearing Date. You are OK to continue.');
+			cancel = true;
+		}
+	if ((appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')) && matches(wfTask,'Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
+			showMessage = true;
+			comment('Just stopping the workflow because the BOS Hearing is already Active with a Hearing Date. You are OK to continue.');
+			cancel = true;
+		}
 //6P  moved to WTUA:Planning
 
 //6.1P Not Needed - fixed in workflow
