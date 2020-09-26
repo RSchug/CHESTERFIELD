@@ -9,10 +9,10 @@ try {
 			}
 		}
 		if (matches(wfTask,'BZA Staff Report','Review Consolidation') && matches(wfStatus,'Complete','Ready for BZA') && isTaskActive('BZA Hearing')) {
-			if (isTaskActive('BZA Staff Report') {
+			if (isTaskActive('BZA Staff Report')) {
 				closeTask("BZA Staff Report","Complete","");  //put the cancel in the WTUA
 			}
-			if (isTaskActive('Review Consolidation') {
+			if (isTaskActive('Review Consolidation')) {
 				closeTask("Review Consolidation","Complete","");
 			}
 		}
