@@ -22,7 +22,7 @@ try {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
 					}
 				}
 			}

@@ -13,7 +13,7 @@ try {
 		activateTask("GIS-IST Review");
 		activateTask("Water Quality Review");
 		deactivateTask("Default");
-	}
+
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
@@ -34,6 +34,7 @@ try {
 				}
 			}
 		}
+	}
 	
 //Site Plan - Initial Submittal Fee 8.1P
 if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
