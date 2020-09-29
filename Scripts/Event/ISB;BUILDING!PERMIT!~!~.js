@@ -1,5 +1,3 @@
-//Temporarily turned off until Selectron and ACA in place to use these
-// ISB:BUILDING/PERMIT/*/*
 // Permit must be Issued or Temporary CO Issued, except Site Visit Inspection
 if (!wasCapStatus(["Issued"])) { //Remove != "Site Visit" as not available in IVR, "Temporary CO Issued" removed as always Issued first
         showMessage = true;
