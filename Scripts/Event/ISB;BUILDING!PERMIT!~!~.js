@@ -1,14 +1,14 @@
 //Temporarily turned off until Selectron and ACA in place to use these
 // ISB:BUILDING/PERMIT/*/*
 // Permit must be Issued or Temporary CO Issued, except Site Visit Inspection
-if (inspType != "Site Visit" && (!wasCapStatus(["Issued", "Temporary CO Issued"]))) {
+if (!wasCapStatus(["Issued"])) { //Remove != "Site Visit" as not available in IVR, "Temporary CO Issued" removed as always Issued first
         showMessage = true;
-        comment('<font size=small><b>Record must be Issued to schedule inspections</b></font>');
+        comment('<font size=small><b>Record must be Issued to Schedule Inspection</b></font>');
         // if (!exists(vEventName, ["InspectionMultipleScheduleAfter", "InspectionMultipleScheduleBefore"])) 
         cancel = true;
 }
 // Parent Permit must be Issued
-if (inspType != "Site Visit") {
+//if (inspType != "Site Visit") { //removed as not needed for IVR
         var parentAppTypes = null;
         if (exists(appTypeArray[3], ["Boiler", "Fire", "Gas", "Mechanical", "Plumbing"])) {
                 var parentAppTypes = ["Building/Permit/Commercial/NA", "Building/Permit/Residential/NA", "Building/Permit/Residential/Multi-Family"];
@@ -20,10 +20,9 @@ if (inspType != "Site Visit") {
         if (parentAppTypes) {
                 logDebug("Checking parentCap: " + (parentCapId ? parentCapId.getCustomID() : parentCapId) + " was issued");
         }
-        if (parentAppTypes && parentCapId && !wasCapStatus(["Issued", "Temporary CO Issued"], parentCapId)) {
+        if (parentAppTypes && parentCapId && !wasCapStatus(["Issued"], parentCapId)) {
                 showMessage = true;
                 comment('<font size=small><b>Parent Record ' + (parentCapId ? parentCapId.getCustomID() : parentCapId) + ' must be Issued to schedule inspections</b></font>');
                 // if (!exists(vEventName, ["InspectionMultipleScheduleAfter", "InspectionMultipleScheduleBefore"])) 
                 cancel = true;
         }
-}
