@@ -175,16 +175,16 @@ try {
 		}
 		if (appMatch("*/*/AdminVariance/*")) {	
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 		}
 	}
