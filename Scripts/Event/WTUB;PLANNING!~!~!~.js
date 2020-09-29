@@ -64,6 +64,19 @@ try {
 			cancel = true;
 		}
 	}
+/*	Could not get this to complete WTUB and then not update the due date in the BOS Hearing
+	if ((appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA') || appMatch('Planning/LandUse/Appeal/NA')) &&
+		matches(wfTask,'Review Consolidation','BZA Staff Report') && matches(wfStatus,'Ready for BZA','Complete') && isTaskActive('BZA Hearing')) {
+			if (isTaskActive('BZA Staff Report')) {
+				closeTask("BZA Staff Report","Complete","");  //put the cancel in the WTUB:Planning!LandUse
+			}
+			if (isTaskActive('Review Consolidation')) {
+				closeTask("Review Consolidation","Complete","");
+			}
+	}
+	if ((appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')) && matches(wfTask,'Review Consolidation') && matches(wfStatus,'Complete','Review Complete') && isTaskActive('BOS Hearing')) {
+		closeTask("Review Consolidation","Complete","");
+	} */
 
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
