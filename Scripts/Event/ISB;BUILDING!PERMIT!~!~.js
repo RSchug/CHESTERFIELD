@@ -1,4 +1,4 @@
-// Permit must be Issued or Temporary CO Issued, except Site Visit Inspection
+// Permit must be Issued 
 if (!wasCapStatus(["Issued"])) { //Remove != "Site Visit" as not available in IVR, "Temporary CO Issued" removed as always Issued first
         showMessage = true;
         comment('<font size=small><b>Record must be Issued to Schedule Inspection</b></font>');
