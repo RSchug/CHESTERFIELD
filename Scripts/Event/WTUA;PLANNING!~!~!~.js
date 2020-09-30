@@ -347,15 +347,6 @@ try {
 					if (capStatus == 'Submit Signed Plat') {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
 					}
-					else if (!capStatus == 'Submit Signed Plat') {
-						if (AInfo['Special Consideration'] == 'Expedited') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-						} else if (AInfo['Special Consideration'] == 'Fast Track') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-						} else if (AInfo['Special Consideration'] == 'Regular') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-						}
-					}
 					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true)); }
 				}
 			}
@@ -394,7 +385,7 @@ try {
 				var NewExpireDate = dateAddMonths(BlankExpireDate,months);
 			}
 			editAppSpecific("Expiration Date",NewExpireDate);
-	}
+		}
 	}	
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
