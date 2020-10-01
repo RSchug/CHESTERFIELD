@@ -45,7 +45,7 @@ try {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						closeTask(wfbTask.getTaskDescription(), null, "Staff and Developer Meeting Complete", "Closed by Meeting Complete");
+						closeTask(wfbTask.getTaskDescription(), wfbTask.getDisposition(), "Staff and Developer Meeting Complete", "Closed by Meeting Complete");
 					}
 				}
 			}
@@ -54,23 +54,4 @@ try {
 	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-function getTaskStatus(scriptTask,taskStatusDesc)
-{
-	var taskStatusScriptModel= null;
-	var result = aa.workflow.getTask(capID, taskDescription);
-	if(result.getSuccess())
-	{
-		taskStatusScriptModel= result.getOutput();
-		if (taskItemScriptModel == null)
-		{
-			aa.print("ERROR: Failed to get workflow task status with CAPID(" + capID + ")");
-		}
-	}  
-	else 
-	{
-		aa.print("ERROR: Failed to get workflow task status(" + capID + ") for review: " + result.getErrorMessage());
-	}
-
-	return taskStatusScriptModel;
 }
