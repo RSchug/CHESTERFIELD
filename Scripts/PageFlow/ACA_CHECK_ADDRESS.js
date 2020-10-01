@@ -16,8 +16,8 @@
 |     will no longer be considered a "Master" script and will not be supported in future releases.  If
 |     changes are made, please add notes above.
 /------------------------------------------------------------------------------------------------------*/
-var showMessage = false; // Set to true to see results in popup window
-var showDebug = false; // Set to true to see debug messages in popup window
+var showMessage = true; // Set to true to see results in popup window
+var showDebug = true; // Set to true to see debug messages in popup window
 var useAppSpecificGroupName = false; // Use Group name when populating App Specific Info Values
 var useTaskSpecificGroupName = false; // Use Group name when populating Task Specific Info Values
 var cancel = false;
@@ -96,7 +96,7 @@ var capId = cap.getCapID();
 
 var serverName = java.net.InetAddress.getLocalHost().getHostName(); // Host Name
 
-// Get Public User Email Address
+/*// Get Public User Email Address
 var publicUserEmail = "";
 if (publicUserID) {
 	var publicUserModelResult = aa.publicUser.getPublicUserByPUser(publicUserID);
@@ -116,7 +116,7 @@ if (publicUserEmail && debugEmailTo == "") {
 	//if (exists(publicUserEmail,['rschug@truepointsolutions.com']))	debugEmailTo = publicUserEmail;
 }
 logDebug("debugEmailTo: " + debugEmailTo);
-if (debugEmailTo && debugEmailTo != "") showDebug = true;
+if (debugEmailTo != "") { showDebug = true; } */
 
 // page flow custom code begin
 try {
@@ -138,15 +138,16 @@ try {
 	var addressLine = '';
 	if (addressModel) {
 		addressLine += (addressModel.getHouseNumberStart() ? (addressLine == '' ? '' : ' ') + addressModel.getHouseNumberStart() : '');
-		addressLine += (addressModel.getStreetDirection() ? (addressLine == '' ? '' : ' ') + addressModel.getStreetDirection() : '');
+		//addressLine += (addressModel.getStreetDirection() ? (addressLine == '' ? '' : ' ') + addressModel.getStreetDirection() : '');
 		addressLine += (addressModel.getStreetName() ? (addressLine == '' ? '' : ' ') + addressModel.getStreetName() : '');
-		addressLine += (addressModel.getStreetSuffix() ? (addressLine == '' ? '' : ' ') + addressModel.getStreetSuffix() : '');
+		//addressLine += (addressModel.getStreetSuffix() ? (addressLine == '' ? '' : ' ') + addressModel.getStreetSuffix() : '');
+		addressLine = addressLine.toUpperCase();
 	}
 	logDebug("capId: " + capId + (capId? " "+capId.getCustomID():"") + " at " + addressLine);
 	var capIdsFound = null;
 	if (addressModel && appMatch('eReview/Planning/NA/NA')) {
 		logDebug("looking for Records at " + addressLine);
-		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName(), addressModel.getHouseNumberStart(), null, null, null, null);
+		var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName().toUpperCase(), addressModel.getHouseNumberStart(), null, null, null, null);
 		if (capAddResult.getSuccess()) {
 			var capIdsArray = capAddResult.getOutput();
 			logDebug("Address Associated Records: " + capIdsArray.length);
@@ -167,31 +168,6 @@ try {
 			showMessage = true;
 			comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing ' + intakeASI + ' Planning Record(s) at this address ' + addressLine + '.</B></Font>');
 		}
-		if (addressModel.getStreetName() && addressModel.getStreetName() != addressModel.getStreetName().toUpperCase()) { // Check Upper Case
-			var addressLine = addressLine.toUpperCase();
-			logDebug("looking for Records at " + addressLine);
-			var capAddResult = aa.cap.getCapListByDetailAddress(addressModel.getStreetName().toUpperCase(), addressModel.getHouseNumberStart(), null, null, null, null);
-			if (capAddResult.getSuccess()) {
-				var capIdsArray = capAddResult.getOutput();
-				logDebug("Address Associated Records: " + capIdsArray.length);
-				var capIdsFound = filterCapIds(capIdsArray, "eReview/Planning/NA/NA");
-				logDebug("Planning Records: " + capIdsFound.length);
-				var capIdsFiltered = [];
-				for (y in capIdsArray) {
-					var itemCapId = capIdsArray[y].getCapID();
-					var fldVal = getAppSpecific('Planning Record Type', itemCapId);
-					if (fldVal == intakeASI) {
-						var capRecTypeisSame = true;
-						capIdsFiltered.push(itemCapId);
-					}
-					else { var capRecTypeisSame = false; }
-				}
-			}
-			if (capIdsFound && capIdsFound.length > 0 && capRecTypeisSame == true) {
-				showMessage = true;
-				comment('<B><Font Color=RED>Error: There ' + (capIdsFound.length > 1 ? 'are' : 'is an') + ' existing ' + intakeASI + ' Planning Record(s) at this address ' + addressLine + '.</B></Font>');
-			}
-		}
 	}
 
 	logDebug("End Custom Code")
@@ -203,8 +179,8 @@ try {
 	showDebug = false;
 }
 
-// Send Debug Email
-if (debugEmailTo && debugEmailTo != "") {
+/*// Send Debug Email
+if (debugEmailTo != "") {
 	debugEmailSubject = "";
 	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - Debug";
 	logDebug("Sending Debug Message to "+debugEmailTo);
@@ -216,7 +192,7 @@ if (debugEmailTo && debugEmailTo != "") {
 if (aa.env.getValue("ScriptName") == "Test") { 	// Print Debug
 	var z = debug.replace(/<BR>/g, "\r"); aa.print(">>> DEBUG: \r" + z);
 	showDebug = true;
-}
+}*/
 
 if (debug.indexOf("**ERROR") > 0) {
 	aa.env.setValue("ErrorCode", "1");
@@ -226,14 +202,14 @@ if (debug.indexOf("**ERROR") > 0) {
 		aa.env.setValue("ErrorCode", "-2");
 		if (showMessage)
 			aa.env.setValue("ErrorMessage", message);
-		if (showDebug)
-			aa.env.setValue("ErrorMessage", debug);
+		//if (showDebug)
+		//	aa.env.setValue("ErrorMessage", debug);
 	} else {
 		aa.env.setValue("ErrorCode", "0");
 		if (showMessage)
 			aa.env.setValue("ErrorMessage", message);
-		if (showDebug)
-			aa.env.setValue("ErrorMessage", debug);
+		//if (showDebug)
+		//	aa.env.setValue("ErrorMessage", debug);
 	}
 }
 

@@ -2,7 +2,7 @@ try {
 //07-2020 Boucher 11p  and 82p - updated per Word Doc on 9-2020
 // for all Planning records - updating the Reviewers Due date based on the Special Consideration field, only those active Reviews (can get overwritten by TRC Set Hearing Date)
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/SitePlan/Minor/*')) {
+		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/*/Minor/*') &&  !appMatch('*/*/Final Plat/*') && !appMatch('*/*/ParcelAcreage/*')) {
 			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 			for (var ind in taskAuditArray) {
@@ -337,16 +337,14 @@ try {
 	}
 
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
-	if (matches(wfTask,'CPC Hearing','BOS Hearing','BZA Hearing') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
-		if (capStatus == 'Deferred from CPC') {
-			activateTask("CPC Hearing");
-		}
-		else if ((capStatus == 'Deferred from BOS' || capStatus == 'Remanded from BOS')) {
-			activateTask("BOS Hearing");
-		}
-		else if (capStatus == 'Deferred from BZA'){
-			activateTask("BZA Hearing");
-		}
+	if (wfTask == 'CPC Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && (capStatus == 'Deferred from CPC')){
+		activateTask("CPC Hearing");
+	}
+	if (wfTask == 'BOS Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS') && (capStatus == 'Deferred from BOS')){
+		activateTask("BOS Hearing");
+	}
+		if (wfTask == 'BZA Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BZA') && (capStatus == 'Deferred from BZA')){
+		activateTask("BOS Hearing");
 	}
 	
 //07-2020 Boucher 40p - Land use Record do not have submittal count
