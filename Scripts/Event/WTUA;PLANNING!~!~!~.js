@@ -337,13 +337,13 @@ try {
 	}
 
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
-	if (wfTask == 'CPC Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && (capStatus == 'Deferred from CPC')){
+	if (wfTask == 'CPC Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && matches(capStatus, 'Deferred from CPC','Deferred')){
 		activateTask("CPC Hearing");
 	}
-	if (wfTask == 'BOS Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS') && (capStatus == 'Deferred from BOS')){
+	if (wfTask == 'BOS Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS') && matches(capStatus, 'Deferred from BOS','Deferred')){
 		activateTask("BOS Hearing");
 	}
-		if (wfTask == 'BZA Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BZA') && (capStatus == 'Deferred from BZA')){
+	if (wfTask == 'BZA Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BZA') && matches(capStatus, 'Deferred from BZA','Deferred')){
 		activateTask("BOS Hearing");
 	}
 	
