@@ -20,7 +20,7 @@ function copyCapInfo(srcCapId, targetCapId) {
     }
     if (exists("Detailed Description", copySections)) {
         srcWorkDes = workDescGet(srcCapId);
-        if (srcWorkDes != null && newWorkDes != "")
+        if (srcWorkDes != null && srcWorkDes != "")
             updateWorkDesc(srcWorkDes, targetCapId);
     }
     if (exists("Addresses", copySections)) copyAddresses(srcCapId, targetCapId);
