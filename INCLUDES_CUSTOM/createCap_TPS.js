@@ -102,7 +102,7 @@ function createCap_TPS() {
                 else
                     logDebug("Could not link " + newCapRelation.toLowerCase() + " CAP " + newAppTypeString);
             }
-            copyCapInfo(srcCapId, newCapId);  //copy data
+            copyCapInfo(srcCapId, newCapId, copySections);  //copy data
             var statusComment = "Created from " + srcAppTypeArray[3] + ": " + srcCapId;
             var statusComment = "Created from " + srcAppTypeAlias + ": " + srcCapId;
         }
