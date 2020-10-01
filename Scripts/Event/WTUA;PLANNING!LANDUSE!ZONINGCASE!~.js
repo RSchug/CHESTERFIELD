@@ -62,13 +62,13 @@ try {
 		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}
-// Add Fees
-	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
-		addFees_ZoneCase();
-	}
 	if (wfTask == 'Review Consolidation' && wfStatus == 'Move to BOS') {
 		activateTask("BOS Hearing");
 		deactivateTask("Review Consolidation");
+	}
+// Add Fees
+	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+		addFees_ZoneCase();
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

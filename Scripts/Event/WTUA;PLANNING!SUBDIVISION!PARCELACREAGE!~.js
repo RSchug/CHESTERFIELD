@@ -16,6 +16,7 @@ try {
 		activateTask("GIS-EDM Utilities Review");
 		deactivateTask("Default");
 		
+			//per the ELM Planning Due Dates Doc
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
@@ -23,16 +24,10 @@ try {
 			for (var i in workflowTasks) {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
-					if (wfaTask == wfbTask.getTaskDescription()) {
-						if (AInfo['Special Consideration'] == 'Expedited') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-						} else if (AInfo['Special Consideration'] == 'Fast Track') {
+					if (capStatus == 'Submit Signed Plat') {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-						} else if (AInfo['Special Consideration'] == 'Regular') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true));
-						}
-					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
 					}
+					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true)); }
 				}
 			}
 		}

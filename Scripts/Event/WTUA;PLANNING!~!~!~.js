@@ -335,33 +335,16 @@ try {
 			}
 		}
 	}
-//per the ELM Planning Due Dates Doc for Final Plat and Parcel Acreage
-	if ((appMatch('*/*/Final Plat/*') || appMatch('*/*/ParcelAcreage/*')) && wfTask =='Review Distribution' && wfStatus == 'Routed for Review') {
-		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
-		for (var ind in taskAuditArray) {
-			var wfaTask = taskAuditArray[ind];
-			for (var i in workflowTasks) {
-				var wfbTask = workflowTasks[i];
-				if (wfbTask.getActiveFlag() == 'Y') {
-					if (capStatus == 'Submit Signed Plat') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-					}
-					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true)); }
-				}
-			}
-		}
-	}
 
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
 	if (matches(wfTask,'CPC Hearing','BOS Hearing','BZA Hearing') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
-		if (capStatus == 'Deferred from CPC' && !isTaskActive("CPC Hearing")) {
+		if (capStatus == 'Deferred from CPC') {
 			activateTask("CPC Hearing");
 		}
-		else if ((capStatus == 'Deferred from BOS' || capStatus == 'Remanded from BOS') && !isTaskActive("BOS Hearing")) {
+		else if ((capStatus == 'Deferred from BOS' || capStatus == 'Remanded from BOS')) {
 			activateTask("BOS Hearing");
 		}
-		else if (capStatus == 'Deferred from BZA' && !isTaskActive("BZA Hearing")){
+		else if (capStatus == 'Deferred from BZA'){
 			activateTask("BZA Hearing");
 		}
 	}
