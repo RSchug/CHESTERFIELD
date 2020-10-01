@@ -2,7 +2,7 @@ try {
 //07-2020 Boucher 11p  and 82p - updated per Word Doc on 9-2020
 // for all Planning records - updating the Reviewers Due date based on the Special Consideration field, only those active Reviews (can get overwritten by TRC Set Hearing Date)
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
-		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/SitePlan/Minor/*')) {
+		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/*/Minor/*') &&  !appMatch('*/*/Final Plat/*') && !appMatch('*/*/ParcelAcreage/*')) {
 			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 			for (var ind in taskAuditArray) {
@@ -105,7 +105,7 @@ try {
 			if (isTaskComplete_TPS("Sign Posting")) {
 				activateTask("Sign Posting");
 			}
-			if (appMatch('*/SitePlan/*/*') && AInfo['Review Type'] == 'Administrative Review') {
+			if (AInfo['Review Type'] == 'Administrative Review') {
 				if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 					addAdHocTask("ADHOC_WF","Public Notices","");
 				}
@@ -175,16 +175,16 @@ try {
 		}
 		if (appMatch("*/*/AdminVariance/*")) {	
 			if (isTaskActive('Public Notices')) {
-				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Adjacents')) {
-				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('IVR Message')) {
-				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 			if (isTaskActive('Sign Posting')) {
-				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),10,true));
+				editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Review Distribution'),13));
 			}
 		}
 	}
@@ -335,44 +335,16 @@ try {
 			}
 		}
 	}
-//per the ELM Planning Due Dates Doc for Final Plat and Parcel Acreage
-	if ((appMatch('*/*/Final Plat/*') || appMatch('*/*/ParcelAcreage/*')) && wfTask =='Review Distribution' && wfStatus == 'Routed for Review') {
-		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
-		for (var ind in taskAuditArray) {
-			var wfaTask = taskAuditArray[ind];
-			for (var i in workflowTasks) {
-				var wfbTask = workflowTasks[i];
-				if (wfbTask.getActiveFlag() == 'Y') {
-					if (capStatus == 'Submit Signed Plat') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-					}
-					else if (!capStatus == 'Submit Signed Plat') {
-						if (AInfo['Special Consideration'] == 'Expedited') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-						} else if (AInfo['Special Consideration'] == 'Fast Track') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-						} else if (AInfo['Special Consideration'] == 'Regular') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-						}
-					}
-					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true)); }
-				}
-			}
-		}
-	}
 
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
-	if (matches(wfTask,'CPC Hearing','BOS Hearing','BZA Hearing') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC','Deferred by BOS','Deferred by BZA')){
-		if (capStatus == 'Deferred from CPC' && !isTaskActive("CPC Hearing")) {
-			activateTask("CPC Hearing");
-		}
-		else if ((capStatus == 'Deferred from BOS' || capStatus == 'Remanded from BOS') && !isTaskActive("BOS Hearing")) {
-			activateTask("BOS Hearing");
-		}
-		else if (capStatus == 'Deferred from BZA' && !isTaskActive("BZA Hearing")){
-			activateTask("BZA Hearing");
-		}
+	if (wfTask == 'CPC Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && (capStatus == 'Deferred from CPC')){
+		activateTask("CPC Hearing");
+	}
+	if (wfTask == 'BOS Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS') && (capStatus == 'Deferred from BOS')){
+		activateTask("BOS Hearing");
+	}
+		if (wfTask == 'BZA Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BZA') && (capStatus == 'Deferred from BZA')){
+		activateTask("BOS Hearing");
 	}
 	
 //07-2020 Boucher 40p - Land use Record do not have submittal count
@@ -394,7 +366,7 @@ try {
 				var NewExpireDate = dateAddMonths(BlankExpireDate,months);
 			}
 			editAppSpecific("Expiration Date",NewExpireDate);
-	}
+		}
 	}	
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {

@@ -22,7 +22,7 @@ try {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
 					}
 				}
 			}
@@ -35,31 +35,21 @@ try {
 	if (wfTask == 'Review Consolidation' && wfStatus == 'Approved'){
 		editAppSpecific(expDateField, expDate);
 	}
-//80p
+//80p - David B. updated to cycle through
 	if (wfTask == 'Staff and Developer Meeting' && wfStatus == 'Complete'){
-		setTask("Planning Review","N","Y");
-		setTask("Airport Review","N","Y");
-		setTask("Assessor Review","N","Y");
-		setTask("Building Inspection Review","N","Y");
-		setTask("County Library Review","N","Y");
-		setTask("Department of Health Review","N","Y");
-		setTask("CDOT Review","N","Y");
-		setTask("Economic Development Review","N","Y");
-		setTask("Environmental Engineering Review","N","Y");
-		setTask("Fire and Life Safety Review","N","Y");
-		setTask("GIS-IST Review","N","Y");
-		setTask("GIS-EDM Utilities Review","N","Y");
-		setTask("Parks and Recreation Review","N","Y");
-		setTask("Police Review","N","Y");
-		setTask("Real Property Review","N","Y");
-		setTask("County Attorney Review","N","Y");
-		setTask("School Research and Planning Review","N","Y");
-		setTask("Utilities Review","N","Y");
-		setTask("VDOT Review","N","Y");
-		setTask("Water Quality Review","N","Y");
-		setTask("Chesterfield Historical Society Review","N","Y");
-		setTask("Community Enhancement Review","N","Y");
-		activateTask("Review Consolidation");
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
+		for (var ind in taskAuditArray) {
+			var wfaTask = taskAuditArray[ind];
+			for (var i in workflowTasks) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						closeTask(wfbTask.getTaskDescription(), wfbTask.getTaskStatus(), "Staff and Developer Meeting Complete", "Closed by Meeting Complete");
+					}
+				}
+			}
+		}
 	}
 	
 } catch (err) {
