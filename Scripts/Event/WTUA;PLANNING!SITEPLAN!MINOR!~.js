@@ -45,7 +45,7 @@ try {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						deactivateTask(wfbTask.getTaskDescription());
+						closeTask(wfbTask.getDescription(), "", "Staff and Developer Meeting Complete", "");
 					}
 				}
 			}
