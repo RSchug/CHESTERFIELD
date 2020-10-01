@@ -1,5 +1,5 @@
-function copyCapInfo(srcCapId,targetCapId) {
-    var copySections = (arguments.length > 5 && arguments[5] ? arguments[5] : null);
+function copyCapInfo(srcCapId, targetCapId) {
+    var copySections = (arguments.length > 2 && arguments[2] ? arguments[2] : null);
     // For typically use null, by default valuation, documents & education are not copied.
     //copy data
     if (srcCapId == null) srcCapId = capId;
