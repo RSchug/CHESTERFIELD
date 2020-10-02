@@ -420,112 +420,136 @@ try {
 //  and Planning/SitePlan/ -> Schematics - Major - Minor
 
 	var ComCodeName = "Community Code";
-	var seq1CodeName = null;
-	if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/SitePlan/Major/*')) {
-		seq1CodeName = "Community Code";
-		
-		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		
-			if (seq1CodeName && typeof (AInfo[ComCodeName]) != "undefined") {
-				
-				AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
-				if (AInfo[ComCodeName] < 10) {
-					AInfo[ComCodeName] = '00'+AInfo[ComCodeName];
+	if (AInfo[ComCodeName] > 1) {
+		logDebug('Community Code Already Exists: ' + AInfo[ComCodeName]);
+	}
+	else {
+		var seq1CodeName = null;
+		if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/SitePlan/Major/*')) {
+			seq1CodeName = "Community Code";
+			
+			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+			
+				if (seq1CodeName && typeof (AInfo[ComCodeName]) != "undefined") {
+					
+					AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
+					if (AInfo[ComCodeName] < 10) {
+						AInfo[ComCodeName] = '00'+AInfo[ComCodeName];
+					}
+					else if (AInfo[ComCodeName] < 100) {
+						AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
+					}
+					logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
+					editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
 				}
-				else if (AInfo[ComCodeName] < 100) {
-					AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
-				}
-				logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
-				editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
 			}
 		}
 	}
 	
 	var SubCodeName = "Subdivision Code";
-	var seq2CodeName = null;
-	if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/SitePlan/Major/*')) {
-		seq2CodeName = "Subdivision Code";
-		
-		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		
-			if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
-				
-				AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
-				if (AInfo[SubCodeName] < 100) {
-					AInfo[SubCodeName] = '000'+AInfo[SubCodeName];
+	if (AInfo[SubCodeName] > 1) {
+		logDebug('Subdivision Code Already Exists: ' + AInfo[SubCodeName]);
+	}
+	else {
+		var seq2CodeName = null;
+		if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/SitePlan/Major/*')) {
+			seq2CodeName = "Subdivision Code";
+			
+			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+			
+				if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
+					
+					AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
+					if (AInfo[SubCodeName] < 100) {
+						AInfo[SubCodeName] = '000'+AInfo[SubCodeName];
+					}
+					else if (AInfo[SubCodeName] < 1000) {
+						AInfo[SubCodeName] = '00'+AInfo[SubCodeName];
+					}
+					else if (AInfo[SubCodeName] < 10000) {
+						AInfo[SubCodeName] = '0'+AInfo[SubCodeName];
+					}
+					logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
+					editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
 				}
-				else if (AInfo[SubCodeName] < 1000) {
-					AInfo[SubCodeName] = '00'+AInfo[SubCodeName];
-				}
-				else if (AInfo[SubCodeName] < 10000) {
-					AInfo[SubCodeName] = '0'+AInfo[SubCodeName];
-				}
-				logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
-				editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
 			}
 		}
 	}
 	
 	var DevCodeName = "Development Code";
-	var seq3CodeName = null;
-	if (appMatch('*/SitePlan/Minor/*') || appMatch('*/SitePlan/Major/*')) {
-		seq3CodeName = "Development Code";
-		
-		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		
-			if (seq3CodeName && typeof (AInfo[DevCodeName]) != "undefined") {
-				
-				AInfo[DevCodeName] = generateDevCode(DevCodeName);
-				if (AInfo[DevCodeName] < 100) {
-					AInfo[DevCodeName] = '000'+AInfo[DevCodeName];
+	if (AInfo[DevCodeName] > 1) {
+		logDebug('Development Code Already Exists: ' + AInfo[DevCodeName]);
+	}
+	else {
+		var seq3CodeName = null;
+		if (appMatch('*/SitePlan/Minor/*') || appMatch('*/SitePlan/Major/*')) {
+			seq3CodeName = "Development Code";
+			
+			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+			
+				if (seq3CodeName && typeof (AInfo[DevCodeName]) != "undefined") {
+					
+					AInfo[DevCodeName] = generateDevCode(DevCodeName);
+					if (AInfo[DevCodeName] < 100) {
+						AInfo[DevCodeName] = '000'+AInfo[DevCodeName];
+					}
+					else if (AInfo[DevCodeName] < 1000) {
+						AInfo[DevCodeName] = '00'+AInfo[DevCodeName];
+					}
+					else if (AInfo[DevCodeName] < 10000) {
+						AInfo[DevCodeName] = '0'+AInfo[DevCodeName];
+					}
+					logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
+					editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
 				}
-				else if (AInfo[DevCodeName] < 1000) {
-					AInfo[DevCodeName] = '00'+AInfo[DevCodeName];
-				}
-				else if (AInfo[DevCodeName] < 10000) {
-					AInfo[DevCodeName] = '0'+AInfo[DevCodeName];
-				}
-				logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
-				editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
 			}
 		}
 	}
-
+	
 	var SecCodeName = "Section Code";
-	var seq4CodeName = null;
-	if (appMatch('*/Subdivision/ConstructionPlan/*')) {
-		seq4CodeName = "Section Code";
-		
-		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		
-			if (seq4CodeName && typeof (AInfo[SecCodeName]) != "undefined") {
-				
-				AInfo[SecCodeName] = generateSecCode(SecCodeName);
-				if (AInfo[SecCodeName] < 100) {
-					AInfo[SecCodeName] = '00'+AInfo[SecCodeName];
+	if (AInfo[SecCodeName] > 1) {
+		logDebug('Section Code Already Exists: ' + AInfo[SecCodeName]);
+	}
+	else {
+		var seq4CodeName = null;
+		if (appMatch('*/Subdivision/ConstructionPlan/*')) {
+			seq4CodeName = "Section Code";
+			
+			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+			
+				if (seq4CodeName && typeof (AInfo[SecCodeName]) != "undefined") {
+					
+					AInfo[SecCodeName] = generateSecCode(SecCodeName);
+					if (AInfo[SecCodeName] < 100) {
+						AInfo[SecCodeName] = '00'+AInfo[SecCodeName];
+					}
+					else if (AInfo[SecCodeName] < 1000) {
+						AInfo[SecCodeName] = '0'+AInfo[SecCodeName];
+					}
+					logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
+					editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
 				}
-				else if (AInfo[SecCodeName] < 1000) {
-					AInfo[SecCodeName] = '0'+AInfo[SecCodeName];
-				}
-				logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
-				editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
 			}
 		}
 	}
 	//Still need data from GIS to finish this requirement - not sure why this is not generating...
 	var SubIDName = "Subdivision ID";
-	var seq5CodeName = null;
-	if (appMatch('*/Subdivision/Final Plat/*')) {
-		seq5CodeName = "Subdividion ID";
-		
-		if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		
-			//if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
-				
-				AInfo[SubIDName] = 'ComCode-SubCode-' + AInfo['ParcelAttribute.CensusTract'];
-				logDebug(SubIDName + ": " + AInfo[SubIDName]);
-				editAppSpecific(SubIDName, AInfo[SubIDName]);	
-			//}
+	if (AInfo[SubIDName] > 1) {
+		logDebug('Subdivision ID Already Exists: ' + AInfo[SubIDName]);
+	}
+	else {
+		var seq5CodeName = null;
+		if (appMatch('*/Subdivision/Final Plat/*')) {
+			seq5CodeName = "Subdividion ID";
+			
+			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
+			
+				if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
+					AInfo[SubIDName] = AInfo[ComCodeName] + AInfo[SubCodeName] + AInfo[SecCodeName];
+					logDebug(SubIDName + ": " + AInfo[SubIDName]);
+					editAppSpecific(SubIDName, AInfo[SubIDName]);	
+				}
+			}
 		}
 	}
 
