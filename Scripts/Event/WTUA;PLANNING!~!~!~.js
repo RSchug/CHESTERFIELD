@@ -344,7 +344,7 @@ try {
 		activateTask("BOS Hearing");
 	}
 	if (wfTask == 'BZA Hearing' && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BZA') && matches(capStatus, 'Deferred from BZA','Deferred')){
-		activateTask("BOS Hearing");
+		activateTask("BZA Hearing");
 	}
 	
 //07-2020 Boucher 40p - Land use Record do not have submittal count
