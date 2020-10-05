@@ -439,6 +439,10 @@ try {
 					else if (AInfo[ComCodeName] < 100) {
 						AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
 					}
+					else if (AInfo[ComCodeName] < 1000) {
+						AInfo[ComCodeName] = AInfo[ComCodeName];
+					}
+					else {AInfo[ComCodeName] = 'Incorrect Code Value';}
 					logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
 					editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
 				}
@@ -469,6 +473,10 @@ try {
 					else if (AInfo[SubCodeName] < 10000) {
 						AInfo[SubCodeName] = '0'+AInfo[SubCodeName];
 					}
+					else if (AInfo[SubCodeName] < 100000) {
+						AInfo[SubCodeName] = AInfo[SubCodeName];
+					}
+					else {AInfo[SubCodeName] = 'Incorrect Code Value';}
 					logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
 					editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
 				}
@@ -499,6 +507,10 @@ try {
 					else if (AInfo[DevCodeName] < 10000) {
 						AInfo[DevCodeName] = '0'+AInfo[DevCodeName];
 					}
+					else if (AInfo[DevCodeName] < 100000) {
+						AInfo[DevCodeName] = AInfo[DevCodeName];
+					}
+					else {AInfo[DevCodeName] = 'Incorrect Code Value';}
 					logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
 					editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
 				}
@@ -526,6 +538,10 @@ try {
 					else if (AInfo[SecCodeName] < 1000) {
 						AInfo[SecCodeName] = '0'+AInfo[SecCodeName];
 					}
+					else if (AInfo[SecCodeName] < 10000) {
+						AInfo[SecCodeName] = AInfo[SecCodeName];
+					}
+					else {AInfo[SecCodeName] = 'Incorrect Code Vaule';}
 					logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
 					editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
 				}
@@ -545,10 +561,11 @@ try {
 			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
 			
 				if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
-					AInfo[SubIDName] = AInfo[ComCodeName] + AInfo[SubCodeName] + AInfo[SecCodeName];
+					AInfo[SubIDName] = AInfo[ComCodeName] + '-' + AInfo[SubCodeName] + '-' + AInfo[SecCodeName];
 					logDebug(SubIDName + ": " + AInfo[SubIDName]);
 					editAppSpecific(SubIDName, AInfo[SubIDName]);	
 				}
+				else {AInfo[SubIDName] = 'Incorrect Code Vaule';}
 			}
 		}
 	}
