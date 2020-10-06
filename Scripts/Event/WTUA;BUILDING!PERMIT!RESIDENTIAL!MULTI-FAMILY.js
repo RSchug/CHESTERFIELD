@@ -30,7 +30,7 @@ if (wfTask == "Review Consolidation" && wfStatus == "Approved" && parentCapId) {
     if (childArray == null || childArray == false) childArray = [];
     for (var uu in childArray) {
         capId = childArray[uu];
-        copySections = ["Addresses", "ASI", "ASIT", "Cap Detail", "Cap Short Notes", "Detailed Description", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Comments, LPs, Documents, Education, ContEducation, Examination
+        copySections = ["Addresses", "ASI", "ASIT", "Cap Detail", "Cap Short Notes", "Detailed Description", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels"]; // Excludes Additional Info, Comments, Documents, Education, ContEducation, Examination
         cap = aa.cap.getCap(capId).getOutput();
         newCapName = cap.getSpecialText();
         var newCapId = createCap_TPS("Building/Permit/Residential/NA", newCapName, null, "Child", capId, copySections);
