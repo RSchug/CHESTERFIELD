@@ -11,7 +11,7 @@ if (wfTask == "Application Submittal" && exists(wfStatus, ["Accepted - Plan Revi
     var saveCapId = capId;
     for (var uu = 1; uu <= units; uu++) {
         copySections = ["ASI", "ASIT", "Cap Short Notes", "Conditions", "Contacts"]; // Excludes Address,Parcel,Owner, GIS Objects,Additional Info, Cap Detail, Comments, LPs, Detailed Description, Documents, Education, ContEducation, Examination
-        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName + " # " + uu, null, "Child", capId, copySections);
+        var newCapId = createCap_TPS("Building/Unit/NA/NA", capName, null, "Child", capId, copySections); //remove units from capName + " # " + uu,
         comment("New child Building Unit[" + uu + "]: " + (newCapId ? newCapId.getCustomID() : newCapId)
             + " for " + (capId ? capId.getCustomID() : capId));
         // capId = newCapId;
