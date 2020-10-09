@@ -15,3 +15,13 @@ createLP(lpId, lpType, capId, lpBoard, lpExpirDate, lpFirstName, null, lpLastNam
 }
 
 if (!publicUser) assignCap(currentUserID);
+
+//10-2020 Boucher 105aca
+	var addrArray = [];
+	loadAddressAttributes4ACA(addrArray);
+	var TechRev = addrArray["AddressAttribute.County"];
+	
+	if (TechRev != null) {
+		addStdCondition('Economic Development','Eligible for Technology Zone Incentive Program');
+		email('dboucher@truepointsolutions.com','noreply@chesterfield.gov','Record: ' + capId + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
+	}
