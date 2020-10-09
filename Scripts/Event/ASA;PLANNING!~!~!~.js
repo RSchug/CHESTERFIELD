@@ -51,7 +51,10 @@ try {
 	}
 	//10-2020 Boucher 105aca
 		var addrArray = [];
-		loadAddressAttributes4ACA(addrArray);
+		if (publicUser) {
+			loadAddressAttributes4ACA(addrArray);
+		}
+		else { loadAddressAttributes(addrArray); }
 		var TechRev = addrArray["AddressAttribute.County"];
 	
 	if (TechRev != null) {

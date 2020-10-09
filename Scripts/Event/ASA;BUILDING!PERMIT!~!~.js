@@ -16,10 +16,13 @@ createLP(lpId, lpType, capId, lpBoard, lpExpirDate, lpFirstName, null, lpLastNam
 
 if (!publicUser) assignCap(currentUserID);
 
-//10-2020 Boucher 105aca
-	var addrArray = [];
-	loadAddressAttributes4ACA(addrArray);
-	var TechRev = addrArray["AddressAttribute.County"];
+	//10-2020 Boucher 105aca
+		var addrArray = [];
+		if (publicUser) {
+			loadAddressAttributes4ACA(addrArray);
+		}
+		else { loadAddressAttributes(addrArray); }
+		var TechRev = addrArray["AddressAttribute.County"];
 	
 	if (TechRev != null) {
 		addStdCondition('Economic Development','Eligible for Technology Zone Incentive Program');
