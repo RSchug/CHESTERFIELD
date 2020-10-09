@@ -37,6 +37,7 @@ if (currentUserID == "JGUEST") showDebug = true;
 if (currentUserID == "GUESTJ") showDebug = true;
 if (currentUserID == "TRUEPOINT") showDebug = 3;
 if (currentUserID == "RSCHUG") showDebug = true;
+if (currentUserID == "DHOOPS") showDebug = 3;
 
 /*------------------------------------------------------------------------------------------------------/
 | END Custom Parameters
