@@ -7,7 +7,7 @@ var docGroupArrayModule = ["EREVIEW"];
 var docTypeArrayModule = ["Plans","Supporting Documents","Application","Calculation","Correspondance","Code Modification","Image","Legal Documentation","Plat","Comments","Final Plans"];
 
 //Workflow Specific variables for EREVIEW2
-var reviewTasksArray = ["PLANNING REVIEW", "AIRPORT REVIEW", "ASSESSOR REVIEW", "BUILDING INSPECTION REVIEW", "COUNTY LIBRARY REVIEW", "DEPARTMENT OF HEALTH REVIEW", "CDOT REVIEW", "ECONOMIC DEVELOPMENT REVIEW", "ENVIRONMENTAL ENGINEERING", "FIRE AND LIFE SAFETY REVIEW", "GIS-IST REVIEW", "GIS-EDM UTILITIES REVIEW", "PARKS AND RECREATION REVIEW", "POLICE REVIEW", "REAL PROPERTY REVIEW", "COUNTY ATTORNEY REVIEW", "SCHOOLS RESEARCH AND PLANNING REVIEW", "UTILITIES REVIEW", "VDOT REVIEW", "WATER QUALITY REVIEW", "CHESTERFIELD HISTORICAL SOCIETY REVIEW", "COMMUNITY ENHANCEMENT REVIEW"];
+var reviewTasksArray = ["PLANNING REVIEW", "AIRPORT REVIEW", "ASSESSOR REVIEW", "BUILDING INSPECTION REVIEW", "COUNTY LIBRARY REVIEW", "DEPARTMENT OF HEALTH REVIEW", "CDOT REVIEW", "ECONOMIC DEVELOPMENT REVIEW", "ENVIRONMENTAL ENGINEERING", "FIRE AND LIFE SAFETY REVIEW", "GIS-IST REVIEW", "GIS-EDM UTILITIES REVIEW", "PARKS AND RECREATION REVIEW", "POLICE REVIEW", "REAL PROPERTY REVIEW", "SCHOOL BOARD REVIEW", "SCHOOLS RESEARCH AND PLANNING REVIEW", "UTILITIES REVIEW", "VDOT REVIEW", "WATER QUALITY REVIEW", "CHESTERFIELD HISTORICAL SOCIETY REVIEW", "COMMUNITY ENHANCEMENT REVIEW"];
 var taskStatusArray = ["APPROVED", "APPROVED WITH CONDITIONS", "REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "TABLE REVIEW ELIGIBLE"];
 var routingTask = "Review Distribution";
 var routingStatusArray = ["Routed for Review"];
@@ -17,7 +17,7 @@ var reviewTaskResubmitStatus = ["REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "
 var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
 var consolidationTask = "Review Consolidation";
-if (matches(wfStatus, 'RR-Substatntial Approval', 'RR-Table Review', 'Revisions Requested', 'First Glance Complete')) {
+if (matches(wfStatus, 'RR-Substantial Approval', 'RR-Table Review', 'Revisions Requested', 'First Glance Complete')) {
 var ResubmitStatus = wfStatus; }
 var ApprovedStatus = 'Approved';
 
@@ -39,12 +39,11 @@ if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, ro
     }
 }
 
-//update required reviewTaskArray tasks to reviewTaskResubmittalReceivedStatus
-if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && exists(wfStatus, resubmittalRoutedStatusArray)) {
-    updatePlanReviewTasks4Resubmittal(reviewTasksArray, taskStatusArray, reviewTaskResubmittalReceivedStatus);
-}
+//08/2020 db turned off from Enhancement:  update required reviewTaskArray tasks to reviewTaskResubmittalReceivedStatus
+//if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && exists(wfStatus, resubmittalRoutedStatusArray)) {
+//    updatePlanReviewTasks4Resubmittal(reviewTasksArray, taskStatusArray, reviewTaskResubmittalReceivedStatus); }
 
-//Update Approved Document Statuses/Category on consolidationTask/ApprovedStatus
+//Update Document Statuses/Category to Approved on consolidationTask/ApprovedStatus
 if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, consolidationTask) && matches(wfStatus, ApprovedStatus)) {
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
@@ -74,6 +73,22 @@ if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, co
     }
 }
 
+//Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
+if (wfTask == consolidationTask && matches(wfStatus, ResubmitStatus)) {
+    emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
+    //Update the mark up report to Comment Doc Type
+	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
+		var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+		if(docArray != null && docArray.length > 0) {
+			for (d in docArray) {
+				if(docArray[d]["docStatus"] == "Review Complete") {
+					updateDocPermissionsbyCategory(docArray[d],"Comments");
+				}
+			}
+		}
+	}
+}
+
 synchronizeDocFileNames();
 
 /*-----END DIGEPLAN EDR SCRIPTS-----*/
@@ -95,21 +110,6 @@ if (exists(wfTask.toUpperCase(), reviewTasksArray) && isTaskActive(consolidation
     //emailReviewConsolidationNotification();
 }
 
-//send email to Applicant on consolidationTask Resubmit
-if (wfTask == consolidationTask && matches(wfStatus, ResubmitStatus)) {
-    emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
-    //Update the mark up report to Comment Doc Type
-	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
-		var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
-		if(docArray != null && docArray.length > 0) {
-			for (d in docArray) {
-				if(docArray[d]["docStatus"] == "Review Complete") {
-					updateDocPermissionsbyCategory(docArray[d],"Comments");
-				}
-			}
-		}
-	}
-}
 //send email to Applicant on consolidationTask Approved Status
 if (wfTask == consolidationTask && matches(wfStatus, ApprovedStatus)) {
     emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);

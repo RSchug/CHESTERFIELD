@@ -37,6 +37,7 @@ if (currentUserID == "JGUEST") showDebug = true;
 if (currentUserID == "GUESTJ") showDebug = true;
 if (currentUserID == "TRUEPOINT") showDebug = 3;
 if (currentUserID == "RSCHUG") showDebug = true;
+if (currentUserID == "DHOOPS") showDebug = 3;
 
 /*------------------------------------------------------------------------------------------------------/
 | END Custom Parameters
@@ -48,7 +49,8 @@ var inReviewDocStatus = "In Review";
 var interimDocStatus = "Comments Available";
 var reviewCompleteDocStatus = "Review Complete";
 var revisionsRequiredDocStatus = "Revisions Requested";
-var docInternalCategory = "Internal";
+var docInternalCategory = "Final Plans";
+var docCommentCategory = "Comments";
 var approvedDocStatus = "Approved";
 var approvedFinalDocStatus = "Review Complete - Approved";
 var approvedPendingDocStatus = "Approved - Pending";
