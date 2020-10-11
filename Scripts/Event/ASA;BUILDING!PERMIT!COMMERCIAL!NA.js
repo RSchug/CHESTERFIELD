@@ -1,4 +1,5 @@
-if (AInfo["Nature of Work"] == "New Construction"){
+if (!publicUser) {
+    if (AInfo["Nature of Work"] == "New Construction"){
 addFee("NEWCONST","CC-BLD-COMM","FINAL",1,"Y");
 addFee("STATELEVY","CC-BLD-COMM","FINAL",1,"Y")}
 
@@ -63,3 +64,4 @@ addFee("STATELEVY","CC-BLD-COMM","FINAL",1,"Y")}
 if (AInfo["Nature of Work"] == "Flagpole"){
 addFee("FLAGPOLE","CC-BLD-COMM","FINAL",1,"Y");
 addFee("STATELEVY","CC-BLD-COMM","FINAL",1,"Y")}
+}
