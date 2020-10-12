@@ -52,3 +52,4 @@ var tempcertexpdate = "Temporary Certificate Expiration Date";
 var tempcertexpdatenew = jsDateToASIDate(new Date(dateAdd(null, 30)));
 if (wfStatus == 'Temporary Certificate Issued' && appMatch("Building/Permit/Elevator/Renewal")) {
 editAppSpecific(tempcertexpdate,tempcertexpdatenew);
+}
