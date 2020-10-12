@@ -47,3 +47,8 @@ if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
 		assignTask_CHESTERFIELD("Environmental Engineering Review", null, null, null, "EnvEngineering");
 	}
 }
+//Temporary Elevator Renewal Certificate Dates
+var tempcertexpdate = "Temporary Certificate Expiration Date";
+var tempcertexpdatenew = jsDateToASIDate(new Date(dateAdd(null, 30)));
+if (wfStatus == 'Temporary Certificate Issued' && appMatch("Building/Permit/Elevator/Renewal")) {
+editAppSpecific(tempcertexpdate,tempcertexpdatenew);
