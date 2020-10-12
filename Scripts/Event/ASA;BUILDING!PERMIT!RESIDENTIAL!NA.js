@@ -20,20 +20,20 @@ if (AInfo["Nature of Work"] == "Additions and other accessory structures" && !fe
 addFee("ADDITION","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Florida rooms, attached garages, detached garages with occupiable space" && !feeExists("ACCESSORY1")){
-addFee("ACCESSORY1","CC-BLD-RES","FINAL",1,"Y");
+if (AInfo["Nature of Work"] == "Florida rooms, attached garages, detached garages with occupiable space" && !feeExists("ACCESSORY392")){
+addFee("ACCESSORY392","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Detached garages (no second floor occupiable space), double-door car shed, and finished pool house" && !feeExists("ACCESSORY2")){
-addFee("ACCESSORY2","CC-BLD-RES","FINAL",1,"Y");
+if (AInfo["Nature of Work"] == "Detached garages (no second floor occupiable space), double-door car shed, and finished pool house" && !feeExists("ACCESSORY285")){
+addFee("ACCESSORY285","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "Porch and chimney additions" && !feeExists("CHIMNEYPORCH")){
 addFee("CHIMNEYPORCH","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Deck, carport, gazebo, dormers, greenhouse, unheated pool house, retaining wall, boat dock with roof" && !feeExists("ACCESSORY3")){
-addFee("ACCESSORY3","CC-BLD-RES","FINAL",1,"Y");
+if (AInfo["Nature of Work"] == "Deck, carport, gazebo, dormers, greenhouse, unheated pool house, retaining wall, boat dock with roof" && !feeExists("ACCESSORY114")){
+addFee("ACCESSORY114","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "In-ground swimming pool with barrier" && !feeExists("POOLINGROUND")){
@@ -56,12 +56,12 @@ if (AInfo["Nature of Work"] == "Alterations, and converting deck/porch/garage to
 addFee("ALTERATION3","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in change in use of square footage" && !feeExists("ALTERATION1")){
-addFee("ALTERATION1","CC-BLD-RES","FINAL",1,"Y");
+if (AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in change in use of square footage" && !feeExists("ALTERATION171")){
+addFee("ALTERATION171","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
-if (AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in no change in use of square footage" && !feeExists("ALTERATION2")){
-addFee("ALTERATION2","CC-BLD-RES","FINAL",1,"Y");
+if (AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in no change in use of square footage" && !feeExists("ALTERATION114")){
+addFee("ALTERATION114","CC-BLD-RES","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "Fire damage repair permit" && !feeExists("FIREREPAIR")){
