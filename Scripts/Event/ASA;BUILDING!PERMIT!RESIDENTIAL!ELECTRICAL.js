@@ -1,4 +1,5 @@
 //Add Fees//
+if (!publicUser) {
 if (AInfo["Nature of Work"] == "New" && AInfo["Type of Building"] == "Single-Family Dwelling" && !feeExists("NEWSFD")){
 addFee("NEWSFD","CC-BLD-RES-ELEC","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-ELEC","FINAL",1,"Y")}
@@ -30,3 +31,4 @@ updateFee("STATELEVY","CC-BLD-RES-ELEC","FINAL",1,"Y")}
 if (AInfo["Nature of Work"] == "New" && AInfo["Type of Building"] == "Accessory Structure" && !feeExists("ADDITION")){
 addFee("ADDITION","CC-BLD-RES-ELEC","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-ELEC","FINAL",1,"Y")}
+}
