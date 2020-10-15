@@ -1,5 +1,4 @@
 //Add Fees//
-if (!publicUser) {
 if (AInfo["Nature of Work"] == "New Natural Gas" && (AInfo["Type of Building"] != "Multi-Family Dwelling") && !feeExists("NATURAL")){
 addFee("NATURAL","CC-BLD-RES-GAS","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-GAS","FINAL",1,"Y")}
@@ -31,4 +30,3 @@ updateFee("STATELEVY","CC-BLD-RES-GAS","FINAL",1,"Y")}
 if (AInfo["Propane Gas Work"] == "Propane tank and/or product line, and gas piping to appliances" && AInfo["Type of Building"] == "Multi-Family Dwelling" && !feeExists("MULTIPROPANE")){
 addFee("MULTIPROPANE","CC-BLD-RES-GAS","FINAL",houseCount,"Y");
 updateFee("STATELEVY","CC-BLD-RES-GAS","FINAL",1,"Y")}
-}
