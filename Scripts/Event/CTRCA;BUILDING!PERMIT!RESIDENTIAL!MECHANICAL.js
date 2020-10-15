@@ -1,5 +1,4 @@
 //Add Fees//
-if (!publicUser) {
 if (AInfo["Nature of Work"] == "Fuel tank installation and/or removal or replacement" && !feeExists("FUELTANK")){
 addFee("FUELTANK","CC-BLD-RES-MECH","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y")}
@@ -31,4 +30,3 @@ updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y")}
 if (AInfo["Nature of Work"] == "Heating, venting and air conditioning (HVAC)" && AInfo["HVAC Type of Work"] == "New system installation" && AInfo["Type of Building"] == "Multi-Family Dwelling" && !feeExists("MULTIFAMILY")){
 addFee("MULTIFAMILY","CC-BLD-RES-MECH","FINAL",houseCount,"Y");
 updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y")}
-}
