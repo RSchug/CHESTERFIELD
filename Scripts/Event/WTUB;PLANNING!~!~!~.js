@@ -50,6 +50,13 @@ try {
 			cancel = true;
 		}
 	}
+	if (matches(wfTask, 'GIS Update') && matches(wfStatus, 'Complete')) {
+		if (appMatch('*/*/Final Plat/*') && parcelHasCondition_TPS('Final', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Final Plat Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+	}
 	//86P
 	if ((wfTask == 'Sign Posting' && wfStatus == 'Signs Removed') && (!matches(capStatus, 'Final Approval', 'Approved', 'Denied', 'Withdrawn'))) {
 		showMessage = true;

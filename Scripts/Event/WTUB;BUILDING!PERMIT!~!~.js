@@ -37,11 +37,9 @@ try {
 			}
 		}
 		// 07-2020 Boucher 11p For Residential or Commercial here are the Proffer Conditions that need to be met on the Parcel before permit can be issued
-		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))) {
-			logDebug("Checking parcel conditions");
-		}
 		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))  && 
 			(parcelHasCondition_TPS('CDOT', 'Applied') ||
+			parcelHasCondition_TPS('Budget', 'Applied') ||
 			parcelHasCondition_TPS('EE', 'Applied') ||
 			parcelHasCondition_TPS('Fire', 'Applied') ||
 			parcelHasCondition_TPS('Parks and Rec', 'Applied') ||
