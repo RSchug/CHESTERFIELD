@@ -4340,7 +4340,7 @@ function generateSignPostingNumber(fieldName) {
 function generateCommunityCode(ComCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
-    for (var i = 32; i < 1000; i++) {
+    for (var i = 46; i < 1000; i++) {
         var ASIValue1 = '0'+i;
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, ASIValue1);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
@@ -4356,13 +4356,13 @@ function generateCommunityCode(ComCodeName) {
         }
         if (ASIValue1 != null) break
     }
-    return parseInt(ASIValue1);
+    return i;
 }
 function generateSubdivCode(SubCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
     for (var i = 8290; i < 100000; i++) {
-        var ASIValue2 = i + "";
+        var ASIValue2 = '0'+i;
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SubCodeName, parseInt(ASIValue2));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
@@ -4377,14 +4377,14 @@ function generateSubdivCode(SubCodeName) {
         }
         if (ASIValue2 != null) break
     }
-    return ASIValue2;
+    return i;
 }
 function generateDevCode(DevCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
     for (var i = 10; i < 100000; i++) {
-        var ASIValue3 = i + "";
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, parseInt(ASIValue3));
+        var ASIValue3 = '000'+i;
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, ASIValue3);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {
@@ -4398,14 +4398,14 @@ function generateDevCode(DevCodeName) {
         }
         if (ASIValue3 != null) break
     }
-    return ASIValue3;
+    return i;
 }
 function generateSecCode(SecCodeName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
 
     for (var i = 10; i < 10000; i++) {
-        var ASIValue4 = i + "";
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SecCodeName, parseInt(ASIValue4));
+        var ASIValue4 = '00'+i;
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SecCodeName, ASIValue4);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {
@@ -4419,7 +4419,7 @@ function generateSecCode(SecCodeName) {
         }
         if (ASIValue4 != null) break
     }
-    return ASIValue4;
+    return i;
 }
 
 // FA this method returns all the related caps for given cap, it excludes the given cap in the array
