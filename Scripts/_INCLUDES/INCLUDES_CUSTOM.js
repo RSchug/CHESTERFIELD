@@ -6679,7 +6679,10 @@ function performCISLookup() {
             var stName = addressToUse.getStreetName();
             var stType = addressToUse.getStreetSuffix();
             var stNbr = addressToUse.getHouseNumberStart();
-            var postresp = aa.util.httpPost( dataServiceURL.replace("$$DATA$$", stName+"|"+stType+"|"+stNbr), "PARAMETERSINURL");
+            stName = String(stName).replace(/ /g, "%20");
+	        stName = String(stName).replace(/,/g, "%2C");
+	        var qString = stName+"|"+stType+"|"+stNbr;
+            var postresp = aa.util.httpPost( dataServiceURL.replace("$$DATA$$",qString), "PARAMETERSINURL");
             if (postresp.getSuccess()) {
                var tmpResp = postresp.getOutput();
                logDebug("Response: " + tmpResp);    
