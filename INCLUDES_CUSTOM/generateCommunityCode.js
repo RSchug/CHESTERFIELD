@@ -3,7 +3,7 @@ function generateCommunityCode(ComCodeName) {
 
     for (var i = 32; i < 1000; i++) {
         var ASIValue1 = '0'+i;
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, ASIValue1);
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, parseInt(ASIValue1));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {

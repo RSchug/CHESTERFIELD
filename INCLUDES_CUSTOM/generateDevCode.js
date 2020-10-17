@@ -3,7 +3,7 @@ function generateDevCode(DevCodeName) {
 
     for (var i = 10; i < 100000; i++) {
         var ASIValue3 = '000'+i;
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, ASIValue3);
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, parseInt(ASIValue3));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {

@@ -4342,7 +4342,7 @@ function generateCommunityCode(ComCodeName) {
 
     for (var i = 32; i < 1000; i++) {
         var ASIValue1 = i + "";
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, ASIValue1);
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(ComCodeName, parseInt(ASIValue1));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {
@@ -4363,7 +4363,7 @@ function generateSubdivCode(SubCodeName) {
 
     for (var i = 8290; i < 100000; i++) {
         var ASIValue2 = i + "";
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SubCodeName, ASIValue2);
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(SubCodeName, parseInt(ASIValue2));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {
@@ -4384,7 +4384,7 @@ function generateDevCode(DevCodeName) {
 
     for (var i = 10; i < 100000; i++) {
         var ASIValue3 = i + "";
-        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, ASIValue3);
+        var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(DevCodeName, parseInt(ASIValue3));
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
         for (aps in apsArray) {
