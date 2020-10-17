@@ -442,7 +442,9 @@ try {
 					else if (AInfo[ComCodeName] < 1000) {
 						AInfo[ComCodeName] = AInfo[ComCodeName];
 					}
-					else {AInfo[ComCodeName] = 'Incorrect Code Value';}
+					else if (AInfo[ComCodeName] < 1000) {
+						AInfo[ComCodeName] = 'Incorrect Code Value';
+					}
 					logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
 					editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
 				}
@@ -476,7 +478,9 @@ try {
 					else if (AInfo[SubCodeName] < 100000) {
 						AInfo[SubCodeName] = AInfo[SubCodeName];
 					}
-					else {AInfo[SubCodeName] = 'Incorrect Code Value';}
+					else if (AInfo[SubCodeName] > 100000) {
+						AInfo[SubCodeName] = 'Incorrect Code Value';
+					}
 					logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
 					editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
 				}
@@ -510,7 +514,9 @@ try {
 					else if (AInfo[DevCodeName] < 100000) {
 						AInfo[DevCodeName] = AInfo[DevCodeName];
 					}
-					else {AInfo[DevCodeName] = 'Incorrect Code Value';}
+					else if (AInfo[DevCodeName] > 100000) {
+						AInfo[DevCodeName] = 'Incorrect Code Value';
+					}
 					logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
 					editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
 				}
@@ -541,7 +547,9 @@ try {
 					else if (AInfo[SecCodeName] < 10000) {
 						AInfo[SecCodeName] = AInfo[SecCodeName];
 					}
-					else {AInfo[SecCodeName] = 'Incorrect Code Vaule';}
+					else if (AInfo[SecCodeName] > 10000) {
+						AInfo[SecCodeName] = 'Incorrect Code Vaule';
+					}
 					logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
 					editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
 				}
