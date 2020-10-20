@@ -365,29 +365,31 @@ function load_lp_contacts(targetCapId) {
     }
 
     try {
-        logDebug("===== 1st copying ===== from " + srcCapId + " to " + targetCapId);
+        logDebug("===== copying ===== from " + srcCapId + " to " + targetCapId);
         //2. Remove license professionals were sequence #, type or number matches what was given.
-        //removeLicenseProfessionals(targetCapId)
-
-        //copyApplicationName(srcCapId, targetCapId);
+        //removeLicenseProfessionals(targetCapId);
+		//copy App Name (Project Name)
+		copyApplicationName(srcCapId, targetCapId);
+		//copy AST information
+        copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
-        //copyAppSpecificInfo(srcCapId, targetCapId);
+        copyAppSpecificInfo(srcCapId, targetCapId);
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        copyAddress(srcCapId, targetCapId);
+        //copyAddress(srcCapId, targetCapId);
         //copy AST information
         //copyAppSpecificTable(srcCapId, targetCapId);
         //copy Parcel information
-        copyParcel(srcCapId, targetCapId);
+        //copyParcel(srcCapId, targetCapId);
         //copy People information
         copyPeople(srcCapId, targetCapId);
         //copy Owner information
-        copyOwner(srcCapId, targetCapId);
+        //copyOwner(srcCapId, targetCapId);
         //Copy CAP condition information
         //copyCapCondition(srcCapId, targetCapId);
         //Copy additional info.
-        //copyAdditionalInfo(srcCapId, targetCapId);
+        copyAdditionalInfo(srcCapId, targetCapId);
         //Copy Education information.
         // copyEducation(srcCapId, targetCapId);
         //Copy Continuing Education information.
