@@ -256,7 +256,7 @@ if (capModel != null) {
 /-----------------------------------------------------------------------------------------------------*/
 // page flow custom code begin
 try {
-    //	showMessage = false; showDebug = false;
+    	showMessage = false; showDebug = false;
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
         logDebug("===== capModel ===== ");
         logCapModel(capModel);
@@ -365,7 +365,7 @@ function load_lp_contacts(targetCapId) {
     }
 
     try {
-        logDebug("===== copying LP & Contacts ===== from " + srcCapId + " to " + targetCapId);
+        logDebug("===== 1st copying ===== from " + srcCapId + " to " + targetCapId);
         //2. Remove license professionals were sequence #, type or number matches what was given.
         //removeLicenseProfessionals(targetCapId)
 
@@ -375,11 +375,11 @@ function load_lp_contacts(targetCapId) {
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        copyAddress(srcCapId, targetCapId);
+        //copyAddress(srcCapId, targetCapId);
         //copy AST information
         //copyAppSpecificTable(srcCapId, targetCapId);
         //copy Parcel information
-        copyParcel(srcCapId, targetCapId);
+        //copyParcel(srcCapId, targetCapId);
         //copy People information
         //copyPeople(srcCapId, targetCapId, ["Applicant", "Site Contact"]);
         //copy Owner information
