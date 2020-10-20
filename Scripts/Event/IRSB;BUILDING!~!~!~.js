@@ -23,3 +23,11 @@
 //} catch (err) {
 //	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 //}
+if (appMatch("Building/Permit/Residential/NA")){
+    if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
+        if (inspType.equals("Foundation") && inspResult.equals("Approved")){
+                checkInspectionResult("E and SC","Approved"){
+                showMessage = false;
+			    comment('<font size=small><b> E and SC Inspection is not Approved.</b></font>');
+			    cancel = false;
+}}}}
