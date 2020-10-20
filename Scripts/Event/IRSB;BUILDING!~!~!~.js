@@ -27,7 +27,7 @@ if (appMatch("Building/Permit/Residential/NA")){
     if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
         if (inspType.equals("Foundation") && inspResult.equals("Approved")){
                 checkInspectionResult("E and SC","Approved");
-                showMessage = false;
+                showMessage = true;
 			    comment('<font size=small><b> E and SC Inspection is not Approved.</b></font>');
-			    cancel = false;
+			    cancel = true;
 }}}
