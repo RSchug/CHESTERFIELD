@@ -369,7 +369,7 @@ function load_lp_contacts(targetCapId) {
         //2. Remove license professionals were sequence #, type or number matches what was given.
         //removeLicenseProfessionals(targetCapId);
 		//copy App Name (Project Name)
-		copyApplicationName(srcCapId, targetCapId);
+		//copyApplicationName(srcCapId, targetCapId);
 		//copy AST information
         copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
