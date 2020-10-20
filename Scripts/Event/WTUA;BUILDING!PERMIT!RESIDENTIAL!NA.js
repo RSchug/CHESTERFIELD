@@ -67,3 +67,14 @@ if (wfStatus == 'Amendment Submitted') {
     }
     addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 }
+///New EE script
+if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
+    if (wfStatus == 'Issued'){
+//Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
+var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
+//var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
+var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
+var InspAssignment = null;
+    if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
+    scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled");
+}}
