@@ -375,11 +375,11 @@ function load_lp_contacts(targetCapId) {
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        //copyAddress(srcCapId, targetCapId);
+        copyAddress(srcCapId, targetCapId);
         //copy AST information
         //copyAppSpecificTable(srcCapId, targetCapId);
         //copy Parcel information
-        //copyParcel(srcCapId, targetCapId);
+        copyParcel(srcCapId, targetCapId);
         //copy People information
         //copyPeople(srcCapId, targetCapId, ["Applicant", "Site Contact"]);
         //copy Owner information
@@ -527,10 +527,8 @@ function logCapModel(p_CapModel) {
 }
 
 function loadAppSpecific4CapModel(thisArr) {
-    //
     // Returns an associative array of App Specific Info
     // Optional second parameter, capModel to load from
-    //
 
     var itemCap = capId;
     var p_CapModel = cap;
