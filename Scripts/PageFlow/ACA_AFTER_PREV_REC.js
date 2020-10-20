@@ -381,7 +381,7 @@ function load_lp_contacts(targetCapId) {
         //copy Parcel information
         copyParcel(srcCapId, targetCapId);
         //copy People information
-        //copyPeople(srcCapId, targetCapId, ["Applicant", "Site Contact"]);
+        copyPeople(srcCapId, targetCapId);
         //copy Owner information
         copyOwner(srcCapId, targetCapId);
         //Copy CAP condition information
