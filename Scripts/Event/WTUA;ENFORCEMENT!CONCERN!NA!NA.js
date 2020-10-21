@@ -8,8 +8,8 @@
 */
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
     deactivateTask("Community Enhancement");
-    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
-    logDebug("Violations: " + checkedItems);
+    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]); //Add "TRANSPORTATION CONCERNS"
+    logDebug("Violations: " + checkedItems);    
     newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     if (newChildID) {
         var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
@@ -20,7 +20,7 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
 
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') {
     deactivateTask("Community Enhancement");
-    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
+    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]); //Add "TRANSPORTATION CONCERNS"
     logDebug("Violations: " + checkedItems);
     newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
     if (newChildID) {
@@ -38,7 +38,7 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') {
 
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and ZC') {
     deactivateTask("Community Enhancement");
-    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
+    var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]); //Add "TRANSPORTATION CONCERNS"
     logDebug("Violations: " + checkedItems);
     newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     if (newChildID) {
