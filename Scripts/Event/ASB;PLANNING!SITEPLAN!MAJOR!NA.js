@@ -19,6 +19,15 @@ try {
 			if (!rParcelID) continue;
 		}	
 	}
+	// Send Debug Email
+	debugEmailSubject = "";
+	debugEmailSubject += (capIDString ? capIDString + " " : "") + vScriptName + " - Debug";
+	if (exists(publicUserEmail, ["dboucher@truepointsolutions.com",""]))
+		debugEmailTo = "dboucher@truepointsolutions.com";
+	else if (exists(publicUserEmail, ["dboucher@truepointsolutions.com",""]))
+		debugEmailTo = publicUserEmail;
+	if (debugEmailTo && debugEmailTo != "")
+		aa.sendMail("NoReply_Accela@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
