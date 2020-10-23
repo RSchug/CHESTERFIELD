@@ -249,7 +249,7 @@ if (capModel != null) {
     if (parentCapId)
         logDebug("parentCapId = " + parentCapId.getCustomID());
 
-    logGlobals(AInfo);
+    //logGlobals(AInfo);
 }
 /*------------------------------------------------------------------------------------------------------/
 | <===========Main=Loop================>
@@ -258,7 +258,7 @@ if (capModel != null) {
 try {
     	showMessage = false; showDebug = false;
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
-        logDebug("===== capModel ===== ");
+        logDebug("===== capModel =====");
         logCapModel(capModel);
         load_lp_contacts(capId);
     }
@@ -369,7 +369,7 @@ function load_lp_contacts(targetCapId) {
         //2. Remove license professionals were sequence #, type or number matches what was given.
         //removeLicenseProfessionals(targetCapId);
 		//copy App Name (Project Name)
-		//copyApplicationName(srcCapId, targetCapId);
+		copyApplicationName(srcCapId, targetCapId);
 		//copy AST information
         copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
@@ -378,8 +378,6 @@ function load_lp_contacts(targetCapId) {
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
         //copyAddress(srcCapId, targetCapId);
-        //copy AST information
-        //copyAppSpecificTable(srcCapId, targetCapId);
         //copy Parcel information
         //copyParcel(srcCapId, targetCapId);
         //copy People information
@@ -687,6 +685,26 @@ function copyExamination(srcCapId, targetCapId) {
     if (srcCapId != null && targetCapId != null) {
         aa.examination.copyExaminationList(srcCapId, targetCapId);
     }
+}
+
+function copyApplicationName(srcCapId, targetCapId)
+{
+	//1. Get CapModel with source CAPID.
+	var srcCapModel = getCapModel(srcCapId, true);
+	if (srcCapModel == null)
+	{
+		return;
+	}
+	//2. Get CapModel with target CAPID.
+	var targetCapModel = getCapModel(targetCapId, true);
+	if (targetCapModel == null)
+	{
+		return;
+	}
+	//3. Copy application name from source to target.
+	var srcCapName = srcCapModel.getSpecialText();
+	targetCapModel.setSpecialText(srcCapName);
+	aa.cap.editCapByPK(targetCapModel);
 }
 
 function copyAppSpecificInfo(srcCapId, targetCapId) {
