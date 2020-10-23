@@ -710,9 +710,8 @@ function copyApplicationName(srcCapId, targetCapId)
 function copyAppSpecificInfo(srcCapId, targetCapId) {
     //1. Get Application Specific Information with source CAPID.
     var appSpecificInfo = getAppSpecificInfo(srcCapId);
-    if (appSpecificInfo == null || appSpecificInfo.length == 0) {
-        return;
-    }
+    //if (appSpecificInfo == null || appSpecificInfo.length == 0) {
+    //    return;   }
     //2. Set target CAPID to source Specific Information.
     for (loopk in appSpecificInfo) {
         var sourceAppSpecificInfoModel = appSpecificInfo[loopk];
