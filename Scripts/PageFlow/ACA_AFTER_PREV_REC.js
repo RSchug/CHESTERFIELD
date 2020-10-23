@@ -1,13 +1,13 @@
 /*------------------------------------------------------------------------------------------------------/
-| Program : ACA_Onload_ASI_APO.js
-| Event   : ASI on  1st Pageflow
+| Program : ACA_AFTER_PREV_REC.js
+| Event   : 1st Pageflow
 |
 | Usage   : Master Script by Accela.  See accompanying documentation and release notes.
 |
 | Client  : N/A
 | Action# : N/A
 |
-| Notes   : M Becker 12/06/2018 - Created this onload to load existing LP, Applicant, and Site Contact so they do not have to reenter if existing.
+| Notes   : D Boucher updated for Chesterfield
 |
 /------------------------------------------------------------------------------------------------------*/
 
