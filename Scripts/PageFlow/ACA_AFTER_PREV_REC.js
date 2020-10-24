@@ -313,10 +313,8 @@ function load_lp_contacts(targetCapId) {
         end();
         return;
     }
-
-    // Get list of valid LP Types depending on Record Type.
-    // Get permit associated with the record so contacts and lp can be loaded
-    var parentCapIdField = "Case Number", //" " - if you use the code below for different record types
+    // Get Previous record info to copy to application online
+    var parentCapIdField = ["Case Number","Zoning Opinion Number"] //  if you use the code below for different record types
     parentCapIdString = null,
     parentCapId = null;
     /*if (appMatch_local("Development/Building/Pay for Approved/General Construction", targetCapId)) {
@@ -373,21 +371,21 @@ function load_lp_contacts(targetCapId) {
 		//copy AST information
         copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
-        copyAppSpecificInfo(srcCapId, targetCapId);
+        //copyAppSpecificInfo(srcCapId, targetCapId);
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        //copyAddress(srcCapId, targetCapId);
+        copyAddress(srcCapId, targetCapId);
         //copy Parcel information
-        //copyParcel(srcCapId, targetCapId);
+        copyParcel(srcCapId, targetCapId);
         //copy People information
         copyPeople(srcCapId, targetCapId);
         //copy Owner information
-        //copyOwner(srcCapId, targetCapId);
+        copyOwner(srcCapId, targetCapId);
         //Copy CAP condition information
         //copyCapCondition(srcCapId, targetCapId);
         //Copy additional info.
-        copyAdditionalInfo(srcCapId, targetCapId);
+        //copyAdditionalInfo(srcCapId, targetCapId);
         //Copy Education information.
         // copyEducation(srcCapId, targetCapId);
         //Copy Continuing Education information.
