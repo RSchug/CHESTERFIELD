@@ -314,19 +314,25 @@ function load_lp_contacts(targetCapId) {
         return;
     }
     // Get Previous record info to copy to application online
-    var parentCapIdField = "Zoning Opinion Number"; //  if you use the code below for different record types
+    var parentCapIdField = "";
     parentCapIdString = null;
     parentCapId = null;
-    /*if (appMatch_local("Development/Building/Pay for Approved/General Construction", targetCapId)) {
+    if (appMatch_local("*/LandUse/*/*", targetCapId)) {
+        parentCapIdField = "Zoning Opinion Number";
+    } else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
         parentCapIdField = "Case Number";
-    } else if (appMatch_local("Development/Building/Pay for Approved/Sub-Permit", targetCapId)) {
-        parentCapIdField = "Sub-Permit #";
+    } else if (appMatch_local("*/Subdivision/*/*", targetCapId)){
+        if (AInfo["Inquiry Case Number"] != null) {
+            parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
+
     } else {
-        // var parentCapId = getParent(targetCapId);
-        parentCapId = capModel.getParentCapID();
-        if (parentCapId)
-            parentCapIdString = parentCapId.getCustomID();
-    } */
+		showMessage = true;
+		comment('You need a previous record in order to proceed.');
+		cancel = true;
+	}
 
 	//logGlobals(AInfo);
 	parentCapIdString = AInfo[parentCapIdField];
@@ -371,7 +377,7 @@ function load_lp_contacts(targetCapId) {
 		//copy AST information
         copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
-        //copyAppSpecificInfo(srcCapId, targetCapId);
+        copyAppSpecificInfo(srcCapId, targetCapId);
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
