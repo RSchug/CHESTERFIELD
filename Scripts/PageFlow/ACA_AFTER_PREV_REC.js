@@ -334,7 +334,7 @@ function load_lp_contacts(targetCapId) {
 		cancel = true;
 	}
 
-	//logGlobals(AInfo);
+	logGlobals(AInfo);
 	parentCapIdString = AInfo[parentCapIdField];
 	logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
