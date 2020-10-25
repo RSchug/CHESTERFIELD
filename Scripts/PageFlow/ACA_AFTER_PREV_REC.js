@@ -314,7 +314,7 @@ function load_lp_contacts(targetCapId) {
         return;
     }
     // Get Previous record info to copy to application online
-    var parentCapIdField = ["Case Number","Zoning Opinion Number"]; //  if you use the code below for different record types
+    var parentCapIdField = "Zoning Opinion Number"; //  if you use the code below for different record types
     parentCapIdString = null;
     parentCapId = null;
     /*if (appMatch_local("Development/Building/Pay for Approved/General Construction", targetCapId)) {
