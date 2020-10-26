@@ -30,10 +30,10 @@ try {
 		deactivateTask("Default");
 	}
 	if (wfTask == 'Review Distribution' && (wfStatus == 'Routed for Residential and Commercial' || wfStatus == 'Routed for Residential Review')) {
-		activateTask("Budget Review");
+		activateTask("Budget and Management Review");
 		activateTask("CDOT Review");
 		activateTask("Community Enhancement Review");
-		activateTask("Department of Health Review");
+		activateTask("Health Department Review");
 		activateTask("Environmental Engineering Review");
 		activateTask("Fire and Life Safety Review");
 		activateTask("County Library Review");
@@ -41,10 +41,10 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
-		activateTask("School Research and Planning Review");
+		activateTask("Schools Research and Planning Review");
 		activateTask("Technical Review Committee");
 		if (wfStatus == 'Routed for Residential and Commercial') {
-			activateTask("General Services");
+			activateTask("General Services Review");
 		}
 		deactivateTask("Default");
 	}
@@ -57,8 +57,8 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
-		activateTask("General Services");
-		activateTask("Radio Shop");
+		activateTask("General Services Review");
+		activateTask("Radio Shop Review");
 		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}

@@ -9,8 +9,8 @@ try {
 		editTaskDueDate('Environmental Engineering Review', dateAdd(getTaskDueDate('Review Distribution'),13));
 		activateTask("Fire and Life Safety Review");
 		editTaskDueDate('Fire and Life Safety Review', dateAdd(getTaskDueDate('Review Distribution'),13));
-		activateTask("Department of Health Review");
-		editTaskDueDate('Department of Health Review', dateAdd(getTaskDueDate('Review Distribution'),13));
+		activateTask("Health Department Review");
+		editTaskDueDate('Health Department Review', dateAdd(getTaskDueDate('Review Distribution'),13));
 		activateTask("Planning Review");
 		editTaskDueDate('Planning Review', dateAdd(getTaskDueDate('Review Distribution'),13));
 		activateTask("Utilities Review");
