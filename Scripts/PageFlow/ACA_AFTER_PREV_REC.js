@@ -919,17 +919,14 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
         var targetAppSpecificTable = getAppSpecificTable(srcCapId, tableName);
 
         //2. Edit AppSpecificTableInfos with target CAPID
-        var aSTableModel = null;
+        /*var aSTableModel = null;
         if (targetAppSpecificTable == null) {
             return;
-        } else {
-            aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
-        }
-        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,
-            targetCapId,
-            null);
+        } else {*/
+        var aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
+        //}
+        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,targetCapId,null);
     }
-
 }
 
 function getTableName(capId) {
