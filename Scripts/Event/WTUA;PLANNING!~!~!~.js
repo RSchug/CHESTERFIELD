@@ -600,6 +600,8 @@ try {
 			editAppSpecific(fieldName, "Removed " + AInfo[fieldName]);
 		}
 	}
+//for all DigEplan processing
+	loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
