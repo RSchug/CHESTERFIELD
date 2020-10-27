@@ -52,3 +52,7 @@ try {
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
+//Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
+    if (publicUser && matches(appTypeString,'Building/*/*/*')) {
+		addAdHocTask("ADHOC_WF","Document Submitted Online","");
+    }
