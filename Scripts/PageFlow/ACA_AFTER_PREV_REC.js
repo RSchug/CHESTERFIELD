@@ -320,7 +320,13 @@ function load_lp_contacts(targetCapId) {
     if (appMatch_local("*/LandUse/*/*", targetCapId)) {
         parentCapIdField = "Zoning Opinion Number";
     } else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
-        parentCapIdField = "Case Number";
+        if (AInfo["Case Number"] != null) {
+			parentCapIdField = "Case Number";
+		} else if (AInfo["Inquiry Case Number"] != null) {
+            parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
     } else if (appMatch_local("*/Subdivision/*/*", targetCapId)){
         if (AInfo["Inquiry Case Number"] != null) {
             parentCapIdField = "Inquiry Case Number";
