@@ -4,7 +4,7 @@ try {
 	if (matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review','Routed for Commercial Review','Routed for Residential Review','Routed for Residential and Commercial','Routed for Towers Review','Manual Routing')) {
 		if ((appMatch('*/Subdivision/*/*') || appMatch('*/SitePlan/*/*')) && !appMatch('*/*/Minor/*') &&  !appMatch('*/*/Final Plat/*') && !appMatch('*/*/ParcelAcreage/*')) {
 			var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
+			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 			for (var ind in taskAuditArray) {
 				var wfaTask = taskAuditArray[ind];
 				for (var i in workflowTasks) {
@@ -192,7 +192,7 @@ try {
 //09-2020 Boucher per ELM Planning DueDates for any record with TRC - No due dates are updated for Staff and Developer Meeting
 	if (matches(wfTask,'Technical Review Committee','Pre-Applicaiton Meeting','Staff and Developer Meeting') && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Department of Health Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','School Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
 			var wfaTask = taskAuditArray[ind];
 			for (var i in workflowTasks) {
@@ -600,6 +600,8 @@ try {
 			editAppSpecific(fieldName, "Removed " + AInfo[fieldName]);
 		}
 	}
+//for all DigEplan processing
+	loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

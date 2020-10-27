@@ -7,7 +7,7 @@ try {
 		activateTask("Environmental Engineering Review");
 		activateTask("Economic Development Review");
 		activateTask("Fire and Life Safety Review");
-		activateTask("Department of Health Review");
+		activateTask("Health Department Review");
 		activateTask("Parks and Recreation Review");
 		activateTask("Planning Review");
 		activateTask("Police Review");

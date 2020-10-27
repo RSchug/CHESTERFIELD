@@ -313,22 +313,32 @@ function load_lp_contacts(targetCapId) {
         end();
         return;
     }
-
-    // Get list of valid LP Types depending on Record Type.
-    // Get permit associated with the record so contacts and lp can be loaded
-    var parentCapIdField = "Case Number", //" " - if you use the code below for different record types
-    parentCapIdString = null,
+    // Get Previous record info to copy to application online
+    var parentCapIdField = "";
+    parentCapIdString = null;
     parentCapId = null;
-    /*if (appMatch_local("Development/Building/Pay for Approved/General Construction", targetCapId)) {
-        parentCapIdField = "Case Number";
-    } else if (appMatch_local("Development/Building/Pay for Approved/Sub-Permit", targetCapId)) {
-        parentCapIdField = "Sub-Permit #";
+    if (appMatch_local("*/LandUse/*/*", targetCapId)) {
+        parentCapIdField = "Zoning Opinion Number";
+    } else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
+        if (AInfo["Case Number"] != null) {
+			parentCapIdField = "Case Number";
+		} else if (AInfo["Inquiry Case Number"] != null) {
+            parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
+    } else if (appMatch_local("*/Subdivision/*/*", targetCapId)){
+        if (AInfo["Inquiry Case Number"] != null) {
+            parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
+
     } else {
-        // var parentCapId = getParent(targetCapId);
-        parentCapId = capModel.getParentCapID();
-        if (parentCapId)
-            parentCapIdString = parentCapId.getCustomID();
-    } */
+		showMessage = true;
+		comment('You need a previous record in order to proceed.');
+		cancel = true;
+	}
 
 	logGlobals(AInfo);
 	parentCapIdString = AInfo[parentCapIdField];
@@ -377,17 +387,17 @@ function load_lp_contacts(targetCapId) {
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        //copyAddress(srcCapId, targetCapId);
+        copyAddress(srcCapId, targetCapId);
         //copy Parcel information
-        //copyParcel(srcCapId, targetCapId);
+        copyParcel(srcCapId, targetCapId);
         //copy People information
         copyPeople(srcCapId, targetCapId);
         //copy Owner information
-        //copyOwner(srcCapId, targetCapId);
+        copyOwner(srcCapId, targetCapId);
         //Copy CAP condition information
         //copyCapCondition(srcCapId, targetCapId);
         //Copy additional info.
-        copyAdditionalInfo(srcCapId, targetCapId);
+        //copyAdditionalInfo(srcCapId, targetCapId);
         //Copy Education information.
         // copyEducation(srcCapId, targetCapId);
         //Copy Continuing Education information.
@@ -915,17 +925,14 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
         var targetAppSpecificTable = getAppSpecificTable(srcCapId, tableName);
 
         //2. Edit AppSpecificTableInfos with target CAPID
-        var aSTableModel = null;
+        /*var aSTableModel = null;
         if (targetAppSpecificTable == null) {
             return;
-        } else {
-            aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
-        }
-        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,
-            targetCapId,
-            null);
+        } else {*/
+        var aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
+        //}
+        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,targetCapId,null);
     }
-
 }
 
 function getTableName(capId) {
