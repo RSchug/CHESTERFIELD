@@ -53,8 +53,8 @@ if (inspType.equals("Framing") && inspResult.equals("Approved")) {
 if (inspType.equals("E and SC") && inspResult.equals("Extended")) {
 	scheduleInspection("E and SC", 2, InspAssignment, null, "Auto Scheduled from E and SC Status of Extended");
 }
-//If Inspection Result is 'Not Approved' or "Rain Not Approved" and Inspection Type is 'E and SC' then create an ESC Notice to Comply child record AND schedule a Follow-up inspection on the ESC Notice to Comply child record with a scheduled date 2 days from system date.
-if (inspType.equals("E and SC")) {
+//If Inspection Result is 'Corrections Required' and Inspection Type is 'E and SC' then create an ESC Notice to Comply child record AND schedule a Follow-up inspection on the ESC Notice to Comply child record with a scheduled date 2 days from system date.
+if (inspType.equals("E and SC") && inspResult.equals("Corrections Required")) {
 	var newCapId = createChild("EnvEngineering", "ESC Notice to Comply", "NA", "NA", "");
 	var sCapId = capId; // save current capId
 	capId = newCapId; // use child capId
