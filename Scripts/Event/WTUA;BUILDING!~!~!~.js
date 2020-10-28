@@ -8,17 +8,17 @@
 	loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 //Adhoc task updated to Amendment then update Status 'Amendment Submitted' on Inspections, Certificate Issuance or Certificate of Occupancy
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-	if (isTaskActive('Inspections'){
+	if (isTaskActive('Inspections')){
 		updateTask("Inspections", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
 	}
 }
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-	if (isTaskActive('Certificate Issuance'){
+	if (isTaskActive('Certificate Issuance')){
 		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
 	}
 }
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-	if (isTaskActive('Certificate of Occupancy'){
+	if (isTaskActive('Certificate of Occupancy')){
 		updateTask("Certificate of Occupancy", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
 	}
 }
