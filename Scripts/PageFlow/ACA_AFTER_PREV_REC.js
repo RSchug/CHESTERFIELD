@@ -260,7 +260,10 @@ try {
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
         logDebug("===== capModel =====");
         logCapModel(capModel);
-        load_lp_contacts(capId);
+		if (appMatch_local("*/LandUse/*/*", targetCapId) || ((appMatch_local("*/SitePlan/*/*", targetCapId) || appMatch_local("*/Subdivision/*/*", targetCapId)) 
+			&& AInfo["Is there a Previous Inquiry Case?"] == "CHECKED")) {
+			load_lp_contacts(capId);
+		}
     }
 } catch (err) {
     handleError(err, "Page Flow Script: " + vScriptName);
@@ -383,17 +386,17 @@ function load_lp_contacts(targetCapId) {
 		//copy AST information
         copyAppSpecificTable(srcCapId, targetCapId);
         //copy ASI information
-        copyAppSpecificInfo(srcCapId, targetCapId);
+        //copyAppSpecificInfo(srcCapId, targetCapId);
         //copy License information
         //copyLicenseProfessional(srcCapId, targetCapId);
         //copy Address information
-        copyAddress(srcCapId, targetCapId);
+        //copyAddress(srcCapId, targetCapId);
         //copy Parcel information
-        copyParcel(srcCapId, targetCapId);
+        //copyParcel(srcCapId, targetCapId);
         //copy People information
         copyPeople(srcCapId, targetCapId);
         //copy Owner information
-        copyOwner(srcCapId, targetCapId);
+        //copyOwner(srcCapId, targetCapId);
         //Copy CAP condition information
         //copyCapCondition(srcCapId, targetCapId);
         //Copy additional info.
@@ -475,14 +478,10 @@ function load_lp_contacts(targetCapId) {
                     " License: #" + capLicProfModel.getLicSeqNbr() + " " + capLicProfModel.getLicenseType() + " " + capLicProfModel.getLicenseNbr() +
                     (capLicProfModel.getBusinessName() ? ", Business: " + capLicProfModel.getBusinessName() : "") +
                     (capLicProfModel.getFullName() ? ", Name: " + capLicProfModel.getFullName() : "") +
-                    (capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") +
-                    ", component: " + capLicProfModel.getComponentName());
-
+                    (capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") + ", component: " + capLicProfModel.getComponentName());
                 //logDebug("capLicProfModel[" + i + "]: " + capLicProfModel + br + describe_TPS(capLicProfModel, "function", /(^get.*$)/, true));
-
             }
         }
-
         logDebug("===== amendCapModel ===== ");
         logCapModel(amendCapModel);
 
@@ -931,7 +930,7 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
         } else {*/
         var aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
         //}
-        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,targetCapId,null);
+        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,srcCapId,null);
     }
 }
 
