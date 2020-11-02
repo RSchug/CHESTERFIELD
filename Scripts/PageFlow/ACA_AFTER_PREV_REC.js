@@ -260,7 +260,10 @@ try {
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
         logDebug("===== capModel =====");
         logCapModel(capModel);
-        load_lp_contacts(capId);
+		if (appMatch_local("*/LandUse/*/*", targetCapId) || ((appMatch_local("*/SitePlan/*/*", targetCapId) || appMatch_local("*/Subdivision/*/*", targetCapId)) 
+			&& AInfo["Is there a Previous Inquiry Case?"] == "CHECKED")) {
+			load_lp_contacts(capId);
+		}
     }
 } catch (err) {
     handleError(err, "Page Flow Script: " + vScriptName);
