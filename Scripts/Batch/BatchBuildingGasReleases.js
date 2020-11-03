@@ -5,7 +5,7 @@ var paramsStartDt = dateAdd(null,0);                                            
 var paramsEndDt = dateAdd(null,0); 
 var fromAddress = "noreply@accela.com";
 var toAddress = "mbouquin@truepointsolutions.com";
-//var ccAddress = "khobday@truepointsolutions.com";
+var ccAddress = "mbouquin@truepointsolutions.com";
 var reportSubject = "SUPP Daily Gas Releases report for " + paramsStartDt;
 var reportContent = "Daily Gas Releases report for " + paramsStartDt;
 var aaReportName = "Gas Releases";
@@ -22,11 +22,11 @@ var myHashMap = aa.util.newHashMap();
 //myHashMap.put("EndDate","08/10/2014");
 myHashMap.put("StartDate",paramsStartDt);
 myHashMap.put("EndDate",paramsEndDt);
-myHashMap.put("RecordID","ALL");
+//myHashMap.put("RecordID","ALL");
 //var filename = runReport();
 aa.print("EMSE report test");
 sendEmailwAttchmnt(fromAddress,toAddress,ccAddress,reportSubject,reportContent,aaReportName,myHashMap);
-function sendEmailwAttchmnt(fromAddress,toAddress,reportSubject,reportContent,aaReportName,parameters)
+function sendEmailwAttchmnt(fromAddress,toAddress,ccAddress,reportSubject,reportContent,aaReportName,parameters)
 {
 	var reportName = aaReportName;
 	report = aa.reportManager.getReportInfoModelByName(reportName);
