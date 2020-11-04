@@ -1,6 +1,8 @@
 //Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
 if (publicUser) {
     addAdHocTask("ADHOC_WF","Document Submitted Online Utilities","");
+    var adHocTaskAssignID = null;
+    assignTask(adHocTask,adHocTaskAssignID);
     }
     function addAdHocTask(adHocProcess, adHocTask, adHocNote)
     {
