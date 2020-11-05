@@ -1,3 +1,4 @@
+try {
 // set the Permit Expiration Date to 180 days from Application Date.
 logDebug("fileDate: " + new Date(fileDate));
 var expField = "Permit Expiration Date";
@@ -16,12 +17,17 @@ createLP(lpId, lpType, capId, lpBoard, lpExpirDate, lpFirstName, null, lpLastNam
 
 if (!publicUser) assignCap(currentUserID);
 
-	//10-2020 Boucher 105aca
+	//10-2020 Boucher 105aca - 11-2020 added record type filters
 	var addrArray = [];
 	loadAddressAttributes(addrArray);
 	var TechRev = addrArray["AddressAttribute.County"];
 	
 	if (TechRev != null) {
-		addStdCondition('Economic Development','Eligible for Technology Zone Incentive Program');
-		email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
+		if (!appMatch('*/*/Elevator/*') || !appMatch('*/*/*/Demolition')) {
+			addStdCondition('Economic Development','Eligible for Technology Zone Incentive Program');
+			email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
+		}
 	}
+} catch (err) {
+		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
