@@ -27,7 +27,7 @@ try {
 
 //11-2020 added code for copying Address Parcel Owner information from a Table to a Record, because we cannont have multiple parcel submission at ACA intake
 		for (b in tempAsit) {
-			if (tempAsit[b]["Create Address-Parcel-Owner"]) == 'CHECKED') {
+			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
 				var BaseAddress = tempAsit[b]["Base Address"];
 				addParcelAndOwnerFromRefAddress(BaseAddress);
 			}
