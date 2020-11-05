@@ -9,7 +9,7 @@
 //Adhoc task updated to Amendment then update Status 'Amendment Submitted' on Inspections, Certificate Issuance or Certificate of Occupancy
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 	if (isTaskActive('Inspections')){
-		updateTask("Inspections", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
+		updateTask("Inspections", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
 			var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
 			if (appMatch("Building/Permit/Residential/NA"))
 				var newAppTypeString = "Building/Permit/Residential/Amendment";
@@ -37,15 +37,16 @@ if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 }
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 	if (isTaskActive('Certificate Issuance')){
-		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
+		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
 	}
 }
 if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 	if (isTaskActive('Certificate of Occupancy')){
-		updateTask("Certificate of Occupancy", "Amendment Submitted", "Updated based on Docuent Submitted Online 'Amendment' Status", "");
+		updateTask("Certificate of Occupancy", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
 	}
 }
 //Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
 if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
-		updateTask("Review Distribution", "Corrections Received", "Updated based on Docuent Submitted Online 'Revision' Status", "");
-	}
+	if (isTaskActive('Review Distribution')){
+		updateTask("Review Distribution", "Corrections Received", "Updated based on Docucent Submitted Online 'Revision' Status", "");
+	}}
