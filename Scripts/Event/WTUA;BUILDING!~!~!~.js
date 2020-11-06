@@ -1,4 +1,4 @@
-// If setting the Licecense status manually from the workflow
+// If setting the License status manually from the workflow
 
 	if (wfTask == 'Annual Status' && wfStatus == 'About to Expire') {
 		lic = new licenseObject(capIDString);
@@ -35,11 +35,11 @@ if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 			addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 	}
 }
-if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-	if (isTaskActive('Certificate Issuance')){
-		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
-	}
-}
+//if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
+//	if (isTaskActive('Certificate Issuance')){
+//		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
+//	}
+//}
 //Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
 if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
 	if (isTaskActive('Review Distribution')){
