@@ -40,11 +40,6 @@ if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 		updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
 	}
 }
-if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-	if (isTaskActive('Certificate of Occupancy')){
-		updateTask("Certificate of Occupancy", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
-	}
-}
 //Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
 if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
 	if (isTaskActive('Review Distribution')){
