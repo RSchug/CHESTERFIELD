@@ -48,5 +48,5 @@ if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 //Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
 if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
 	if (isTaskActive('Review Distribution')){
-		updateTask("Review Distribution", "Corrections Received", "Updated based on Docucent Submitted Online 'Revision' Status", "");
+		updateTask("Review Distribution", "Corrections Received", "Updated based on Document Submitted Online 'Revision' Status", "");
 	}}
