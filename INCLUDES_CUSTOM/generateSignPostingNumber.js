@@ -7,7 +7,7 @@ function generateSignPostingNumber(fieldName) {
             ASIValue = parseInt(ASIValue);
             logDebug("Checking " + fieldName + " sequence: " + ASIValue);
         } else {
-            continue;
+            continue; 
         }
         var ASIValue = ASIValue + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(fieldName, ASIValue);
