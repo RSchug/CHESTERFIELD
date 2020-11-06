@@ -49,4 +49,5 @@ if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
 if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
 	if (isTaskActive('Review Distribution')){
 		updateTask("Review Distribution", "Corrections Received", "Updated based on Document Submitted Online 'Revision' Status", "");
+		updateAppStatus("In Review","Updated based on Document Submitted Online 'Revision' Status.");
 	}}
