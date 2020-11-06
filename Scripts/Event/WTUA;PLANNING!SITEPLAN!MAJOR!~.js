@@ -39,13 +39,13 @@ try {
 	//Site Plan - Initial Submittal Fee 8.1P
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
-	//11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP
-		if (AInfo['Case Number'] != null) {
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP
+		if (parentCapId != null || AInfo['Case Number'] != null) {
 			var parentCase = AInfo['Case Number'];
-			if (parentCase.toUpperCase().indexOf('PS') >= 0) {
+			if (parentCapId.indexOf('PS') >= 0 || parentCase.toUpperCase().indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
 			}
-			else if (parentCase.toUpperCase().indexOf("OP") >= 0) {
+			else if (parentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
 				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
 			}
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
