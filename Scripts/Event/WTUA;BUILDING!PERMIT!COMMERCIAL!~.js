@@ -1,4 +1,5 @@
-if (wfStatus == 'Amendment Submitted') {
+if (!appMatch("Building/Permit/Commercial/Demolition")){
+if ((wfTask =='Inspections' || wfTask == 'Certificate Issuance') && wfStatus == 'Amendment Submitted') {
     var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
     if (appMatch("Building/Permit/Commercial/NA"))
         var newAppTypeString = "Building/Permit/Commercial/Amendment";
@@ -23,4 +24,5 @@ if (wfStatus == 'Amendment Submitted') {
         var expDate = jsDateToASIDate(new Date(dateAdd(null, 180)));
         editAppSpecific(expDateField, expDate, newCapId);
     }
+}
 }
