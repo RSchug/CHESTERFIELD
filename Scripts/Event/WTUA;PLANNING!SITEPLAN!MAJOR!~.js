@@ -36,24 +36,36 @@ try {
 		}
 	}
 	
-//Site Plan - Initial Submittal Fee 8.1P
-if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-    addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
-}
-//Erosion and Sediment Control Review and Enforcement Fees 8.2P
-var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
-if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
-    addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
-}
-if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
-    addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
-}
-if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
-    addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
-}    
-//Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
-//if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){
-//    addFee("SITEPLAN2","CC-PLANNING","FINAL",1,"N")}
+	//Site Plan - Initial Submittal Fee 8.1P
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+		addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
+	//11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP
+		if (AInfo['Case Number'] != null) {
+			var parentCase = AInfo['Case Number'];
+			if (parentCase.toUpperCase().indexOf("SC") >= 0) {
+				var recType = "Planning/SitePlan/Schematics/NA";
+			}
+			else if (parentCase.toUpperCase().indexOf("OCP") >= 0) {
+				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
+			}
+				copyASIfromParent(capId,recType,'Community Code','Community Code');
+				copyASIfromParent(capId,recType,'Development Code','Development Code');
+		}
+	}
+	//Erosion and Sediment Control Review and Enforcement Fees 8.2P
+	var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
+	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
+		addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
+	}
+	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
+		addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
+	}
+	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
+		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
+	}    
+	//Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
+	//if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){
+	//    addFee("SITEPLAN2","CC-PLANNING","FINAL",1,"N")}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
