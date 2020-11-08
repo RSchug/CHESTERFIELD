@@ -34,6 +34,7 @@ if (aa.env.getValue("ScriptName") == "Test") { 	// Setup parameters for Script T
     var CurrentUserID = "PUBLICUSER548433"; // Public User ID: rschug
     var capIDString = "20PR0128";			// Test Temp Record from ACA.
     var capIDString = "20TMP-000782";			// Test Temp Record from ACA.
+    var capIDString = "20TMP-000805";			// Test Temp Record from ACA.
     aa.env.setValue("ScriptCode", "Test");
     aa.env.setValue("CurrentUserID", CurrentUserID); 	// Current User
     sca = capIDString.split("-");
@@ -184,7 +185,7 @@ if (publicUserEmail) {
     // Fix turned off email address for development users.
     if (publicUserEmail.indexOf("@truepointsolutions.com") >= 0)
         publicUserEmail = publicUserEmail.replace("turned_off", "");
-    if (exists(publicUserEmail,["rschug@truepointsolutions.com"]))
+    if (exists(publicUserEmail, ["rschug@truepointsolutions.com"]))
         var showDebug = true; // Set to true to see debug messages in popup window
 }
 
@@ -219,21 +220,21 @@ logDebug("GLOBAL VERSION : " + GLOBAL_VERSION);
 /*------------------------------------------------------------------------------------------------------*/
 
 var cap = null,
-capId = null,
-appTypeResult = null,
-appTypeAlias = "",
-appTypeString = "",
-appTypeArray = new Array(),
-capName = null,
-capStatus = null,
-fileDateObj = null,
-fileDate = null,
-fileDateYYYYMMDD = null,
-AInfo = new Array(),
-parentCapId = null;
+    capId = null,
+    appTypeResult = null,
+    appTypeAlias = "",
+    appTypeString = "",
+    appTypeArray = new Array(),
+    capName = null,
+    capStatus = null,
+    fileDateObj = null,
+    fileDate = null,
+    fileDateYYYYMMDD = null,
+    AInfo = new Array(),
+    parentCapId = null;
 
 errorMessage = "",
-errorCode = "0";
+    errorCode = "0";
 
 //var currentUserID = aa.env.getValue("CurrentUserID");
 //if (currentUserID.indexOf("PUBLICUSER") == 0) { currentUserID = "ADMIN" ; publicUser = true }  // ignore public users
@@ -289,8 +290,8 @@ if (capModel != null) {
 /-----------------------------------------------------------------------------------------------------*/
 // page flow custom code begin
 try {
-       showMessage = false; showDebug = false;
-       amendCapModel = null;
+    showMessage = false; showDebug = false;
+    amendCapModel = null;
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
         loadAppSpecific4ACA(AInfo);
 
@@ -360,7 +361,7 @@ else if (publicUserEmail.indexOf("@truepointsolutions.com") >= 0)
     debugEmailTo = publicUserEmail.replace("turned_off", "");
 logDebug("debugEmailTo: " + debugEmailTo)
 if (debugEmailTo && debugEmailTo != "")
-    aa.sendMail("NoReply-Accela@accela.com".replace("-Accela", "-"+servProvCode+"-Accela"), debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+    aa.sendMail("NoReply-Accela@accela.com".replace("-Accela", "-" + servProvCode + "-Accela"), debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Internal Functions (used by Action entries)
@@ -382,34 +383,34 @@ function loadCapModel(targetCapId) {
         parentCapIdField = "Zoning Opinion Number";
     } else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
         if (AInfo["Case Number"] != null) {
-			parentCapIdField = "Case Number";
-		} else if (AInfo["Inquiry Case Number"] != null) {
+            parentCapIdField = "Case Number";
+        } else if (AInfo["Inquiry Case Number"] != null) {
             parentCapIdField = "Inquiry Case Number";
-		} else if (AInfo["Related Case Number"] != null) {
-			parentCapIdField = "Related Case Number";
-		}
-    } else if (appMatch_local("*/Subdivision/*/*", targetCapId)){
+        } else if (AInfo["Related Case Number"] != null) {
+            parentCapIdField = "Related Case Number";
+        }
+    } else if (appMatch_local("*/Subdivision/*/*", targetCapId)) {
         if (AInfo["Inquiry Case Number"] != null) {
             parentCapIdField = "Inquiry Case Number";
-		} else if (AInfo["Related Case Number"] != null) {
-			parentCapIdField = "Related Case Number";
-		}
+        } else if (AInfo["Related Case Number"] != null) {
+            parentCapIdField = "Related Case Number";
+        }
     } else {
-		showMessage = true;
-		comment('You need a previous record in order to proceed.');
-		cancel = true;
-	}
+        showMessage = true;
+        comment('You need a previous record in order to proceed.');
+        cancel = true;
+    }
 
-	// logGlobals(AInfo);
-	parentCapIdString = AInfo[parentCapIdField];
-	logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
+    // logGlobals(AInfo);
+    parentCapIdString = AInfo[parentCapIdField];
+    logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
-	if (parentCapIdString)
-		parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
-	if (parentCapId && parentCapIdField != "") { // Set parentCapId
-		capModel.setParentCapID(parentCapId);
-		logDebug("capModel.setParentCapID(" + capModel.getParentCapID() + "):");
-	}
+    if (parentCapIdString)
+        parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
+    if (parentCapId && parentCapIdField != "") { // Set parentCapId
+        capModel.setParentCapID(parentCapId);
+        logDebug("capModel.setParentCapID(" + capModel.getParentCapID() + "):");
+    }
     if (!parentCapId) {
         parentCapId = capModel.getParentCapID();
         if (parentCapId)
@@ -435,7 +436,7 @@ function loadCapModel(targetCapId) {
             capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
 
         logDebug("===== copying ===== from "
-            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to " 
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
             + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
             + ", sections: " + capSections.join(","));
         //2. Remove license professionals were sequence #, type or number matches what was given.
@@ -448,7 +449,7 @@ function loadCapModel(targetCapId) {
         if (exists("CapDetail", capSections)) {
             copyCapDetailInfo(srcCapId, targetCapId);
         }
-		//copy App Name (Project Name)
+        //copy App Name (Project Name)
         if (exists("AppName", capSections)) {
             copyApplicationName(srcCapId, targetCapId);
         }
@@ -460,7 +461,7 @@ function loadCapModel(targetCapId) {
         if (exists("ASI", capSections)) {
             copyAppSpecificInfo(srcCapId, targetCapId);
         }
-		//copy AST information
+        //copy AST information
         if (exists("ASIT", capSections))
             copyAppSpecificTable(srcCapId, targetCapId);
         //copy Address information
@@ -637,7 +638,7 @@ function logCapModel() {
 }
 
 function logCapModelASI() {
-    var pCapModel = (arguments.length > 0 && arguments[0]? arguments[0]:cap);
+    var pCapModel = (arguments.length > 0 && arguments[0] ? arguments[0] : cap);
     var capASI = pCapModel.getAppSpecificInfoGroups();
     if (!capASI) { logDebug("No ASI for the CapModel"); return; }
     var i = capASI.iterator();
@@ -747,7 +748,7 @@ function updateContactAttributeFieldLabel(contactType, peopleAttributes) {
 
         var resultAttributes = aa.util.newArrayList()
 
-            var peopleAttrList = peopleAttributes.toArray();
+        var peopleAttrList = peopleAttributes.toArray();
         var contactAttrList = contactAttributes.toArray();
 
         for (xx in peopleAttrList) {
@@ -775,21 +776,21 @@ function appMatch_local(ats) // optional capId or CapID string
     //	if optional capId is null then use appTypeArray.
     //	Allow for capID to be passed as java.lang.String class.
     var matchArray = appTypeArray //default to current app
-        if (arguments.length > 1 && arguments[1]) {
-            matchCapParm = arguments[1];
-            if (typeof(matchCapParm) == "string" || matchCapParm.getClass() == "class java.lang.String")
-                matchCapId = aa.cap.getCapID(matchCapParm).getOutput(); // Cap ID to check
-            else
-                matchCapId = matchCapParm;
-            if (!matchCapId) {
-                logDebug("**WARNING: CapId passed to appMatch was not valid: " + arguments[1]);
-                return false
-            }
-            matchCap = aa.cap.getCap(matchCapId).getOutput();
-            matchArray = matchCap.getCapType().toString().split("/");
+    if (arguments.length > 1 && arguments[1]) {
+        matchCapParm = arguments[1];
+        if (typeof (matchCapParm) == "string" || matchCapParm.getClass() == "class java.lang.String")
+            matchCapId = aa.cap.getCapID(matchCapParm).getOutput(); // Cap ID to check
+        else
+            matchCapId = matchCapParm;
+        if (!matchCapId) {
+            logDebug("**WARNING: CapId passed to appMatch was not valid: " + arguments[1]);
+            return false
         }
+        matchCap = aa.cap.getCap(matchCapId).getOutput();
+        matchArray = matchCap.getCapType().toString().split("/");
+    }
 
-        var isMatch = true;
+    var isMatch = true;
     var ata = ats.split("/");
     if (ata.length != 4)
         logDebug("**ERROR in appMatch.  The following Application Type String is incorrectly formatted: " + ats);
@@ -865,27 +866,24 @@ function copyExamination(srcCapId, targetCapId) {
     }
 }
 
-function copyApplicationName(srcCapId, targetCapId)
-{
+function copyApplicationName(srcCapId, targetCapId) {
     logDebug("copying AppName: "
         + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
         + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
-	//1. Get CapModel with source CAPID.
-	var srcCapModel = getCapModel(srcCapId, true);
-	if (srcCapModel == null)
-	{
-		return;
-	}
-	//2. Get CapModel with target CAPID.
-	var targetCapModel = getCapModel(targetCapId, true);
-	if (targetCapModel == null)
-	{
-		return;
-	}
-	//3. Copy application name from source to target.
-	var srcCapName = srcCapModel.getSpecialText();
-	targetCapModel.setSpecialText(srcCapName);
-	aa.cap.editCapByPK(targetCapModel);
+    //1. Get CapModel with source CAPID.
+    var srcCapModel = getCapModel(srcCapId, true);
+    if (srcCapModel == null) {
+        return;
+    }
+    //2. Get CapModel with target CAPID.
+    var targetCapModel = getCapModel(targetCapId, true);
+    if (targetCapModel == null) {
+        return;
+    }
+    //3. Copy application name from source to target.
+    var srcCapName = srcCapModel.getSpecialText();
+    targetCapModel.setSpecialText(srcCapName);
+    aa.cap.editCapByPK(targetCapModel);
 }
 
 function copyCapDetailInfo(srcCapId, targetCapId) {
@@ -914,14 +912,14 @@ function copyAppSpecificInfo(srcCapId, targetCapId) {
     for (loopk in appSpecificInfo) {
         var srcFieldModel = appSpecificInfo[loopk];
         if (srcFieldModel.getChecklistComment())
-        logDebug("copying ASI " // + srcFieldModel
-            + (useAppSpecificGroupName ? srcFieldModel.getCheckboxType() + ".":"")
-            + srcFieldModel.getCheckboxDesc() + ": "
-            + srcFieldModel.getChecklistComment()
-            + (srcFieldModel.getFieldLabel() && srcFieldModel.getCheckboxDesc() != srcFieldModel.getFieldLabel()? ", Label: " + srcFieldModel.getFieldLabel() : "")
-            + (srcFieldModel.getAlternativeLabel() ? ", Alt Label: " + srcFieldModel.getAlternativeLabel() : "")
-            + (srcFieldModel.getLabelAlias() ? ", LabelAlias: " + srcFieldModel.getLabelAlias() : "")
-            + (loopk == -1 ? br + describe_TPS(srcFieldModel):""));
+            logDebug("copying ASI " // + srcFieldModel
+                + (useAppSpecificGroupName ? srcFieldModel.getCheckboxType() + "." : "")
+                + srcFieldModel.getCheckboxDesc() + ": "
+                + srcFieldModel.getChecklistComment()
+                + (srcFieldModel.getFieldLabel() && srcFieldModel.getCheckboxDesc() != srcFieldModel.getFieldLabel() ? ", Label: " + srcFieldModel.getFieldLabel() : "")
+                + (srcFieldModel.getAlternativeLabel() ? ", Alt Label: " + srcFieldModel.getAlternativeLabel() : "")
+                + (srcFieldModel.getLabelAlias() ? ", LabelAlias: " + srcFieldModel.getLabelAlias() : "")
+                + (loopk == -1 ? br + describe_TPS(srcFieldModel) : ""));
         //2. Set target CAPID to source Specific Information.
         //srcFieldModel.setPermitID1(targetCapId.getID1());
         //srcFieldModel.setPermitID2(targetCapId.getID2());
@@ -1017,7 +1015,7 @@ function copyLicenseProfessional(srcCapId, targetCapId) {
         } else {
             //3.4.1 Create new license professional.
             aa.licenseProfessional.createLicensedProfessional(sourceLicProfModel);
-            logDebug("Created " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr() + " to " 
+            logDebug("Created " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr() + " to "
                 + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
         }
     }
@@ -1125,7 +1123,8 @@ function getAddress(capId) {
     return capAddresses;
 }
 
-function copyAppSpecificTable(srcCapId, targetCapId) {
+
+function copyAppSpecificTableX(srcCapId, targetCapId) {
     var tableNames = (arguments.length > 2 ? arguments[2] : null); // list of tables to copy
     var tableNameArray = getTableName(srcCapId);
     if (tableNameArray == null) {
@@ -1134,7 +1133,7 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
     for (loopk in tableNameArray) {
         var tableName = tableNameArray[loopk];
         if (tableNames && !exists(tableName, tableNames)) continue;
-        logDebug("copying table: " + tableName
+        logDebug("copying table: " + tableName + " "
             + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
             + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
 
@@ -1144,7 +1143,26 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
 
         //2. Edit AppSpecificTableInfos with target CAPID
         var aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
-        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,targetCapId,null);
+        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel, targetCapId, null);
+    }
+}
+
+function copyAppSpecificTable(srcCapId, targetCapId) {
+    //var tableNames = ["OFFICER/OWNERSHIP INFORMATION","SIGNING AUTHORITY","POWER OF ATTORNEY INFORMATION","TRADE NAMES / OPERATING NAME"];
+    var tableNames = (arguments.length > 2 ? arguments[2] : null); // list of tables to copy
+    var tableNameArray = getTableName(srcCapId);
+    if (tableNameArray == null) {
+        return;
+    }
+    for (loopk in tableNameArray) {
+        var tableName = tableNameArray[loopk];
+        if (tableNames && !exists(tableName, tableNames)) continue;
+        logDebug("copying table: " + tableName + " "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
+
+        var targetAppSpecificTable = _loadASITable(tableName, srcCapId);
+        _addASITable(tableName, targetAppSpecificTable, targetCapId);
     }
 }
 
@@ -1166,7 +1184,7 @@ function getAppSpecificTable(capId, tableName) {
     if (s_result.getSuccess()) {
         appSpecificTable = s_result.getOutput();
         if (appSpecificTable == null || appSpecificTable.length == 0) {
-            logDebug("WARNING: no appSpecificTable on this CAP:" 
+            logDebug("WARNING: no appSpecificTable on this CAP:"
                 + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             appSpecificTable = null;
         }
@@ -1175,6 +1193,101 @@ function getAppSpecificTable(capId, tableName) {
         appSpecificTable = null;
     }
     return appSpecificTable;
+}
+
+function _loadASITable(tname) {
+    // Returns a single ASI Table array of arrays
+    // Optional parameter, cap ID to load from
+    var itemCap = (arguments.length > 1 ? arguments[1] : capId); // use cap ID specified in args
+
+    var gm = aa.appSpecificTableScript.getAppSpecificTableGroupModel(itemCap).getOutput();
+    var ta = gm.getTablesArray()
+    var tai = ta.iterator();
+    while (tai.hasNext()) {
+        var tsm = tai.next();
+        var tn = tsm.getTableName();
+
+        if (!tn.equals(tname)) continue;
+        if (tsm.rowIndex.isEmpty()) {
+            logDebug("Couldn't load ASI Table " + tname + " it is empty");
+            return false;
+        }
+
+        var tempObject = new Array();
+        var tempArray = new Array();
+
+        var tsmfldi = tsm.getTableField().iterator();
+        var tsmcoli = tsm.getColumns().iterator();
+        var readOnlyi = tsm.getAppSpecificTableModel().getReadonlyField().iterator(); // get Readonly filed
+        var numrows = 1;
+
+        while (tsmfldi.hasNext()) { // cycle through fields
+            if (!tsmcoli.hasNext()) { // cycle through columns
+                var tsmcoli = tsm.getColumns().iterator();
+                tempArray.push(tempObject);  // end of record
+                var tempObject = new Array();  // clear the temp obj
+                numrows++;
+            }
+            var tcol = tsmcoli.next();
+            var tval = tsmfldi.next();
+            var readOnly = 'N';
+            if (readOnlyi.hasNext()) {
+                readOnly = readOnlyi.next();
+            }
+            var fieldInfo = new asiTableValObj(tcol.getColumnName(), tval, readOnly);
+            tempObject[tcol.getColumnName()] = fieldInfo;
+        }
+        tempArray.push(tempObject);  // end of record
+    }
+    return tempArray;
+}
+
+function asiTableValObj(columnName, fieldValue, readOnly) {
+    this.columnName = columnName;
+    this.fieldValue = fieldValue;
+    this.readOnly = readOnly;
+
+    asiTableValObj.prototype.toString = function () { return this.fieldValue }
+};
+
+function _addASITable(tableName, tableValueArray) {// optional capId
+    //  tableName is the name of the ASI table
+    //  tableValueArray is an array of associative array values.  All elements MUST be either a string or asiTableVal object
+    var itemCap = (arguments.length > 2 ? arguments[2] : capId); // use cap ID specified in args
+
+    var tssmResult = aa.appSpecificTableScript.getAppSpecificTableModel(itemCap, tableName);
+    if (!tssmResult.getSuccess()) { logDebug("**WARNING: error retrieving app specific table " + tableName + " " + tssmResult.getErrorMessage()); return false }
+
+    var tssm = tssmResult.getOutput();
+    var tsm = tssm.getAppSpecificTableModel();
+    var fld = tsm.getTableField();
+    var fld_readonly = tsm.getReadonlyField(); // get Readonly field
+
+    for (thisrow in tableValueArray) {
+        var col = tsm.getColumns()
+        var coli = col.iterator();
+        while (coli.hasNext()) {
+            var colname = coli.next();
+            if (typeof (tableValueArray[thisrow][colname.getColumnName()]) == "object") { // we are passed an asiTablVal Obj
+                fld.add(tableValueArray[thisrow][colname.getColumnName()].fieldValue);
+                fld_readonly.add(tableValueArray[thisrow][colname.getColumnName()].readOnly);
+            } else { // we are passed a string
+                fld.add(tableValueArray[thisrow][colname.getColumnName()]);
+                fld_readonly.add(null);
+            }
+        }
+        tsm.setTableField(fld);
+        tsm.setReadonlyField(fld_readonly);
+    }
+
+    var addResult = aa.appSpecificTableScript.editAppSpecificTableInfos(tsm, itemCap, currentUserID);
+    if (!addResult.getSuccess()) { logDebug("**WARNING: error adding record to ASI Table:  " + tableName + " " + addResult.getErrorMessage()); return false }
+    else {
+        //Refresh Cap Model (Custom Addition by Engineering, but wasn't able to submit ACA record)
+        //var tmpCap = aa.cap.getCapViewBySingle(capId);
+        //cap.setAppSpecificTableGroupModel(tmpCap.getAppSpecificTableGroupModel()); 
+        logDebug("Successfully added record to ASI Table: " + tableName);
+    }
 }
 
 function copyParcel(srcCapId, targetCapId) {
@@ -1499,7 +1612,7 @@ function getCapConditionByCapID(capId) {
     if (s_result.getSuccess()) {
         capConditionScriptModels = s_result.getOutput();
         if (capConditionScriptModels == null || capConditionScriptModels.length == 0) {
-            logDebug("WARNING: no cap condition on this CAP:" 
+            logDebug("WARNING: no cap condition on this CAP:"
                 + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capConditionScriptModels = null;
         }
@@ -1671,7 +1784,7 @@ function describe_TPS(obj) {
         return ret;
     }
     try {
-        ret += "typeof(): " + typeof(obj) + (obj && obj.getClass ? ", class: " + obj.getClass() : "") + newLine;
+        ret += "typeof(): " + typeof (obj) + (obj && obj.getClass ? ", class: " + obj.getClass() : "") + newLine;
         var oPropArray = new Array();
         var oFuncArray = new Array();
         if (oType == null)
@@ -1680,9 +1793,9 @@ function describe_TPS(obj) {
             if (oNameRegEx && !oNameRegEx.test(i)) {
                 continue;
             }
-            if ((oType == "*" || oType == "function") && typeof(obj[i]) == "function") {
+            if ((oType == "*" || oType == "function") && typeof (obj[i]) == "function") {
                 oFuncArray.push(i);
-            } else if ((oType == "*" || oType == "property") && typeof(obj[i]) != "function") {
+            } else if ((oType == "*" || oType == "property") && typeof (obj[i]) != "function") {
                 oPropArray.push(i);
             }
         }
@@ -1706,7 +1819,7 @@ function describe_TPS(obj) {
         for (var i in oFuncArray) {
             n = oFuncArray[i];
             oDef = String(obj[n]).replace("\n", " ").replace("\r", " ").replace(String.fromCharCode(10), " ").replace(String.fromCharCode(10), " ")
-                x = oDef.indexOf(n + "()", n.length + 15);
+            x = oDef.indexOf(n + "()", n.length + 15);
             if (x > 15)
                 x = x + n.length + 1;
             oName = (verbose ? oDef : "function:" + n + "()"); // Include full definition of function if verbose
