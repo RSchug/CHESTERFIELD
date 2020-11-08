@@ -19,6 +19,7 @@
 /------------------------------------------------------------------------------------------------------*/
 var showMessage = false; // Set to true to see results in popup window
 var showDebug = false; // Set to true to see debug messages in popup window
+var showDebug = true; // Set to true to see debug messages in popup window
 var debugEmailTo = "";
 var useAppSpecificGroupName = false; // Use Group name when populating App Specific Info Values
 var useTaskSpecificGroupName = false; // Use Group name when populating Task Specific Info Values
@@ -27,6 +28,31 @@ var useCustomScriptFile = true; // if true, use Events->Custom Script, else use 
 var scrubApplicant = false;
 var scrubContacts = false;
 var scrubLPs = true;
+
+if (aa.env.getValue("ScriptName") == "Test") { 	// Setup parameters for Script Test.
+    var CurrentUserID = "PUBLICUSER124450"; // Public User ID: rschug
+    var CurrentUserID = "PUBLICUSER548433"; // Public User ID: rschug
+    var capIDString = "20PR0128";			// Test Temp Record from ACA.
+    var capIDString = "20TMP-000782";			// Test Temp Record from ACA.
+    aa.env.setValue("ScriptCode", "Test");
+    aa.env.setValue("CurrentUserID", CurrentUserID); 	// Current User
+    sca = capIDString.split("-");
+    if (sca.length == 3 && sca[1] == "00000") { // Real capId
+        var capID = aa.cap.getCapID(sca[0], sca[1], sca[2]).getOutput();
+        aa.print("capID: " + capID + ", capIDString: " + sca.join("-") + " sca");
+    } else { // Alt capId
+        capID = aa.cap.getCapID(capIDString).getOutput();
+        aa.print("capID: " + capID + ", capIDString: " + capIDString);
+    }
+    capModel = aa.cap.getCapViewBySingle4ACA(capID);
+    aa.env.setValue("CapModel", capModel);
+    aa.print("CurrentUserID:" + CurrentUserID);
+    aa.print("capIDString:" + capIDString);
+    aa.print("capID:" + capID);
+    aa.print("capModel:" + capModel);
+    aa.env.setValue("fromReviewPage", "N");
+}
+
 /*------------------------------------------------------------------------------------------------------/
 | END User Configurable Parameters
 /------------------------------------------------------------------------------------------------------*/
@@ -153,8 +179,14 @@ if (publicUserID) {
         logDebug("publicUserEmail: " + publicUserEmail);
     }
 }
-if (publicUserEmail)
+if (publicUserEmail) {
     publicUserEmail = publicUserEmail.toLowerCase();
+    // Fix turned off email address for development users.
+    if (publicUserEmail.indexOf("@truepointsolutions.com") >= 0)
+        publicUserEmail = publicUserEmail.replace("turned_off", "");
+    if (exists(publicUserEmail,["rschug@truepointsolutions.com"]))
+        var showDebug = true; // Set to true to see debug messages in popup window
+}
 
 if (currentUserID != null) {
     systemUserObj = aa.person.getUser(currentUserID).getOutput(); // Current User Object
@@ -231,7 +263,8 @@ if (capModel != null) {
     logDebug("currentUserID = " + currentUserID + ", email: " + systemUserEmail);
     logDebug("currentUserGroup = " + currentUserGroup);
     logDebug("systemUserObj = " + systemUserObj.getClass());
-    logDebug("publicUser = " + publicUserID + ", email: " + publicUserEmail)
+    if (publicUser && publicUserID)
+        logDebug("publicUser = " + publicUserID + ", email: " + publicUserEmail)
     logDebug("appTypeString = " + appTypeString);
     logDebug("appTypeAlias = " + appTypeAlias);
     logDebug("capName = " + capName);
@@ -256,14 +289,40 @@ if (capModel != null) {
 /-----------------------------------------------------------------------------------------------------*/
 // page flow custom code begin
 try {
-    	showMessage = false; showDebug = false;
+       showMessage = false; showDebug = false;
+       amendCapModel = null;
     if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
-        logDebug("===== capModel =====");
-        logCapModel(capModel);
-		if (appMatch_local("*/LandUse/*/*", targetCapId) || ((appMatch_local("*/SitePlan/*/*", targetCapId) || appMatch_local("*/Subdivision/*/*", targetCapId)) 
-			&& AInfo["Is there a Previous Inquiry Case?"] == "CHECKED")) {
-			load_lp_contacts(capId);
-		}
+        loadAppSpecific4ACA(AInfo);
+
+        //logDebug("===== capModel (Before) =====");
+        //logCapModel(capModel);
+        logDebug("load capModel from cap: " + capId.getCustomID());
+        capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
+        capSections = ["AppName", "ASIT", "Contacts"];
+        var capSections = null;
+        loadCapModel(capId);
+        aa.env.setValue("CAP_MODEL_INITED", "TRUE");
+
+        if (amendCapModel) { // Use amendCapModel
+            // Restore original values
+            var svFieldNames = ["Is there a Previous Inquiry Case?", "Inquiry Case Number"]
+            for (var ff in svFieldNames) {
+                var svFieldName = svFieldNames[ff];
+                logDebug("restoring " + svFieldName + ": " + AInfo[svFieldName]);
+                _editAppSpecific4ACA(svFieldName, AInfo[svFieldName], amendCapModel);
+            }
+
+            aa.env.setValue("CapModel", amendCapModel);
+            aa.env.setValue("CAP_MODEL_INITED", "TRUE");
+            logDebug("===== amendCapModel ===== ");
+            logDebug("amendCapModel.parentCapID: " + (amendCapModel.parentCapID ? amendCapModel.parentCapID.getCustomID() : amendCapModel.parentCapID));
+        } else {
+            amendCapModel = capModel
+            aa.env.setValue("CapModel", capModel);
+            logDebug("===== capModel (After) =====");
+            logDebug("capModel.parentCapID: " + (capModel.parentCapID ? capModel.parentCapID.getCustomID() : capModel.parentCapID));
+        }
+        logCapModel(amendCapModel, capSections);
     }
 } catch (err) {
     handleError(err, "Page Flow Script: " + vScriptName);
@@ -277,45 +336,44 @@ try {
 if (debug.indexOf("**ERROR") > 0) {
     aa.env.setValue("ErrorCode", "1");
     aa.env.setValue("ErrorMessage", debug);
+} else if (cancel) {
+    aa.env.setValue("ErrorCode", "-2");
+    if (showMessage)
+        aa.env.setValue("ErrorMessage", message);
+    if (showDebug)
+        aa.env.setValue("ErrorMessage", debug);
 } else {
-    if (cancel) {
-        aa.env.setValue("ErrorCode", "-2");
-        if (showMessage)
-            aa.env.setValue("ErrorMessage", message);
-        if (showDebug)
-            aa.env.setValue("ErrorMessage", debug);
-    } else {
-        aa.env.setValue("ErrorCode", "0");
-        if (showMessage)
-            aa.env.setValue("ErrorMessage", message);
-        if (showDebug)
-            aa.env.setValue("ErrorMessage", debug);
-    }
+    aa.env.setValue("ErrorCode", "0");
+    if (showMessage)
+        aa.env.setValue("ErrorMessage", message);
+    if (showDebug)
+        aa.env.setValue("ErrorMessage", debug);
 }
 
 // Send Debug Email
 debugEmailSubject = "";
 debugEmailSubject += (capIDString ? capIDString + " " : "") + vScriptName + " - Debug";
-if (exists(publicUserEmail, ["dboucher@truepointsolutions.com",""]))
+// Override debugEmailTo for specific Public Users based on email address.
+if (exists(publicUserEmail, ["dboucher@truepointsolutions.com", ""]))
     debugEmailTo = "dboucher@truepointsolutions.com";
-else if (exists(publicUserEmail, ["dboucher@truepointsolutions.com",""]))
-    debugEmailTo = publicUserEmail;
+else if (publicUserEmail.indexOf("@truepointsolutions.com") >= 0)
+    debugEmailTo = publicUserEmail.replace("turned_off", "");
+logDebug("debugEmailTo: " + debugEmailTo)
 if (debugEmailTo && debugEmailTo != "")
-    aa.sendMail("NoReply_Accela@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+    aa.sendMail("NoReply-Accela@accela.com".replace("-Accela", "-"+servProvCode+"-Accela"), debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Internal Functions (used by Action entries)
 /------------------------------------------------------------------------------------------------------*/
-function load_lp_contacts(targetCapId) {
+function loadCapModel(targetCapId) {
     //----------------------------------------
-    aa.debug("Debug:", "targetCapId:" + targetCapId);
-    logDebug("targetCapId:" + targetCapId);
-
     if (targetCapId == null) {
         logError("targetCapId is null.");
         end();
         return;
     }
+    logDebug("loadCapModel from CapId:" + targetCapId + (targetCapId && targetCapId.getCustomID ? " " + targetCapId.getCustomID() : ""));
+
     // Get Previous record info to copy to application online
     var parentCapIdField = "";
     parentCapIdString = null;
@@ -336,14 +394,13 @@ function load_lp_contacts(targetCapId) {
 		} else if (AInfo["Related Case Number"] != null) {
 			parentCapIdField = "Related Case Number";
 		}
-
     } else {
 		showMessage = true;
 		comment('You need a previous record in order to proceed.');
 		cancel = true;
 	}
 
-	logGlobals(AInfo);
+	// logGlobals(AInfo);
 	parentCapIdString = AInfo[parentCapIdField];
 	logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
@@ -358,62 +415,94 @@ function load_lp_contacts(targetCapId) {
         if (parentCapId)
             parentCapIdString = parentCapId.getCustomID();
     }
-    aa.debug("Debug", "parentCapId:" + parentCapId);
     logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString + " " + parentCapId);
 
-    var srcCapId = parentCapId;
-    if (arguments.length > 1 && arguments[1])
+    var srcCapId = parentCapId, srcCapMsg = "Parent";
+    if (arguments.length > 1 && arguments[1]) {
         srcCapId = arguments[1];
+        srcCapMsg = "Source";
+    }
 
-    aa.debug("Debug", "srcCapId:" + srcCapId);
-    logDebug("srcCapId: " + srcCapId);
-
+    logDebug("srcCapId: " + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " " + srcCapMsg);
     if (srcCapId == null) {
-        if (arguments.length > 1 && arguments[1])
-            logError("Source is null.");
-        else
-            logError("Parent is null.");
+        logError(srcCapMsg + " is null.");
         end();
         return;
     }
 
     try {
-        logDebug("===== copying ===== from " + srcCapId + " to " + targetCapId);
-        //2. Remove license professionals were sequence #, type or number matches what was given.
-        //removeLicenseProfessionals(targetCapId);
-		//copy App Name (Project Name)
-		copyApplicationName(srcCapId, targetCapId);
-		//copy AST information
-        copyAppSpecificTable(srcCapId, targetCapId);
-        //copy ASI information
-        //copyAppSpecificInfo(srcCapId, targetCapId);
-        //copy License information
-        //copyLicenseProfessional(srcCapId, targetCapId);
-        //copy Address information
-        //copyAddress(srcCapId, targetCapId);
-        //copy Parcel information
-        //copyParcel(srcCapId, targetCapId);
-        //copy People information
-        copyPeople(srcCapId, targetCapId);
-        //copy Owner information
-        //copyOwner(srcCapId, targetCapId);
-        //Copy CAP condition information
-        //copyCapCondition(srcCapId, targetCapId);
-        //Copy additional info.
-        //copyAdditionalInfo(srcCapId, targetCapId);
-        //Copy Education information.
-        // copyEducation(srcCapId, targetCapId);
-        //Copy Continuing Education information.
-        // copyContEducation(srcCapId, targetCapId);
-        //Copy Examination information.
-        // copyExamination(srcCapId, targetCapId);
+        if (capSections == null)
+            capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
 
-        var amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
+        logDebug("===== copying ===== from "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to " 
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
+            + ", sections: " + capSections.join(","));
+        //2. Remove license professionals were sequence #, type or number matches what was given.
+        //copy License information
+        if (exists("LPs", capSections)) {
+            removeLicenseProfessionals(targetCapId);
+            copyLicenseProfessional(srcCapId, targetCapId);
+        }
+        //copy Cap Detail Info
+        if (exists("CapDetail", capSections)) {
+            copyCapDetailInfo(srcCapId, targetCapId);
+        }
+		//copy App Name (Project Name)
+        if (exists("AppName", capSections)) {
+            copyApplicationName(srcCapId, targetCapId);
+        }
+        //copy Cap Detail Info
+        if (exists("CapWorkDes", capSections)) {
+            copyCapWorkDesInfo(srcCapId, targetCapId);
+        }
+        //copy ASI information
+        if (exists("ASI", capSections)) {
+            copyAppSpecificInfo(srcCapId, targetCapId);
+        }
+		//copy AST information
+        if (exists("ASIT", capSections))
+            copyAppSpecificTable(srcCapId, targetCapId);
+        //copy Address information
+        if (exists("Addresses", capSections))
+            copyAddress(srcCapId, targetCapId);
+        //copy Parcel information
+        if (exists("Parcels", capSections))
+            copyParcel(srcCapId, targetCapId);
+        //copy Owner information
+        if (exists("Owners", capSections))
+            copyOwner(srcCapId, targetCapId);
+        //copy People information
+        if (exists("Contacts", capSections))
+            copyPeople(srcCapId, targetCapId);
+        //Copy CAP condition information
+        if (exists("Conditions", capSections))
+            copyCapCondition(srcCapId, targetCapId);
+        //Copy additional info.
+        if (exists("Additional Info", capSections))
+            copyAdditionalInfo(srcCapId, targetCapId);
+        //Copy Education information.
+        if (exists("Education", capSections))
+            copyEducation(srcCapId, targetCapId);
+        //Copy Continuing Education information.
+        if (exists("Continuing Education", capSections))
+            copyContEducation(srcCapId, targetCapId);
+        //Copy Examination information.
+        if (exists("Examination", capSections))
+            copyExamination(srcCapId, targetCapId);
+
+        amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
         logDebug("amendCapModel.getCapType().getSpecInfoCode(): " + amendCapModel.getCapType().getSpecInfoCode());
         amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode());
         amendCapModel.setAppSpecificInfoGroups(capModel.getAppSpecificInfoGroups());
         if (parentCapId && !amendCapModel.getParentCapID())
             amendCapModel.setParentCapID(parentCapId);
+
+        //fix ASI information
+        if (exists("ASI", capSections)) {
+            srcCapModel = aa.cap.getCapViewBySingle4ACA(srcCapId);
+            _copyAppSpecific4ACA(srcCapModel, amendCapModel);
+        }
 
         // Fix Component Info for Contacts & Applicant
         // Get the non-Applicant contacts
@@ -482,72 +571,141 @@ function load_lp_contacts(targetCapId) {
                 //logDebug("capLicProfModel[" + i + "]: " + capLicProfModel + br + describe_TPS(capLicProfModel, "function", /(^get.*$)/, true));
             }
         }
-        logDebug("===== amendCapModel ===== ");
-        logCapModel(amendCapModel);
-
-        aa.env.setValue("CapModel", amendCapModel);
-        aa.env.setValue("CAP_MODEL_INITED", "TRUE");
     } catch (e) {
+        logDebug("Error " + e.message + " at " + e.lineNumber + "Stack: " + e.stack);
         logError("Error: " + e);
         end();
     }
 }
 
-function logCapModel(p_CapModel) {
-    logDebug("capModel.getCapID(): " + p_CapModel.getCapID() + " " + p_CapModel.getCapID().getCustomID());
-    logDebug("capModel.getParentCapID(): " + p_CapModel.getParentCapID() + (p_CapModel.getParentCapID() ? " " + p_CapModel.getParentCapID().getCustomID() : ""));
-    logDebug("capModel.getCapType().getSpecInfoCode(): " + p_CapModel.getCapType().getSpecInfoCode());
+function logCapModel() {
+    var pCapModel = (arguments.length > 0 && arguments[0] ? arguments[0] : cap);
+    var capSections = (arguments.length > 1 && arguments[1] ? arguments[1] : null);
+    logDebug("pCapModel.getCapID(): " + pCapModel.getCapID() + " " + pCapModel.getCapID().getCustomID());
+    logDebug("pCapModel.getParentCapID(): " + pCapModel.getParentCapID() + (pCapModel.getParentCapID() ? " " + pCapModel.getParentCapID().getCustomID() : ""));
+    logDebug("pCapModel.getCapType().getSpecInfoCode(): " + pCapModel.getCapType().getSpecInfoCode());
+    //logDebug("pCapModel: " + pCapModel + br + describe_TPS(pCapModel, null, null, true));
 
-    capModel_AInfo = [];
-    loadAppSpecific4CapModel(capModel_AInfo, p_CapModel);
-    logGlobals(capModel_AInfo);
+    // Display ASI
+    // if (capSections == null || exists("ASI", capSections)) logCapModelASI(pCapModel);
+    if (capSections == null || exists("ASI", capSections)) {
+        capModel_AInfo = [];
+        loadAppSpecific4CapModel(capModel_AInfo, pCapModel);
+        logGlobals(capModel_AInfo);
+    }
+
+    // Display ASIT
+    if (capSections == null || exists("ASIT", capSections)) logCapModelASIT(pCapModel);
 
     // Display non-Applicant contacts
-    contactList = p_CapModel.getContactsGroup();
-    if (contactList) {
-        for (var i = 0; i < contactList.size(); i++) {
-            var capContactModel = contactList.get(i);
-            logDebug("contactsGroup[" + i + "]: " + capContactModel.getCapID() + " " + capContactModel.contactSeqNumber + ", type: " + capContactModel.contactType +
-                ", name: " + capContactModel.contactName + ", component: " + capContactModel.componentName);
+    if (capSections == null || exists("Contacts", capSections)) {
+        contactList = pCapModel.getContactsGroup();
+        if (contactList) {
+            for (var i = 0; i < contactList.size(); i++) {
+                var capContactModel = contactList.get(i);
+                logDebug("contactsGroup[" + i + "]: " + capContactModel.getCapID() + " " + capContactModel.contactSeqNumber + ", type: " + capContactModel.contactType +
+                    ", name: " + capContactModel.contactName + ", component: " + capContactModel.componentName);
+            }
         }
     }
 
     // Display applicant
-    applicantModel = p_CapModel.getApplicantModel();
-    if (applicantModel) {
-        logDebug("applicantModel: " + applicantModel.getPeople().getContactSeqNumber() + ", type: " + applicantModel.contactType +
-            ", name: " + applicantModel.contactName + ", component: " + applicantModel.componentName);
+    if (capSections == null || exists("Applicant", capSections)) {
+        applicantModel = pCapModel.getApplicantModel();
+        if (applicantModel) {
+            logDebug("applicantModel: " + applicantModel.getPeople().getContactSeqNumber() + ", type: " + applicantModel.contactType +
+                ", name: " + applicantModel.contactName + ", component: " + applicantModel.componentName);
+        }
     }
 
     // Display LPs
-    var capLicenses = []
-    if (p_CapModel.getLicenseProfessionalList())
-        capLicenses = p_CapModel.getLicenseProfessionalList().toArray();
-    for (loopk in capLicenses) {
-        capLicProfModel = capLicenses[loopk];
-        logDebug("capLicProfModel[" + loopk + "]: " + (capLicProfModel.getPrintFlag() == "Y" ? "Primary" : "") + " " + capLicProfModel.getAuditStatus() +
-            " License: #" + capLicProfModel.getLicSeqNbr() + " " + capLicProfModel.getLicenseType() + " " + capLicProfModel.getLicenseNbr() +
-            (capLicProfModel.getBusinessName() ? ", Business: " + capLicProfModel.getBusinessName() : "") +
-            (capLicProfModel.getFullName() ? ", Name: " + capLicProfModel.getFullName() : "") +
-            (capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") +
-            ", component: " + capLicProfModel.getComponentName());
-        logDebug("capLicProfModel[" + loopk + "]: " + br + describe_TPS(capLicProfModel, null, null, true));
+    if (capSections == null || exists("LPs", capSections)) {
+        var capLicenses = []
+        if (pCapModel.getLicenseProfessionalList())
+            capLicenses = pCapModel.getLicenseProfessionalList().toArray();
+        for (loopk in capLicenses) {
+            capLicProfModel = capLicenses[loopk];
+            logDebug("capLicProfModel[" + loopk + "]: " + (capLicProfModel.getPrintFlag() == "Y" ? "Primary" : "") + " " + capLicProfModel.getAuditStatus() +
+                " License: #" + capLicProfModel.getLicSeqNbr() + " " + capLicProfModel.getLicenseType() + " " + capLicProfModel.getLicenseNbr() +
+                (capLicProfModel.getBusinessName() ? ", Business: " + capLicProfModel.getBusinessName() : "") +
+                (capLicProfModel.getFullName() ? ", Name: " + capLicProfModel.getFullName() : "") +
+                (capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") +
+                ", component: " + capLicProfModel.getComponentName());
+            //logDebug("capLicProfModel[" + loopk + "]: " + br + describe_TPS(capLicProfModel, null, null, true));
+        }
     }
+}
+
+function logCapModelASI() {
+    var pCapModel = (arguments.length > 0 && arguments[0]? arguments[0]:cap);
+    var capASI = pCapModel.getAppSpecificInfoGroups();
+    if (!capASI) { logDebug("No ASI for the CapModel"); return; }
+    var i = capASI.iterator();
+    while (i.hasNext()) {
+        var group = i.next();
+        var fields = group.getFields();
+        if (fields != null) {
+            var iteFields = fields.iterator();
+            while (iteFields.hasNext()) {
+                var field = iteFields.next();
+                logDebug(field.getCheckboxType() + "." + field.getCheckboxDesc() + ": " + field.getChecklistComment());
+            }
+        }
+    }
+}
+
+function logCapModelASIT() {
+    var pCapModel = (arguments.length > 0 && arguments[0] ? arguments[0] : cap);
+    var gm = pCapModel.getAppSpecificTableGroupModel();
+    if (!gm) { logDebug("No ASIT for the CapModel"); return; }
+    for (var ta = gm.getTablesMap(), tai = ta.values().iterator(); tai.hasNext();) {
+        var tsm = tai.next();
+        if (!tsm.rowIndex.isEmpty()) {
+            var tempObject = new Array,
+                tempArray = new Array,
+                tn = tsm.getTableName();
+            //tn = String(tn).replace(/[^a-zA-Z0-9]+/g, ""),
+            //    isNaN(tn.substring(0, 1)) || (tn = "TBL" + tn);
+            for (var tsmfldi = tsm.getTableField().iterator(), tsmcoli = tsm.getColumns().iterator(), numrows = 1; tsmfldi.hasNext();) {
+                if (!tsmcoli.hasNext()) {
+                    var tsmcoli = tsm.getColumns().iterator();
+                    logDebug(tn + "[" + numrows + "] " + tempArray.join("; "));
+                    var tempArray = new Array;
+                    numrows++;
+                }
+
+                var tcol = tsmcoli.next();
+                var tobj = tsmfldi.next();
+                var tval = "";
+                try {
+                    tval = tobj.getInputValue();
+                } catch (ex) {
+                    tval = tobj;
+                }
+                tempArray.push(tcol.getColumnName() + ": " + tval);
+            }
+            logDebug(tn + "[" + numrows + "] " + tempArray.join("; "));
+        }
+    }
+}
+
+function _logGlobals(globArray) {
+
+    for (loopGlob in globArray)
+        logDebug("{" + loopGlob + "} = " + globArray[loopGlob])
 }
 
 function loadAppSpecific4CapModel(thisArr) {
     // Returns an associative array of App Specific Info
     // Optional second parameter, capModel to load from
-
     var itemCap = capId;
-    var p_CapModel = cap;
-    if (arguments.length > 1)
-        p_CapModel = arguments[1]; // use cap ID specified in args
-    var capASI = p_CapModel.getAppSpecificInfoGroups();
+    var pCapModel = (arguments.length > 1 && arguments[1] ? arguments[1] : cap);
+    logDebug("loadAppSpecific4CapModel from " + (pCapModel ? pCapModel.getAltID() : pCapModel));
+    var capASI = pCapModel.getAppSpecificInfoGroups();
     if (!capASI) {
         logDebug("No ASI for the CapModel");
     } else {
-        var i = cap.getAppSpecificInfoGroups().iterator();
+        var i = capASI.iterator();
         while (i.hasNext()) {
             var group = i.next();
             var fields = group.getFields();
@@ -555,6 +713,8 @@ function loadAppSpecific4CapModel(thisArr) {
                 var iteFields = fields.iterator();
                 while (iteFields.hasNext()) {
                     var field = iteFields.next();
+                    if (field.getChecklistComment())
+                        logDebug(field.getCheckboxDesc() + ": " + field.getChecklistComment());
                     if (useAppSpecificGroupName)
                         thisArr[field.getCheckboxType() + "." + field.getCheckboxDesc()] = field.getChecklistComment();
                     else
@@ -660,11 +820,11 @@ function getParent(targetCapId) {
         if (parentArray.length)
             return parentArray[0].getCapID();
         else {
-            aa.print("**WARNING: GetParent found no project parent for this application");
+            logDebug("**WARNING: GetParent found no project parent for this application");
             return false;
         }
     } else {
-        aa.print("**WARNING: getting project parents:  " + getCapResult.getErrorMessage());
+        logDebug("**WARNING: getting project parents:  " + getCapResult.getErrorMessage());
         return false;
     }
 }
@@ -681,23 +841,35 @@ function matches(eVal, argList) {
 function copyEducation(srcCapId, targetCapId) {
     if (srcCapId != null && targetCapId != null) {
         aa.education.copyEducationList(srcCapId, targetCapId);
+        logDebug("copying Education: "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
     }
 }
 
 function copyContEducation(srcCapId, targetCapId) {
     if (srcCapId != null && targetCapId != null) {
         aa.continuingEducation.copyContEducationList(srcCapId, targetCapId);
+        logDebug("copying continuing education: "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
     }
 }
 
 function copyExamination(srcCapId, targetCapId) {
     if (srcCapId != null && targetCapId != null) {
         aa.examination.copyExaminationList(srcCapId, targetCapId);
+        logDebug("copying Examination: "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
     }
 }
 
 function copyApplicationName(srcCapId, targetCapId)
 {
+    logDebug("copying AppName: "
+        + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+        + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
 	//1. Get CapModel with source CAPID.
 	var srcCapModel = getCapModel(srcCapId, true);
 	if (srcCapModel == null)
@@ -716,20 +888,50 @@ function copyApplicationName(srcCapId, targetCapId)
 	aa.cap.editCapByPK(targetCapModel);
 }
 
+function copyCapDetailInfo(srcCapId, targetCapId) {
+    if (srcCapId != null && targetCapId != null) {
+        aa.cap.copyCapDetailInfo(srcCapId, targetCapId);
+        logDebug("copying CapDetail: "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
+    }
+}
+
+function copyCapWorkDesInfo(srcCapId, targetCapId) {
+    if (srcCapId != null && targetCapId != null) {
+        aa.cap.copyCapWorkDesInfo(srcCapId, targetCapId);
+        logDebug("copying Work Desc: "
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
+    }
+}
+
 function copyAppSpecificInfo(srcCapId, targetCapId) {
     //1. Get Application Specific Information with source CAPID.
     var appSpecificInfo = getAppSpecificInfo(srcCapId);
     //if (appSpecificInfo == null || appSpecificInfo.length == 0) {
     //    return;   }
-    //2. Set target CAPID to source Specific Information.
     for (loopk in appSpecificInfo) {
-        var sourceAppSpecificInfoModel = appSpecificInfo[loopk];
-
-        sourceAppSpecificInfoModel.setPermitID1(targetCapId.getID1());
-        sourceAppSpecificInfoModel.setPermitID2(targetCapId.getID2());
-        sourceAppSpecificInfoModel.setPermitID3(targetCapId.getID3());
+        var srcFieldModel = appSpecificInfo[loopk];
+        if (srcFieldModel.getChecklistComment())
+        logDebug("copying ASI " // + srcFieldModel
+            + (useAppSpecificGroupName ? srcFieldModel.getCheckboxType() + ".":"")
+            + srcFieldModel.getCheckboxDesc() + ": "
+            + srcFieldModel.getChecklistComment()
+            + (srcFieldModel.getFieldLabel() && srcFieldModel.getCheckboxDesc() != srcFieldModel.getFieldLabel()? ", Label: " + srcFieldModel.getFieldLabel() : "")
+            + (srcFieldModel.getAlternativeLabel() ? ", Alt Label: " + srcFieldModel.getAlternativeLabel() : "")
+            + (srcFieldModel.getLabelAlias() ? ", LabelAlias: " + srcFieldModel.getLabelAlias() : "")
+            + (loopk == -1 ? br + describe_TPS(srcFieldModel):""));
+        //2. Set target CAPID to source Specific Information.
+        //srcFieldModel.setPermitID1(targetCapId.getID1());
+        //srcFieldModel.setPermitID2(targetCapId.getID2());
+        //srcFieldModel.setPermitID3(targetCapId.getID3());
         //3. Edit ASI on target CAP (Copy info from source to target)
-        aa.appSpecificInfo.editAppSpecInfoValue(sourceAppSpecificInfoModel);
+        //aa.appSpecificInfo.editAppSpecInfoValue(srcFieldModel);
+        var fieldName = (useAppSpecificGroupName ? srcFieldModel.getCheckboxType() + "." : "")
+            + srcFieldModel.getCheckboxDesc();
+        var fieldValue = srcFieldModel.getChecklistComment();
+        editAppSpecific(fieldName, fieldValue, targetCapId);
     }
 }
 
@@ -739,21 +941,24 @@ function getAppSpecificInfo(capId) {
     if (s_result.getSuccess()) {
         capAppSpecificInfo = s_result.getOutput();
         if (capAppSpecificInfo == null || capAppSpecificInfo.length == 0) {
-            aa.print("WARNING: no appSpecificInfo on this CAP:" + capId);
+            logDebug("WARNING: no appSpecificInfo on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capAppSpecificInfo = null;
         }
     } else {
-        aa.print("ERROR: Failed to appSpecificInfo: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to appSpecificInfo: " + s_result.getErrorMessage());
         capAppSpecificInfo = null;
     }
     // Return AppSpecificInfoModel[]
     return capAppSpecificInfo;
 }
 
+//
 function copyLicenseProfessional(srcCapId, targetCapId) {
     // Modified to include additional logDebug statements.
     // Modified to copy Primary or last License Professional
     //1. Get license professionals with source CAPID.
+    logDebug(">> copy LPs")
     var capLicenses = getLicenseProfessional(srcCapId);
     if (capLicenses == null || capLicenses.length == 0) {
         logDebug("Skipping copy LP as source doesn't have licenses");
@@ -761,7 +966,7 @@ function copyLicenseProfessional(srcCapId, targetCapId) {
     }
     //2. Get license professionals with target CAPID.
     var targetLicenses = getLicenseProfessional(targetCapId);
-    if (targetLicenses && false) {
+    if (targetLicenses) {
         logDebug("Skipping copy LP as target already has " + targetLicenses.length + " licenses");
         logDebug("targetLicenses[0]: " + targetLicenses[0].getLicenseNbr() + " " + targetLicenses[0].getLicenseType());
         return;
@@ -803,15 +1008,20 @@ function copyLicenseProfessional(srcCapId, targetCapId) {
                 targetLicProfModel.setResLicenseType(sourceLicProfModel.getLicenseType());
             //3.3.2 Edit licProf with source licProf information.
             aa.licenseProfessional.editLicensedProfessional(targetLicProfModel);
-            logDebug("Copied LicenseProfessional: " + srcCapId + " to " + targetCapId + " " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr());
+            logDebug("Copied LicenseProfessional: "
+                + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+                + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
+                + " " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr());
 
             //3.4 It is new licProf model.
         } else {
             //3.4.1 Create new license professional.
             aa.licenseProfessional.createLicensedProfessional(sourceLicProfModel);
-            logDebug("Created " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr() + " to " + targetCapId);
+            logDebug("Created " + sourceLicProfModel.getLicenseType() + " " + sourceLicProfModel.getLicenseNbr() + " to " 
+                + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
         }
     }
+    logDebug("copy LPs Finished")
 
 }
 
@@ -832,11 +1042,12 @@ function getLicenseProfessional(capId) {
     if (s_result.getSuccess()) {
         capLicenseArr = s_result.getOutput();
         if (capLicenseArr == null || capLicenseArr.length == 0) {
-            aa.print("WARNING: no licensed professionals on this CAP:" + capId);
+            logDebug("WARNING: no licensed professionals on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capLicenseArr = null;
         }
     } else {
-        aa.print("ERROR: Failed to license professional: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to license professional: " + s_result.getErrorMessage());
         capLicenseArr = null;
     }
     return capLicenseArr;
@@ -903,34 +1114,37 @@ function getAddress(capId) {
     if (s_result.getSuccess()) {
         capAddresses = s_result.getOutput();
         if (capAddresses == null || capAddresses.length == 0) {
-            aa.print("WARNING: no addresses on this CAP:" + capId);
+            logDebug("WARNING: no addresses on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capAddresses = null;
         }
     } else {
-        aa.print("ERROR: Failed to address: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to address: " + s_result.getErrorMessage());
         capAddresses = null;
     }
     return capAddresses;
 }
 
 function copyAppSpecificTable(srcCapId, targetCapId) {
+    var tableNames = (arguments.length > 2 ? arguments[2] : null); // list of tables to copy
     var tableNameArray = getTableName(srcCapId);
     if (tableNameArray == null) {
         return;
     }
     for (loopk in tableNameArray) {
         var tableName = tableNameArray[loopk];
+        if (tableNames && !exists(tableName, tableNames)) continue;
+        logDebug("copying table: " + tableName
+            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
+
         //1. Get appSpecificTableModel with source CAPID
         var targetAppSpecificTable = getAppSpecificTable(srcCapId, tableName);
+        if (targetAppSpecificTable == null) continue;
 
         //2. Edit AppSpecificTableInfos with target CAPID
-        /*var aSTableModel = null;
-        if (targetAppSpecificTable == null) {
-            return;
-        } else {*/
         var aSTableModel = targetAppSpecificTable.getAppSpecificTableModel();
-        //}
-        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,srcCapId,null);
+        aa.appSpecificTableScript.editAppSpecificTableInfos(aSTableModel,targetCapId,null);
     }
 }
 
@@ -952,11 +1166,12 @@ function getAppSpecificTable(capId, tableName) {
     if (s_result.getSuccess()) {
         appSpecificTable = s_result.getOutput();
         if (appSpecificTable == null || appSpecificTable.length == 0) {
-            aa.print("WARNING: no appSpecificTable on this CAP:" + capId);
+            logDebug("WARNING: no appSpecificTable on this CAP:" 
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             appSpecificTable = null;
         }
     } else {
-        aa.print("ERROR: Failed to appSpecificTable: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to appSpecificTable: " + s_result.getErrorMessage());
         appSpecificTable = null;
     }
     return appSpecificTable;
@@ -1018,11 +1233,12 @@ function getParcel(capId) {
     if (s_result.getSuccess()) {
         capParcelArr = s_result.getOutput();
         if (capParcelArr == null || capParcelArr.length == 0) {
-            aa.print("WARNING: no parcel on this CAP:" + capId);
+            logDebug("WARNING: no parcel on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capParcelArr = null;
         }
     } else {
-        aa.print("ERROR: Failed to parcel: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to parcel: " + s_result.getErrorMessage());
         capParcelArr = null;
     }
     return capParcelArr;
@@ -1131,7 +1347,8 @@ function getPeople(capId) {
     if (s_result.getSuccess()) {
         capPeopleArr = s_result.getOutput();
         if (capPeopleArr == null || capPeopleArr.length == 0) {
-            logDebug("WARNING: no People on this CAP:" + capId);
+            logDebug("WARNING: no People on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capPeopleArr = null;
         }
     } else {
@@ -1201,11 +1418,12 @@ function getOwner(capId) {
     if (s_result.getSuccess()) {
         capOwnerArr = s_result.getOutput();
         if (capOwnerArr == null || capOwnerArr.length == 0) {
-            aa.print("WARNING: no Owner on this CAP:" + capId);
+            logDebug("WARNING: no Owner on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capOwnerArr = null;
         }
     } else {
-        aa.print("ERROR: Failed to Owner: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to Owner: " + s_result.getErrorMessage());
         capOwnerArr = null;
     }
     return capOwnerArr;
@@ -1281,11 +1499,12 @@ function getCapConditionByCapID(capId) {
     if (s_result.getSuccess()) {
         capConditionScriptModels = s_result.getOutput();
         if (capConditionScriptModels == null || capConditionScriptModels.length == 0) {
-            aa.print("WARNING: no cap condition on this CAP:" + capId);
+            logDebug("WARNING: no cap condition on this CAP:" 
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capConditionScriptModels = null;
         }
     } else {
-        aa.print("ERROR: Failed to get cap condition: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to get cap condition: " + s_result.getErrorMessage());
         capConditionScriptModels = null;
     }
     return capConditionScriptModels;
@@ -1315,11 +1534,12 @@ function getAdditionalInfo(capId) {
     if (s_result.getSuccess()) {
         bvaluatnScriptModel = s_result.getOutput();
         if (bvaluatnScriptModel == null) {
-            aa.print("WARNING: no additional info on this CAP:" + capId);
+            logDebug("WARNING: no additional info on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             bvaluatnScriptModel = null;
         }
     } else {
-        aa.print("ERROR: Failed to get additional info: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to get additional info: " + s_result.getErrorMessage());
         bvaluatnScriptModel = null;
     }
     // Return bvaluatnScriptModel
@@ -1332,11 +1552,12 @@ function getCapDetailByID(capId) {
     if (s_result.getSuccess()) {
         capDetailScriptModel = s_result.getOutput();
         if (capDetailScriptModel == null) {
-            aa.print("WARNING: no cap detail on this CAP:" + capId);
+            logDebug("WARNING: no cap detail on this CAP:"
+                + (capId && capId.getCustomID ? capId.getCustomID() : capId));
             capDetailScriptModel = null;
         }
     } else {
-        aa.print("ERROR: Failed to get cap detail: " + s_result.getErrorMessage());
+        logDebug("ERROR: Failed to get cap detail: " + s_result.getErrorMessage());
         capDetailScriptModel = null;
     }
     // Return capDetailScriptModel
@@ -1352,7 +1573,7 @@ function getCapId() {
     if (s_capResult.getSuccess()) {
         return s_capResult.getOutput();
     } else {
-        aa.print("ERROR: Failed to get capId: " + s_capResult.getErrorMessage());
+        logDebug("ERROR: Failed to get capId: " + s_capResult.getErrorMessage());
         return null;
     }
 }
@@ -1367,14 +1588,14 @@ function getPartialCapID(capid) {
     if (result.getSuccess()) {
         projectScriptModels = result.getOutput();
         if (projectScriptModels == null || projectScriptModels.length == 0) {
-            aa.print("ERROR: Failed to get partial CAP with CAPID(" + capid + ")");
+            logDebug("ERROR: Failed to get partial CAP with CAPID(" + capid + ")");
             return null;
         }
         //2. Get original partial CAP ID from project Model
         projectScriptModel = projectScriptModels[0];
         return projectScriptModel.getProjectID();
     } else {
-        aa.print("ERROR: Failed to get partial CAP by child CAP(" + capid + "): " + result.getErrorMessage());
+        logDebug("ERROR: Failed to get partial CAP by child CAP(" + capid + "): " + result.getErrorMessage());
         return null;
     }
 }
@@ -1507,4 +1728,57 @@ function describe_TPS(obj) {
         logDebug("Stack: " + err.stack);
     }
     return ret;
+}
+
+
+// 4ACA Functions - This functions update the capModel without a database update
+function _copyAppSpecific4ACA(capFrom) { // copy all App Specific info into new Cap
+    var capModelTo = (arguments.length > 1 && arguments[1] ? arguments[1] : cap);
+    if (!capFrom.getAppSpecificInfoGroups)
+        logDebug("Invalid capModel. capFrom: " + capFrom);
+    var i = capFrom.getAppSpecificInfoGroups().iterator();
+    while (i.hasNext()) {
+        var group = i.next();
+        var fields = group.getFields();
+        if (fields != null) {
+            var iteFields = fields.iterator();
+            while (iteFields.hasNext()) {
+                var field = iteFields.next();
+                if (useAppSpecificGroupName) {
+                    if (field.getChecklistComment())
+                        logDebug("copying " + field.getCheckboxType() + "." + field.getCheckboxDesc() + " : " + field.getChecklistComment());
+                    _editAppSpecific4ACA(field.getCheckboxType() + "." + field.getCheckboxDesc(), field.getChecklistComment(), capModelTo);
+                } else {
+                    if (field.getChecklistComment())
+                        logDebug("copying " + field.getCheckboxDesc() + " : " + field.getChecklistComment());
+                    _editAppSpecific4ACA(field.getCheckboxDesc(), field.getChecklistComment(), capModelTo);
+                }
+            }
+        }
+    }
+}
+
+function _editAppSpecific4ACA(itemName, itemValue) {
+    var pCapModel = (arguments.length > 2 && arguments[2] ? arguments[2] : cap);
+    var capASI = pCapModel.getAppSpecificInfoGroups();
+    if (!capASI) {
+        logDebug("No ASI for the CapModel");
+        return null;
+    }
+    var i = pCapModel.getAppSpecificInfoGroups().iterator();
+    while (i.hasNext()) {
+        var group = i.next();
+        var fields = group.getFields();
+        if (fields != null) {
+            var iteFields = fields.iterator();
+            while (iteFields.hasNext()) {
+                var field = iteFields.next();
+                if ((useAppSpecificGroupName && itemName.equals(field.getCheckboxType() + "." + field.getCheckboxDesc())) || itemName.equals(field.getCheckboxDesc())) {
+                    field.setChecklistComment(itemValue);
+                    if (field.getChecklistComment())
+                        logDebug("Updated " + field.getCheckboxDesc() + ": " + field.getChecklistComment());
+                }
+            }
+        }
+    }
 }
