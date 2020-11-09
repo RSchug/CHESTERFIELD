@@ -54,7 +54,7 @@ try {
 //56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP	
 	if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
 		if (parentCapId != null) {
-			var formattedparentCapId = aa.cap.getCap(parentCapId).getOutput();
+			var formattedparentCapId = parentCapId.getCustomID();
 			logDebug("parentCapId: " + parentCapId);
 			logDebug("formattedparentCapId: " + formattedparentCapId);
 			if (formattedparentCapId.indexOf('PS') >= 0) {
