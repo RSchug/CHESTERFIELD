@@ -57,8 +57,7 @@ try {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			logDebug("parentCapId: " + parentCapId);
-			logDebug("formattedparentCapId: " + formattedparentCapId);
+
 			if (formattedparentCapId.indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
 			}
