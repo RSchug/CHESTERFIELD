@@ -1,9 +1,5 @@
 try {
-	if (AInfo["Related Record ID"] != null) {
-		addParent(AInfo["Related Record ID"]);
-		pLicCap  = aa.cap.getCapID(["Related Record ID"]).getOutput();
-	}
-	//10-2020 Boucher 105aca - 11-2020 added record type filters
+//10-2020 Boucher 105aca - 11-2020 added the filter for record types
 	var addrArray = [];
 	loadAddressAttributes(addrArray);
 	var TechRev = addrArray["AddressAttribute.County"];
