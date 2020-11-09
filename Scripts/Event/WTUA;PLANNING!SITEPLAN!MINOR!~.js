@@ -55,7 +55,7 @@ try {
 	if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
 		if (parentCapId != null) {
 			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId.getCapID());
+			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
 			logDebug("parentCapId: " + parentCapId);
 			logDebug("formattedparentCapId: " + formattedparentCapId);
