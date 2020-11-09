@@ -41,6 +41,9 @@ try {
 		addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP
 		if (parentCapId != null || AInfo['Case Number'] != null) {
+			var formattedparentCapId = "";
+			var capScriptModel = aa.cap.getCap(parentCapId);
+			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
 			var parentCase = AInfo['Case Number'];
 			if (parentCapId.indexOf('PS') >= 0 || parentCase.toUpperCase().indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
