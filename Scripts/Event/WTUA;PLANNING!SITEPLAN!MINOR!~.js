@@ -54,10 +54,13 @@ try {
 //56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP	
 	if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
 		if (parentCapId != null) {
-			if (parentCapId.indexOf('PS') >= 0) {
+			var formattedparentCapId = aa.cap.getCap(parentCapId).getOutput();
+			logDebug("parentCapId: " + parentCapId);
+			logDebug("formattedparentCapId: " + formattedparentCapId);
+			if (formattedparentCapId.indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
 			}
-			else if (parentCapId.indexOf("OP") >= 0) {
+			else if (formattedparentCapId.indexOf("OP") >= 0) {
 				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
 			}
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
