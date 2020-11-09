@@ -463,6 +463,7 @@ function loadCapModel(targetCapId) {
         }
         //copy AST information
         if (exists("ASIT", capSections))
+            // remove ASIT
             copyAppSpecificTable(srcCapId, targetCapId);
         //copy Address information
         if (exists("Addresses", capSections))
@@ -1162,6 +1163,7 @@ function copyAppSpecificTable(srcCapId, targetCapId) {
             + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId));
 
         var targetAppSpecificTable = _loadASITable(tableName, srcCapId);
+        removeASITable(tableName, targetCapId);
         _addASITable(tableName, targetAppSpecificTable, targetCapId);
     }
 }
