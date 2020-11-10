@@ -168,16 +168,18 @@ if (matches(inspResult, "Completed")) {
 	}
 }
 //If Inspection Result is 'Not Approved' or "Rain Not Approved" and not an VSMP then create an ESC Notice to Comply child record AND schedule a Follow-up inspection on the ESC Notice to Comply child record with a scheduled date 7 days from system date.
-if (inspType.equals("VSMP")) {
-	var newCapId = createChild("EnvEngineering","ESC Notice to Comply","NA","NA","");
-	var sCapId = capId; // save current capId.
-	capId = newCapId; // use child capId
-	scheduleInspection("Follow-up",7,InspAssignment,null,"Auto Scheduled");
-	capId = sCapId; // restore capId.
-} else if(matches(inspResult,"Not Approved","Rain Not Approved")) {
-	var newCapId = createChild("EnvEngineering","ESC Notice to Comply","NA","NA","");
-	var sCapId = capId; // save current capId.
-	capId = newCapId; // use child capId
-	scheduleInspection("Follow-up",7,InspAssignment,null,"Auto Scheduled");
-	capId = sCapId; // restore capId.
+if (matches(inspResult, "Not Approved", "Rain Not Approved")) {
+	if (inspType.equals("VSMP")) {
+		var newCapId = createChild("EnvEngineering", "VSMP Notice to Comply", "NA", "NA", "");
+		var sCapId = capId; // save current capId.
+		capId = newCapId; // use child capId
+		scheduleInspection("Follow-up", 7, InspAssignment, null, "Auto Scheduled");
+		capId = sCapId; // restore capId.
+	} else {
+		var newCapId = createChild("EnvEngineering", "ESC Notice to Comply", "NA", "NA", "");
+		var sCapId = capId; // save current capId.
+		capId = newCapId; // use child capId
+		scheduleInspection("Follow-up", 7, InspAssignment, null, "Auto Scheduled");
+		capId = sCapId; // restore capId.
+	}
 }
