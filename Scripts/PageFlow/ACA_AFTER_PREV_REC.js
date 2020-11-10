@@ -403,7 +403,7 @@ function loadCapModel(targetCapId) {
 
     // logGlobals(AInfo);
     parentCapIdString = AInfo[parentCapIdField];
-    logDebug("x parentCapId (" + parentCapIdField + "): " + parentCapIdString);
+    logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
     if (parentCapIdString) {
         parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
