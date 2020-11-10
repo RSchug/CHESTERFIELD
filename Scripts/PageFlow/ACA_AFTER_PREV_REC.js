@@ -403,11 +403,13 @@ function loadCapModel(targetCapId) {
 
     // logGlobals(AInfo);
     parentCapIdString = AInfo[parentCapIdField];
-    logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
+    logDebug("x parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
-    if (parentCapIdString)
+    if (parentCapIdString) {
         parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
+    }
     if (parentCapId && parentCapIdField != "") { // Set parentCapId
+        addParent(parentCapId);
         capModel.setParentCapID(parentCapId);
         logDebug("capModel.setParentCapID(" + capModel.getParentCapID() + "):");
     }
