@@ -9,7 +9,7 @@ try {
 	var TechRev = addrArray["AddressAttribute.County"];
 	
 	if (TechRev != null) {
-		if (!appMatch('*/*/Elevator/*') || !appMatch('*/*/*/Demolition')) {
+		if (!appMatch('*/*/Elevator/*') && !appMatch('*/*/*/Demolition')) {
 			addStdCondition('Economic Development','Eligible for Technology Zone Incentive Program');
 			email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
 		}
