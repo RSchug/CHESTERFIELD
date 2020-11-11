@@ -36,9 +36,9 @@ try {
 				cancel = true;
 			}
 		}
-		// 07-2020 Boucher 11p For Residential or Commercial here are the Proffer Conditions that need to be met on the Parcel before permit can be issued
-		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))  && 
-			(parcelHasCondition_TPS('CDOT', 'Applied') ||
+		// 07-2020 Boucher 11p For Residential or Commercial here are the Proffer Conditions that need to be met on the Parcel before permit can be issued - turned off - looking for business rule.
+//		if ((appMatch('*/*/Residential/NA') || appMatch('*/*/Commercial/NA') || appMatch('*/*/Residential/Multi-Family'))  && 
+/*			(parcelHasCondition_TPS('CDOT', 'Applied') ||
 			parcelHasCondition_TPS('Budget', 'Applied') ||
 			parcelHasCondition_TPS('EE', 'Applied') ||
 			parcelHasCondition_TPS('Fire', 'Applied') ||
@@ -48,7 +48,7 @@ try {
 				showMessage = true;
 				comment('<font size=small><b>The Parcel(s) seem to have still applied Conditions?</b> You will need to update the Condition Status to Condition Met to proceed in the workflow </font>');
 				cancel = true;
-		}
+		}*/
 	}
 	if (wfTask == 'Application Submittal' && exists(wfStatus, ['Accepted - Plan Review Required', 'Accepted - Plan Review Not Required', 'Accepted'])) {
 		//Before Workflow Task Status can be selected - confirm that at least one Address, one Parcel and one Owner exists on Record.
