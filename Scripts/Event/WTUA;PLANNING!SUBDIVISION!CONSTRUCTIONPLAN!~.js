@@ -34,11 +34,32 @@ try {
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P and 8.3P
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
-		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
+		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
 	}
 	//Construction Plan Fee
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - Construction then Preliminary then Major then OCP
+		if (parentCapId != null || AInfo['Related Case Number'] != null) {
+			var formattedparentCapId = "";
+			var capScriptModel = aa.cap.getCap(parentCapId);
+			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
+			var parentCase = AInfo['Related Case Number'];
+			if (formattedparentCapId.indexOf('CP') >= 0 || parentCase.toUpperCase().indexOf("CP") >= 0) {
+				var recType = "Planning/Subdivision/ConstructionPlan/NA";
+			}
+			else if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
+				var recType = "Planning/Subdivision/Preliminary/NA";
+			}
+			else if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
+				var recType = "Planning/SitePlan/Major/NA";
+			}
+			else if (formattedparentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
+				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
+			}
+			copyASIfromParent(capId,recType,'Community Code','Community Code');
+			copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
+		}
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

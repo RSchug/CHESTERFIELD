@@ -458,7 +458,8 @@ try {
 	}
 	else {
 		var seq2CodeName = null;
-		if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/SitePlan/Major/*')) {
+		if (appMatch('*/Subdivision/Preliminary/*') || (appMatch('*/SitePlan/Major/*') && AInfo['Mixed Use'] == "Yes" && (AInfo['Multi-Family (MF)'] == 'CHECKED'
+		|| AInfo['Residential Construction Plan (CP)'] == 'CHECKED'))) {
 			seq2CodeName = "Subdivision Code";
 			
 			if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {

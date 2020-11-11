@@ -39,20 +39,23 @@ try {
 	//Site Plan - Initial Submittal Fee 8.1P
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
-	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Schematics or OCP
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Major then Schematic then OCP
 		if (parentCapId != null || AInfo['Case Number'] != null) {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
 			var parentCase = AInfo['Case Number'];
-			if (parentCapId.indexOf('PS') >= 0 || parentCase.toUpperCase().indexOf('PS') >= 0) {
+			if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
+				var recType = "Planning/SitePlan/Major/NA";
+			}
+			else if (formattedparentCapId.indexOf('PS') >= 0 || parentCase.toUpperCase().indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
 			}
-			else if (parentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
+			else if (formattedparentCapId.indexOf('OP') >= 0) {
 				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
 			}
-				copyASIfromParent(capId,recType,'Community Code','Community Code');
-				copyASIfromParent(capId,recType,'Development Code','Development Code');
+			copyASIfromParent(capId,recType,'Community Code','Community Code');
+			copyASIfromParent(capId,recType,'Development Code','Development Code');
 		}
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P
