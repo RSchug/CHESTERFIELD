@@ -435,7 +435,7 @@ function loadCapModel(targetCapId) {
 			//return;
 		}
 	}
-	else (AInfo["Is there a Previous Inquiry Case?"] == "UNCHECKED") {
+	else if (AInfo["Is there a Previous Inquiry Case?"] == "UNCHECKED") {
 		logError("Not Actually an Error, just advising that there is no table data to copy over to this new record.");
 		end();
 		return;
