@@ -24,7 +24,7 @@ function generateSignPostingNumber(fieldName) {
         }
         if (ASIValue != null) { break; }
 		else if (ASIValue == null){
-			ASIValue = '000';
+			ASIValue = '000'; }
     }
     //if (ASIValue == null)
     return ASIValue;
