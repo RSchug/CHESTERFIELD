@@ -1,6 +1,9 @@
 try {
 	//var pLicCap  = aa.cap.getCapID(["Case Number"]).getOutput();
-	if (AInfo["Case Number"] != null) {
+	if (AInfo["Inquiry Case Number"] != null) {
+		addParent(AInfo["Inquiry Case Number"]);
+	}
+	else if (AInfo["Case Number"] != null) {
 		addParent(AInfo["Case Number"]);
 	}
 } catch (err) {
