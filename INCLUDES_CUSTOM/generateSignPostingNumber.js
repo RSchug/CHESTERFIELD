@@ -22,7 +22,9 @@ function generateSignPostingNumber(fieldName) {
             ASIValue = null;
             break; // Active record found so get next number
         }
-        if (ASIValue != null) break;
+        if (ASIValue != null) { break; }
+		else if (ASIValue == null){
+			ASIValue = '000';
     }
     //if (ASIValue == null)
     return ASIValue;

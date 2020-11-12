@@ -22,14 +22,14 @@ try {
 	// Use Agency Sign Posting Number sequence to keep track of Sign Postings for Selectron.
 	// 10P Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
 	// The sign post number is a number is related to the IVR prompt that will be recorded so that callers may get case information from calling the number.
-//Need to turn off for testing, as numbers are used up
-/*	var fieldName = "Sign Posting Number";
+
+	var fieldName = "Sign Posting Number";
 	if ((AInfo[fieldName]) != "undefined") {
 		//AInfo[fieldName] = getNextSequence(seqName);
 		AInfo[fieldName] = generateSignPostingNumber(fieldName);
 		logDebug(fieldName + ": " + AInfo[fieldName]);
 		editAppSpecific(fieldName, AInfo[fieldName]);
-	}*/
+	}
 
 	// Alternative scripting for the Sign Posting:  Initiating Record Types:
 	//  Planning/LandUse/ManufacturedHomes/NA or Planning/LandUse/RPAException/NA or Planning/LandUse/Variance/*/* or Planning/LandUse/AdminVariance/* or */LandUse/SpecialExceptions/* or 
