@@ -292,39 +292,40 @@ if (capModel != null) {
 try {
     showMessage = false; showDebug = false;
     amendCapModel = null;
-    if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
-        loadAppSpecific4ACA(AInfo);
+	if (capModel && capModelInited != "TRUE" && fromReviewPage != "Y") {
+		loadAppSpecific4ACA(AInfo);
 
-        //logDebug("===== capModel (Before) =====");
-        //logCapModel(capModel);
-        logDebug("load capModel from cap: " + capId.getCustomID());
-        capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
-        capSections = ["AppName", "ASIT", "Contacts"];
-        var capSections = null;
-        loadCapModel(capId);
-        aa.env.setValue("CAP_MODEL_INITED", "TRUE");
+		//logDebug("===== capModel (Before) =====");
+		//logCapModel(capModel);
+		logDebug("load capModel from cap: " + capId.getCustomID());
+		capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
+		capSections = ["AppName", "ASIT", "Contacts"];
+		var capSections = null;
+		loadCapModel(capId);
+		aa.env.setValue("CAP_MODEL_INITED", "TRUE");
 
-        if (amendCapModel) { // Use amendCapModel
-            // Restore original values
-            var svFieldNames = ["Is there a Previous Inquiry Case?", "Inquiry Case Number"]
-            for (var ff in svFieldNames) {
-                var svFieldName = svFieldNames[ff];
-                logDebug("restoring " + svFieldName + ": " + AInfo[svFieldName]);
-                _editAppSpecific4ACA(svFieldName, AInfo[svFieldName], amendCapModel);
-            }
+		if (amendCapModel) { // Use amendCapModel
+			// Restore original values
+			var svFieldNames = ["Is there a Previous Inquiry Case?", "Inquiry Case Number"]
+			for (var ff in svFieldNames) {
+				var svFieldName = svFieldNames[ff];
+				logDebug("restoring " + svFieldName + ": " + AInfo[svFieldName]);
+				_editAppSpecific4ACA(svFieldName, AInfo[svFieldName], amendCapModel);
+			}
 
-            aa.env.setValue("CapModel", amendCapModel);
-            aa.env.setValue("CAP_MODEL_INITED", "TRUE");
-            logDebug("===== amendCapModel ===== ");
-            logDebug("amendCapModel.parentCapID: " + (amendCapModel.parentCapID ? amendCapModel.parentCapID.getCustomID() : amendCapModel.parentCapID));
-        } else {
-            amendCapModel = capModel
-            aa.env.setValue("CapModel", capModel);
-            logDebug("===== capModel (After) =====");
-            logDebug("capModel.parentCapID: " + (capModel.parentCapID ? capModel.parentCapID.getCustomID() : capModel.parentCapID));
-        }
-        logCapModel(amendCapModel, capSections);
-    }
+			aa.env.setValue("CapModel", amendCapModel);
+			aa.env.setValue("CAP_MODEL_INITED", "TRUE");
+			logDebug("===== amendCapModel ===== ");
+			logDebug("amendCapModel.parentCapID: " + (amendCapModel.parentCapID ? amendCapModel.parentCapID.getCustomID() : amendCapModel.parentCapID));
+		} else {
+			amendCapModel = capModel
+			aa.env.setValue("CapModel", capModel);
+			logDebug("===== capModel (After) =====");
+			logDebug("capModel.parentCapID: " + (capModel.parentCapID ? capModel.parentCapID.getCustomID() : capModel.parentCapID));
+		}
+		logCapModel(amendCapModel, capSections);
+	}
+
 } catch (err) {
     handleError(err, "Page Flow Script: " + vScriptName);
 }
@@ -376,63 +377,70 @@ function loadCapModel(targetCapId) {
     logDebug("loadCapModel from CapId:" + targetCapId + (targetCapId && targetCapId.getCustomID ? " " + targetCapId.getCustomID() : ""));
 
     // Get Previous record info to copy to application online
-    var parentCapIdField = "";
-    parentCapIdString = null;
-    parentCapId = null;
-    if (appMatch_local("*/LandUse/*/*", targetCapId)) {
-        parentCapIdField = "Zoning Opinion Number";
-    } else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
-        if (AInfo["Case Number"] != null) {
-            parentCapIdField = "Case Number";
-        } else if (AInfo["Inquiry Case Number"] != null) {
-            parentCapIdField = "Inquiry Case Number";
-        } else if (AInfo["Related Case Number"] != null) {
-            parentCapIdField = "Related Case Number";
-        }
-    } else if (appMatch_local("*/Subdivision/*/*", targetCapId)) {
-        if (AInfo["Inquiry Case Number"] != null) {
-            parentCapIdField = "Inquiry Case Number";
-        } else if (AInfo["Related Case Number"] != null) {
-            parentCapIdField = "Related Case Number";
-        }
-    } else {
+	if (AInfo["Is there a Previous Inquiry Case?"] == "CHECKED") {
+		var parentCapIdField = "";
+		parentCapIdString = null;
+		parentCapId = null;
+		if (appMatch_local("*/LandUse/*/*", targetCapId)) {
+			parentCapIdField = "Zoning Opinion Number";
+		} else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
+			if (AInfo["Case Number"] != null) {
+				parentCapIdField = "Case Number";
+			} else if (AInfo["Inquiry Case Number"] != null) {
+				parentCapIdField = "Inquiry Case Number";
+			} else if (AInfo["Related Case Number"] != null) {
+				parentCapIdField = "Related Case Number";
+			}
+		} else if (appMatch_local("*/Subdivision/*/*", targetCapId)) {
+			if (AInfo["Inquiry Case Number"] != null) {
+				parentCapIdField = "Inquiry Case Number";
+			} else if (AInfo["Related Case Number"] != null) {
+				parentCapIdField = "Related Case Number";
+			}
+		} 
+		else {
         showMessage = true;
         comment('You need a previous record in order to proceed.');
         cancel = true;
-    }
+		}
 
-    // logGlobals(AInfo);
-    parentCapIdString = AInfo[parentCapIdField];
-    logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
+		// logGlobals(AInfo);
+		parentCapIdString = AInfo[parentCapIdField];
+		logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
-    if (parentCapIdString) {
-        parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
-    }
-    if (parentCapId && parentCapIdField != "") { // Set parentCapId
-        addParent(parentCapId);
-        capModel.setParentCapID(parentCapId);
-        logDebug("capModel.setParentCapID(" + capModel.getParentCapID() + "):");
-    }
-    if (!parentCapId) {
-        parentCapId = capModel.getParentCapID();
-        if (parentCapId)
-            parentCapIdString = parentCapId.getCustomID();
-    }
-    logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString + " " + parentCapId);
+		if (parentCapIdString) {
+			parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
+		}
+		if (parentCapId && parentCapIdField != "") { // Set parentCapId
+			addParent(parentCapId);
+			capModel.setParentCapID(parentCapId);
+			logDebug("capModel.setParentCapID(" + capModel.getParentCapID() + "):");
+		}
+		if (!parentCapId) {
+			parentCapId = capModel.getParentCapID();
+			if (parentCapId)
+				parentCapIdString = parentCapId.getCustomID();
+		}
+		logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString + " " + parentCapId);
 
-    var srcCapId = parentCapId, srcCapMsg = "Parent";
-    if (arguments.length > 1 && arguments[1]) {
-        srcCapId = arguments[1];
-        srcCapMsg = "Source";
-    }
-
-    logDebug("srcCapId: " + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " " + srcCapMsg);
-    if (srcCapId == null) {
-        logError(srcCapMsg + " is null.");
-        end();
-        return;
-    }
-
+		var srcCapId = parentCapId, srcCapMsg = "Parent";
+		if (arguments.length > 1 && arguments[1]) {
+			srcCapId = arguments[1];
+			srcCapMsg = "Source";
+		}
+		logDebug("srcCapId: " + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " " + srcCapMsg);
+		if (srcCapId == null) {
+			logError("Not actually an Error, just advising that " + srcCapMsg + "does not have any table data to copy over to this new record");
+			//end();
+			//return;
+		}
+	}
+	else (AInfo["Is there a Previous Inquiry Case?"] == "UNCHECKED") {
+		logError("Not Actually an Error, just advising that there is no table data to copy over to this new record.");
+		end();
+		return;
+	}
+		
     try {
         if (capSections == null)
             capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
