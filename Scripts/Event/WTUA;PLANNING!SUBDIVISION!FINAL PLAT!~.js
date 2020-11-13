@@ -39,7 +39,12 @@ try {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			var parentCase = AInfo['Related Case Number'];
+			if (AInfo['Related Case Number'] != null) { 
+				var parentCase = AInfo['Related Case Number']; 
+			}
+			else {
+				var parentCase = "na";
+			}
 			if (formattedparentCapId.indexOf('CP') >= 0 || parentCase.toUpperCase().indexOf("CP") >= 0) {
 				var recType = "Planning/Subdivision/ConstructionPlan/NA";
 			}

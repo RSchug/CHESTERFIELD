@@ -64,9 +64,6 @@ try {
 			else if (formattedparentCapId.indexOf('PS') >= 0) {
 				var recType = "Planning/SitePlan/Schematics/NA";
 			}
-			else if (formattedparentCapId.indexOf('OP') >= 0) {
-				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
-			}
 			copyASIfromParent(capId,recType,'Community Code','Community Code');
 			copyASIfromParent(capId,recType,'Development Code','Development Code');
 		}

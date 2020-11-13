@@ -44,7 +44,12 @@ try {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			var parentCase = AInfo['Case Number'];
+			if (AInfo['Case Number'] != null) { 
+				var parentCase = AInfo['Case Number']; 
+			}
+			else {
+				var parentCase = "na";
+			}
 			if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
 				var recType = "Planning/SitePlan/Major/NA";
 			}
