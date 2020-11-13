@@ -48,7 +48,7 @@ try {
 				var parentCase = AInfo['Related Case Number']; 
 			}
 			else {
-				var parentCase = na;
+				var parentCase = "na";
 			}
 			if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
 				var recType = "Planning/Subdivision/Preliminary/NA";
