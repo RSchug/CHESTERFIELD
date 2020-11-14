@@ -52,21 +52,25 @@ try {
 			}
 			if (formattedparentCapId.indexOf('CP') >= 0 || parentCase.toUpperCase().indexOf("CP") >= 0) {
 				var recType = "Planning/Subdivision/ConstructionPlan/NA";
+				logDebug('Inside CP');
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
 				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
 			}
 			else if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
 				var recType = "Planning/Subdivision/Preliminary/NA";
+				logDebug('Inside PP');
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
 				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
 			}
 			else if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
 				var recType = "Planning/SitePlan/Major/NA";
+				logDebug('Inside PR');
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
 				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
 			}
 			else if (formattedparentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
 				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
+				logDebug('Inside OP');
 				copyASIfromParent(capId,recType,'Community Code','Community Code');
 				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
 			}
