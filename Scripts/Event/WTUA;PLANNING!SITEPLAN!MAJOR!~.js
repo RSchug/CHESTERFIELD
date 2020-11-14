@@ -38,27 +38,20 @@ try {
 	
 	//Site Plan - Initial Submittal Fee 8.1P
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-		addFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
-	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Major then Schematic then OCP
-		if (parentCapId != null || AInfo['Case Number'] != null) {
-			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId);
-			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			if (AInfo['Case Number'] != null) { 
-				var parentCase = AInfo['Case Number']; 
-			}
-			else {
-				var parentCase = "na";
-			}
-			if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
-				var recType = "Planning/SitePlan/Major/NA";
-			}
-			else if (formattedparentCapId.indexOf('PS') >= 0 || parentCase.toUpperCase().indexOf('PS') >= 0) {
-				var recType = "Planning/SitePlan/Schematics/NA";
-			}
-			else if (formattedparentCapId.indexOf('OP') >= 0) {
-				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
-			}
+		updateFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records, whatever is related, then filter on the ASI
+		if (parentCapId != null) {
+			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Development Code','Development Code');
+		}
+		else if (AInfo['Case Number'] != null) {
+			if (AInfo['Case Number'].toUpperCase().indexOf("PR") >= 0) {
+				var recType = "Planning/SitePlan/Major/NA"; }
+			else if (AInfo['Case Number'].toUpperCase().indexOf("PS") >= 0) {
+				var recType = "Planning/SitePlan/Schematics/NA"; }
+			else if (AInfo['Case Number'].toUpperCase().indexOf("OP") >= 0) {
+				var recType = "Planning/Subdivision/OverallConceptualPlan/NA"; }
+
 			copyASIfromParent(capId,recType,'Community Code','Community Code');
 			copyASIfromParent(capId,recType,'Development Code','Development Code');
 		}
@@ -66,13 +59,13 @@ try {
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P
 	var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
-		addFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
+		updateFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
 	}
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
-		addFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
+		updateFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
 	}
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
-		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
+		updateFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
 	}    
 	//Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
 	//if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){

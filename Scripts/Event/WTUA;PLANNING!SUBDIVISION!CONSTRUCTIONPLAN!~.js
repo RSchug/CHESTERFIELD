@@ -12,25 +12,25 @@ try {
 		deactivateTask("Default");
 		
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-			var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
-			for (var ind in taskAuditArray) {
-				var wfaTask = taskAuditArray[ind];
-				for (var i in workflowTasks) {
-					var wfbTask = workflowTasks[i];
-					if (wfbTask.getActiveFlag() == 'Y') {
-						if (wfaTask == wfbTask.getTaskDescription()) {
-							if (AInfo['Special Consideration'] == 'Expedited') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
-							} else if (AInfo['Special Consideration'] == 'Fast Track') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-							} else if (AInfo['Special Consideration'] == 'Regular') {
-							editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true));
-							}
-						else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
+		for (var ind in taskAuditArray) {
+			var wfaTask = taskAuditArray[ind];
+			for (var i in workflowTasks) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						if (AInfo['Special Consideration'] == 'Expedited') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true));
+						} else if (AInfo['Special Consideration'] == 'Fast Track') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
+						} else if (AInfo['Special Consideration'] == 'Regular') {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true));
 						}
+					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
 					}
 				}
 			}
+		}
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P and 8.3P
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
@@ -45,9 +45,17 @@ try {
 			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');
 		}
 		else if (AInfo['Related Case Number'] != null) {
-			//need to filter for the record types...Construction then Preliminary then Major then OCP
-			copyASIfromParent(capId,AInfo['Related Case Number'],'Community Code','Community Code');
-			copyASIfromParent(capId,AInfo['Related Case Number'],'Subdivision Code','Subdivision Code');
+			if (AInfo['Related Case Number'].toUpperCase().indexOf("CP") >= 0) {
+				var recType = "Planning/Subdivision/ConstructionPlan/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0) {
+				var recType = "Planning/Subdivision/Preliminary/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PR") >= 0) {
+				var recType = "Planning/SitePlan/Major/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("OP") >= 0) {
+				var recType = "Planning/Subdivision/OverallConceptualPlan/NA"; }
+
+			copyASIfromParent(capId,recType,'Community Code','Community Code');
+			copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
 		}
 	}
 } catch (err) {

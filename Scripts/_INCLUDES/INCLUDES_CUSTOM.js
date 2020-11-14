@@ -2965,14 +2965,14 @@ function copyASIfromParent_TPS(childCapID,parentCapID,childASISubGrpfldNm,parent
 		// get the given asi field's value from parent cap
 		fldVal = getAppSpecific(parentASISubGrpfldNm,parentCapID);
 		if(fldVal==null){
-			logDebug("Method name: copyASIfromParent. Error: childASISubGrpfldNm is null. parentASISubGrpfldNm:" + parentASISubGrpfldNm);
+			logDebug("Method name: copyASIfromParent_TPS. Error: parent ASI is null. parentASISubGrpfldNm:" + parentASISubGrpfldNm);
 			return false;
 		}			
 		//update given child field from parent
 		editAppSpecific(childASISubGrpfldNm,fldVal,childCapID);
 		return true;
 	}catch(err){
-		logDebug("Method name: copyASIfromParent. Message: Error-" + err.message + ". CapID:" + childCapID);
+		logDebug("Method name: copyASIfromParent_TPS. Message: Error-" + err.message + ". CapID:" + childCapID);
 		return false;
 	}
 }

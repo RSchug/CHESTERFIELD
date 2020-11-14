@@ -25,34 +25,28 @@ try {
 						} else if (AInfo['Special Consideration'] == 'Regular') {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true));
 						}
-					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
 					}
+					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,15,true)); }
 				}
 			}
 		}
 	}
-	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code and Section Code, if they exist on related records - Construction Plan then Preliminary
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code, Subdivision Code, and Section Code if they exist on related records, whatever is related, then filter on the ASI
 	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
-		if (parentCapId != null || AInfo['Related Case Number'] != null) {
-			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId);
-			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			if (AInfo['Related Case Number'] != null) { 
-				var parentCase = AInfo['Related Case Number']; 
-			}
-			else {
-				var parentCase = "na";
-			}
-			if (formattedparentCapId.indexOf('CP') >= 0 || parentCase.toUpperCase().indexOf("CP") >= 0) {
-				var recType = "Planning/Subdivision/ConstructionPlan/NA";
-			}
-			else if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
-				var recType = "Planning/Subdivision/Preliminary/NA";
-			}
-			copyASIfromParent(capId,recType,'Community Code','Community Code');
-			copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
-			copyASIfromParent(capId,recType,'Section Code','Section Code');			
+		if (parentCapId != null) {
+			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Section Code','Section Code');
 		}
+		else if (AInfo['Related Case Number'] != null) {
+			if (AInfo['Related Case Number'].toUpperCase().indexOf("CP") >= 0) {
+				var recType = "Planning/Subdivision/ConstructionPlan/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0) {
+				var recType = "Planning/Subdivision/Preliminary/NA"; }	
+		}
+		copyASIfromParent(capId,recType,'Community Code','Community Code');
+		copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
+		copyASIfromParent(capId,recType,'Section Code','Section Code');
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

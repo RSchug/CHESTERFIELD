@@ -51,21 +51,11 @@ try {
 			}
 		}
 	}
-//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records - Major then Schematics then OCP
+//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records
 	if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
 		if (parentCapId != null) {
-			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId);
-			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-
-			if (formattedparentCapId.indexOf('PR') >= 0) {
-				var recType = "Planning/SitePlan/Major/NA";
-			}
-			else if (formattedparentCapId.indexOf('PS') >= 0) {
-				var recType = "Planning/SitePlan/Schematics/NA";
-			}
-			copyASIfromParent(capId,recType,'Community Code','Community Code');
-			copyASIfromParent(capId,recType,'Development Code','Development Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Development Code','Development Code');
 		}
 	}
 	

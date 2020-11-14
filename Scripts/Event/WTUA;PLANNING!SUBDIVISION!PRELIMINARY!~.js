@@ -38,27 +38,20 @@ try {
 	}
 //FEE
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-		addFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
-	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - Preliminary then Major then Schematics then OCP
-		if (parentCapId != null || AInfo['Related Case Number'] != null) {
-			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId);
-			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			if (AInfo['Related Case Number'] != null) { 
-				var parentCase = AInfo['Related Case Number']; 
-			}
-			else {
-				var parentCase = "na";
-			}
-			if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
-				var recType = "Planning/Subdivision/Preliminary/NA";
-			}
-			else if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
-				var recType = "Planning/SitePlan/Major/NA";
-			}
-			else if (formattedparentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
-				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
-			}
+		updateFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - whatever is related, then filter on the ASI
+		if (parentCapId != null) {
+			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');
+		}
+		else if (AInfo['Related Case Number'] != null) {
+			if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0) {
+				var recType = "Planning/Subdivision/Preliminary/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PR") >= 0) {
+				var recType = "Planning/SitePlan/Major/NA"; }
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("OP") >= 0) {
+				var recType = "Planning/Subdivision/OverallConceptualPlan/NA"; }
+
 			copyASIfromParent(capId,recType,'Community Code','Community Code');
 			copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
 		}
