@@ -39,18 +39,15 @@ try {
 	//Construction Plan Fee
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		updateFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
-	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - Construction then Preliminary then Major then OCP
+	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records, whatever is related, then filter on the ASI
 		if (parentCapId != null) {
-			var formattedparentCapId = "";
-			var capScriptModel = aa.cap.getCap(parentCapId);
-			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			logDebug('formattedparentCapId: ' + formattedparentCapId + ' and childcap: ' + capId);
-			copyASIfromParent_TPS(capId,formattedparentCapId,'Community Code','Community Code');
-			copyASIfromParent_TPS(capId,formattedparentCapId,'Subdivision Code','Subdivision Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');
 		}
-		else if (AInfo['Related Case Number'] != null) { 
-			copyASIfromParent_TPS(capId,AInfo['Related Case Number'],'Community Code','Community Code');
-			copyASIfromParent_TPS(capId,AInfo['Related Case Number'],'Subdivision Code','Subdivision Code');
+		else if (AInfo['Related Case Number'] != null) {
+			//need to filter for the record types...Construction then Preliminary then Major then OCP
+			copyASIfromParent(capId,AInfo['Related Case Number'],'Community Code','Community Code');
+			copyASIfromParent(capId,AInfo['Related Case Number'],'Subdivision Code','Subdivision Code');
 		}
 	}
 } catch (err) {
