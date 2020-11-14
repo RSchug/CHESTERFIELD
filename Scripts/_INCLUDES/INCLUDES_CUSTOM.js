@@ -2959,6 +2959,24 @@ function copyASIfromParent(childCapID,parentRecordType,childASISubGrpfldNm,paren
 	}
 }
 
+//editted from original 11-2020 to pass the related parent and copy the given ASI from that parent to the given ASI in the current cap.
+function copyASIfromParent_TPS(childCapID,parentCapID,childASISubGrpfldNm,parentASISubGrpfldNm){
+	try{
+		// get the given asi field's value from parent cap
+		fldVal = getAppSpecific(parentASISubGrpfldNm,parentCapID);
+		if(fldVal==null){
+			logDebug("Method name: copyASIfromParent. Error: childASISubGrpfldNm is null. parentASISubGrpfldNm:" + parentASISubGrpfldNm);
+			return false;
+		}			
+		//update given child field from parent
+		editAppSpecific(childASISubGrpfldNm,fldVal,childCapID);
+		return true;
+	}catch(err){
+		logDebug("Method name: copyASIfromParent. Message: Error-" + err.message + ". CapID:" + childCapID);
+		return false;
+	}
+}
+
 // S11C Find the related parent of the given record type and copy the given ASIT rows from the parent to the given ASIT rows in the current cap.
 function copyASITfromParent(childCapID,parentRecordType,childASITSubGrpfldNm,parentASITSubGrpfldNm){
 	try{

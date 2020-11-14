@@ -40,40 +40,16 @@ try {
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - Construction then Preliminary then Major then OCP
-		if (parentCapId != null || AInfo['Related Case Number'] != null) {
+		if (parentCapId != null) {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
-			if (AInfo['Related Case Number'] != null) { 
-				var parentCase = AInfo['Related Case Number']; 
-			}
-			else {
-				var parentCase = "na";
-			}
-			if (formattedparentCapId.indexOf('CP') >= 0 || parentCase.toUpperCase().indexOf("CP") >= 0) {
-				var recType = "Planning/Subdivision/ConstructionPlan/NA";
-				logDebug('Inside CP');
-				copyASIfromParent(capId,recType,'Community Code','Community Code');
-				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
-			}
-			else if (formattedparentCapId.indexOf('PP') >= 0 || parentCase.toUpperCase().indexOf("PP") >= 0) {
-				var recType = "Planning/Subdivision/Preliminary/NA";
-				logDebug('Inside PP');
-				copyASIfromParent(capId,recType,'Community Code','Community Code');
-				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
-			}
-			else if (formattedparentCapId.indexOf('PR') >= 0 || parentCase.toUpperCase().indexOf("PR") >= 0) {
-				var recType = "Planning/SitePlan/Major/NA";
-				logDebug('Inside PR');
-				copyASIfromParent(capId,recType,'Community Code','Community Code');
-				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
-			}
-			else if (formattedparentCapId.indexOf('OP') >= 0 || parentCase.toUpperCase().indexOf("OP") >= 0) {
-				var recType = "Planning/Subdivision/OverallConceptualPlan/NA";
-				logDebug('Inside OP');
-				copyASIfromParent(capId,recType,'Community Code','Community Code');
-				copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');				
-			}
+			copyASIfromParent_TPS(capId,formattedparentCapId,'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,formattedparentCapId,'Subdivision Code','Subdivision Code');
+		}
+		else if (AInfo['Related Case Number'] != null) { 
+			copyASIfromParent_TPS(capId,AInfo['Related Case Number'],'Community Code','Community Code');
+			copyASIfromParent_TPS(capId,AInfo['Related Case Number'],'Subdivision Code','Subdivision Code');
 		}
 	}
 } catch (err) {
