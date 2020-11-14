@@ -34,16 +34,17 @@ try {
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P and 8.3P
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
-		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
+		updateFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
 	}
 	//Construction Plan Fee
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-		addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
+		updateFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - Construction then Preliminary then Major then OCP
 		if (parentCapId != null) {
 			var formattedparentCapId = "";
 			var capScriptModel = aa.cap.getCap(parentCapId);
 			formattedparentCapId = capScriptModel.getOutput().getCapModel().getAltID();
+			logDebug('formattedparentCapId: ' + formattedparentCapId + ' and childcap: ' + capId);
 			copyASIfromParent_TPS(capId,formattedparentCapId,'Community Code','Community Code');
 			copyASIfromParent_TPS(capId,formattedparentCapId,'Subdivision Code','Subdivision Code');
 		}
