@@ -450,11 +450,11 @@ function loadCapModel(targetCapId) {
             + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
             + ", sections: " + capSections.join(","));
         //2. Remove license professionals were sequence #, type or number matches what was given.
-        //copy License information
-        if (exists("LPs", capSections)) {
-            removeLicenseProfessionals(targetCapId);
-            copyLicenseProfessional(srcCapId, targetCapId);
-        }
+        //copy License information - removed because No LP's for Planning module
+ //       if (exists("LPs", capSections)) {
+ //           removeLicenseProfessionals(targetCapId);
+ //           copyLicenseProfessional(srcCapId, targetCapId);
+ //       }
         //copy Cap Detail Info
         if (exists("CapDetail", capSections)) {
             copyCapDetailInfo(srcCapId, targetCapId);
@@ -962,7 +962,7 @@ function getAppSpecificInfo(capId) {
     return capAppSpecificInfo;
 }
 
-//
+/*
 function copyLicenseProfessional(srcCapId, targetCapId) {
     // Modified to include additional logDebug statements.
     // Modified to copy Primary or last License Professional
@@ -1061,7 +1061,7 @@ function getLicenseProfessional(capId) {
     }
     return capLicenseArr;
 }
-
+*/
 function copyAddress(srcCapId, targetCapId) {
     //1. Get address with source CAPID.
     var capAddresses = getAddress(srcCapId);
