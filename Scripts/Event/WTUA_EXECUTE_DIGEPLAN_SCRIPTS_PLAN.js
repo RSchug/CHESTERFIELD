@@ -17,7 +17,7 @@ var reviewTaskResubmitStatus = ["REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "
 var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
 var consolidationTask = "Review Consolidation";
-if (matches(wfStatus, 'RR-Substantial Approval', 'RR-Table Review', 'Revisions Requested', 'First Glance Complete')) {
+if (matches(wfStatus, 'RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting')) {
 var ResubmitStatus = wfStatus; }
 var ApprovedStatus = 'Review Complete';
 
