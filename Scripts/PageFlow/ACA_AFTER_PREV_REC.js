@@ -377,38 +377,36 @@ function loadCapModel(targetCapId) {
     logDebug("loadCapModel from CapId:" + targetCapId + (targetCapId && targetCapId.getCustomID ? " " + targetCapId.getCustomID() : ""));
 
     // Get Previous record info to copy to application online
-	if (AInfo["Is there a Previous Inquiry Case?"] == "CHECKED") {
-		var parentCapIdField = "";
-		parentCapIdString = null;
-		parentCapId = null;
-		if (appMatch_local("*/LandUse/*/*", targetCapId)) {
-			parentCapIdField = "Zoning Opinion Number";
-		} else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
-			if (AInfo["Case Number"] != null) {
-				parentCapIdField = "Case Number";
-			} else if (AInfo["Inquiry Case Number"] != null) {
-				parentCapIdField = "Inquiry Case Number";
-			} else if (AInfo["Related Case Number"] != null) {
-				parentCapIdField = "Related Case Number";
-			}
-		} else if (appMatch_local("*/Subdivision/*/*", targetCapId)) {
-			if (AInfo["Inquiry Case Number"] != null) {
-				parentCapIdField = "Inquiry Case Number";
-			} else if (AInfo["Related Case Number"] != null) {
-				parentCapIdField = "Related Case Number";
-			}
-		} 
-		else {
-        showMessage = true;
-        comment('You need a previous record in order to proceed.');
-        cancel = true;
-		}
 
+	var parentCapIdField = "";
+	parentCapIdString = null;
+	parentCapId = null;
+	if (appMatch_local("*/LandUse/*/*", targetCapId)) {
+		parentCapIdField = "Zoning Opinion Number";
+	} else if (appMatch_local("*/SitePlan/*/*", targetCapId)) {
+		if (AInfo["Case Number"] != null) {
+			parentCapIdField = "Case Number";
+		} else if (AInfo["Inquiry Case Number"] != null) {
+			parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
+	} else if (appMatch_local("*/Subdivision/*/*", targetCapId)) {
+		if (AInfo["Inquiry Case Number"] != null) {
+			parentCapIdField = "Inquiry Case Number";
+		} else if (AInfo["Related Case Number"] != null) {
+			parentCapIdField = "Related Case Number";
+		}
+	} else {
+	showMessage = true;
+	comment('No valid intake field.');
+	//cancel = true;
+	}
 		// logGlobals(AInfo);
 		parentCapIdString = AInfo[parentCapIdField];
 		logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
-		if (parentCapIdString) {
+		if (parentCapIdString == null) {
 			parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
 		}
 		if (parentCapId && parentCapIdField != "") { // Set parentCapId
@@ -430,159 +428,155 @@ function loadCapModel(targetCapId) {
 		}
 		logDebug("srcCapId: " + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " " + srcCapMsg);
 		if (srcCapId == null) {
-			logError("Not actually an Error, just advising that " + srcCapMsg + "does not have any table data to copy over to this new record");
+			logError("Not actually an Error, just advising that " + srcCapMsg + "is not a valid record, so you will need to fill the application completely");
 			//end();
 			//return;
 		}
-	}
-	else if (AInfo["Is there a Previous Inquiry Case?"] == "UNCHECKED") {
-		logError("Not Actually an Error, just advising that there is no table data to copy over to this new record.");
-		end();
-		return;
-	}
 		
     try {
-        if (capSections == null)
-            capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
+		if (srcCapId != null) {
+			if (capSections == null)
+				capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
 
-        logDebug("===== copying ===== from "
-            + (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
-            + (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
-            + ", sections: " + capSections.join(","));
-        //2. Remove license professionals were sequence #, type or number matches what was given.
-        //copy License information - removed because No LP's for Planning module
- //       if (exists("LPs", capSections)) {
- //           removeLicenseProfessionals(targetCapId);
- //           copyLicenseProfessional(srcCapId, targetCapId);
- //       }
-        //copy Cap Detail Info
-        if (exists("CapDetail", capSections)) {
-            copyCapDetailInfo(srcCapId, targetCapId);
-        }
-        //copy App Name (Project Name)
-//        if (exists("AppName", capSections)) {
-//            copyApplicationName(srcCapId, targetCapId);
-//       }
-        //copy Cap Detail Info
-        if (exists("CapWorkDes", capSections)) {
-            copyCapWorkDesInfo(srcCapId, targetCapId);
-        }
-        //copy ASI information
-        if (exists("ASI", capSections)) {
-            copyAppSpecificInfo(srcCapId, targetCapId);
-        }
-        //copy AST information
-        if (exists("ASIT", capSections))
-            // remove ASIT
-            copyAppSpecificTable(srcCapId, targetCapId);
-        //copy Address information
-        if (exists("Addresses", capSections))
-            copyAddress(srcCapId, targetCapId);
-        //copy Parcel information
-        if (exists("Parcels", capSections))
-            copyParcel(srcCapId, targetCapId);
-        //copy Owner information
-        if (exists("Owners", capSections))
-            copyOwner(srcCapId, targetCapId);
-        //copy People information
-        if (exists("Contacts", capSections))
-            copyPeople(srcCapId, targetCapId);
-        //Copy CAP condition information
-        if (exists("Conditions", capSections))
-            copyCapCondition(srcCapId, targetCapId);
-        //Copy additional info.
-        if (exists("Additional Info", capSections))
-            copyAdditionalInfo(srcCapId, targetCapId);
-        //Copy Education information.
-        if (exists("Education", capSections))
-            copyEducation(srcCapId, targetCapId);
-        //Copy Continuing Education information.
-        if (exists("Continuing Education", capSections))
-            copyContEducation(srcCapId, targetCapId);
-        //Copy Examination information.
-        if (exists("Examination", capSections))
-            copyExamination(srcCapId, targetCapId);
+			logDebug("===== copying ===== from "
+				+ (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
+				+ (targetCapId && targetCapId.getCustomID ? targetCapId.getCustomID() : targetCapId)
+				+ ", sections: " + capSections.join(","));
+			//2. Remove license professionals were sequence #, type or number matches what was given.
+			//copy License information
+			if (exists("LPs", capSections)) {
+				removeLicenseProfessionals(targetCapId);
+				copyLicenseProfessional(srcCapId, targetCapId);
+			}
+			//copy Cap Detail Info
+			if (exists("CapDetail", capSections)) {
+				copyCapDetailInfo(srcCapId, targetCapId);
+			}
+			//copy App Name (Project Name)
+			if (exists("AppName", capSections)) {
+				copyApplicationName(srcCapId, targetCapId);
+		   }
+			//copy Cap Detail Info
+			if (exists("CapWorkDes", capSections)) {
+				copyCapWorkDesInfo(srcCapId, targetCapId);
+			}
+			//copy ASI information
+			if (exists("ASI", capSections)) {
+				copyAppSpecificInfo(srcCapId, targetCapId);
+			}
+			//copy AST information
+			if (exists("ASIT", capSections))
+				// remove ASIT
+				copyAppSpecificTable(srcCapId, targetCapId);
+			//copy Address information
+			if (exists("Addresses", capSections))
+				copyAddress(srcCapId, targetCapId);
+			//copy Parcel information
+			if (exists("Parcels", capSections))
+				copyParcel(srcCapId, targetCapId);
+			//copy Owner information
+			if (exists("Owners", capSections))
+				copyOwner(srcCapId, targetCapId);
+			//copy People information
+			if (exists("Contacts", capSections))
+				copyPeople(srcCapId, targetCapId);
+			//Copy CAP condition information
+			if (exists("Conditions", capSections))
+				copyCapCondition(srcCapId, targetCapId);
+			//Copy additional info.
+			if (exists("Additional Info", capSections))
+				copyAdditionalInfo(srcCapId, targetCapId);
+			//Copy Education information.
+			if (exists("Education", capSections))
+				copyEducation(srcCapId, targetCapId);
+			//Copy Continuing Education information.
+			if (exists("Continuing Education", capSections))
+				copyContEducation(srcCapId, targetCapId);
+			//Copy Examination information.
+			if (exists("Examination", capSections))
+				copyExamination(srcCapId, targetCapId);
 
-        amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
-        logDebug("amendCapModel.getCapType().getSpecInfoCode(): " + amendCapModel.getCapType().getSpecInfoCode());
-        amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode());
-        amendCapModel.setAppSpecificInfoGroups(capModel.getAppSpecificInfoGroups());
-        if (parentCapId && !amendCapModel.getParentCapID())
-            amendCapModel.setParentCapID(parentCapId);
+			amendCapModel = aa.cap.getCapViewBySingle4ACA(targetCapId);
+			logDebug("amendCapModel.getCapType().getSpecInfoCode(): " + amendCapModel.getCapType().getSpecInfoCode());
+			amendCapModel.getCapType().setSpecInfoCode(capModel.getCapType().getSpecInfoCode());
+			amendCapModel.setAppSpecificInfoGroups(capModel.getAppSpecificInfoGroups());
+			if (parentCapId && !amendCapModel.getParentCapID())
+				amendCapModel.setParentCapID(parentCapId);
 
-        //fix ASI information
-        if (exists("ASI", capSections)) {
-            srcCapModel = aa.cap.getCapViewBySingle4ACA(srcCapId);
-            _copyAppSpecific4ACA(srcCapModel, amendCapModel);
-        }
+			//fix ASI information
+			if (exists("ASI", capSections)) {
+				srcCapModel = aa.cap.getCapViewBySingle4ACA(srcCapId);
+				_copyAppSpecific4ACA(srcCapModel, amendCapModel);
+			}
 
-        // Fix Component Info for Contacts & Applicant
-        // Get the non-Applicant contacts
-        logDebug("Scrub component information for Contacts");
-        contactList = amendCapModel.getContactsGroup();
-        if (contactList && scrubContacts) {
-            for (i = 0; i < contactList.size(); i++) {
-                var capContactModel = contactList.get(i);
-                // Scrub Contact List Sequence Number.
-                capContactModel.setCapID(targetCapId);
-                var peopleModel = capContactModel.getPeople();
-                // Remove contact seq number, this is only for parent cap.
-                peopleModel.setContactSeqNumber(null);
-                // Update the Label Information for Contact Attributes
-                peopleModel.setAttributes(updateContactAttributeFieldLabel(peopleModel.getContactType(), peopleModel.getAttributes()));
-                capContactModel.setPeople(peopleModel);
-                // Set Component Name based on Contact Type
-                var contactType = capContactModel.getContactType();
-                var contactTypeComponents = {
-                    "Applicant": "Applicant",
-                    "Site Contact": "Contact1",
-                    "Business": "Contact2"
-                };
-                //if (typeof(contactTypeComponents[contactType]) != "undefined") capContactModel.setComponentName(contactTypeComponents[contactType]);
-                capContactModel.setComponentName(null); // Fix from CRC for contacts not displaying in ACA
-                contactList.set(i, capContactModel);
-                logDebug("Scrubed contactsGroup[" + i + "]: " + +capContactModel.getCapID() + " " + capContactModel.contactSeqNumber + ", type: " + capContactModel.contactType + ", name: " + capContactModel.contactName + ", component: " + capContactModel.componentName);
-            }
-        }
-        amendCapModel.setContactsGroup(contactList);
+			// Fix Component Info for Contacts & Applicant
+			// Get the non-Applicant contacts
+			logDebug("Scrub component information for Contacts");
+			contactList = amendCapModel.getContactsGroup();
+			if (contactList && scrubContacts) {
+				for (i = 0; i < contactList.size(); i++) {
+					var capContactModel = contactList.get(i);
+					// Scrub Contact List Sequence Number.
+					capContactModel.setCapID(targetCapId);
+					var peopleModel = capContactModel.getPeople();
+					// Remove contact seq number, this is only for parent cap.
+					peopleModel.setContactSeqNumber(null);
+					// Update the Label Information for Contact Attributes
+					peopleModel.setAttributes(updateContactAttributeFieldLabel(peopleModel.getContactType(), peopleModel.getAttributes()));
+					capContactModel.setPeople(peopleModel);
+					// Set Component Name based on Contact Type
+					var contactType = capContactModel.getContactType();
+					var contactTypeComponents = {
+						"Applicant": "Applicant",
+						"Site Contact": "Contact1",
+						"Business": "Contact2"
+					};
+					//if (typeof(contactTypeComponents[contactType]) != "undefined") capContactModel.setComponentName(contactTypeComponents[contactType]);
+					capContactModel.setComponentName(null); // Fix from CRC for contacts not displaying in ACA
+					contactList.set(i, capContactModel);
+					logDebug("Scrubed contactsGroup[" + i + "]: " + +capContactModel.getCapID() + " " + capContactModel.contactSeqNumber + ", type: " + capContactModel.contactType + ", name: " + capContactModel.contactName + ", component: " + capContactModel.componentName);
+				}
+			}
+			amendCapModel.setContactsGroup(contactList);
 
-        // Scrub the applicant
-        logDebug("Scrub component information for Applicant");
-        applicantModel = amendCapModel.getApplicantModel();
-        if (applicantModel && scrubApplicant) {
-            applicantModel.setCapID(targetCapId);
-            applicantModel.getPeople().setContactSeqNumber(null);
-            //applicantModel.setComponentName("Applicant");
-            applicantModel.setComponentName(null); // Fix from CRC for contacts not displaying in ACA
-            amendCapModel.setApplicantModel(applicantModel);
-            logDebug("Scrubed applicantModel: " + applicantModel.getPeople().getContactSeqNumber() + ", type: " + applicantModel.contactType + ", name: " + applicantModel.contactName + ", component: " + applicantModel.componentName);
-        }
+			// Scrub the applicant
+			logDebug("Scrub component information for Applicant");
+			applicantModel = amendCapModel.getApplicantModel();
+			if (applicantModel && scrubApplicant) {
+				applicantModel.setCapID(targetCapId);
+				applicantModel.getPeople().setContactSeqNumber(null);
+				//applicantModel.setComponentName("Applicant");
+				applicantModel.setComponentName(null); // Fix from CRC for contacts not displaying in ACA
+				amendCapModel.setApplicantModel(applicantModel);
+				logDebug("Scrubed applicantModel: " + applicantModel.getPeople().getContactSeqNumber() + ", type: " + applicantModel.contactType + ", name: " + applicantModel.contactName + ", component: " + applicantModel.componentName);
+			}
 
-        // Display LPs
-        logDebug("Scrub component information for License Professionals")
-        logDebug("amendCapModel.getLicenseProfessionalList().isEmpty(): " + (amendCapModel.getLicenseProfessionalList() ? ".isEmpty(): " + amendCapModel.getLicenseProfessionalList().isEmpty() : ": " + amendCapModel.getLicenseProfessionalList()));
-        var capLicenses = null;
-        if (amendCapModel.getLicenseProfessionalList())
-            capLicenses = amendCapModel.getLicenseProfessionalList().toArray();
-        if (capLicenses && scrubLPs) {
-            for (i in capLicenses) {
-                capLicProfModel = capLicenses[i];
-                if (capLicProfModel.getResLicenseType() == null)
-                    capLicProfModel.setResLicenseType(capLicProfModel.getLicenseType()); // 02/14/2019 RS - 91468 Fix Missing License Type
-                //capLicProfModel.setComponentName("Licensed Professional");
-                //capLicProfModel.setComponentName("License");
-                //capLicProfModel.setComponentName("License_697");
-                capLicProfModel.setComponentName(null); // Fix for LP not displaying in ACA
+			// Display LPs
+			logDebug("Scrub component information for License Professionals")
+			logDebug("amendCapModel.getLicenseProfessionalList().isEmpty(): " + (amendCapModel.getLicenseProfessionalList() ? ".isEmpty(): " + amendCapModel.getLicenseProfessionalList().isEmpty() : ": " + amendCapModel.getLicenseProfessionalList()));
+			var capLicenses = null;
+			if (amendCapModel.getLicenseProfessionalList())
+				capLicenses = amendCapModel.getLicenseProfessionalList().toArray();
+			if (capLicenses && scrubLPs) {
+				for (i in capLicenses) {
+					capLicProfModel = capLicenses[i];
+					if (capLicProfModel.getResLicenseType() == null)
+						capLicProfModel.setResLicenseType(capLicProfModel.getLicenseType()); // 02/14/2019 RS - 91468 Fix Missing License Type
+					//capLicProfModel.setComponentName("Licensed Professional");
+					//capLicProfModel.setComponentName("License");
+					//capLicProfModel.setComponentName("License_697");
+					capLicProfModel.setComponentName(null); // Fix for LP not displaying in ACA
 
-                logDebug("Scrubed Licensed Professional[" + i + "]: " +
-                    (capLicProfModel.getPrintFlag() == "Y" ? "Primary" : "") + " " + capLicProfModel.getAuditStatus() +
-                    " License: #" + capLicProfModel.getLicSeqNbr() + " " + capLicProfModel.getLicenseType() + " " + capLicProfModel.getLicenseNbr() +
-                    (capLicProfModel.getBusinessName() ? ", Business: " + capLicProfModel.getBusinessName() : "") +
-                    (capLicProfModel.getFullName() ? ", Name: " + capLicProfModel.getFullName() : "") +
-                    (capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") + ", component: " + capLicProfModel.getComponentName());
-                //logDebug("capLicProfModel[" + i + "]: " + capLicProfModel + br + describe_TPS(capLicProfModel, "function", /(^get.*$)/, true));
-            }
-        }
+					logDebug("Scrubed Licensed Professional[" + i + "]: " +
+						(capLicProfModel.getPrintFlag() == "Y" ? "Primary" : "") + " " + capLicProfModel.getAuditStatus() +
+						" License: #" + capLicProfModel.getLicSeqNbr() + " " + capLicProfModel.getLicenseType() + " " + capLicProfModel.getLicenseNbr() +
+						(capLicProfModel.getBusinessName() ? ", Business: " + capLicProfModel.getBusinessName() : "") +
+						(capLicProfModel.getFullName() ? ", Name: " + capLicProfModel.getFullName() : "") +
+						(capLicProfModel.getLicenseBoard() ? " " + capLicProfModel.getLicenseBoard() : "") + ", component: " + capLicProfModel.getComponentName());
+					//logDebug("capLicProfModel[" + i + "]: " + capLicProfModel + br + describe_TPS(capLicProfModel, "function", /(^get.*$)/, true));
+				}
+			}
+		}
     } catch (e) {
         logDebug("Error " + e.message + " at " + e.lineNumber + "Stack: " + e.stack);
         logError("Error: " + e);
@@ -962,7 +956,6 @@ function getAppSpecificInfo(capId) {
     return capAppSpecificInfo;
 }
 
-/*
 function copyLicenseProfessional(srcCapId, targetCapId) {
     // Modified to include additional logDebug statements.
     // Modified to copy Primary or last License Professional
@@ -1061,7 +1054,7 @@ function getLicenseProfessional(capId) {
     }
     return capLicenseArr;
 }
-*/
+
 function copyAddress(srcCapId, targetCapId) {
     //1. Get address with source CAPID.
     var capAddresses = getAddress(srcCapId);
