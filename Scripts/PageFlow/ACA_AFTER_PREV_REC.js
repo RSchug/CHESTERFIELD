@@ -306,7 +306,7 @@ try {
 
 		if (amendCapModel) { // Use amendCapModel
 			// Restore original values
-			var svFieldNames = ["Is there a Previous Inquiry Case?", "Inquiry Case Number"]
+			var svFieldNames = ["Is there a Previous Inquiry Case?", "Inquiry Case Number","Zoning Opinion Number","Related Case Number"]
 			for (var ff in svFieldNames) {
 				var svFieldName = svFieldNames[ff];
 				logDebug("restoring " + svFieldName + ": " + AInfo[svFieldName]);
@@ -399,7 +399,7 @@ function loadCapModel(targetCapId) {
 		}
 	} else {
 	showMessage = true;
-	comment('No valid intake field.');
+	comment('Not valid Record Type at intake.');
 	//cancel = true;
 	}
 		// logGlobals(AInfo);
