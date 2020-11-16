@@ -408,7 +408,7 @@ function loadCapModel(targetCapId) {
 
 		if (parentCapIdString != null) {
 			var s_result = aa.cap.getCapID(parentCapIdString);
-			if (s_result.getSuccess()
+			if (s_result.getSuccess()) 
 				parentCapId = s_result.getOutput(); // Cap ID entered as future parent
 			else {
 				logDebug("ERROR: getting parentCapId: " + parentCapIdString + " " + s_result.getErrorMessage());
