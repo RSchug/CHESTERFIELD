@@ -406,8 +406,14 @@ function loadCapModel(targetCapId) {
 		parentCapIdString = AInfo[parentCapIdField];
 		logDebug("parentCapId (" + parentCapIdField + "): " + parentCapIdString);
 
-		if (parentCapIdString == null) {
-			parentCapId = aa.cap.getCapID(parentCapIdString).getOutput(); // Cap ID entered as future parent
+		if (parentCapIdString != null) {
+			var s_result = aa.cap.getCapID(parentCapIdString);
+			if (s_result.getSuccess()
+				parentCapId = s_result.getOutput(); // Cap ID entered as future parent
+			else {
+				logDebug("ERROR: getting parentCapId: " + parentCapIdString + " " + s_result.getErrorMessage());
+				parentCapId = null;
+			}
 		}
 		if (parentCapId && parentCapIdField != "") { // Set parentCapId
 			addParent(parentCapId);
