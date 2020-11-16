@@ -460,9 +460,9 @@ function loadCapModel(targetCapId) {
             copyCapDetailInfo(srcCapId, targetCapId);
         }
         //copy App Name (Project Name)
-        if (exists("AppName", capSections)) {
-            copyApplicationName(srcCapId, targetCapId);
-        }
+//        if (exists("AppName", capSections)) {
+//            copyApplicationName(srcCapId, targetCapId);
+//       }
         //copy Cap Detail Info
         if (exists("CapWorkDes", capSections)) {
             copyCapWorkDesInfo(srcCapId, targetCapId);
