@@ -1,5 +1,5 @@
 try {
-	if (appMatch('*/Land Disturbance/*/*') {
+	if (appMatch('*/Land Disturbance/*/*')) {
 		if (AInfo["Engineering Plan Review Number"] != null) {
 			addParent(AInfo["Engineering Plan Review Number"]);
 		}
