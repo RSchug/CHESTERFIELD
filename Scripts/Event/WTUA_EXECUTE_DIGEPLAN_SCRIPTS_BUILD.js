@@ -48,6 +48,7 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && wfTask == consolidat
 			for (d in docArray) {
 				if(docArray[d]["docStatus"] == "Review Complete") {
 					updateDocPermissionsbyCategory(docArray[d],"Comments");
+					enableToBeResubmit(docArray[d],"Review Complete");
 				}
 			}
 		}
