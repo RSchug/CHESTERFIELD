@@ -42,39 +42,80 @@
 //    closeTask("Permit Issuance","Issued","Issued as MultiUnit","")
 //    capId = saveCapId;
 //    }
-if (wfTask =='Inspections' && wfStatus == 'Amendment Submitted') {
-    var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
-    if (appMatch("Building/Permit/Residential/NA"))
-        var newAppTypeString = "Building/Permit/Residential/Amendment";
-    var newCapName = capName;
-    var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
-    var newCapRelation = "Child";
-    var srcCapId = capId;
-    var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId);
-    if (newCapId) {
-        showMessage = true;
-        comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
-            + "Amendment: <b>" + newCapId.getCustomID() + "</b> " + newAppTypeString);
-        if (wfComment && wfComment != "") {
-            cWorkDesc = workDescGet(capId);
-            nWorkDesc = cWorkDesc + ", " + wfComment;
-            updateWorkDesc(nWorkDesc, newCapId);
-        }
-        // set the Permit Expiration Date to 180 days from Application Date.
-        var expDateField = "Permit Expiration Date";
-        var expDate = jsDateToASIDate(new Date(dateAdd(null, 180)));
-        editAppSpecific(expDateField, expDate, newCapId);
-    }
-    addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
+try {
+//Adhoc task updated to Amendment then update Status 'Amendment Submitted' on Inspections, Certificate Issuance or Certificate of Occupancy
+	if ((wfTask =='Document Submitted Online' && wfStatus == 'Amendment')){
+		if (isTaskActive('Inspections')){
+			updateTask("Inspections", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
+				var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
+				if (appMatch("Building/Permit/Residential/NA"))
+					var newAppTypeString = "Building/Permit/Residential/Amendment";
+				var newCapName = capName;
+				var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
+				var newCapRelation = "Child";
+				var srcCapId = capId;
+				var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId);
+				if (newCapId) {
+					showMessage = true;
+					comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
+						+ "Amendment: <b>" + newCapId.getCustomID() + "</b> " + newAppTypeString);
+					if (wfComment && wfComment != "") {
+						cWorkDesc = workDescGet(capId);
+						nWorkDesc = cWorkDesc + ", " + wfComment;
+						updateWorkDesc(nWorkDesc, newCapId);
+					}
+					// set the Permit Expiration Date to 180 days from Application Date.
+					var expDateField = "Permit Expiration Date";
+					var expDate = jsDateToASIDate(new Date(dateAdd(null, 180)));
+					editAppSpecific(expDateField, expDate, newCapId);
+				}
+				addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
+		}
+	}
+//Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
+	if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
+		if (isTaskActive('Review Distribution')){
+			updateTask("Review Distribution", "Corrections Received", "Updated based on Document Submitted Online 'Revision' Status", "");
+			updateAppStatus("In Review","Updated based on Document Submitted Online 'Revision' Status.");
+		}
+	}
+	if (wfTask =='Inspections' && wfStatus == 'Amendment Submitted') {
+		var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
+		if (appMatch("Building/Permit/Residential/NA"))
+			var newAppTypeString = "Building/Permit/Residential/Amendment";
+		var newCapName = capName;
+		var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
+		var newCapRelation = "Child";
+		var srcCapId = capId;
+		var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId);
+		if (newCapId) {
+			showMessage = true;
+			comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
+				+ "Amendment: <b>" + newCapId.getCustomID() + "</b> " + newAppTypeString);
+			if (wfComment && wfComment != "") {
+				cWorkDesc = workDescGet(capId);
+				nWorkDesc = cWorkDesc + ", " + wfComment;
+				updateWorkDesc(nWorkDesc, newCapId);
+			}
+			// set the Permit Expiration Date to 180 days from Application Date.
+			var expDateField = "Permit Expiration Date";
+			var expDate = jsDateToASIDate(new Date(dateAdd(null, 180)));
+			editAppSpecific(expDateField, expDate, newCapId);
+		}
+		addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
+	}
+	///New EE script
+	if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
+		if (wfStatus == 'Issued'){
+			//Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
+			var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
+			//var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
+			var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
+			var InspAssignment = null;
+				if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
+				scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled");
+		}
+	}
+} catch (err) {
+	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-///New EE script
-if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
-    if (wfStatus == 'Issued'){
-//Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
-var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
-//var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
-var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
-var InspAssignment = null;
-    if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
-    scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled");
-}}
