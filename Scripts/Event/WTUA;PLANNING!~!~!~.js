@@ -454,7 +454,7 @@ try {
 		else {
 			var seq2CodeName = null;
 			if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/Preliminary/*') || (appMatch('*/SitePlan/Major/*') && AInfo['Mixed Use'] == "Yes" && (AInfo['Multi-Family (MF)'] == 'CHECKED'
-			|| AInfo['Residential Construction Plan (CP)'] == 'CHECKED')) || appMatch('*/Subdivision/OverallConceptualPlan/*')) {
+			|| AInfo['Residential Construction Plan (CP)'] == 'CHECKED'))) {
 				seq2CodeName = "Subdivision Code";
 				if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
 					AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
