@@ -46,7 +46,7 @@ var partialProcessCompletion = false;                                           
 
 var systemUserObj = aa.person.getUser("ADMIN").getOutput();
 var capId;                                                  // Variable used to hold the Cap Id value.
-var senderEmailAddr = "noreply@accela.com".replace("@","-"+agencyName+"@");                 // Email address of the sender
+var senderEmailAddr = "noreply@chesterfield.gov" //.replace("@","-"+agencyName+"@");                 // Email address of the sender
 var emailAddress = "";                                      // Email address of the person who will receive the batch script log information
 //var emailAddress = "rschug@truepointsolutions.com";
 var emailAddress2 = "";                                     // CC email address of the person who will receive the batch script log information

@@ -362,7 +362,7 @@ else if (publicUserEmail.indexOf("@truepointsolutions.com") >= 0)
     debugEmailTo = publicUserEmail.replace("turned_off", "");
 logDebug("debugEmailTo: " + debugEmailTo)
 if (debugEmailTo && debugEmailTo != "")
-    aa.sendMail("NoReply-Accela@accela.com".replace("-Accela", "-" + servProvCode + "-Accela"), debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+    aa.sendMail("noreply@chesterfield.gov", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 
 /*------------------------------------------------------------------------------------------------------/
 | <===========Internal Functions (used by Action entries)

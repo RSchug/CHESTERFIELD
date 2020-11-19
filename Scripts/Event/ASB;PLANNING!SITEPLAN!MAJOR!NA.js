@@ -27,7 +27,7 @@ try {
 	else if (exists(publicUserEmail, ["dboucher@truepointsolutions.com",""]))
 		debugEmailTo = publicUserEmail;
 	if (debugEmailTo && debugEmailTo != "")
-		aa.sendMail("NoReply_Accela@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
+		aa.sendMail("noreply@chesterfield.gov", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

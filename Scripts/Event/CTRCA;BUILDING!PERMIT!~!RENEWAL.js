@@ -44,4 +44,4 @@ aa.runScript("CONVERTTOREALCAPAFTER4RENEW");
 
 logDebug("Building Permit Renewal end.");
 
-email("khobday@truepointsolutions.com", "noreply@accela.com", "CTRCA testing Chesterfield", debug);
+email("khobday@truepointsolutions.com", "noreply@chesterfield.gov", "CTRCA testing Chesterfield", debug);
