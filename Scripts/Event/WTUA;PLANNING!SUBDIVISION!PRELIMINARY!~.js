@@ -57,7 +57,8 @@ try {
 		}
 	}
 	// in conjunction with 40p - adding submittal counts
-	if (wfTask == 'Review Consolidation' && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting') && {AInfo['Waive Submittal Fee'] == 'UNCHECKED' && AInfo['Submittal Count'] > 2) {
+	if (wfTask == 'Review Consolidation' && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting') && AInfo['Waive Submittal Fee'] == 'UNCHECKED' && 
+		AInfo['Submittal Count'] > 2) {
 		updateFee("PRESUBPLAT2","CC-PLANNING","FINAL",1,"N");
 	}
 } catch (err) {
