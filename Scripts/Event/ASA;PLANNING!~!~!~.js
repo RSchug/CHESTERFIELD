@@ -20,7 +20,7 @@ try {
 		addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
 	}	
 	//Add Planning/LandUse/RPAException/NA Fee
-	if (appMatch("Planning/LandUse/RPAException/NA")){
+	if (!publicUser && appMatch("Planning/LandUse/RPAException/NA")){
 		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
 		addFee("RPAEXCEPTOTH","CC-PLANNING","FINAL",1,"N");
 	}

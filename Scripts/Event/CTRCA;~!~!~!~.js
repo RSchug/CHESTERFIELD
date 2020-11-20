@@ -1,3 +1,13 @@
+try {
+	//Add Planning/LandUse/RPAException/NA Fee
+	if (publicUser && appMatch("Planning/LandUse/RPAException/NA")){
+		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
+		addFee("RPAEXCEPTOTH","CC-PLANNING","FINAL",1,"N");
+	}
+} catch (err) {
+    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}	
+	
 //showMessage = true;
 //showDebug = 3;
 
