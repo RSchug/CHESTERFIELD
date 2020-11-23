@@ -69,27 +69,15 @@ try {
 		}
 	}
 	//added for ASA create parent relationships - any and all
-	if (AInfo["Inquiry Case Number"] != null) {
-		addParent(AInfo["Inquiry Case Number"]);
+	var firstParentName = [AInfo["Inquiry Case Number"],Ainfo["Zoning Opinion Number"]];
+	if (firstParentName != null) {
+		addParent(firstParentName);
 	}
-	if (AInfo["Case Number"] != null) {
-		addParent(AInfo["Case Number"]);
+	var secondParentName = [AInfo["Case Number"],AInfo["Historic Case Number"],AInfo["Previous Case Number (if applicable)"],AInfo["Previous case number"],AInfo["Related case number"],AInfo["Related Case Number"]];
+	if (secondParentName != null) {
+		addParent(secondParentName);
 	}
-	if (AInfo["Historic Case Number"] != null) {
-		addParent(AInfo["Historic Case Number"]);
-	}
-	if (AInfo["Previous Case Number (if applicable)"] != null) {
-		addParent(AInfo["Previous Case Number (if applicable)"]);
-	}
-	if (AInfo["Previous case number"] != null) {
-		addParent(AInfo["Previous case number"]);
-	}
-	if (AInfo["Related case number"] != null) {
-		addParent(AInfo["Related case number"]);
-	}
-	if (AInfo["Related Case Number"] != null) {
-		addParent(AInfo["Related Case Number"]);
-	}
+
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
