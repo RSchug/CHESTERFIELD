@@ -68,6 +68,28 @@ try {
 			email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
 		}
 	}
+	//added for ASA create parent relationships - any and all
+	if (AInfo["Inquiry Case Number"] != null) {
+		addParent(AInfo["Inquiry Case Number"]);
+	}
+	if (AInfo["Case Number"] != null) {
+		addParent(AInfo["Case Number"]);
+	}
+	if (AInfo["Historic Case Number"] != null) {
+		addParent(AInfo["Historic Case Number"]);
+	}
+	if (AInfo["Previous Case Number (if applicable)"] != null) {
+		addParent(AInfo["Previous Case Number (if applicable)"]);
+	}
+	if (AInfo["Previous case number"] != null) {
+		addParent(AInfo["Previous case number"]);
+	}
+	if (AInfo["Related case number"] != null) {
+		addParent(AInfo["Related case number"]);
+	}
+	if (AInfo["Related Case Number"] != null) {
+		addParent(AInfo["Related Case Number"]);
+	}
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

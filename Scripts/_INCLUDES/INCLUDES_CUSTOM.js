@@ -3596,9 +3596,7 @@ function createCap_TPS() {
 }
 
 function createChildLic(grp, typ, stype, cat, desc)
-//
-// creates the new application and returns the capID object
-//
+// creates the new application and returns the capID object - updated 11/2020 for LP's
 {
     try {
         var appCreateResult = aa.cap.createApp(grp, typ, stype, cat, desc);
@@ -3621,7 +3619,6 @@ function createChildLic(grp, typ, stype, cat, desc)
                 logDebug("Could not link applications");
 
             // Copy Parcels
-
             var capParcelResult = aa.parcel.getParcelandAttribute(capId, null);
             if (capParcelResult.getSuccess()) {
                 var Parcels = capParcelResult.getOutput().toArray();
@@ -3675,20 +3672,20 @@ function createChildLic(grp, typ, stype, cat, desc)
             }
             // Copy Work Description - This is custom for Sac County
             copyDetailedDescription(capId, newId);
+			
+			// Copy License Prof - Added for Chesterfield 11/2020
+            copyLicenseProfessional(capId, newId);
 
             //Copy GIS Objects This is ADDED fro SACRAMENTO COUNTY
             var holdId = capId;
             capId = newId;
             copyParcelGisObjects();
             capId = holdId;
-
             return newId;
         } else {
             logDebug("**ERROR: adding child App: " + appCreateResult.getErrorMessage());
         }
-
     } catch (err) {
-
         logDebug("A JavaScript Error occurred: " + err.message + " Line " + err.lineNumber);
     }
 }
