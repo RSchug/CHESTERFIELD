@@ -193,7 +193,7 @@ try {
 		  }
 	}
 	//added 11-2020 per Melissa email
-	if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
+	if (appMatch("Building/Permit/Elevator/Installation") && wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
 		scheduleInspection("Elevator Final", 1, "CONDREYC", null, "Auto Scheduled based on Permit Issuance");
 	}
 } catch (err) {
