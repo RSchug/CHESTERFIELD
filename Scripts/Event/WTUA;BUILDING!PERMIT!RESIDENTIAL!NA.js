@@ -72,13 +72,7 @@ try {
 				addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 		}
 	}
-//Adhoc task updated to Revision then activate 'Review Distribution' and status of 'Corrections Received'
-	if (wfTask =='Document Submitted Online' && wfStatus == 'Revision'){
-		if (isTaskActive('Review Distribution')){
-			updateTask("Review Distribution", "Corrections Received", "Updated based on Document Submitted Online 'Revision' Status", "");
-			updateAppStatus("In Review","Updated based on Document Submitted Online 'Revision' Status.");
-		}
-	}
+
 	if (wfTask =='Inspections' && wfStatus == 'Amendment Submitted') {
 		var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
 		if (appMatch("Building/Permit/Residential/NA"))
