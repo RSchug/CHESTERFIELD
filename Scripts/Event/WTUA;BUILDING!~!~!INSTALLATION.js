@@ -192,10 +192,10 @@ try {
 				logDebug("ERROR: Updating expiration Status: Active, Date: " + expDate + ": " + err);
 		  }
 	}
-	//added 11-2020 per Melissa email
+/*	//added 11-2020 per Melissa email - removed 11-2020 per email via Melissa
 	if (appMatch("Building/Permit/Elevator/Installation") && wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
 		scheduleInspection("Elevator Final", 1, "CONDREYC", null, "Auto Scheduled based on Permit Issuance");
-	}
+	} */
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
