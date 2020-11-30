@@ -5967,8 +5967,8 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
 
     if (applicantEmail != "") {
         if (matches(wfStatus, ResubmitStatus)) {
-            if (appMatch("eReview/*/*/*"))
-                var emailTemplate = "WTUA_CONTACT NOTIFICATION_RESUBMIT";
+			//if (appMatch("eReview/*/*/*"))
+			var emailTemplate = "WTUA_CONTACT NOTIFICATION_RESUBMIT";
 
             var fileNameArray = [];
             var fileNameString = "";
@@ -5987,8 +5987,8 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
 				addParameter(emailParameters, "$$correctionFileNames$$", fileNameString);
         }
         if (matches(wfStatus, ApprovedStatus)) {
-            if (appMatch("eReview/*/*/*"))
-                var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED";
+			//if (appMatch("eReview/*/*/*"))
+			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED";
         }
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     } else {

@@ -16,5 +16,5 @@ function doScriptActions() {
         debugEmailAddress = "";
     }
     if (debug && sendDebugEmail && debugEmailAddress != "")
-        aa.sendMail(sysFromEmail, debugEmailAddress, "", "DEBUG-PROD: " + prefix, debug);
+        aa.sendMail(sysFromEmail, debugEmailAddress, "", "DEBUG-SUPP: " + prefix, debug);
 }

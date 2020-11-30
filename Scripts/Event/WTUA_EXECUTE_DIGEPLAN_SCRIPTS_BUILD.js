@@ -3,22 +3,22 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["BUILDING"];
-var docTypeArrayModule = ["Plan","Other"];
+var docGroupArrayModule = ["BUILDING","ENVENGINEERING","UTILITIES"];
+var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 
 //Workflow Specific variables
 var reviewTasksArray = ["STRUCTURAL REVIEW","NON STRUCTURAL REVIEW","MECHANICAL REVIEW","PLUMBING REVIEW","ELECTRICAL REVIEW","GAS REVIEW","ADDRESSING REVIEW","ENVIRONMENTAL ENGINEERING REVIEW","PLANNING REVIEW","UTILITIES REVIEW","BUDGET AND MANAGEMENT REVIEW","HEALTH DEPARTMENT REVIEW"];
 var taskStatusArray = ["APPROVED","APPROVED WITH CONDITIONS","CORRECTIONS REQUIRED","NOT REQUIRED"];
-var routingTask = "Review Distribution";
-var routingStatusArray = ["Routed for Review"];
-var resubmittalRoutedStatusArray = ["Routed for Review"];
+var routingTask = ["Review Distribution","Application/Plat Submittal"];
+var routingStatusArray = ["Routed for Review","Distributed for Review"];
+var resubmittalRoutedStatusArray = ["Routed for Review","Distributed for Review"];
 var reviewTaskResubmittalReceivedStatus = "Revisions Received";
 var reviewTaskResubmitStatus = "Corrections Required";
 var reviewTaskApprovedStatusArray = ["Approved","Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null,"",undefined,"Revisions Received","In Review"];
 var consolidationTask = "Review Consolidation";
-var ResubmitStatus = "Corrections Required";
-var ApprovedStatus = "Approved";
+var ResubmitStatus = ["Corrections Required","Revisions Requested"];
+var ApprovedStatus = ["Approved","Complete"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
