@@ -50,26 +50,6 @@ logDebug("debugEmailTo: " + debugEmailTo);
 if (debugEmailTo && debugEmailTo != "") showDebug = true;
 
 /*------------RUNNING SCRIPTS HERE------------*/
-//Since we are not able to get DUB:eReview to run effectively in AA and ACA, we are running scripts here. DocumentUploadBefore Event 8.0 is running this DUB_EXECUTE_SCRIPTS and standard choice DocumentUploadBefore. 08-2020 db
-try {
-	if (publicUser && appTypeString == 'eReview/Planning/NA/NA' && !matches(capStatus,'Submitted','Pending Applicant',null)) {
-		cancel = true;
-		showMessage = true;
-		comment("<div class='docList'><span class='fontbold font14px ACA_Title_Color'>Error: You cannot upload a document when the record is " + capStatus + ".</span><ol>");
-    }
-	if (publicUser && appTypeString == 'eReview/Building/NA/NA' /*&& !matches(capStatus,'Submitted','Pending Applicant') && exists(newDocModelArray[dl]["docCategory"],docTypeArrayModule)*/) {
-		//cancel = true;
-		//showMessage = true;
-		//comment("<div class='docList'><span class='fontbold font14px ACA_Title_Color'>Error: You cannot upload a " + newDocModelArray[dl]["docCategory"] + " when the record is " + capStatus + ".</span><ol>");
-		updateAppStatus("Additional Info Submitted","Update by Document Upload");
-    }
-} catch (err) {
-   logDebug("Error in pageflow ACA_CHECK_ADDRESS, err: " + err + ". " + err.stack);
-	debugEmailSubject = "";
-	debugEmailSubject += (capIDString ? capIDString + " " : (capModel && capModel.getCapID ? capModel.getCapID() + " " : "")) + vScriptName + " - ERROR";
-	aa.sendMail("NoReply-" + servProvCode + "@chesterfield.gov", debugEmailTo, "", debugEmailSubject, "Debug: " + br + debug);
-	showDebug = false;
-}
 
 // Send Debug Email
 if (debugEmailTo && debugEmailTo != "") {
