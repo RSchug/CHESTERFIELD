@@ -39,20 +39,3 @@ if(doPreCache) {
      var docPreCache = digEplanPreCache("chesterfield",capIDString);
 }
 /*------------END EDR UPLOAD/RESUBMITTAL ACTIONS------------*/
-//05-2020 db - Since not able to get DUA:eReview to run in ACA, we are running here, the DocumentUploadAfter Event is running this DUA_EXECUTE_DIGEPLAN_SCRIPTS with the Standard Choice
-try {
-    if (publicUser && matches(capStatus, "Pending Applicant") && matches(appTypeString,'eReview/Planning/NA/NA')) {
-        updateTask("Review Distribution", "Revisions Received");
-        updateAppStatus("Revisions Received", "Update by Document Upload");
-    }
-	if (publicUser && matches(capStatus, "Pending Applicant") && matches(appTypeString,'eReview/Building/NA/NA')) {
-        updateTask("Review Distribution", "Revisions Received");
-        updateAppStatus("Revisions Received", "Update by Document Upload");
-    }
-} catch (err) {
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-//Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
-    if (publicUser && matches(appTypeString,'Building/*/*/*')) {
-		addAdHocTask("ADHOC_WF","Document Submitted Online","");
-    }
