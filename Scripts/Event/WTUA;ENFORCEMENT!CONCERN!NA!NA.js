@@ -8,6 +8,7 @@
 */
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
     deactivateTask("Community Enhancement");
+	var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]); //Add "TRANSPORTATION CONCERNS"
     logDebug("Violations: " + checkedItems);    
     newChildID = createChild("Enforcement","Property Maintenance","NA","NA","");
     if (newChildID) {

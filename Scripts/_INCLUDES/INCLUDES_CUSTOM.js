@@ -33,6 +33,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 06/03/2020 Ray Schug Initial Import of existing INCLUDES_CUSTOM from SUPP & PROD
 | 06/10/2020 Ray Schug Added isTaskComplete_TPS
 | 09/08/2020 Boucher updated addParcelStdCondition_TPS so status would be set correctly
+| 12/03/2020 Boucher added new funtion per Melissa
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -5092,6 +5093,26 @@ function getVendor(sourceValue, sourceName)
 		aa.print("Method name: hasAppCondition. Message: Error-" + err.message + ". CapID:" + capID);
 		return false;
 	}
+}
+
+function invoiceAllFees(capid) {
+    var itemCap = capid;
+    var targetFees = loadFees(itemCap);
+    var feeSeqArray = new Array();
+    var paymentPeriodArray = new Array();
+    for (tFeeNum in targetFees) {
+        targetFee = targetFees[tFeeNum];
+        if (targetFee.status == "NEW") {
+            feeSeqArray.push(targetFee.sequence);
+            paymentPeriodArray.push(targetFee.period);
+
+        }
+    }
+    var invoicingResult = aa.finance.createInvoice(itemCap, feeSeqArray, paymentPeriodArray);
+    if (!invoicingResult.getSuccess()) {
+        logDebug("**ERROR: Invoicing fee items not successful.  Reason: " + invoicingResult.getErrorMessage());
+        return false;
+    }
 }
 
 function isTaskComplete_TPS(wfstr) // optional process name
