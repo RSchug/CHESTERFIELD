@@ -15,12 +15,12 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
         var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
-        //Add "TRANSPORTATION CONCERNS" custom fields
+        /*Add "TRANSPORTATION CONCERNS" custom fields
         var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
         for (asi in checkedItems) {
             logDebug("Updating " + asi + " with " + AInfo[asi]);
             editAppSpecific(asi, AInfo[asi], newChildID);
-        }
+        } */
     }
 }
 
@@ -39,12 +39,12 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') {
         activateTask("Investigation");
         capId = saveCapId;
         //copyAppSpecific(newChildID);
-        //Add "TRANSPORTATION CONCERNS" custom fields
+        /*Add "TRANSPORTATION CONCERNS" custom fields
         var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
         for (asi in checkedItems) {
             logDebug("Updating " + asi + " with " + AInfo[asi]);
             editAppSpecific(asi, AInfo[asi], newChildID);
-        }
+        } */
     }
 }
 
@@ -57,12 +57,12 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and
         var newInspId = scheduleInspection_TPS("Initial", 1, null, null, "Auto Scheduled from Concern Record: " + checkedItems, newChildID);
         var iInspector = assignInspection_CHESTERFIELD(newInspId, null, newChildID);
         //copyAppSpecific(newChildID);
-        //Add "TRANSPORTATION CONCERNS" custom fields
+        /*Add "TRANSPORTATION CONCERNS" custom fields
         var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
         for (asi in checkedItems) {
             logDebug("Updating " + asi + " with " + AInfo[asi]);
             editAppSpecific(asi, AInfo[asi], newChildID);
-        }
+        } */
     }
     newChildID = createChild("Enforcement","Zoning Code Compliance","NA","NA","");
     if (newChildID) {
