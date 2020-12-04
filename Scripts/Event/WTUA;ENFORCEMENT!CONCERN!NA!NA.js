@@ -75,6 +75,11 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM and
         activateTask("Investigation");
         capId = saveCapId;
         //copyAppSpecific(newChildID);
+		var InspAssignment = null;
+		if (iInspector && iInspector.getGaUserID()) {
+			InspAssignment = iInspector.getGaUserID();
+			assignCap(InspAssignment,newChildID);
+		}
     }
 }
 
