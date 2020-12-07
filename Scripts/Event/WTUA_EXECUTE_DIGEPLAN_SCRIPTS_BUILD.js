@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["BUILDING","ENVENGINEERING","UTILITIES"];
+var docGroupArrayModule = ["BUILDING","ENVENGINEERING"];
 var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 
 //Workflow Specific variables
@@ -17,7 +17,7 @@ var reviewTaskResubmitStatus = "Corrections Required";
 var reviewTaskApprovedStatusArray = ["Approved","Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null,"",undefined,"Revisions Received","In Review"];
 var consolidationTask = "Review Consolidation";
-var ResubmitStatus = ["Corrections Required","Revisions Requested"];
+var ResubmitStatus = "Corrections Required";
 var ApprovedStatus = ["Approved","Complete"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
