@@ -39,7 +39,7 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,routi
 }
 
 //send email to Applicant on consolidationTask/consolidationResubmitStatus or consolidationTask/ApprovedStatus and update type to Comments
-if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && wfTask == consolidationTask && matches(wfStatus,ResubmitStatus,ApprovedStatus)) {
+if(wfTask == consolidationTask && matches(wfStatus,ResubmitStatus,ApprovedStatus)) {
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
 	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
