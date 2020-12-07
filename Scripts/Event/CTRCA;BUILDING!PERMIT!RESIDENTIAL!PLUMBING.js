@@ -28,7 +28,7 @@ addFee("ROUGHIN","CC-BLD-RES-PLUMB","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-PLUMB","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "New" && AInfo["Type of Building"] == "Multi-Family Dwelling" && !feeExists("MULTIFAMILY")){
-addFee("MULTIFAMILY","CC-BLD-RES-PLUMB","FINAL",houseCount,"Y");
+addFee("MULTIFAMILY","CC-BLD-RES-PLUMB","FINAL",1,"Y");
 updateFee("STATELEVY","CC-BLD-RES-PLUMB","FINAL",1,"Y")}
 
 if (AInfo["Nature of Work"] == "New" && AInfo["Type of Building"] == "Accessory Structure" && !feeExists("ROUGHIN")){
