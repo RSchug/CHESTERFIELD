@@ -2,7 +2,7 @@ try {
 //11-2020 db updated this to work 
 	if (!appMatch("*/*/*/Demolition")){
 		if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
-			if (matches(wfTask,'Certificate Issuance','Inspections')) {
+			if (isTaskActive('Certificate Issuance') || isTaskActive('Inspections')){
 				if (appMatch("*/*/*/NA")) {
 					var newAppTypeString = "Building/Permit/Commercial/Amendment";
 					updateTask("Certificate Issuance", "Amendment Submitted", "Updated based on Document Submitted Online 'Amendment' Status", "");
