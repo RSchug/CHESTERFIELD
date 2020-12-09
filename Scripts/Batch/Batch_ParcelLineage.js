@@ -50,11 +50,11 @@ var childParcelFieldName = "TaxID";
 var transactionIDFieldName = "TransactionID";
 var processingDateFieldName = "ProcessingDate";
 var processingStatusFieldName = "ProcessingStatus";
-var orderByFields = "Date,ProcessingDate,TransactionID,ParentTaxID,TaxID,OBJECTID";
+var orderByFields = "ProcessingDate,Date,TransactionID,ParentTaxID,TaxID,OBJECTID";
 // List of itemNames to include in output.
 var emailFields = [];
-emailFields.push("Date");
 emailFields.push(processingDateFieldName);
+emailFields.push("Date");
 emailFields.push(transactionIDFieldName);
 emailFields.push(parentParcelFieldName);
 emailFields.push(childParcelFieldName);
@@ -307,9 +307,8 @@ try {
     var mapService = new MapService(mapServiceURL, mapServiceUsername, mapServicePassword);
     var mapService_xAPO = new MapService(mapServiceURL_xAPO, mapServiceUsername_xAPO, mapServicePassword_xAPO);
 
-    var childParcelID = "775662353600000";
-    var childParcelUID = null, childParcelModel = null;
-    var parentParcelUID = null, parentParcelModel = null;
+    var childParcelID = null, childParcelUID = null, childParcelModel = null;
+    var parentParcelID = null, parentParcelUID = null, parentParcelModel = null;
 
     /*
     var childParcelID = "775662353600000";
@@ -499,7 +498,16 @@ function mainProcess() {
             continue;
         }
 
-        copyrefParcelConditions(parentParcelID, childParcelID);
+        if (parentParcelModel && childParcelModel) {
+            var parentParcelNumber = parentParcelModel.getParcelNumber();
+            var childParcelNumber = childParcelModel.getParcelNumber();
+            logDebug("Using parent parcel number: " + parentParcelNumber
+                + " child parcel number: " + childParcelNumber);
+            copyrefParcelConditions(parentParcelNumber, childParcelNumber);
+        } else {
+            copyrefParcelConditions(parentParcelID, childParcelID);
+        }
+
 
         //TODO: Resolve error when adding to Parcel Set.
         //ERROR: parcelSet: add set 2010212004:A0502: 778608831900000. INSERT INTO SETDETAILS (SERV_PROV_CODE, SET_SEQ_NBR, SET_ID, L1_PARCEL_NBR,L1_ADDRESS_NBR,LIC_SEQ_NBR, SOURCE_SEQ_NBR, REC_DATE, REC_FUL_NAM, REC_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?) The INSERT statement conflicted with the FOREIGN KEY constraint "SETDETAILS$L3PARCEL_FK". The conflict occurred in database "CHESTERFIELD", table "dbo.L3PARCEL".
