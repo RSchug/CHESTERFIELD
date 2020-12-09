@@ -1,5 +1,5 @@
 try {
-	if (wfTask == "Review Consolidation" &amp;&amp; wfStatus == "Internal Revisions Needed"){
+	if (wfTask == "Review Consolidation" && wfStatus == "Internal Revisions Needed"){
 		deactivateTask("Review Consolidation");
 	}
 } catch (err) {
