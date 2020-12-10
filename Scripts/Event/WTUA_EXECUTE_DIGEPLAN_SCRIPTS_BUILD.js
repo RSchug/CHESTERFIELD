@@ -23,7 +23,7 @@ var ApprovedStatus = ["Approved","Complete"];
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
 //Set "Uploaded" documents by group/category to inReviewDocStatus upon routing
-if(matches(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {  //edrPlansExist(docGroupArrayModule,docTypeArrayModule) && 
+if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {  //edrPlansExist(docGroupArrayModule,docTypeArrayModule) && 
 	logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
