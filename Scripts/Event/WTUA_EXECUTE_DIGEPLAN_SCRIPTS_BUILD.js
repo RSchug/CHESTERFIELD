@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["BUILDING","ENVENGINEERING"];
+var docGroupArrayModule = ["Building","EnvEngineering"];
 var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 
 //Workflow Specific variables
