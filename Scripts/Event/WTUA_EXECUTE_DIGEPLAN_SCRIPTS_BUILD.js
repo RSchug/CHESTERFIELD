@@ -23,12 +23,13 @@ var ApprovedStatus = ["Approved","Complete"];
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
 //Set "Uploaded" documents by group/category to inReviewDocStatus upon routing
-if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {  //edrPlansExist(docGroupArrayModule,docTypeArrayModule) && 
-	logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
+if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
+	logDebug("<font color='blue'>EDR exists and routing " + docGroupArrayModule+docTypeArrayModule+routingTask+routingStatusArray + "</font>");
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
-			if(exists(docArray[d]["docGroup"],docGroupArrayModule) && exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+				logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 				docArray[d].setDocStatus(inReviewDocStatus);
 				docArray[d].setRecStatus("A");
 				docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
