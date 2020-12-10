@@ -1,7 +1,7 @@
 // WTUB:Building/Permit/*/*
 try {
 	if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
-		if (!getLicenseProf() &amp;&amp; (AInfo["Jurat Checkbox"] == null)) {
+		if (!getLicenseProf() && (AInfo["Jurat Checkbox"] == null)) {
 			showMessage = true;
 			comment('&lt;font size=small&gt;&lt;b&gt;Owner Contractor Exemption Jurat Checkbox is required prior to Issuance if no Licensed Professional is selected.&lt;/b&gt;&lt;/font&gt;');
 			cancel = true;
