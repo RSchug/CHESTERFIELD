@@ -3,8 +3,8 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["Building","EnvEngineering"];
-var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
+var docGroupArrayModule = "Building";
+var docTypeArrayModule = "Plans";
 
 //Workflow Specific variables
 var reviewTasksArray = ["STRUCTURAL REVIEW","NON STRUCTURAL REVIEW","MECHANICAL REVIEW","PLUMBING REVIEW","ELECTRICAL REVIEW","GAS REVIEW","ADDRESSING REVIEW","ENVIRONMENTAL ENGINEERING REVIEW","PLANNING REVIEW","UTILITIES REVIEW","BUDGET AND MANAGEMENT REVIEW","HEALTH DEPARTMENT REVIEW"];
@@ -22,7 +22,7 @@ var ApprovedStatus = ["Approved","Complete"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
-//Set "Uploaded" documents by group/category to inReviewDocStatus on routing
+//Set "Uploaded" documents by group/category to inReviewDocStatus upon routing
 if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 	logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
