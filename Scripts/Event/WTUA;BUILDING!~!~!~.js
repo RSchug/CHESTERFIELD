@@ -12,7 +12,7 @@ try {
 		}
 	}
 //For DigEplan
-	if (matches(wfTask,'Review Distribution','Review Consolidation') {
+	if (matches(wfTask,'Review Distribution','Review Consolidation')) {
 		loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 	}
 } catch (err) {
