@@ -38,8 +38,8 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,routi
 	}	
 }
 
-//send email to Applicant on consolidationTask/consolidationResubmitStatus or consolidationTask/ApprovedStatus and update type to Comments
-if(wfTask == consolidationTask && matches(wfStatus,ResubmitStatus,ApprovedStatus)) {
+//send email to Applicant on consolidationTask/consolidationResubmitStatus and update type to Comments
+if(wfTask == consolidationTask && matches(wfStatus,ResubmitStatus)) {
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
 	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
@@ -68,8 +68,9 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,conso
 				if(matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 					updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
+					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 				}
-				if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
+			/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
 					logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
 					docArray[d].setDocGroup("GENERAL");
 					docArray[d].setDocStatus(approvedPendingDocStatus);
@@ -79,7 +80,7 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && matches(wfTask,conso
 					docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
 					updateDocResult = aa.document.updateDocument(docArray[d]);
 					logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
-				}
+				} */
 			}
 		}
 	}

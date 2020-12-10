@@ -16,7 +16,7 @@ var routingStatus = "Routed for Review";
 var routingResubmittalStatus = "Revisions Received";
 
 /*------------START EDR UPLOAD/RESUBMITTAL ACTIONS------------*/
-
+/*
 //Update any document uploaded by DigEplan to comments
 var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 if(docArray != null && docArray.length > 0) {
@@ -29,7 +29,7 @@ if(docArray != null && docArray.length > 0) {
 		}
 	}
 }
-
+*/
 //Any new document uploaded via RESUBMIT, will updated and status for intake
 var newDocModelArray = documentModelArray.toArray();
 var doPreCache = false;
