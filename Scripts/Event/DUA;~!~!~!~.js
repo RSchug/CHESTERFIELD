@@ -1,6 +1,6 @@
 try {
 	//From eReview
-	if (appMatch("Planning/*/*/*") || appMatch("Building/*/*/*") || appMatch("EnvEngineering/*/*/*") {
+	if (appMatch("Planning/*/*/*") || appMatch("Building/*/*/*") || appMatch("EnvEngineering/*/*/*")) {
 		loadCustomScript("DUA_EXECUTE_DIGEPLAN_SCRIPTS");
 	}
 } catch (err) {

@@ -279,12 +279,6 @@ function doResubmitActions(documentModel,docGroups,docCategories,routingTask,rou
 	disableToBeResubmit(documentModel["documentNo"]);
         //5-2020 per business updated to not send emails internally, and added Record Status update for ease of Record filtering - db   
         //emailDocResubmitNotification(docGroups,docCategories);
-        //updateTask(routingTask,routingResubmittalStatus,"","");
-        //updateAppStatus("Revisions Received","Update by Document Upload");
-        if (matches(capStatus,"Pending Applicant")) {
-             updateTask("Review Distribution","Revisions Received");
-             updateAppStatus("Revisions Received","Update by Document Upload");
-         }
 }
 
 function afterResubmitParentDocument(originalDocStatusOnResubmit,parentDocStatusOnResubmit,resubmitDocStatusOnResubmit)
