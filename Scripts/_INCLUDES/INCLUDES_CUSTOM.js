@@ -6185,10 +6185,6 @@ function doResubmitActions(documentModel,docGroups,docCategories,routingTask,rou
         //emailDocResubmitNotification(docGroups,docCategories);
         //updateTask(routingTask,routingResubmittalStatus,"","");
         //updateAppStatus("Revisions Received","Update by Document Upload");
-        if (matches(capStatus,"Pending Applicant")) {
-             updateTask("Review Distribution","Revisions Received");
-             updateAppStatus("Revisions Received","Update by Document Upload");
-         }
 }
 
 function afterResubmitParentDocument(originalDocStatusOnResubmit,parentDocStatusOnResubmit,resubmitDocStatusOnResubmit)
