@@ -25,7 +25,8 @@ var ApprovedStatus = ["Approved","Complete"];
 //Set "Uploaded" documents type/status to inReviewDocStatus upon routing
 if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 	logDebug("<font color='blue'>Inside workflow " + routingTask+routingStatusArray + "</font>");
-	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	var docArray = getDocumentList();
+	logDebug("DocStatus: " + docArray[d]["docStatus"]);
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser && exits(docArray[d]["docCategory"],docTypeArrayModule) ) {
@@ -43,7 +44,7 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
-	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	var docArray = getDocumentList(); //aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
@@ -59,7 +60,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
-			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
+			//logDebug("DocStatus: " + docArray[d]["docStatus"]);
 			//logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
 			//logDebug("DocName: " + docArray[d]["docName"]);
 			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
