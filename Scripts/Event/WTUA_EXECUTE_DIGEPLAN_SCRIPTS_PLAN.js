@@ -10,27 +10,28 @@ var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site
 var reviewTasksArray = ["PLANNING REVIEW", "AIRPORT REVIEW", "ASSESSOR REVIEW", "BUILDING INSPECTION REVIEW", "COUNTY LIBRARY REVIEW", "HEALTH DEPARTMENT REVIEW", "CDOT REVIEW", "ECONOMIC DEVELOPMENT REVIEW", "ENVIRONMENTAL ENGINEERING", "FIRE AND LIFE SAFETY REVIEW", "GIS-IST REVIEW", "GIS-EDM UTILITIES REVIEW", "PARKS AND RECREATION REVIEW", "POLICE REVIEW", "REAL PROPERTY REVIEW", "SCHOOLS CONSTRUCTION REVIEW", "SCHOOLS RESEARCH AND PLANNING REVIEW", "UTILITIES REVIEW", "VDOT REVIEW", "WATER QUALITY REVIEW", "CHESTERFIELD HISTORICAL SOCIETY REVIEW", "COMMUNITY ENHANCEMENT REVIEW"];
 var taskStatusArray = ["APPROVED", "APPROVED WITH CONDITIONS", "REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "TABLE REVIEW ELIGIBLE"];
 var routingTask = "Review Distribution";
-var routingStatusArray = ["Routed for Review"];
-var resubmittalRoutedStatusArray = ["Routed for Review"];
+var routingStatusArray = ["Routed for Review","Manual Routing"];
+var resubmittalRoutedStatusArray = ["Routed for Review","Manual Routing"];
 var reviewTaskResubmittalReceivedStatus = "Revisions Received";
 var reviewTaskResubmitStatus = ["REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "TABLE REVIEW ELIGIBLE"];
 var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
 var consolidationTask = "Review Consolidation";
-if (matches(wfStatus, 'RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting')) {
-var ResubmitStatus = wfStatus; }
+var ResubmitStatus = ['RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting'];
 var ApprovedStatus = 'Review Complete';
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
-//Set "Uploaded" documents by group/category to inReviewDocStatus on routing
-if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, routingTask) && exists(wfStatus, routingStatusArray)) {
-    logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
+//Set "Uploaded" documents to inReviewDocStatus on routing
+if (exists(wfTask, routingTask) && exists(wfStatus, routingStatusArray)) {
+    logDebug("<font color='blue'>Inside the workflow " + wfTask+wfStatus + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
+	logDebug("DocStatus: " + docArray[d]["docStatus"]);
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
-            if (exists(docArray[d]["docGroup"], docGroupArrayModule) && exists(docArray[d]["docCategory"], docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
-                docArray[d].setDocStatus(inReviewDocStatus);
+            if (exits(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+                logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
+				docArray[d].setDocStatus(inReviewDocStatus);
                 docArray[d].setRecStatus("A");
                 docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
                 updateDocResult = aa.document.updateDocument(docArray[d]);
@@ -44,7 +45,6 @@ if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, co
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
-            //logDebug("DocumentID: " + docArray[d]["documentNo"]);
             //logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
             //logDebug("DocName: " + docArray[d]["docName"]);
             //logDebug("DocumentID: " + docArray[d]["documentNo"]);
