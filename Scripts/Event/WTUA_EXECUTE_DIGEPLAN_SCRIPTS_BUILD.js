@@ -22,13 +22,13 @@ var ApprovedStatus = ["Approved","Complete"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
-//Set "Uploaded" documents by group/category to inReviewDocStatus upon routing
-if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
-	logDebug("<font color='blue'>EDR exists and routing " + docGroupArrayModule+docTypeArrayModule+routingTask+routingStatusArray + "</font>");
+//Set "Uploaded" documents type/status to inReviewDocStatus upon routing
+if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
+	logDebug("<font color='blue'>Inside workflow " + routingTask+routingStatusArray + "</font>");
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
-			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser && exits(docArray[d]["docCategory"],docTypeArrayModule) ) {
 				logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 				docArray[d].setDocStatus(inReviewDocStatus);
 				docArray[d].setRecStatus("A");
@@ -39,25 +39,23 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask,routin
 	}	
 }
 
-//send email to Applicant on consolidationTask/consolidationResubmitStatus and update type to Comments
+//send email to Applicant on consolidationTask/consolidationResubmitStatus and update mark up to type to Comments 
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
-	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
-		var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
-		if(docArray != null && docArray.length > 0) {
-			for (d in docArray) {
-				if(docArray[d]["docStatus"] == "Review Complete") {
-					updateDocPermissionsbyCategory(docArray[d],"Comments");
-					enableToBeResubmit(docArray[d],"Review Complete");
-				}
+	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	if(docArray != null && docArray.length > 0) {
+		for (d in docArray) {
+			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+				updateDocPermissionsbyCategory(docArray[d],"Comments");
+				enableToBeResubmit(docArray[d],"Review Complete");
 			}
 		}
 	}
 }
 
-//Update Approved Document Statuses/Category on consolidationTask/ApprovedStatus
-if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
+//Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
+if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -65,7 +63,7 @@ if(edrPlansExist(docGroupArrayModule,docTypeArrayModule) && exists(wfTask,consol
 			//logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
 			//logDebug("DocName: " + docArray[d]["docName"]);
 			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
-			if((exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {
+			if(exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {  //(exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && 
 				if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 					updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
