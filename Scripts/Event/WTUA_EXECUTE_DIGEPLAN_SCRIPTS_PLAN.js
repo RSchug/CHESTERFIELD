@@ -23,7 +23,7 @@ var ApprovedStatus = 'Review Complete';
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
 //Set "Uploaded" documents to inReviewDocStatus on routing
-if (exists(wfTask, routingTask) && exists(wfStatus, routingStatusArray)) {
+if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
     logDebug("<font color='blue'>Inside the workflow " + wfTask+wfStatus + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
 	logDebug("DocStatus: " + docArray[d]["docStatus"]);

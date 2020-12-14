@@ -1,10 +1,8 @@
 /*
 Script# 7p
 Purpose : checking for conditions on parcels at each record type and at their final step
-Description:
-PLEASE BE ADVISED - This code also exist in the WTUB:Building for these proffer conditions on the parcels
+PLEASE BE ADVISED - Code was removed for Building Records.  Added wfStatus of Create Conditions and Close Case will circumvent these scripts
  */
-//Constants:
 try {
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) {
 		if (appMatch('*/*/RPAException/*') && parcelHasCondition_TPS('RPA', 'Applied')) {
@@ -47,6 +45,11 @@ try {
 		else if ((appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*')) && parcelHasCondition_TPS('Variance', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if ((appMatch('*/*/SitePlan/*') && parcelHasCondition_TPS('Site Plan', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Site Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
