@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["BUILDING","ENVENGINEERING"];
+var docGroupArrayModule = ["BUILDING","ENVENGINEERING","GENERAL"];
 var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 
 //Workflow Specific variables
@@ -25,11 +25,10 @@ var ApprovedStatus = ["Approved","Complete"];
 //Set "Uploaded" documents type/status to inReviewDocStatus upon routing
 if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	var docArray = getDocumentList(); // documentModelArray.toArray();
-	logDebug("DocStatus: " + docArray[d]["docStatus"]);
+	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
-			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser && exits(docArray[d]["docCategory"],docTypeArrayModule) ) {
+			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser && exists(docArray[d]["docCategory"],docTypeArrayModule) ) {
 				logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 				docArray[d].setDocStatus(inReviewDocStatus);
 				docArray[d].setRecStatus("A");

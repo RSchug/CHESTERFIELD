@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for PLANNING
-var docGroupArrayModule = ["PLANNING"];
+var docGroupArrayModule = ["PLANNING","GENERAL","CC-PLN-ZC","CC-PLN-VP","CC-PLN-HP","CC-PLN-SS","CC-PLN-PP"];
 var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site Plan/Master Plan","Other","Access Plan","Improvement Plan","Legal Documentation","Plat","Validation Plan Advisory Certificate","Final Plans","Plats"];
 
 //Workflow Specific variables for Planning
@@ -26,7 +26,6 @@ var ApprovedStatus = 'Review Complete';
 if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
     logDebug("<font color='blue'>Inside the workflow " + wfTask+wfStatus + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
-	logDebug("DocStatus: " + docArray[d]["docStatus"]);
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
             if (exits(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
@@ -41,7 +40,7 @@ if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 }
 
 //Update Document Statuses/Category to Approved on consolidationTask/ApprovedStatus
-if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, consolidationTask) && matches(wfStatus, ApprovedStatus)) {
+if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && exists(wfTask, consolidationTask) && exists(wfStatus, ApprovedStatus)) {
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
@@ -70,7 +69,7 @@ if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && matches(wfTask, co
 }
 
 //Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
-if (wfTask == consolidationTask && matches(wfStatus, ResubmitStatus)) {
+if (wfTask == consolidationTask && exists(wfStatus, ResubmitStatus)) {
     emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
     //Update the mark up report to Comment Doc Type
 	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {

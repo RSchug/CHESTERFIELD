@@ -4,7 +4,7 @@ logDebug("Inside DUA_EXECUTE_DIGEPLAN_SCRIPTS");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables
-var docGroupArrayModule = ["BUILDING","PLANNING","ENVENGINEERING"];
+var docGroupArrayModule = ["BUILDING","PLANNING","ENVENGINEERING","GENERAL"];
 var docTypeArrayModule = ["Plans","Supporting Documents","Application","Calculation","Correspondance","Code Modification","Image","Legal Documentation","Plat"];
 var originalDocStatusOnResubmit = "Resubmitted";
 var parentDocStatusOnResubmit = "Resubmitted";
