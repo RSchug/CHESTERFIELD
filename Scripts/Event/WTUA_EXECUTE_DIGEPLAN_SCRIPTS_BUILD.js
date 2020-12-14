@@ -24,8 +24,8 @@ var ApprovedStatus = ["Approved","Complete"];
 
 //Set "Uploaded" documents type/status to inReviewDocStatus upon routing
 if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
-	logDebug("<font color='blue'>Inside workflow " + routingTask+routingStatusArray + "</font>");
-	var docArray = documentModelArray.toArray();
+	logDebug("<font color='blue'>Inside workflow " + wfTask + "</font>");
+	var docArray = getDocumentList(); // documentModelArray.toArray();
 	logDebug("DocStatus: " + docArray[d]["docStatus"]);
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
