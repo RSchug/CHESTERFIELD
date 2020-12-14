@@ -15,27 +15,27 @@ try {
 			addParent(firstParentName);
 		}
 		if (AInfo["Case Number"] != null) {
-			var secondParentName = [AInfo["Case Number"]
+			var secondParentName = AInfo["Case Number"]
 			addParent(secondParentName);
 		}
 		else if (AInfo["Historic Case Number"] != null) {
-			var secondParentName = [AInfo["Historic Case Number"]
+			var secondParentName = AInfo["Historic Case Number"]
 			addParent(secondParentName);
 		}
 		else if (AInfo["Previous Case Number (if applicable)"] != null) {
-			var secondParentName = [AInfo["Previous Case Number (if applicable)"]
+			var secondParentName = AInfo["Previous Case Number (if applicable)"]
 			addParent(secondParentName);
 		}
 		else if (AInfo["Previous case number"] != null) {
-			var secondParentName = [AInfo["Previous case number"]
+			var secondParentName = AInfo["Previous case number"]
 			addParent(secondParentName);
 		}
 		else if (AInfo["Related case number"] != null) {
-			var secondParentName = [AInfo["Related case number"]
+			var secondParentName = AInfo["Related case number"]
 			addParent(secondParentName);
 		}
 		else if (AInfo["Related Case Number"] != null) {
-			var secondParentName = [AInfo["Related Case Number"]
+			var secondParentName = AInfo["Related Case Number"]
 			addParent(secondParentName);
 		}
 	}
