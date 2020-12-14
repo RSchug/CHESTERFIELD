@@ -14,7 +14,7 @@ try {
 			var firstParentName = AInfo["Zoning Opinion Number"];
 			addParent(firstParentName);
 		}
-		if ([AInfo["Case Number"] != null) {
+		if (AInfo["Case Number"] != null) {
 			var secondParentName = [AInfo["Case Number"]
 			addParent(secondParentName);
 		}
