@@ -47,7 +47,7 @@ try {
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if ((appMatch('*/*/SitePlan/*') && parcelHasCondition_TPS('Site Plan', 'Applied')) {
+		else if (appMatch('*/*/SitePlan/*') && parcelHasCondition_TPS('Site Plan', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Site Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;

@@ -4,7 +4,7 @@ try {
 		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
 		addFee("RPAEXCEPTOTH","CC-PLANNING","FINAL",1,"N");
 	}
-	if (appMatch('Planning/*/*/*') {
+	if (appMatch('Planning/*/*/*')) {
 	//create parent relationships - any and all - firstParentName is 1st pageflow, secondParentName is in ASI
 		if (AInfo["Inquiry Case Number"] != null) {
 			var firstParentName = AInfo["Inquiry Case Number"];
