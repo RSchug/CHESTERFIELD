@@ -44,7 +44,7 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
-	var docArray = getDocumentList(); //aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
