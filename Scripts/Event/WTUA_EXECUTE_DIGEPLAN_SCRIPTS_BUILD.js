@@ -24,7 +24,7 @@ var ApprovedStatus = ["Approved","Complete"];
 
 //Set "Uploaded" documents type/status to inReviewDocStatus upon routing
 if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
-	logDebug("<font color='blue'>Inside workflow " + wfTask + "</font>");
+	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
 	var docArray = getDocumentList(); // documentModelArray.toArray();
 	logDebug("DocStatus: " + docArray[d]["docStatus"]);
 	if(docArray != null && docArray.length > 0) {
@@ -42,6 +42,7 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 
 //send email to Applicant on consolidationTask/consolidationResubmitStatus and update mark up to type to Comments 
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
+	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to Comment Doc Type
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
