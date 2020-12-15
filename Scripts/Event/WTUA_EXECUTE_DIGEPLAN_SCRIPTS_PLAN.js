@@ -48,11 +48,11 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete") {
-				updateDocPermissionsbyCategory(docArray[d],"Comments");
-				//enableToBeResubmit(docArray[d]["documentNo"],"Review Complete");
+				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
+				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
-			if (docArray[d]["docStatus"] != "Review Complete") {
-				disableToBeResubmit(docArray[d]["documentNo"]);
+			if (docArray[d]["docStatus"] != "Review Complete-Comments") {
+				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),["Revisions Requested"]);;
 			}
 		}
 	}

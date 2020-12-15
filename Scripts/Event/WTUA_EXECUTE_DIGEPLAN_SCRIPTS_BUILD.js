@@ -48,8 +48,11 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
-				updateDocPermissionsbyCategory(docArray[d],"Comments");
-				enableToBeResubmit(docArray[d],"Review Complete");
+				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
+				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
+			}
+			if (docArray[d]["docStatus"] != "Review Complete-Comments") {
+				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),["Revisions Requested"]);;
 			}
 		}
 	}
@@ -67,7 +70,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 			if(exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {  //(exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && 
 				if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
-					updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
+					//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
 					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 				}
 			/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
