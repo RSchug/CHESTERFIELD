@@ -18,7 +18,7 @@ var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
 var consolidationTask = ["Review Consolidation"];
 var ResubmitStatus = ['RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting'];
-var ApprovedStatus = ['Review Complete','Approved'];
+var ApprovedStatus = ['Review Complete','Approved','Plans Approved'];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
