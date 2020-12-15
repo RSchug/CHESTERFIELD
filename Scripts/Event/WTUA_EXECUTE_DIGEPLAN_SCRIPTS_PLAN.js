@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for PLANNING
-var docGroupArrayModule = ["PLANNING","GENERAL","CC-PLN-ZC","CC-PLN-VP","CC-PLN-HP","CC-PLN-SS","CC-PLN-PP"];
+var docGroupArrayModule = ["GENERAL","CC-PLN-ZC","CC-PLN-VP","CC-PLN-HP","CC-PLN-SS","CC-PLN-PP"];
 var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site Plan/Master Plan","Other","Access Plan","Improvement Plan","Legal Documentation","Plat","Validation Plan Advisory Certificate","Final Plans","Plats"];
 
 //Workflow Specific variables for Planning
@@ -16,15 +16,15 @@ var reviewTaskResubmittalReceivedStatus = "Revisions Received";
 var reviewTaskResubmitStatus = ["REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "TABLE REVIEW ELIGIBLE"];
 var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
-var consolidationTask = "Review Consolidation";
+var consolidationTask = ["Review Consolidation"];
 var ResubmitStatus = ['RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting'];
-var ApprovedStatus = 'Review Complete';
+var ApprovedStatus = ['Review Complete','Approved'];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
 //Set "Uploaded" documents to inReviewDocStatus on routing
 if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
-    logDebug("<font color='blue'>Inside the workflow " + wfTask+wfStatus + "</font>");
+    logDebug("<font color='blue'>Inside the workflow " + wfTask + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
@@ -39,18 +39,35 @@ if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
     }
 }
 
+//Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
+if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
+	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
+    emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
+    //Update the mark up report to Comment Doc Type
+	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	if(docArray != null && docArray.length > 0) {
+		for (d in docArray) {
+			if(docArray[d]["docStatus"] == "Review Complete") {
+				updateDocPermissionsbyCategory(docArray[d],"Comments");
+				enableToBeResubmit(docArray[d],"Comments");
+			}
+		}
+	}
+}
+
 //Update Document Statuses/Category to Approved on consolidationTask/ApprovedStatus
-if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && exists(wfTask, consolidationTask) && exists(wfStatus, ApprovedStatus)) {
+if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
             //logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
             //logDebug("DocName: " + docArray[d]["docName"]);
             //logDebug("DocumentID: " + docArray[d]["documentNo"]);
-            if ((exists(docArray[d]["docGroup"], docGroupArrayModule) || docArray[d]["docGroup"] == null) && matches(docArray[d]["docStatus"], reviewCompleteDocStatus)) {
+            if (exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {
 				if(matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
                     updateDocPermissionsbyCategory(docArray[d], docInternalCategory);
+					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
                 }
                 if (docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
                     logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
@@ -66,23 +83,6 @@ if (edrPlansExist(docGroupArrayModule, docTypeArrayModule) && exists(wfTask, con
             }
         }
     }
-}
-
-//Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
-if (wfTask == consolidationTask && exists(wfStatus, ResubmitStatus)) {
-    emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
-    //Update the mark up report to Comment Doc Type
-	if(edrPlansExist(docGroupArrayModule,docTypeArrayModule)) {
-		var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
-		if(docArray != null && docArray.length > 0) {
-			for (d in docArray) {
-				if(docArray[d]["docStatus"] == "Review Complete") {
-					updateDocPermissionsbyCategory(docArray[d],"Comments");
-					enableToBeResubmit(docArray[d],"Review Complete");
-				}
-			}
-		}
-	}
 }
 synchronizeDocFileNames();
 /*-----END DIGEPLAN EDR SCRIPTS-----*/
