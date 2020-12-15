@@ -17,7 +17,7 @@ var reviewTaskResubmitStatus = ["REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "
 var reviewTaskApprovedStatusArray = ["Approved", "Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null, "", undefined, "Revisions Received", "In Review"];
 var consolidationTask = ["Review Consolidation"];
-var ResubmitStatus = ['RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting'];
+var ResubmitStatus = ['RR-Substantial Approval', 'RR-Table Review', 'RR-Revisions Requested', 'RR-Staff and Developer Meeting','Revisions Requested','Submit Signed Plat'];
 var ApprovedStatus = ['Review Complete','Approved','Plans Approved'];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
@@ -60,6 +60,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 
 //Update Document Statuses/Category to Approved on consolidationTask/ApprovedStatus
 if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
+	logDebug("<font color='blue'>Inside workflow and status: " + wfTask+wfStatus + "</font>");
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
@@ -68,6 +69,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
             //logDebug("DocumentID: " + docArray[d]["documentNo"]);
             if (exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {
 				if(matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
+					logDebug("<font color='blue'>Inside document: " + docArray[d]["documentNo"] + "</font>");
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
                     updateDocPermissionsbyCategory(docArray[d], docInternalCategory);
 					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
