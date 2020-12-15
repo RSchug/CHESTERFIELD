@@ -49,7 +49,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
 				updateDocPermissionsbyCategory(docArray[d],"Comments");
-				enableToBeResubmit(docArray[d],"Comments");
+				enableToBeResubmit(docArray[d],"Review Complete");
 			}
 		}
 	}
