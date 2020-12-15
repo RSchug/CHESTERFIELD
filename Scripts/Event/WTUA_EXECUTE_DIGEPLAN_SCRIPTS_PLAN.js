@@ -9,7 +9,7 @@ var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site
 //Workflow Specific variables for Planning
 var reviewTasksArray = ["PLANNING REVIEW", "AIRPORT REVIEW", "ASSESSOR REVIEW", "BUILDING INSPECTION REVIEW", "COUNTY LIBRARY REVIEW", "HEALTH DEPARTMENT REVIEW", "CDOT REVIEW", "ECONOMIC DEVELOPMENT REVIEW", "ENVIRONMENTAL ENGINEERING", "FIRE AND LIFE SAFETY REVIEW", "GIS-IST REVIEW", "GIS-EDM UTILITIES REVIEW", "PARKS AND RECREATION REVIEW", "POLICE REVIEW", "REAL PROPERTY REVIEW", "SCHOOLS CONSTRUCTION REVIEW", "SCHOOLS RESEARCH AND PLANNING REVIEW", "UTILITIES REVIEW", "VDOT REVIEW", "WATER QUALITY REVIEW", "CHESTERFIELD HISTORICAL SOCIETY REVIEW", "COMMUNITY ENHANCEMENT REVIEW"];
 var taskStatusArray = ["APPROVED", "APPROVED WITH CONDITIONS", "REVISIONS REQUESTED", "SUBSTANTIAL APPROVAL", "TABLE REVIEW ELIGIBLE"];
-var routingTask = "Review Distribution";
+var routingTask = ["Review Distribution"];
 var routingStatusArray = ["Routed for Review","Manual Routing"];
 var resubmittalRoutedStatusArray = ["Routed for Review","Manual Routing"];
 var reviewTaskResubmittalReceivedStatus = "Revisions Received";
@@ -24,7 +24,7 @@ var ApprovedStatus = ['Review Complete','Approved'];
 
 //Set "Uploaded" documents to inReviewDocStatus on routing
 if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
-    logDebug("<font color='blue'>Inside the workflow " + wfTask + "</font>");
+    logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
