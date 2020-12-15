@@ -49,7 +49,10 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete") {
 				updateDocPermissionsbyCategory(docArray[d],"Comments");
-				enableToBeResubmit(docArray[d],"Review Complete");
+				enableToBeResubmit(docArray[d]["documentNo"],"Review Complete");
+			}
+			if (docArray[d]["docStatus"] != "Review Complete") {
+				disableToBeResubmit(docArray[d]["documentNo"]);
 			}
 		}
 	}
