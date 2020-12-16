@@ -70,15 +70,17 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 			//logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
 			//logDebug("DocName: " + docArray[d]["docName"]);
 			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
-			if(exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {  //(exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && 
+			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
+				docArray[d].setDocStatus("Review Complete - Approved");
+				aa.document.updateDocument(docArray[d]);
+				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
+			}
+			if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 				updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
-				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
-				if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
-					logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
-					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
-					//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
-				}
+				//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
+			}
 			/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
 					logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
 					docArray[d].setDocGroup("GENERAL");
