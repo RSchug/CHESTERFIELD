@@ -8,7 +8,7 @@ try {
 	 
 //update ASI Housing Units based on Additional Info Housing Units
 	if (!publicUser) {
-		ditAppSpecific("Number of Units", houseCount);
+		editAppSpecific("Number of Units", houseCount);
 	}
 //If Is a contractor to be determined? is "Yes" then add Licensed Professional Type of "Contractor" and License # of "TBD"//
 	if (AInfo["Is a contractor to be determined?"] == "Yes") {

@@ -5987,7 +5987,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
     addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
 
     if (applicantEmail != "") {
-        if (matches(wfStatus, ResubmitStatus)) {
+        if (exists(wfStatus, ResubmitStatus)) {
 			//if (appMatch("eReview/*/*/*"))
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_RESUBMIT";
 
@@ -5997,7 +5997,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
             if (docArray != null && docArray.length > 0) {
                 for (d in docArray) {
                     601
-                    if (exists(docArray[d]["docGroup"], docGroupArrayModule) && docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser && docArray[d]["allowActions"] != null && docArray[d]["allowActions"].indexOf("RESUBMIT") >= 0) { // docArray[d]["docStatus"] == reviewCompleteDocStatus
+                    if (docArray[d]["fileUpLoadBy"] == digEplanAPIUser && docArray[d]["allowActions"] != null && docArray[d]["allowActions"].indexOf("RESUBMIT") >= 0) { // docArray[d]["docStatus"] == reviewCompleteDocStatus
                         //fileNameArray.push(docArray[d]["fileName"]);
                         getResubmitFileName(docArray[d], fileNameArray);
                     }
@@ -6007,7 +6007,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
                 fileNameString = "Document(s) requiring correction: " + fileNameArray;
 				addParameter(emailParameters, "$$correctionFileNames$$", fileNameString);
         }
-        if (matches(wfStatus, ApprovedStatus)) {
+        if (exists(wfStatus, ApprovedStatus)) {
 			//if (appMatch("eReview/*/*/*"))
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED";
         }
@@ -6185,10 +6185,6 @@ function doResubmitActions(documentModel,docGroups,docCategories,routingTask,rou
         //emailDocResubmitNotification(docGroups,docCategories);
         //updateTask(routingTask,routingResubmittalStatus,"","");
         //updateAppStatus("Revisions Received","Update by Document Upload");
-        if (matches(capStatus,"Pending Applicant")) {
-             updateTask("Review Distribution","Revisions Received");
-             updateAppStatus("Revisions Received","Update by Document Upload");
-         }
 }
 
 function afterResubmitParentDocument(originalDocStatusOnResubmit,parentDocStatusOnResubmit,resubmitDocStatusOnResubmit)

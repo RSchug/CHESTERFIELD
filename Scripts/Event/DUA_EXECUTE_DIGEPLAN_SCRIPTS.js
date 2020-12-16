@@ -4,7 +4,7 @@ logDebug("Inside DUA_EXECUTE_DIGEPLAN_SCRIPTS");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables
-var docGroupArrayModule = ["EREVIEW","BUILDING","PLANNING","ENVENGINEERING","ENFORCEMENT","UTILITIES"];
+var docGroupArrayModule = ["BUILDING","PLANNING","ENVENGINEERING","GENERAL"];
 var docTypeArrayModule = ["Plans","Supporting Documents","Application","Calculation","Correspondance","Code Modification","Image","Legal Documentation","Plat"];
 var originalDocStatusOnResubmit = "Resubmitted";
 var parentDocStatusOnResubmit = "Resubmitted";
@@ -16,6 +16,21 @@ var routingStatus = "Routed for Review";
 var routingResubmittalStatus = "Revisions Received";
 
 /*------------START EDR UPLOAD/RESUBMITTAL ACTIONS------------*/
+/*
+//Update any document uploaded by DigEplan to comments
+var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+if(docArray != null && docArray.length > 0) {
+	for (d in docArray) {
+		if(docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+			docArray[d].setDocStatus(docCommentCategory);
+			docArray[d].setRecStatus("A");
+			docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
+			updateDocResult = aa.document.updateDocument(docArray[d]);
+		}
+	}
+}
+*/
+//Any new document uploaded via RESUBMIT, will updated and status for intake
 var newDocModelArray = documentModelArray.toArray();
 var doPreCache = false;
 //db updated per business request 4-27-2020

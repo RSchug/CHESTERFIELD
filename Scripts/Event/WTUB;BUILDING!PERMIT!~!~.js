@@ -1,6 +1,11 @@
 // WTUB:Building/Permit/*/*
 try {
 	if (wfTask == 'Permit Issuance' && wfStatus == 'Issued') {
+		if (!getLicenseProf() && (AInfo["Jurat Checkbox"] == null)) {
+			showMessage = true;
+			comment('&lt;font size=small&gt;&lt;b&gt;Owner Contractor Exemption Jurat Checkbox is required prior to Issuance if no Licensed Professional is selected.&lt;/b&gt;&lt;/font&gt;');
+			cancel = true;
+		}
 		//Fees must be paid before Permit Issuance Workflow Status is Issued//
 		logDebug("Checking Fees paid: " + balanceDue);
 		if (balanceDue > 0) {

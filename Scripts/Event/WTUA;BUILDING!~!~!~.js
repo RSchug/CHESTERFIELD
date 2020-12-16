@@ -12,7 +12,9 @@ try {
 		}
 	}
 //For DigEplan
-	loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
+	if (matches(wfTask,'Review Distribution','Review Consolidation')) {
+		loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
+	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

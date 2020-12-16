@@ -68,16 +68,6 @@ try {
 			email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
 		}
 	}
-	//added for ASA create parent relationships - any and all
-	var firstParentName = [AInfo["Inquiry Case Number"],Ainfo["Zoning Opinion Number"]];
-	if (firstParentName != null) {
-		addParent(firstParentName);
-	}
-	var secondParentName = [AInfo["Case Number"],AInfo["Historic Case Number"],AInfo["Previous Case Number (if applicable)"],AInfo["Previous case number"],AInfo["Related case number"],AInfo["Related Case Number"]];
-	if (secondParentName != null) {
-		addParent(secondParentName);
-	}
-
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
