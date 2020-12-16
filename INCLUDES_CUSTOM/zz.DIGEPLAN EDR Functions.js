@@ -103,7 +103,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
                 fileNameString = "Document(s) requiring correction: " + fileNameArray;
 				addParameter(emailParameters, "$$correctionFileNames$$", fileNameString);
         }
-        if (esists(wfStatus, ApprovedStatus)) {
+        if (exists(wfStatus, ApprovedStatus)) {
 			//if (appMatch("eReview/*/*/*"))
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED";
         }
