@@ -28,7 +28,7 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
-			if(docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser && exists(docArray[d]["docCategory"],docTypeArrayModule) ) {
+            if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
 				logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
 				docArray[d].setDocStatus(inReviewDocStatus);
 				docArray[d].setRecStatus("A");
@@ -96,5 +96,4 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	}
 }
 synchronizeDocFileNames();
-
 /*-----END DIGEPLAN EDR SCRIPTS-----*/
