@@ -43,7 +43,7 @@ if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
     emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docTypeArrayModule);
-    //Update the mark up report to Comment Doc Type
+//Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -69,25 +69,27 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
             //logDebug("DocumentGroup: " + docArray[d]["docGroup"]);
             //logDebug("DocName: " + docArray[d]["docName"]);
             //logDebug("DocumentID: " + docArray[d]["documentNo"]);
-            if (exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {
-				if(matches(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
-					logDebug("<font color='blue'>Inside document: " + docArray[d]["documentNo"] + "</font>");
-					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
-                    updateDocPermissionsbyCategory(docArray[d], docInternalCategory);
-					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
-                }
-                if (docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
-                    logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
-                    docArray[d].setDocGroup("CC-PLN");
-                    docArray[d].setDocStatus(approvedPendingDocStatus);
-                    docArray[d].setDocCategory(docInternalCategory);
-                    docArray[d].setDocName(capIDString + "_Approved_Plans_Report.pdf");
-                    docArray[d].setRecStatus("A");
-                    docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
-                    updateDocResult = aa.document.updateDocument(docArray[d]);
-                    logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
-                }
-            }
+ 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
+				docArray[d].setDocStatus("Review Complete - Approved");
+				aa.document.updateDocument(docArray[d]);
+			}
+			if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
+				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
+				updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
+				//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
+			}
+		/*  if (docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
+				logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
+				docArray[d].setDocGroup("CC-PLN");
+				docArray[d].setDocStatus(approvedPendingDocStatus);
+				docArray[d].setDocCategory(docInternalCategory);
+				docArray[d].setDocName(capIDString + "_Approved_Plans_Report.pdf");
+				docArray[d].setRecStatus("A");
+				docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
+				updateDocResult = aa.document.updateDocument(docArray[d]);
+				logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
+			} */
         }
     }
 }

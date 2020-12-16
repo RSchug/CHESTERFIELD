@@ -63,6 +63,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 //Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
+	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -74,24 +75,23 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 				docArray[d].setDocStatus("Review Complete - Approved");
 				aa.document.updateDocument(docArray[d]);
-				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 			if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 				updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 				//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
 			}
-			/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
-					logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
-					docArray[d].setDocGroup("GENERAL");
-					docArray[d].setDocStatus(approvedPendingDocStatus);
-					docArray[d].setDocCategory(docInternalCategory);
-					docArray[d].setDocName(capIDString + "_Approved_Plans_Report.pdf");
-					docArray[d].setRecStatus("A");
-					docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
-					updateDocResult = aa.document.updateDocument(docArray[d]);
-					logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
-				} */
+		/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
+				logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
+				docArray[d].setDocGroup("GENERAL");
+				docArray[d].setDocStatus(approvedPendingDocStatus);
+				docArray[d].setDocCategory(docInternalCategory);
+				docArray[d].setDocName(capIDString + "_Approved_Plans_Report.pdf");
+				docArray[d].setRecStatus("A");
+				docArray[d].setSource(getVendor(docArray[d].getSource(), docArray[d].getSourceName()));
+				updateDocResult = aa.document.updateDocument(docArray[d]);
+				logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
+			} */
 		}
 	}
 }
