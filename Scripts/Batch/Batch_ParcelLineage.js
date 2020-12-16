@@ -95,8 +95,9 @@ if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "")
 
 aa.env.setValue("setPrefix", "");
 aa.env.setValue("emailAddress", "rschug@truepointsolutions.com");
+if (aa.env)
 aa.env.setValue("createProcessSets", "Y");
-aa.env.setValue("setType", "");
+aa.env.setValue("setType", "Parcel Condition");
 aa.env.setValue("setStatus", "");
 
 var maxSeconds = 480;			// Standard Max Batch Job Runtime is 5 min (300 seconds). Reduce if you receive batch time error.
@@ -377,7 +378,24 @@ try {
 
     logDebug("Find Map Features: Elapsed Time : " + elapsed() + " Seconds");
 
+    // Create Partial CAP for use as needed.
+    var partialCapType = "Enforcement/Converted/Historical/NA"; // used to create a partial record for some record based processing.
+    var partialCapType = "Utilities/RealProperty/NA/NA";
+    capId = createPartialRecord(partialCapType);
+    logDebug ("Processing CAP: " + capId + " " + partialCapType)
+
     mainProcess();
+
+    // Delete Partial CAP.
+    if (capId) {
+        var result = aa.cap.deletePartialCAP(capId);
+        if (result.getSuccess()) {
+            logDebug("Success deleting CAP: " + capId);
+        }
+        else {
+            logDebug("ERROR: deleting CAP: " + capId + ". " + result.getErrorMessage());
+        }
+    }
 
     logDebug("End of Job: Elapsed Time : " + elapsed() + " Seconds");
 
@@ -425,6 +443,9 @@ function mainProcess() {
         processingStatus = mapFeature[processingStatusFieldName];
 
         if (!exists(transactionID, transactionIDs)) transactionIDs.push(transactionID);
+
+        var rTotals = [];
+        rTotals["Parcel Conditions"] = 0;
 
         // Check for Parent Parcel
         mapFeature["Process Status"] = "";
@@ -498,20 +519,56 @@ function mainProcess() {
             continue;
         }
 
+        // Remove existing parcels.
+        removeParcels();
+        // Add Parcel to temporary record so conditions can be found.
+        addParcelFromRef(parentParcelID);
+        addParcelFromRef(childParcelID);
+
+        var parentParcelNumber = parentParcelID;
+        var childParcelNumber = childParcelID;
         if (parentParcelModel && childParcelModel) {
             var parentParcelNumber = parentParcelModel.getParcelNumber();
             var childParcelNumber = childParcelModel.getParcelNumber();
+            var parentParcelNumber = parentParcelModel.getUnmaskedParcelNumber();
+            var childParcelNumber = childParcelModel.getUnmaskedParcelNumber();
             logDebug("Using parent parcel number: " + parentParcelNumber
                 + " child parcel number: " + childParcelNumber);
-            copyrefParcelConditions(parentParcelNumber, childParcelNumber);
-        } else {
-            copyrefParcelConditions(parentParcelID, childParcelID);
         }
+        logDebug("childParcel:" 
+            //+ ", Model: " + childParcelModel
+            + ", Parcel: " + childParcelModel.getParcel()
+            + ", ParcelNumber: " + childParcelModel.getParcelNumber()
+            + ", UnmaskedParcelNumber: " + childParcelModel.getUnmaskedParcelNumber()
+            + ", UID: " + childParcelModel.getUID()
+            //+ br + describe_TPS(childParcelModel,null,null,true)
+            );
 
+        copyrefParcelConditions(parentParcelNumber, childParcelNumber);
+
+        rTotals["Parcel Conditions"] = 0;
+        if (childParcelModel) {
+            parcCondResult = aa.parcelCondition.getParcelConditions(childParcelModel.getParcelNumber())
+            if (!parcCondResult.getSuccess()) {
+                logDebug("**WARNING: getting Parcel Conditions : " + parcCondResult.getErrorMessage());
+                var parcCondArray = new Array();
+            } else {
+                var parcCondArray = parcCondResult.getOutput();
+            }
+
+            rTotals["Parcel Conditions"] = parcCondArray ? parcCondArray.length : 0;
+        }
 
         //TODO: Resolve error when adding to Parcel Set.
         //ERROR: parcelSet: add set 2010212004:A0502: 778608831900000. INSERT INTO SETDETAILS (SERV_PROV_CODE, SET_SEQ_NBR, SET_ID, L1_PARCEL_NBR,L1_ADDRESS_NBR,LIC_SEQ_NBR, SOURCE_SEQ_NBR, REC_DATE, REC_FUL_NAM, REC_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?) The INSERT statement conflicted with the FOREIGN KEY constraint "SETDETAILS$L3PARCEL_FK". The conflict occurred in database "CHESTERFIELD", table "dbo.L3PARCEL".
-        if (createProcessSets && setPrefix != "" && childParcelModel) {
+
+        var childParcelNo = childParcelID;
+        if (parentParcelModel && childParcelModel) {
+            var childParcelNo = childParcelModel.getParcel();
+            logDebug("For sets using child Parcel: " + childParcelNo);
+        }
+
+        if (createProcessSets && setPrefix != "" && childParcelNo) {
             var setId = setPrefix + ":" + transactionID;
             var setComment = transactionID + " parcels Batch"
                 + (processingDate ? ", Processed on " + jsDateToMMDDYYYY(processingDate) : "")
@@ -519,13 +576,13 @@ function mainProcess() {
             logDebug("set id: " + setId);
             var s = new processingSet(setId, setId, setType, setComment, "PARCEL", setStatus);
             logDebug("set: " + s);
-            logDebug("For set id: " + setId + " adding parcel: " + childParcelID);
-            var s_result = s.add(childParcelID);
+            logDebug("For set id: " + setId + " adding parcel: " + childParcelNo);
+            var s_result = s.add(childParcelNo);
             if (s_result == null || !s_result.getSuccess())
                 processStatus.push("Cannot add to Parcel Set")
             if (masterSet) {
                 if (masterSet.setType == "parcel") {
-                    var s_result = masterSet.add(childParcelID);
+                    var s_result = masterSet.add(childParcelNo);
                 } else if (masterSet.setType == "sets") {
                     var s_result = masterSet.add(setId);
                 } else {
@@ -535,6 +592,11 @@ function mainProcess() {
                     logDebug("Warning: could not add channel set to master set " + s_result.getErrorMessage());
                 }
             }
+        }
+
+        for (var tt in rTotals) {
+            processStatus.push("Added " + rTotals[tt] + " " + tt);
+            logDebug("Added " + rTotals[tt] + " " + tt);
         }
 
         mapFeature["Process Status"] = processStatus.join("; ");
@@ -1525,17 +1587,6 @@ function processingSet(desiredSetId) {
 
 }
 
-function getParcelListForAdmin() {
-    var refParcelID = (arguments.length > 0 ? arguments[0] : null);
-    var refPrclObj = aa.parcel.getParceListForAdmin(refParcelID, null, null, null, null, null, null, null, null, null);
-    if (refPrclObj.getSuccess()) {
-        var refParcels = refPrclObj.getOutput();
-    } else {
-        var refParcels = [];
-    }
-    return refParcels
-}
-
 function copyConditionsFromParcel(parcelIdString) {
     var getFromCondResult = aa.parcelCondition.getParcelConditions(parcelIdString)
     if (getFromCondResult.getSuccess())
@@ -1696,4 +1747,260 @@ function describe_TPS(obj) {
         logDebug("Stack: " + err.stack);
     }
     return ret;
+}
+
+function createPartialRecord(newCapType) {
+    if (!servProvCode) servProvCode = aa.getServiceProviderCode();
+    var newCapId = null;
+    try {
+        logDebug("New Partial CAP Type: " + newCapType);
+        var newCapTypeArray = newCapType.split("/")
+        if (newCapTypeArray.length == 4) {
+            var vCapModel = aa.cap.capModel.getOutput();
+            var vCapTypeModel = vCapModel.capType;
+            vCapTypeModel.setServiceProviderCode(servProvCode);
+            vCapTypeModel.setGroup(newCapTypeArray[0]);
+            vCapTypeModel.setType(newCapTypeArray[1]);
+            vCapTypeModel.setSubType(newCapTypeArray[2]);
+            vCapTypeModel.setCategory(newCapTypeArray[3]);
+            vCapModel.setCapType(vCapTypeModel);
+            var s_result = aa.cap.createPartialRecord(vCapModel);
+            if (s_result.getSuccess()) {
+                newCapId = s_result.getOutput();
+                logDebug("Created partial CAP Type: " + newCapType + ", ID: " + newCapId);
+            } else {
+                logDebug("ERROR: creating partial CAP Type: " + newCapType + " " + s_result.getErrorMessage());
+            }
+        } else {
+            logDebug("ERROR: invalid CAP Type: " + newCapType);
+        }
+    } catch (err) {
+        logDebug("createPartialRecord Error occurred: " + err.message);
+    }
+    return newCapId;
+}
+
+function getParcelListForAdminX() {
+    var refParcelID = (arguments.length > 0 ? arguments[0] : null);
+    var refPrclObj = aa.parcel.getParceListForAdmin(refParcelID, null, null, null, null, null, null, null, null, null);
+    if (refPrclObj.getSuccess()) {
+        var refParcels = refPrclObj.getOutput();
+    } else {
+        var refParcels = [];
+    }
+    return refParcels
+}
+
+
+function getParcelListForAdmin(parcel) {
+    var ownerName = (arguments.length > 1 ? arguments[1] : null);
+    var streetStart = (arguments.length > 2 ? arguments[2] : null);
+    var streetEnd = (arguments.length > 3 ? arguments[3] : null);
+    var houseFractionStart = (arguments.length > 4 ? arguments[4] : null);
+    var houseFractionEnd = (arguments.length > 5 ? arguments[5] : null);
+    var houseNumberAlphaStart = (arguments.length > 6 ? arguments[6] : null);
+    var houseNumberAlphaEnd = (arguments.length > 7 ? arguments[7] : null);
+    var streetDirection = (arguments.length > 8 ? arguments[8] : null);
+    var streetPrefix = (arguments.length > 9 ? arguments[9] : null);
+    var streetName = (arguments.length > 10 ? arguments[10] : null);
+    var streetSuffix = (arguments.length > 11 ? arguments[11] : null);
+    var streetSuffixDirection = (arguments.length > 12 ? arguments[12] : null);
+    var unitType = (arguments.length > 13 ? arguments[13] : null);
+    var unitStart = (arguments.length > 14 ? arguments[14] : null);
+    var unitEnd = (arguments.length > 15 ? arguments[15] : null);
+    var city = (arguments.length > 16 ? arguments[16] : null);
+    var state = (arguments.length > 17 ? arguments[17] : null);
+    var zipCode = (arguments.length > 18 ? arguments[18] : null);
+    var county = (arguments.length > 19 ? arguments[19] : null);
+    var country = (arguments.length > 20 ? arguments[20] : null);
+    var levelPrefix = (arguments.length > 21 ? arguments[21] : null);
+    var levelNumberStart = (arguments.length > 22 ? arguments[22] : null);
+    var levelNumberEnd = (arguments.length > 23 ? arguments[23] : null);
+    var refAddressId = (arguments.length > 24 ? arguments[24] : null);
+    var primaryParcel = (arguments.length > 25 && exists(arguments[25], [false, "N"]) ? "N" : "Y");
+    var itemCap = (arguments.length > 26 && arguments[26] ? arguments[26] : capId);
+
+    var refParcels = [];
+    var fMsg = "";
+    fMsg += " to " + (arguments.length > 26 && arguments[26] ? "itemCap: " : "capId: ") + (itemCap && itemCap.getCustomID ? itemCap.getCustomID() : itemCap);
+    if (parcel) {
+        fMsg = "parcel # " + parcel + fMsg;
+        logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, null, null, null, null, null, null, null, null, null);
+    } else if (refAddressId) {
+        fMsg = "refAddress # " + refAddressId + fMsg;
+        //logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.parcel.getPrimaryParcelByRefAddressID(refAddressId, "Y");
+    } else if (addressStart && addressStreetName && addressStreetSuffix) {
+        fMsg = "address # " + streetStart
+            + (streetEnd ? " - " + streetEnd : "")
+            + (streetDirection ? " " + streetDirection : "")
+            + (streetName ? " " + streetName : "")
+            + (streetSuffix ? " " + streetSuffix : "")
+            + (unitStart ? ", Unit(s): " + unitStart : "")
+            + (unitEnd ? " - " + unitEnd : "")
+            + (addressCity ? " - " + addressCity : "")
+            + (ownerName ? ", ownerName: " + ownerName : "")
+            + fMsg;
+        //logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.address.getParcelListForAdmin(null, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
+    } else if (ownerName) {
+        fMsg = "ownerName: " + ownerName
+            + fMsg;
+        //logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.address.getParcelListForAdmin(null, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
+    } else {
+        logDebug("Failed to create transactional Parcel. No parcel/address identified");
+        return false;
+    }
+    
+    if (!refParcelValidateModelResult.getSuccess()) {
+        logDebug("Failed to get the parcel!" + refParcelValidateModelResult.getErrorMessage());
+    } else {
+        var refParcelValidateModelList = refParcelValidateModelResult.getOutput();
+        if (refParcelValidateModelList == null) {
+            logDebug("There is no parcel info.");
+            var refParcelValidateModelList = [];
+        }
+        for (var i = 0; i < refParcelValidateModelList.length; i++) {
+            var refParcelValidateModel = refParcelValidateModelList[i];
+            //logDebug("refParcelValidateModel: " + refParcelValidateModel + br + describe_TPS(refParcelValidateModel, null, null, true));
+            var refParcelModel = refParcelValidateModel.getParcelModel();
+            //logDebug("refParcelModel: " + refParcelModel + br + describe_TPS(refParcelModel, null, null, true));
+            // Check for those that getParcelListForAdmin doesn't handle.
+            /* Ignored Parameters:
+            if (houseFractionStart && houseFractionStart != refParcelModel.getHouseFractionStart()) continue;
+            if (houseFractionEnd && houseFractionEnd != refParcelModel.getHouseFractionEnd()) continue;
+            if (streetPrefix && streetPrefix != refParcelModel.getStreetPrefix()) continue;
+            if (streetSuffixDirection && streetSuffixDirection != refParcelModel.getStreetSuffixdirection()) continue;
+            if (unitType && unitType != refParcelModel.getUnitType()) continue;
+            if (state && state != refParcelModel.getState()) continue;
+            if (zipCode && zipCode != refParcelModel.getZip()) continue;
+            if (county && county != refParcelModel.getCounty()) continue;
+            if (country && country != refParcelModel.getCountry()) continue;
+            */
+            refParcels.push(refParcelValidateModel);
+            logDebug("refParcels[" + i + "]: " + refParcelModel.getParcel()
+                + (refParcelModel.getPrimaryParcelFlag() && refParcelModel.getPrimaryParcelFlag() == "Y" ? ", Primary" : "")
+                //+ (refParcelModel.getPrimaryFlag() && refParcelModel.getPrimaryFlag() == "Y" ? ", Primary" : "")
+                //+ (refParcelModel.getRefParcelId() ? ", Id: " + refParcelModel.getRefParcelId() : "")
+                //+ (refParcelModel.getRefParcelType() ? ", refParcelType: " + refParcelModel.getRefParcelType() : "")
+            );
+        }
+    }
+    return refParcels;
+}
+
+function addParcelFromRef(parcel) {
+    var ownerName = (arguments.length > 1 ? arguments[1] : null);
+    var streetStart = (arguments.length > 2 ? arguments[2] : null);
+    var streetEnd = (arguments.length > 3 ? arguments[3] : null);
+    var houseFractionStart = (arguments.length > 4 ? arguments[4] : null);
+    var houseFractionEnd = (arguments.length > 5 ? arguments[5] : null);
+    var houseNumberAlphaStart = (arguments.length > 6 ? arguments[6] : null);
+    var houseNumberAlphaEnd = (arguments.length > 7 ? arguments[7] : null);
+    var streetDirection = (arguments.length > 8 ? arguments[8] : null);
+    var streetPrefix = (arguments.length > 9 ? arguments[9] : null);
+    var streetName = (arguments.length > 10 ? arguments[10] : null);
+    var streetSuffix = (arguments.length > 11 ? arguments[11] : null);
+    var streetSuffixDirection = (arguments.length > 12 ? arguments[12] : null);
+    var unitType = (arguments.length > 13 ? arguments[13] : null);
+    var unitStart = (arguments.length > 14 ? arguments[14] : null);
+    var unitEnd = (arguments.length > 15 ? arguments[15] : null);
+    var city = (arguments.length > 16 ? arguments[16] : null);
+    var state = (arguments.length > 17 ? arguments[17] : null);
+    var zipCode = (arguments.length > 18 ? arguments[18] : null);
+    var county = (arguments.length > 19 ? arguments[19] : null);
+    var country = (arguments.length > 20 ? arguments[20] : null);
+    var levelPrefix = (arguments.length > 21 ? arguments[21] : null);
+    var levelNumberStart = (arguments.length > 22 ? arguments[22] : null);
+    var levelNumberEnd = (arguments.length > 23 ? arguments[23] : null);
+    var refAddressId = (arguments.length > 24 ? arguments[24] : null);
+    var primaryParcel = (arguments.length > 25 && exists(arguments[25], [false, "N"]) ? "N" : "Y");
+    var itemCap = (arguments.length > 26 && arguments[26] ? arguments[26] : capId);
+
+    var capParcelObj = null;
+
+    var fMsg = "";
+    fMsg += " to " + (arguments.length > 2 && arguments[2] != null ? "itemCap: " : "capId: ") + (itemCap && itemCap.getCustomID ? itemCap.getCustomID() : itemCap);
+    if (parcel) {
+        fMsg = "parcel # " + parcel + fMsg;
+        logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, null, null, null, null, null, null, null, null, null);
+        //var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
+    } else if (refAddressId) {
+        fMsg = "refAddress # " + refAddressId + fMsg;
+        logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.parcel.getPrimaryParcelByRefAddressID(refAddressId, "Y");
+    } else if (addressStart && addressStreetName && addressStreetSuffix) {
+        fMsg = "address # " + streetStart
+            + (streetEnd ? " - " + streetEnd : "")
+            + (streetDirection ? " " + streetDirection : "")
+            + (streetName ? " " + streetName : "")
+            + (streetSuffix ? " " + streetSuffix : "")
+            + (unitStart ? ", Unit(s): " + unitStart : "")
+            + (unitEnd ? " - " + unitEnd : "")
+            + (addressCity ? " - " + addressCity : "");
+        + (ownerName ? ", ownerName: " + ownerName : "")
+            + fMsg;
+        logDebug("Looking for reference parcel using " + fMsg);
+        var refParcelValidateModelResult = aa.address.getParceListForAdmin(null, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
+    } else {
+        logDebug("Failed to create transactional Parcel. No parcel/address identified");
+        return false;
+    }
+
+    if (!refParcelValidateModelResult.getSuccess()) {
+        logDebug("xxFailed to get reference Parcel for " + fMsg + " Reason: " + refParcelValidateModelResult.getErrorMessage());
+        return false;
+    }
+
+    var refParcelNumber = null;
+    var refParcelModels = refParcelValidateModelResult.getOutput();
+    if (refParcelModels && refParcelModels.length) {
+        var prcl = refParcelModels[0].getParcelModel(); // Use 1st matching reference parcel
+        var refParcelNumber = prcl.getParcelNumber();
+        //if (primaryParcel) 
+        prcl.setPrimaryParcelFlag("Y");
+        var capPrclResult = aa.parcel.warpCapIdParcelModel2CapParcelModel(itemCap, prcl);
+        if (capPrclResult.getSuccess()) {
+            logDebug("Wrapped Transactional Parcel " + refParcelNumber + " with Reference Data");
+            capPrcl = capPrclResult.getOutput();
+            if (!capPrcl.l1ParcelNo) { logDebug("Updated Wrapped Parcel L1ParcelNo:" + prcl.getL1ParcelNo()); capPrcl.setL1ParcelNo(prcl.getL1ParcelNo()); }
+            if (!capPrcl.UID) { logDebug("Updated Wrapped Parcel UID:" + prcl.getUID()); capPrcl.setUID(prcl.getUID()); }
+            logDebug("Wrapped Transactional Parcel " + refParcelNumber + " with Reference Data: "
+                + (capPrcl && capPrcl.parcelNumber ? ", parcelNumber: " + capPrcl.parcelNumber : "")
+                + (capPrcl && capPrcl.l1ParcelNo ? ", l1ParcelNo: " + capPrcl.l1ParcelNo : "")
+                + (capPrcl && capPrcl.UID ? ", UID: " + capPrcl.UID : ""));
+            var capPrclCreateResult = aa.parcel.createCapParcel(capPrcl);
+            if (capPrclCreateResult.getSuccess()) {
+                logDebug("Created Transactional Parcel " + refParcelNumber + " with Reference Data");
+                //capParcelObj = capPrclCreateResult.getOutput(); // Returns null
+                //capParcelObj = getCapParcelObj();
+                capParcelObj = true;
+            } else {
+                logDebug("Failed to create Transactional Parcel with APO Attributes for " + refParcelNumber + " on " + itemCap + " Reason: " + capPrclCreateResult.getErrorMessage());
+            }
+        } else {
+            logDebug("Failed to create Transactional Parcel with APO Attributes for " + refParcelNumber + " on " + itemCap + " Reason: " + capPrclResult.getErrorMessage());
+        }
+    } else {
+        logDebug("No matching reference Parcel for " + fMsg);
+        return false;
+    }
+
+    return (capParcelObj ? capParcelObj : false);
+}
+
+function removeParcels() {
+    var deleteFromCapId = (arguments.length > 0 && arguments[0]? arguments[0] : capId);
+    if (deleteFromCapId) {
+        var pbzns = aa.proxyInvoker.newInstance("com.accela.aa.aamain.parcel.ParcelBusiness").getOutput();
+        var s_result = aa.cap.getCap(deleteFromCapId);
+        if (s_result.getSuccess()) {
+            var deleteFromCap = s_result.getOutput();
+            var deleteFromCapModel = deleteFromCap.getCapModel();
+            pbzns.removeParcel(deleteFromCapModel);
+        }
+    }
 }
