@@ -5997,7 +5997,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
             if (docArray != null && docArray.length > 0) {
                 for (d in docArray) {
                     601
-                    if (exists(docArray[d]["docGroup"], docGroupArrayModule) && docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser && docArray[d]["allowActions"] != null && docArray[d]["allowActions"].indexOf("RESUBMIT") >= 0) { // docArray[d]["docStatus"] == reviewCompleteDocStatus
+                    if (docArray[d]["fileUpLoadBy"] == digEplanAPIUser && docArray[d]["allowActions"] != null && docArray[d]["allowActions"].indexOf("RESUBMIT") >= 0) { // docArray[d]["docStatus"] == reviewCompleteDocStatus
                         //fileNameArray.push(docArray[d]["fileName"]);
                         getResubmitFileName(docArray[d], fileNameArray);
                     }
