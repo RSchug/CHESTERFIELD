@@ -3,7 +3,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for Building Module
-var docGroupArrayModule = ["GENERAL","CC-EE-GENERAL","CC-EE-BMP","CC-EE-PR","CC-EE-LD"];
+var docGroupArrayModule = ["GENERAL","CC-EE-GENERAL","CC-EE-BMP","CC-EE-PR","CC-EE-LD","CC-UTL-GENERAL"];
 var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 
 //Workflow Specific variables
@@ -43,15 +43,17 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
 	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
-//Update the mark up report to Comment Doc Type
+//Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+				docArray[d].setDocStatus("Review Complete-Comments");
+				aa.document.updateDocument(docArray[d]);
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
-			if (docArray[d]["docStatus"] != "Review Complete-Comments") {
+			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
 				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),["Revisions Requested"]);;
 			}
 		}
