@@ -12,12 +12,12 @@ var taskStatusArray = ["APPROVED","APPROVED WITH CONDITIONS","CORRECTIONS REQUIR
 var routingTask = ["Review Distribution","Application/Plat Submittal"];
 var routingStatusArray = ["Routed for Review","Distributed for Review"];
 var resubmittalRoutedStatusArray = ["Routed for Review","Distributed for Review"];
-var reviewTaskResubmittalReceivedStatus = "Revisions Received";
-var reviewTaskResubmitStatus = "Corrections Required";
+var reviewTaskResubmittalReceivedStatus = ["Revisions Received"];
+var reviewTaskResubmitStatus = ["Corrections Required"];
 var reviewTaskApprovedStatusArray = ["Approved","Approved with Conditions"]; //Not currently used, but could be for a review task approval email notification
 var reviewTaskStatusPendingArray = [null,"",undefined,"Revisions Received","In Review"];
 var consolidationTask = ["Review Consolidation"];
-var ResubmitStatus = ["Corrections Required"];
+var ResubmitStatus = ["Corrections Required","Revisions Requested"];
 var ApprovedStatus = ["Approved","Complete"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
