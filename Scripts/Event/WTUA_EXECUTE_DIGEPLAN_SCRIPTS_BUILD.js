@@ -62,6 +62,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 
 //Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
+	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -70,10 +71,13 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 			//logDebug("DocName: " + docArray[d]["docName"]);
 			//logDebug("DocumentID: " + docArray[d]["documentNo"]);
 			if(exists(docArray[d]["docStatus"],reviewCompleteDocStatus)) {  //(exists(docArray[d]["docGroup"],docGroupArrayModule) || docArray[d]["docGroup"] == null) && 
+				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
+				updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
+				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 				if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
+					logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 					updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 					//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
-					emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 				}
 			/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
 					logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");
