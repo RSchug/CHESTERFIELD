@@ -92,7 +92,6 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 					updateDocResult = aa.document.updateDocument(docArray[d]);
 					logDebug("<font color='blue'>Document " + docArray[d]["documentNo"] + " updated </font>");
 				} */
-			}
 		}
 	}
 }
