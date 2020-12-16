@@ -5987,7 +5987,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
     addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
 
     if (applicantEmail != "") {
-        if (matches(wfStatus, ResubmitStatus)) {
+        if (exists(wfStatus, ResubmitStatus)) {
 			//if (appMatch("eReview/*/*/*"))
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_RESUBMIT";
 
@@ -6007,7 +6007,7 @@ function emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGrou
                 fileNameString = "Document(s) requiring correction: " + fileNameArray;
 				addParameter(emailParameters, "$$correctionFileNames$$", fileNameString);
         }
-        if (matches(wfStatus, ApprovedStatus)) {
+        if (exists(wfStatus, ApprovedStatus)) {
 			//if (appMatch("eReview/*/*/*"))
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED";
         }
