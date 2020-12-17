@@ -65,6 +65,9 @@ var mapServiceUsername_xAPO = null;      // Optional parameters for secure map s
 var mapServicePassword_xAPO = null;
 mapLayerName_xAPO = "Parcel_Owner";
 
+var partialCapType = "Enforcement/Converted/Historical/NA"; // used to create a partial record for some record based processing.
+var partialCapType = "Utilities/RealProperty/NA/NA";        // used to create a partial record for some record based processing.
+
 var current = new Date();
 var fromDateMMDDYYYY = null;
 var toDateMMDDYYYY = null;
@@ -93,7 +96,7 @@ if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "")
     }
 }
 
-aa.env.setValue("setPrefix", "");
+aa.env.setValue("setPrefix", "PC");
 aa.env.setValue("emailAddress", "rschug@truepointsolutions.com");
 if (aa.env)
 aa.env.setValue("createProcessSets", "Y");
@@ -379,15 +382,14 @@ try {
     logDebug("Find Map Features: Elapsed Time : " + elapsed() + " Seconds");
 
     // Create Partial CAP for use as needed.
-    var partialCapType = "Enforcement/Converted/Historical/NA"; // used to create a partial record for some record based processing.
-    var partialCapType = "Utilities/RealProperty/NA/NA";
-    capId = createPartialRecord(partialCapType);
+    //capId = createPartialRecord(partialCapType);
+    capId = createCap(partialCapType, "TEST Parcel Processing CAP")
     logDebug ("Processing CAP: " + capId + " " + partialCapType)
 
     mainProcess();
 
     // Delete Partial CAP.
-    if (capId) {
+    if (capId && false) {
         var result = aa.cap.deletePartialCAP(capId);
         if (result.getSuccess()) {
             logDebug("Success deleting CAP: " + capId);
@@ -419,7 +421,7 @@ if (scriptTest) {
     } else {
         aa.env.setValue("ScriptReturnCode", "0");
         if (showMessage) aa.env.setValue("ScriptReturnMessage", message);
-        if (showDebug) aa.env.setValue("ScriptReturnMessage", ">>Message: " + br + message + br + ">>Debug: " + br + debug);
+        if (showDebug) aa.env.setValue("ScriptReturnMessage", message + br + ">>Debug: " + br + debug);
     }
 }
 /*------------------------------------------------------------------------------------------------------/
@@ -444,8 +446,9 @@ function mainProcess() {
 
         if (!exists(transactionID, transactionIDs)) transactionIDs.push(transactionID);
 
-        var rTotals = [];
-        rTotals["Parcel Conditions"] = 0;
+        rTotals = [];
+        //rTotals["Added Parcel Conditions"] = 0;
+        //rTotals["Skipped Parcel Conditions"] = 0;
 
         // Check for Parent Parcel
         mapFeature["Process Status"] = "";
@@ -457,7 +460,7 @@ function mainProcess() {
             var parentParcelModel = parentParcels[0].getParcelModel();
             for (var xx in parentParcels) {
                 var parentParcelModel = parentParcels[xx].getParcelModel();
-                logDebug("Found ref parentParcels[" + xx + "]: " + parentParcelModel.getParcel() + ", UID: " + parentParcelModel.getUID());
+                //logDebug("Found ref parentParcels[" + xx + "]: " + parentParcelModel.getParcel() + ", UID: " + parentParcelModel.getUID());
             }
             parentParcelUID = parentParcelModel.getUID() + ""; // CHESTERFIELD$*$780654386300057
             //xAPO Workaround
@@ -472,7 +475,7 @@ function mainProcess() {
             var childParcelModel = childParcels[0].getParcelModel();
             for (var xx in childParcels) {
                 var childParcelModel = childParcels[xx].getParcelModel();
-                logDebug("Found ref childParcels[" + xx + "]: " + childParcelModel.getParcel() + ", UID: " + childParcelModel.getUID());
+                //logDebug("Found ref childParcels[" + xx + "]: " + childParcelModel.getParcel() + ", UID: " + childParcelModel.getUID());
             }
             childParcelUID = childParcelModel.getUID();
             //xAPO Workaround
@@ -500,9 +503,9 @@ function mainProcess() {
         //if (ff == 0 && childParcelModel) logDebug("childParcelModel: " + br + describe_TPS(childParcelModel, null, null, true));
 
         // Get parcel conditions
-        if (processStatus.length == 0) {
-            logDebug("parentParcelModel: " + parentParcelModel.getParcel() + ", UID: " + parentParcelModel.getUID());
-        }
+        //if (processStatus.length == 0) {
+        //    logDebug("parentParcelModel: " + parentParcelModel.getParcel() + ", UID: " + parentParcelModel.getUID());
+        //}
 
         // Handle Errors
         if (processStatus.length > 0) {
@@ -544,8 +547,10 @@ function mainProcess() {
             //+ br + describe_TPS(childParcelModel,null,null,true)
             );
 
+        // copy parcel conditions
         copyrefParcelConditions(parentParcelNumber, childParcelNumber);
 
+        /*
         rTotals["Parcel Conditions"] = 0;
         if (childParcelModel) {
             parcCondResult = aa.parcelCondition.getParcelConditions(childParcelModel.getParcelNumber())
@@ -558,6 +563,7 @@ function mainProcess() {
 
             rTotals["Parcel Conditions"] = parcCondArray ? parcCondArray.length : 0;
         }
+        */
 
         //TODO: Resolve error when adding to Parcel Set.
         //ERROR: parcelSet: add set 2010212004:A0502: 778608831900000. INSERT INTO SETDETAILS (SERV_PROV_CODE, SET_SEQ_NBR, SET_ID, L1_PARCEL_NBR,L1_ADDRESS_NBR,LIC_SEQ_NBR, SOURCE_SEQ_NBR, REC_DATE, REC_FUL_NAM, REC_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?) The INSERT statement conflicted with the FOREIGN KEY constraint "SETDETAILS$L3PARCEL_FK". The conflict occurred in database "CHESTERFIELD", table "dbo.L3PARCEL".
@@ -595,8 +601,10 @@ function mainProcess() {
         }
 
         for (var tt in rTotals) {
-            processStatus.push("Added " + rTotals[tt] + " " + tt);
-            logDebug("Added " + rTotals[tt] + " " + tt);
+            processStatus.push(tt + " " + rTotals[tt]);
+            logDebug(tt + ": " + rTotals[tt]);
+            if (typeof (pTotals[tt]) == "undefined") pTotals[tt] = 0;
+            pTotals[tt] = pTotals[tt] + rTotals[tt];
         }
 
         mapFeature["Process Status"] = processStatus.join("; ");
@@ -658,28 +666,34 @@ function mainProcess() {
             break;
         }
     }
-    if (emailDetailsMsg != "") emailDetailsMsg = "<table>" + emailDetailsMsg + "</table>";
+    if (emailDetailsMsg != "") {
+        emailDetailsMsgFooter = "";
+        for (var tt in pTotals) {
+            emailDetailsMsgFooter += "<tr><td colspan=4>number of " + tt + "</td><td>" + pTotals[tt] + "</td></tr>";
+        }
+        emailDetailsMsg = "<table>"
+            + "<caption>" + mapTableName + " where " + mapWhereClause.replace(" DATE ", " ").replace(" DATE ", " ") + "</caption>"
+            + emailDetailsMsg
+            + (emailDetailsMsgFooter != "" ? "<tfoot>" + emailDetailsMsgFooter + "</tfoot>" : "")
+            + "</table>";
+    }
 
     if (emailAddress && emailAddress.length) {
         var emailContent = "";
         emailContent += "Processing Results for " + batchJobName + "<br>";
         emailContent += "- processing Date: " + aa.util.formatDate(aa.util.now(), "yyyyMMdd hh:mm:ss") + br;
         //emailContent += "- elapsed time: " + elapsed() + br;
-        for (pp in pTotals) {
-            emailContent += "- number of " + pp + ": " + pTotals[pp] + br;
-        }
         emailContent += emailDetailsMsg + br;
-        emailContent += ">>> debug: " + br + debug;
+        emailContent += ">> Debug: " + br + debug;
         sendResult = aa.sendMail(sysFromEmail, emailAddress, "", batchJobName + " Results", emailContent);
         if (!sendResult.getSuccess()) {
             logDebug("Failed to send system email To:" + emailAddress + ", From:" + sysFromEmail + ": " + sendResult.getErrorMessage())
         }
     }
 
-    for (pp in pTotals) {
-        logDebug("- number of " + pp + ": " + pTotals[pp]);
-    }
-    logDebug(emailDetailsMsg);
+    logMessage(emailDetailsMsg);
+    // debug = emailDetailsMsg + br + ">> Debug: " + br + debug;
+
 } // End MainProcess
 
 //##########External functions###################
@@ -914,6 +928,7 @@ function MapService(serviceURL) {
     this.tokenExpires = null;
     this.layers = null;
     this.tables = null;
+    this.respObj = null;
     logDebug("Initializing MapService: " + serviceURL);
     this.toString = function () {
         return " mapService {URL: " + this.serviceURL
@@ -1006,7 +1021,7 @@ function MapService(serviceURL) {
             }
             logDebug("serverURL:" + this.serverURL);
 
-            var respObj = null;
+            this.respObj = null;
             var postURL = this.serverURL + "/tokens/generateToken/";
             var postParameters = "";
             if (this.serverURL && this.username && this.password) {
@@ -1021,26 +1036,26 @@ function MapService(serviceURL) {
             logDebug("Using get token URL: " + postURL + "?" + postParameters);
             var postResult = aa.util.httpPost(postURL, postParameters);
             if (postResult.getSuccess()) {
-                var respObj = null;
+                this.respObj = null;
                 //logDebug("postResult: " + postResult + br + describe_TPS(postResult));
                 logDebug("     response: " + postResult.getOutput());
                 if (postResult.getOutput() && String(postResult.getOutput()) != "") {
                     resp = String(postResult.getOutput());
-                    var respObj = JSON.parse(resp);
-                    if (respObj.error) {
-                        logDebug("ERROR: mapService.getToken(). Reason: " + respObj.error.code + " " + respObj.error.message);
+                    this.respObj = JSON.parse(resp);
+                    if (this.respObj.error) {
+                        logDebug("ERROR: mapService.getToken(). Reason: " + this.respObj.error.code + " " + this.respObj.error.message);
                         logDebug("     this.serviceURL: " + this.serviceURL + ", Parameters: " + postParameters);
                         logDebug("     response: " + resp);
                     }
                 };
-                //logDebug("respObj: " + respObj + br + describe_TPS(respObj));
-                this.tokenObj = respObj
-                if (respObj && typeof (respObj) == "object") {
-                    this.token = respObj.token;
-                    this.tokenExpires = new Date(respObj.expires);
+                //logDebug("respObj: " + this.respObj + br + describe_TPS(this.respObj));
+                this.tokenObj = this.respObj
+                if (this.respObj && typeof (this.respObj) == "object") {
+                    this.token = this.respObj.token;
+                    this.tokenExpires = new Date(this.respObj.expires);
                     logDebug("token: " + this.token + ", expires: " + this.tokenExpires);
                 }
-                return respObj;
+                return this.respObj;
             } else {
                 logDebug("this.serviceURL: " + this.serviceURL + ", Parameters: " + postParameters);
                 logDebug("ERROR: mapService.getToken() unexpected error: " + postResult.getErrorMessage());
@@ -1058,7 +1073,7 @@ function MapService(serviceURL) {
         // For more information see https://developers.arcgis.com/rest/services-reference/all-layers-and-tables.htm
         //  https://<mapservice-url>/layers
         try {
-            var respObj = null;
+            this.respObj = null;
             var postURL = this.serviceURL + "/layers";
             var postParameters = (this.token ? "Token=" + this.token : "");
             postParameters += "&f=pjson" // Output format: html = HTML, pjson = JSON
@@ -1070,27 +1085,27 @@ function MapService(serviceURL) {
                 //logDebug("     response: " + postResult.getOutput());
                 if (postResult.getOutput() && String(postResult.getOutput()) != "") {
                     resp = String(postResult.getOutput());
-                    var respObj = JSON.parse(resp);
-                    if (respObj.error) {
+                    this.respObj = JSON.parse(resp);
+                    if (this.respObj.error) {
                         //logDebug("     this.serviceURL: " + this.serviceURL + ", Parameters: " + postParameters);
-                        logDebug("ERROR: mapService.getLayers(). Reason: " + respObj.error.code + " " + respObj.error.message);
+                        logDebug("ERROR: mapService.getLayers(). Reason: " + this.respObj.error.code + " " + this.respObj.error.message);
                         return null;
                     }
-                    if (respObj) {
+                    if (this.respObj) {
                         this.layers = null;
                         this.tables = null;
-                        //logDebug("respObj: " + respObj + br + describe_TPS(respObj));
-                        if (respObj.layers) {
+                        //logDebug("respObj: " + this.respObj + br + describe_TPS(this.respObj));
+                        if (this.respObj.layers) {
                             this.layers = [];
-                            var layers = respObj.layers
+                            var layers = this.respObj.layers
                             for (var ll in layers) {
                                 //logDebug("layer[" + ll + "]: " + layers[ll].id + " " + layers[ll].name + " " + layers[ll].type)
                                 this.layers[layers[ll].name] = layers[ll];
                             }
                         }
-                        if (respObj.tables) {
+                        if (this.respObj.tables) {
                             this.tables = [];
-                            var tables = respObj.tables
+                            var tables = this.respObj.tables
                             for (var ll in tables) {
                                 //logDebug("tables[" + ll + "]: " + tables[ll].id + " " + tables[ll].name + " " + tables[ll].type)
                                 this.tables[tables[ll].name] = tables[ll];
@@ -1103,7 +1118,7 @@ function MapService(serviceURL) {
                 logDebug("ERROR: mapService.getLayers(). error: " + postResult.getErrorMessage());
                 return null;
             }
-            return respObj;
+            return this.respObj;
         } catch (err) {
             logDebug("ERROR: mapService.getLayers() unexpected error: " + err.message);
             logDebug("Error occurred: " + err.message + " at line " + err.lineNumber + " stack: " + err.stack);
@@ -1140,11 +1155,11 @@ function MapService(serviceURL) {
                 return null;
             }
             logDebug("Looking for " + mapQueryType + " " + mapLayerName + " ID: " + mapLayerID + " where " + mapWhereClause);
-            var respObj = null;
+            this.respObj = null;
             var postURL = this.serviceURL + "/" + mapLayerID + "/query"
             postParameters = (this.token ? "Token=" + this.token : "");
             if (mapWhereClause) {
-                postParameters += "&where=" + mapWhereClause.replace("'", "%27").replace("'", "%27").replace("=", "%3D");
+                postParameters += "&where=" + mapWhereClause.replace(/'/g, "%27").replace(/=/g, "%3D");
             } else {
                 postParameters += "&where=";
             }
@@ -1186,72 +1201,65 @@ function MapService(serviceURL) {
             postParameters += "&f=json" // Output format: html = HTML, pjson = JSON 
 
             //logDebug("Using query " + mapQueryType + " URL: " + postURL + "?" + postParameters);
-            var mapFields = null, retryCount = 0;
-            do { // TODO: Check 504 is retry is working.
-                var postResult = aa.util.httpPost(postURL, postParameters);
-                if (!postResult) {
-                    return null;
-                } else if (postResult.getSuccess()) {
-                    // logDebug("     response: " + postResult.getOutput());
-                    if (postResult.getOutput() && String(postResult.getOutput()) != "") {
-                        var resp = String(postResult.getOutput());
-                        var respObj = JSON.parse(resp);
-                        if (respObj.error) {
-                            // mapServiceParameters are invalid. This will give an error (400 Failed to execute query). Check for valid mapLayerID, longitude, latitude, fieldNames.
-                            if (respObj.error.code == 504) {
-                                logDebug("     504 Gateway Timeout." + (retryCount > 0 ? " Retry #" + retryCount : ""));
-                                retryCount = 1;
-                            }
-                            if (respObj.error.code == 400) logDebug("     400 Bad Request. Check for invalid parameters.");
-                            logDebug("     this.serviceURL: " + this.serviceURL + ", Parameters: " + postParameters);
-                            logDebug("ERROR: mapService.query(). Reason: " + respObj.error.code + " " + respObj.error.message);
-                            return null;
-                        } else {
-                            if (typeof (respObj["fields"]) != "undefined") {
-                                mapFields = [];
-                                var gisFields = respObj["fields"];
-                                for (var f in gisFields) {
-                                    mapFields[gisFields[f].name] = gisFields[f];
-                                }
+            var mapFields = null;
+            var postResult = aa.util.httpPost(postURL, postParameters);
+            if (!postResult) {
+                return null;
+            } else if (postResult.getSuccess()) {
+                // logDebug("     response: " + postResult.getOutput());
+                if (postResult.getOutput() && String(postResult.getOutput()) != "") {
+                    var resp = String(postResult.getOutput());
+                    this.respObj = JSON.parse(resp);
+                    if (this.respObj.error) {
+                        // mapServiceParameters are invalid. This will give an error (400 Failed to execute query). Check for valid mapLayerID, longitude, latitude, fieldNames.
+                        if (this.respObj.error.code == 504) {
+                            logDebug("     504 Gateway Timeout.");
+                        }
+                        if (this.respObj.error.code == 400) logDebug("     400 Bad Request. Check for invalid parameters.");
+                        logDebug("     this.serviceURL: " + this.serviceURL + ", Parameters: " + postParameters);
+                        logDebug("ERROR: mapService.query(). Reason: " + this.respObj.error.code + " " + this.respObj.error.message);
+                        return null;
+                    } else {
+                        if (typeof (this.respObj["fields"]) != "undefined") {
+                            mapFields = [];
+                            var gisFields = this.respObj["fields"];
+                            for (var f in gisFields) {
+                                mapFields[gisFields[f].name] = gisFields[f];
                             }
                         }
                     }
-                    if (mapFields) {
-                        var mapFeatures = null;
-                        if (typeof (respObj["features"]) != "undefined") {
-                            mapFeatures = [];
-                            var gisFeatures = respObj["features"];
-                            for (var f in gisFeatures) {
-                                mapFeature = gisFeatures[f]["attributes"];
-                                if (typeof (mapFeature) != "undefined") {
-                                    // Fix Dates
-                                    if (mapFields) {
-                                        for (var ff in mapFields) {
-                                            if (mapFields[ff].type == "esriFieldTypeDate") {
-                                                if (mapFeature[ff] != null && !isNaN(mapFeature[ff])) {
-                                                    mapFeature[ff] = new Date(mapFeature[ff]);
-                                                } else {
-                                                    if (mapFeature[ff] != null)
-                                                        logDebug(ff + " (Invalid Date): " + mapFeature[ff]);
-                                                    mapFeature[ff] = null;
-                                                }
+                }
+                if (mapFields) {
+                    var mapFeatures = null;
+                    if (typeof (this.respObj["features"]) != "undefined") {
+                        mapFeatures = [];
+                        var gisFeatures = this.respObj["features"];
+                        for (var f in gisFeatures) {
+                            mapFeature = gisFeatures[f]["attributes"];
+                            if (typeof (mapFeature) != "undefined") {
+                                // Fix Dates
+                                if (mapFields) {
+                                    for (var ff in mapFields) {
+                                        if (mapFields[ff].type == "esriFieldTypeDate") {
+                                            if (mapFeature[ff] != null && !isNaN(mapFeature[ff])) {
+                                                mapFeature[ff] = new Date(mapFeature[ff]);
+                                            } else {
+                                                if (mapFeature[ff] != null)
+                                                    logDebug(ff + " (Invalid Date): " + mapFeature[ff]);
+                                                mapFeature[ff] = null;
                                             }
                                         }
-                                    } else {
-                                        mapFeature = gisFeatures[f]["attributes"];
                                     }
-                                    mapFeatures.push(mapFeature);
+                                } else {
+                                    mapFeature = gisFeatures[f]["attributes"];
                                 }
+                                mapFeatures.push(mapFeature);
                             }
                         }
-                        return mapFeatures;
                     }
-                } else {
-                    logDebug("ERROR: mapService.query() unexpected error: " + postResult.getErrorMessage());
-                    return null;
+                    return mapFeatures;
                 }
-            } while (retryCount != null)
-            if (retryCount) {
+            } else {
                 logDebug("ERROR: mapService.query() unexpected error: " + postResult.getErrorMessage());
                 return null;
             }
@@ -1259,7 +1267,7 @@ function MapService(serviceURL) {
             logDebug("ERROR: mapService.query() unexpected error: " + err.message);
             return null;
         }
-        return respObj
+        return this.respObj
     }
 
     if (this.username && this.password) { // Secure connection get token.
@@ -1610,6 +1618,7 @@ function copyConditionsFromParcel(parcelIdString) {
 }
 
 function copyrefParcelConditions(refParcelIDSrc, refParcelIDTarget) {
+    if (typeof (rTotals) == "undefined") rTotals = [];
     var processStatus = [];
     var parcCondResult = aa.parcelCondition.getParcelConditions(refParcelIDSrc);
     if (!parcCondResult.getSuccess()) {
@@ -1625,29 +1634,74 @@ function copyrefParcelConditions(refParcelIDSrc, refParcelIDTarget) {
     if (parcCondArray && parcCondArray.length > 0) {
         for (var thisParcCond in parcCondArray) {
             var thisCond = parcCondArray[thisParcCond];
+            var cGroup = thisCond.getConditionGroup();
             var cType = thisCond.getConditionType();
             var cStatus = thisCond.getConditionStatus();
+            var cStatusType = thisCond.getConditionStatusType();
             var cDesc = thisCond.getConditionDescription();
             var cImpact = thisCond.getImpactCode();
             var cType = thisCond.getConditionType();
             var cComment = thisCond.getConditionComment();
             var cExpireDate = thisCond.getExpireDate();
+            var cPriority = null; //thisCond.getPriority();
 
             //Check if parcel condition exists on child
             if (parcelHasCondition(refParcelIDTarget, cType, cStatus, cDesc, cImpact)) {
-                logDebug("Skip existing Parcel condition (" + cImpact + ") " + cDesc);
+                logDebug("Skip existing condition on Parcel " + childParcelID
+                    + "  " + (cGroup ? cGroup : "") + "." + cType
+                    + ": " + cDesc + ", Impact: " + cImpact);
+                if (typeof (rTotals["Skipped Parcel Conditions"]) == "undefined") rTotals["Skipped Parcel Conditions"] = 0;
+                rTotals["Skipped Parcel Conditions"]++;
             } else {
                 //TODO: copy exactly from parent parcel condition
+                logDebug("thisCond: " + br + describe_TPS(thisCond));
+                /*	    addParcelCondition(java.lang.String parcelNumber,
+                                          java.lang.String conditionType,
+                                          java.lang.String conditionDescription,
+                                          java.lang.String conditionComment,
+                                          java.lang.String refNumber1,
+                                          java.lang.String refNumber2,
+                                          java.lang.String impactCode,
+                                          java.lang.String conditionStatus,
+                                          com.accela.aa.emse.util.ScriptDateTime effectDate,
+                                          com.accela.aa.emse.util.ScriptDateTime expireDate,
+                                          com.accela.aa.emse.util.ScriptDateTime issuedDate,
+                                          com.accela.aa.emse.util.ScriptDateTime statusDate,
+                                          com.accela.aa.aamain.people.SysUserModel issuedByUser,
+                                          com.accela.aa.aamain.people.SysUserModel statusByUser,
+                                          java.lang.String conditionStatusType,
+                                          java.lang.String displayConditionNotice,
+                                          java.lang.String includeInConditionName,
+                                          java.lang.String includeInShortDescription,
+                                          java.lang.String inheritable,
+                                          java.lang.String longDescripton,
+                                          java.lang.String publicDisplayMessage,
+                                          java.lang.String resolutionAction,
+                                          java.lang.String conditionGroup,
+                                          java.lang.String displayNoticeOnACA,
+                                          java.lang.String displayNoticeOnACAFee,
+                                          java.lang.Integer priority) */
+
+                var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, thisCond.getConditionType(), thisCond.getConditionDescription(), thisCond.getConditionComment(), null, null, thisCond.getImpactCode(), thisCond.getConditionStatus(), sysDate, thisCond.getExpireDate(), thisCond.getIssuedDate(), sysDate, systemUserObj, systemUserObj, thisCond.getConditionStatusType(), thisCond.getDisplayConditionNotice(), thisCond.getIncludeInConditionName(), thisCond.getIncludeInShortDescription(), thisCond.getInheritable(), thisCond.getLongDescripton(), thisCond.getPublicDisplayMessage(), thisCond.getResolutionAction(), thisCond.getConditionGroup(), thisCond.getDisplayNoticeOnACA(), thisCond.getDisplayNoticeOnACAFee()); //, cPriority);
+
+                //var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, cType, cDesc, cComment, null, null, cImpact, cStatus, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj);
                 //addParcelCondition(refParcelIDTarget, cType, cStatus, cDesc, cComment, cImpact);
-                var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, cType, cDesc, cComment, null, null, cImpact, cStatus, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj);
+
                 if (!addParcelCondResult.getSuccess()) {
-                    var errorMsg = "adding condition to Parcel " + childParcelID + " (" + cDesc + "): " + addParcelCondResult.getErrorMessage()
+                    var errorMsg = "adding condition to Parcel " + childParcelID + " (" + cDesc + "): "
+                        + "  " + (cGroup ? cGroup : "") + "." + cType 
+                        + ": " + cDesc + ", Impact: " + cImpact
+                        + ": " + addParcelCondResult.getErrorMessage();
                     logDebug("ERROR: " + errorMsg);
                     processStatus.push("Cannot add " + cDesc);
                     pTotals["Exceptions"]++;
                 } else {
-                    logDebug("Successfully added condition to Parcel " + childParcelID + "  (" + cImpact + ") " + cDesc);
+                    logDebug("Successfully added condition to Parcel " + childParcelID 
+                        + "  " + (cGroup ? cGroup : "") + "." + cType
+                        + ": " + cDesc + ", Impact: " + cImpact);
                     processStatus.push("Added " + cDesc)
+                    if (typeof (rTotals["Copied Parcel Conditions"]) == "undefined") rTotals["Copied Parcel Conditions"] = 0;
+                    rTotals["Copied Parcel Conditions"]++;
                 }
             }
         }
@@ -1825,7 +1879,7 @@ function getParcelListForAdmin(parcel) {
     fMsg += " to " + (arguments.length > 26 && arguments[26] ? "itemCap: " : "capId: ") + (itemCap && itemCap.getCustomID ? itemCap.getCustomID() : itemCap);
     if (parcel) {
         fMsg = "parcel # " + parcel + fMsg;
-        logDebug("Looking for reference parcel using " + fMsg);
+        //logDebug("Looking for reference parcel using " + fMsg);
         var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, null, null, null, null, null, null, null, null, null);
     } else if (refAddressId) {
         fMsg = "refAddress # " + refAddressId + fMsg;
@@ -1880,7 +1934,8 @@ function getParcelListForAdmin(parcel) {
             if (country && country != refParcelModel.getCountry()) continue;
             */
             refParcels.push(refParcelValidateModel);
-            logDebug("refParcels[" + i + "]: " + refParcelModel.getParcel()
+            logDebug("Found Parcel: " + refParcelModel.getParcel()
+            //logDebug("refParcels[" + i + "]: " + refParcelModel.getParcel()
                 + (refParcelModel.getPrimaryParcelFlag() && refParcelModel.getPrimaryParcelFlag() == "Y" ? ", Primary" : "")
                 //+ (refParcelModel.getPrimaryFlag() && refParcelModel.getPrimaryFlag() == "Y" ? ", Primary" : "")
                 //+ (refParcelModel.getRefParcelId() ? ", Id: " + refParcelModel.getRefParcelId() : "")
@@ -1925,12 +1980,12 @@ function addParcelFromRef(parcel) {
     fMsg += " to " + (arguments.length > 2 && arguments[2] != null ? "itemCap: " : "capId: ") + (itemCap && itemCap.getCustomID ? itemCap.getCustomID() : itemCap);
     if (parcel) {
         fMsg = "parcel # " + parcel + fMsg;
-        logDebug("Looking for reference parcel using " + fMsg);
+        //logDebug("Looking for reference parcel using " + fMsg);
         var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, null, null, null, null, null, null, null, null, null);
         //var refParcelValidateModelResult = aa.parcel.getParceListForAdmin(parcel, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
     } else if (refAddressId) {
         fMsg = "refAddress # " + refAddressId + fMsg;
-        logDebug("Looking for reference parcel using " + fMsg);
+        //logDebug("Looking for reference parcel using " + fMsg);
         var refParcelValidateModelResult = aa.parcel.getPrimaryParcelByRefAddressID(refAddressId, "Y");
     } else if (addressStart && addressStreetName && addressStreetSuffix) {
         fMsg = "address # " + streetStart
@@ -1943,7 +1998,7 @@ function addParcelFromRef(parcel) {
             + (addressCity ? " - " + addressCity : "");
         + (ownerName ? ", ownerName: " + ownerName : "")
             + fMsg;
-        logDebug("Looking for reference parcel using " + fMsg);
+        //logDebug("Looking for reference parcel using " + fMsg);
         var refParcelValidateModelResult = aa.address.getParceListForAdmin(null, streetStart, streetEnd, streetDirection, streetName, streetSuffix, unitStart, unitEnd, city, ownerName, houseNumberAlphaStart, houseNumberAlphaEnd, levelPrefix, levelNumberStart, levelNumberEnd);
     } else {
         logDebug("Failed to create transactional Parcel. No parcel/address identified");
@@ -1964,7 +2019,6 @@ function addParcelFromRef(parcel) {
         prcl.setPrimaryParcelFlag("Y");
         var capPrclResult = aa.parcel.warpCapIdParcelModel2CapParcelModel(itemCap, prcl);
         if (capPrclResult.getSuccess()) {
-            logDebug("Wrapped Transactional Parcel " + refParcelNumber + " with Reference Data");
             capPrcl = capPrclResult.getOutput();
             if (!capPrcl.l1ParcelNo) { logDebug("Updated Wrapped Parcel L1ParcelNo:" + prcl.getL1ParcelNo()); capPrcl.setL1ParcelNo(prcl.getL1ParcelNo()); }
             if (!capPrcl.UID) { logDebug("Updated Wrapped Parcel UID:" + prcl.getUID()); capPrcl.setUID(prcl.getUID()); }
