@@ -522,8 +522,69 @@ function mainProcess() {
             continue;
         }
 
+        var sql = " SELECT [L1_PARCEL_NBR] \
+            , [SOURCE_SEQ_NBR] \
+            , [L1_EVENT_ID] \
+            , [L1_GIS_SEQ_NBR] \
+            , [L1_PARCEL_STATUS] \
+            , [L1_BOOK] \
+            , [L1_PAGE] \
+            , [L1_PARCEL] \
+            , [L1_MAP_REF] \
+            , [L1_MAP_NBR] \
+            , [L1_LOT] \
+            , [L1_BLOCK] \
+            , [L1_TRACT] \
+            , [L1_LEGAL_DESC] \
+            , [L1_PARCEL_AREA] \
+            , [L1_PLAN_AREA] \
+            , [L1_CENSUS_TRACT] \
+            , [L1_COUNCIL_DISTRICT] \
+            , [L1_SUPERVISOR_DISTRICT] \
+            , [L1_INSPECTION_DISTRICT] \
+            , [L1_LAND_VALUE], [L1_IMPROVED_VALUE], [L1_EXEMPT_VALUE] \
+            , [L1_UDF1], [L1_UDF2], [L1_UDF3], [L1_UDF4] \
+            , [REC_DATE], [REC_FUL_NAM], [REC_STATUS] \
+            , [L1_SUBDIVISION] \
+            , [EXT_UID] \
+            , [L1_TOWNSHIP], [L1_RANGE] \
+            , [L1_SECTION] \
+            , [L1_PRIMARY_PAR_FLG] \
+        FROM [dbo].[L3PARCEL] \
+        WHERE SOURCE_SEQ_NBR = '"+ parentParcelModel.getSourceSeqNumber() + "' \
+          AND PARCEL_ID IN ('" + childParcelID + "','" + parentParcelID + "')";
+
+        var sql = "SELECT TOP(100) [SERV_PROV_CODE] \
+            , [B1_PER_ID1], [B1_PER_ID2], [B1_PER_ID3] \
+            , [B1_PARCEL_NBR] \
+            , [B1_GIS_SEQ_NBR] \
+            , [B1_PARCEL_STATUS] \
+            , [B1_BOOK], [B1_PAGE] \
+            , [B1_PARCEL] \
+            , [B1_MAP_REF], [B1_MAP_NBR] \
+            , [B1_LOT], [B1_BLOCK] \
+            , [B1_TRACT], [B1_CENSUS_TRACT] \
+            , [B1_LEGAL_DESC] \
+            , [B1_PARCEL_AREA], [B1_PLAN_AREA] \
+            , [B1_COUNCIL_DISTRICT] , [B1_SUPERVISOR_DISTRICT], [B1_INSPECTION_DISTRICT] \
+            , [B1_LAND_VALUE], [B1_IMPROVED_VALUE], [B1_EXEMPT_VALUE] \
+            , [B1_UDF1], [B1_UDF2], [B1_UDF3], [B1_UDF4] \
+            , [REC_DATE], [REC_FUL_NAM], [REC_STATUS] \
+            , [L1_PARCEL_NBR] \
+            , [B1_EVENT_ID] \
+            , [EXT_PARCEL_UID] \
+            , [B1_SUBDIVISION] \
+            , [B1_PRIMARY_PAR_FLG] \
+            , [B1_TOWNSHIP], [B1_RANGE], [B1_SECTION] \
+        FROM [dbo].[B3PARCEL] \
+        WHERE SERV_PROV_CODE = '"+ aa.getServiceProviderCode() + "' \
+          AND B1_PARCEL IN ('" + childParcelID + "','" + parentParcelID + "')";
+        //var db = new dbSql("MSSQL Azure", "java:/" + aa.getServiceProviderCode());
+        var db = new dbSql();
+        var sqlRows = db.select(sql);
+
         // Remove existing parcels.
-        removeParcels();
+        // removeParcels();
         // Add Parcel to temporary record so conditions can be found.
         addParcelFromRef(parentParcelID);
         addParcelFromRef(childParcelID);
@@ -549,21 +610,6 @@ function mainProcess() {
 
         // copy parcel conditions
         copyrefParcelConditions(parentParcelNumber, childParcelNumber);
-
-        /*
-        rTotals["Parcel Conditions"] = 0;
-        if (childParcelModel) {
-            parcCondResult = aa.parcelCondition.getParcelConditions(childParcelModel.getParcelNumber())
-            if (!parcCondResult.getSuccess()) {
-                logDebug("**WARNING: getting Parcel Conditions : " + parcCondResult.getErrorMessage());
-                var parcCondArray = new Array();
-            } else {
-                var parcCondArray = parcCondResult.getOutput();
-            }
-
-            rTotals["Parcel Conditions"] = parcCondArray ? parcCondArray.length : 0;
-        }
-        */
 
         //TODO: Resolve error when adding to Parcel Set.
         //ERROR: parcelSet: add set 2010212004:A0502: 778608831900000. INSERT INTO SETDETAILS (SERV_PROV_CODE, SET_SEQ_NBR, SET_ID, L1_PARCEL_NBR,L1_ADDRESS_NBR,LIC_SEQ_NBR, SOURCE_SEQ_NBR, REC_DATE, REC_FUL_NAM, REC_STATUS) VALUES (?,?,?,?,?,?,?,?,?,?) The INSERT statement conflicted with the FOREIGN KEY constraint "SETDETAILS$L3PARCEL_FK". The conflict occurred in database "CHESTERFIELD", table "dbo.L3PARCEL".
@@ -1654,38 +1700,14 @@ function copyrefParcelConditions(refParcelIDSrc, refParcelIDTarget) {
                 rTotals["Skipped Parcel Conditions"]++;
             } else {
                 //TODO: copy exactly from parent parcel condition
-                logDebug("thisCond: " + br + describe_TPS(thisCond));
-                /*	    addParcelCondition(java.lang.String parcelNumber,
-                                          java.lang.String conditionType,
-                                          java.lang.String conditionDescription,
-                                          java.lang.String conditionComment,
-                                          java.lang.String refNumber1,
-                                          java.lang.String refNumber2,
-                                          java.lang.String impactCode,
-                                          java.lang.String conditionStatus,
-                                          com.accela.aa.emse.util.ScriptDateTime effectDate,
-                                          com.accela.aa.emse.util.ScriptDateTime expireDate,
-                                          com.accela.aa.emse.util.ScriptDateTime issuedDate,
-                                          com.accela.aa.emse.util.ScriptDateTime statusDate,
-                                          com.accela.aa.aamain.people.SysUserModel issuedByUser,
-                                          com.accela.aa.aamain.people.SysUserModel statusByUser,
-                                          java.lang.String conditionStatusType,
-                                          java.lang.String displayConditionNotice,
-                                          java.lang.String includeInConditionName,
-                                          java.lang.String includeInShortDescription,
-                                          java.lang.String inheritable,
-                                          java.lang.String longDescripton,
-                                          java.lang.String publicDisplayMessage,
-                                          java.lang.String resolutionAction,
-                                          java.lang.String conditionGroup,
-                                          java.lang.String displayNoticeOnACA,
-                                          java.lang.String displayNoticeOnACAFee,
-                                          java.lang.Integer priority) */
+                //logDebug("thisCond: " + br + describe_TPS(thisCond));
 
-                var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, thisCond.getConditionType(), thisCond.getConditionDescription(), thisCond.getConditionComment(), null, null, thisCond.getImpactCode(), thisCond.getConditionStatus(), sysDate, thisCond.getExpireDate(), thisCond.getIssuedDate(), sysDate, systemUserObj, systemUserObj, thisCond.getConditionStatusType(), thisCond.getDisplayConditionNotice(), thisCond.getIncludeInConditionName(), thisCond.getIncludeInShortDescription(), thisCond.getInheritable(), thisCond.getLongDescripton(), thisCond.getPublicDisplayMessage(), thisCond.getResolutionAction(), thisCond.getConditionGroup(), thisCond.getDisplayNoticeOnACA(), thisCond.getDisplayNoticeOnACAFee()); //, cPriority);
+                var cIssuedByUser = systemUserObj;
+                if (thisCond.getIssuedByUser()) cIssuedByUser = thisCond.getIssuedByUser();
+                var cStatusByUser = systemUserObj;
+                if (thisCond.getIssuedByUser()) cStatusByUser = thisCond.getIssuedByUser();
 
-                //var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, cType, cDesc, cComment, null, null, cImpact, cStatus, sysDate, null, sysDate, sysDate, systemUserObj, systemUserObj);
-                //addParcelCondition(refParcelIDTarget, cType, cStatus, cDesc, cComment, cImpact);
+                var addParcelCondResult = aa.parcelCondition.addParcelCondition(refParcelIDTarget, thisCond.getConditionType(), thisCond.getConditionDescription(), thisCond.getConditionComment(), null, null, thisCond.getImpactCode(), thisCond.getConditionStatus(), sysDate, thisCond.getExpireDate(), thisCond.getIssuedDate(), sysDate, cIssuedByUser, cStatusByUser, thisCond.getConditionStatusType(), thisCond.getDisplayConditionNotice(), thisCond.getIncludeInConditionName(), thisCond.getIncludeInShortDescription(), thisCond.getInheritable(), thisCond.getLongDescripton(), thisCond.getPublicDisplayMessage(), thisCond.getResolutionAction(), thisCond.getConditionGroup(), thisCond.getDisplayNoticeOnACA(), thisCond.getDisplayNoticeOnACAFee()); //, cPriority);
 
                 if (!addParcelCondResult.getSuccess()) {
                     var errorMsg = "adding condition to Parcel " + childParcelID + " (" + cDesc + "): "
@@ -2056,5 +2078,196 @@ function removeParcels() {
             var deleteFromCapModel = deleteFromCap.getCapModel();
             pbzns.removeParcel(deleteFromCapModel);
         }
+    }
+}
+
+function dbSql() {
+    this.dbServer = (arguments.length > 0 && arguments[0] && exists(arguments[0], ["Oracle", "MSSQL", "MSSQL Azure"]) ? arguments[0] : "MSSQL Azure");
+    this.dsString = (arguments.length > 1 && arguments[1] ? arguments[1] : (this.dbServer && this.dbServer == "MSSQL Azure" ? "java:/" + aa.getServiceProviderCode() : "java:/AA"));	// Use Accela Automation database connection.
+    this.initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
+    var ds = this.initialContext.lookup(this.dsString);
+    this.csvDelimiter = (arguments.length > 2 && arguments[2] ? arguments[2] : ",");
+    var TAB = "\t";
+    var CR = "\r";
+    var LF = "\n";
+    var CRLF = "\r\n";
+    var FF = "\f";
+    var DQUOTE = '\"';
+    var SQUOTE = "\'";
+    var BACKSLASH = "\\";
+    var BACKSPACE = "\b";
+
+    this.select = function (sql) {
+        var sqlParams = (arguments.length > 1 && arguments[1] ? arguments[1] : null);
+        var showRowNum = (arguments.length > 2 && exists(arguments[2], [false, "N", "No"]) ? false : true);	// Show Row #
+        var sqlSelect = sql.replace("select ", "SELECT ").replace("Select ", "SELECT ").replace(" from ", " FROM ").replace(" From ", " FROM ");
+        if (sqlSelect.indexOf("SELECT ") < 0 || sqlSelect.indexOf(" FROM ") < 0) logDebug("SQL not properly formatted SELECT or FROM missing")
+
+        if (sqlSelect.indexOf("AA_") > 0) showRowNum = false;
+        if (sqlSelect.indexOf("GVIEW_ELEMENT") > 0) showRowNum = false;
+
+        if (this.dbServer && this.dbServer == "Oracle") {	// ORACLE PL/SQL
+            var sqlSelect = sql.replace("[dbo].", "").replace("dbo.", ""); // Replace 
+        }
+
+        logDebug("From DB: " + this.dsString + ", sqlSelect: " + sqlSelect);
+        try {
+            var sqlSelectItems = (sqlSelect.split(" FROM "))[0].replace("SELECT ", "").trim();
+            // Handle TOP {rowLimit}
+            if (sqlSelectItems.indexOf("TOP ") == 0) { // Select has TOP
+                sqlSelectItem = sqlSelectItems.trim().split(" ");
+                if (sqlSelectItem.length > 2) sqlSelectItems = sqlSelectItems.replace(sqlSelectItem[0] + " " + sqlSelectItem[1], "").trim();
+            }
+            // Handle Expressions
+            sqlSelectItems = sqlSelectItems.split("()").join("{}");
+            var i = 0;
+            while (sqlSelectItems.indexOf("(") > 0) { // Select has expression.
+                itemExpStart = sqlSelectItems.lastIndexOf("(");
+                itemExp = sqlSelectItems.substr(itemExpStart);
+                itemExpEnd = itemExp.indexOf(")");
+                if (itemExpEnd < 0) break;
+                itemExp = itemExp.substr(0, itemExpEnd + 1)
+                itemExpR = itemExp.replace("(", "{").replace(")", "}").replace(/,/g, ";").replace(/\s/g, "_");
+                //logDebug(">> Handling Expressions: " + itemExp + " with " + itemExpR);
+                sqlSelectItems = sqlSelectItems.replace(itemExp, itemExpR);
+                //logDebug(">> Handled Expressions: " + sqlSelectItems);
+                i++;
+                if (i > 10) break;
+            }
+            // Parse Select Items
+            sqlSelectItems = sqlSelectItems.split("{").join("(").split("}").join(")");
+            //logDebug(">> sqlSelectItems: " + sqlSelectItems);
+            var sqlSelectItemsArray = sqlSelectItems.split(",");
+            var sqlSelectItemNames = new Array();
+            for (n in sqlSelectItemsArray) {
+                itemName = sqlSelectItemsArray[n].trim();
+                var itemNameAlias = itemName;
+                if (itemName.trim().indexOf(" as ") > 0) { // Item Name has alias, use alias
+                    itemNm = itemName.trim().split(" as ");
+                    itemName = itemNm[0].trim();
+                    itemNameAlias = itemNm[1];
+                } else if (itemName.trim().indexOf(" [") > 0) { // Item Name has alias, use alias
+                    itemNm = itemName.trim().split(" [");
+                    itemName = itemNm[0].trim();
+                    itemNameAlias = itemNm[1];
+                } else if (itemName.trim().lastIndexOf(" ") > 0) { // Item Name has alias, use alias
+                    itemNm = itemName.trim().split(" ");
+                    itemName = itemNm[0].trim();
+                    itemNameAlias = itemNm[1];
+                    //logDebug("lastIndexOf (1): " + itemName + "; " + itemNameAlias); 
+                    itemNameAlias = itemNm[itemNm.length - 1];
+                    itemName = itemName.replace(itemNameAlias, "").trim();
+                    //logDebug("lastIndexOf (2): " + itemName + "; " + itemNameAlias); 
+                }
+                if (itemNameAlias.indexOf(".") > 0 && itemNameAlias.trim().indexOf("]") < 0) { // Item Name has table prefix, remove it.
+                    itemNm = itemNameAlias.split(".");
+                    itemNameAlias = itemNm[1];
+                }
+                itemNameAlias = itemNameAlias.replace(/\[/g, "").replace(/\]/g, "").trim();
+                //logDebug("itemName: " + itemName + ", Alias: " + itemNameAlias);
+                if (itemNameAlias != "") sqlSelectItemNames.push(itemNameAlias);
+            }
+
+            var initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
+            var ds = initialContext.lookup(this.dsString);
+            var conn = ds.getConnection();
+            // Execute SQL Select
+            try {
+                var dbStmt = conn.prepareStatement(sql);			//	Original:
+                //var dbStmt = aa.db.prepareStatement(conn, sql);		//	New API:
+                //logDebug("dbStmt: " + dbStmt + br + describe_TPS(dbStmt, null, null, true));
+                // Add SQL Params
+                if (sqlParams) {
+                    var index = 1;
+                    for (var i in sqlParams) {
+                        logDebug("sqlParams[" + index + "]:" + sqlParams[i]);
+                        dbStmt.setString(index++, sqlParams[i]);
+                    }
+                }
+                if (dbStmt.getWarnings()) logDebug("db.select Warnings: " + dbStmt.getWarnings())
+            } catch (err1) {
+                logDebug("Error Preparing DB Statement: " + err1.message + " at line " + err1.lineNumber + " stack: " + err1.stack);
+                handleError(err1, "dbStmt.prepareStatement()");
+                sqlResults = null;
+            }
+            // Execute SQL Select
+            try {
+                // Execute SQL Query
+                if (!sqlParams) {
+                    dbStmt.executeQuery(sql);
+                } else {
+                    dbStmt.executeQuery();
+                }
+                if (dbStmt.getWarnings()) logDebug("db.select Warnings: " + dbStmt.getWarnings())
+                var sqlResults = dbStmt.getResultSet();
+            } catch (err1) {
+                logDebug("Error Executing DB Query: " + err1.message + " at line " + err1.lineNumber + " stack: " + err1.stack);
+                handleError(err1, "dbStmt.executeQuery()");
+                sqlResults = null;
+            }
+
+            // Process Results
+            logDebug("Processing SQL Results...");
+            var sqlRows = new Array();
+            var sqlRowID = 0;
+
+            while (sqlResults && sqlResults.next()) {
+                // logDebug("Processing SQL Results["+sqlRowID+"]: ");
+                var sqlObj = new Array();
+                var rowMsg = "";
+                var rowMsgCSV = "";
+                for (n in sqlSelectItemNames) {
+                    itemNameAlias = sqlSelectItemNames[n].replace(" ", "-");
+                    try {
+                        sqlObj[itemNameAlias] = sqlResults.getString(itemNameAlias);
+                        rowMsg += (rowMsg == "" ? "" : ",") + itemNameAlias + ": " + sqlObj[itemNameAlias];
+                        rowMsgCSV += (rowMsgCSV == "" ? "" : csvDelimiter) + sqlObj[itemNameAlias];
+                    } catch (err2) {
+                        if (sqlRowID == 0) logDebug("Error getting SQL Result " + sqlSelectItemNames[n] + " " + itemNameAlias + " Reason: " + err2.message);
+                    }
+                }
+                if (rowMsg != "") {
+                    sqlRows.push(sqlObj);
+                    if (sqlRowID == 0) logDebug((showRowNum ? "RowNum" + csvDelimiter : "") + sqlSelectItemNames.join(csvDelimiter));
+                    logDebug((showRowNum ? sqlRowID + csvDelimiter : "") + rowMsgCSV);
+                    // logDebug("[" + sqlRows.length + "]{" + rowMsg + "}");
+                }
+                sqlRowID++;
+            }
+            dbStmt.close();
+        } catch (err) {
+            logDebug("Error: " + err.message + " at line " + err.lineNumber + " stack: " + err.stack);
+            if (typeof dbStmt != "undefined") dbStmt.close();
+        }
+        if (typeof conn != "undefined") conn.close();
+        return sqlRows;
+    }
+
+    this.Update = function (sql) {
+        // Beware: Extreme care should be used when using this function especially in an Accela Hosted environment as you can impact other Agencies.
+        var sqlUpdate = sql.toUpperCase();
+        if (sqlUpdate.indexOf("UPDATE ") < 0 || sqlUpdate.indexOf(" SET ") < 0 || sqlUpdate.indexOf(" WHERE ") < 0) logDebug("SQL not properly formatted UPDATE, SET or WHERE missing")
+        if (!(sqlUpdate.indexOf(" SERV_PROV_CODE ") > sqlUpdate.indexOf(" WHERE ") || sqlUpdate.indexOf(" SOURCE_SEQ_NBR ") > sqlUpdate.indexOf(" WHERE "))) logDebug("SQL not properly formatted it is not restricting update to Agency SERV_PROV_CODE or APO SOURCE_SEQ_NBR")
+        logDebug("sqlUpdate: " + sqlUpdate);
+        var conn = null, dbStmt = null, committed = false, sqlRowCount = null;
+        try {
+            var initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext", null).getOutput();
+            var ds = initialContext.lookup("java:/AA");
+            var conn = ds.getConnection();
+            // Execute SQL Select
+            var dbStmt = conn.createStatement();
+            dbStmt.executeUpdate(sqlUpdate);
+            var sqlRowCount = dbStmt.getUpdateCount();
+            logDebug("sqlUpdate: Updated " + sqlRowCount + " rows");
+            if (dbStmt.getWarnings()) logDebug("sqlUpdate Warnings: " + dbStmt.getWarnings())
+            // conn.commit(); committed = true; // Let Accela manage the commit.
+            dbStmt.close();
+        } catch (err) {
+            logDebug("Error: " + err.message + " at line " + err.lineNumber + " stack: " + err.stack);
+            // if (!commited) conn.rollback(); // Let Accela manage the commit
+            if (typeof dbStmt != "undefined") dbStmt.close();
+        }
+        conn.close();
+        return sqlRowCount;
     }
 }
