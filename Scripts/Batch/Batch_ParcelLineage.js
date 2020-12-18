@@ -450,7 +450,10 @@ function mainProcess() {
         processingDate = mapFeature[processingDateFieldName];
         processingStatus = mapFeature[processingStatusFieldName];
 
-        if (!exists(transactionID, transactionIDs)) transactionIDs.push(transactionID);
+        var tranID = transactionID.substring(1);
+        logDebug("tranID: " + tranID);
+
+        if (!exists(tranID, transactionIDs)) transactionIDs.push(tranID);
 
         rTotals = [];
         //rTotals["Added Parcel Conditions"] = 0;
@@ -521,7 +524,7 @@ function mainProcess() {
                 + childParcelFieldName + ": " + childParcelID + "; "
                 + transactionIDFieldName + ": " + transactionID + "; "
                 + processingDateFieldName + ": " + processingDate + "; "
-                + processingStatusFieldName + ": " + processingStatus + "; "
+                //+ processingStatusFieldName + ": " + processingStatus + "; "
                 + "Status: " + processStatus.join("; ")
             );
             pTotals["Exceptions"]++;
