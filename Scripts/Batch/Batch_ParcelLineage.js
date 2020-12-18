@@ -96,15 +96,19 @@ if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "")
     }
 }
 
-aa.env.setValue("setPrefix", "PC");
+aa.env.setValue("setPrefix", ""); // TODO: Fix Error with Parcel Sets.
 aa.env.setValue("emailAddress", "rschug@truepointsolutions.com");
-if (aa.env)
-aa.env.setValue("createProcessSets", "Y");
-aa.env.setValue("setType", "Parcel Condition");
-aa.env.setValue("setStatus", "");
+if (aa.env.getValue("setPrefix") == ""){
+    aa.env.setValue("createProcessSets", "N");
+    aa.env.setValue("setType", "");
+    aa.env.setValue("setStatus", "");
+} else {
+    aa.env.setValue("createProcessSets", "Y");
+    aa.env.setValue("setType", "Parcel Condition");
+    aa.env.setValue("setStatus", "");
+}
 
 var maxSeconds = 480;			// Standard Max Batch Job Runtime is 5 min (300 seconds). Reduce if you receive batch time error.
-
 
 var asiField = "Project Number";
 /*------------------------------------------------------------------------------------------------------/
@@ -369,8 +373,10 @@ try {
     // Query map service table for parcel transactions
     mapWhereClause = processingDateFieldName + " >= CURRENT_TIMESTAMP - 90"
     // Format: Sightings BETWEEN DATE '2018-06-01' AND DATE '2018-06-05'
-    mapWhereClause = processingDateFieldName + " BETWEEN DATE '" + fromDate + "' AND DATE '" + toDate + "'"
+    mapWhereClause = "ParentTaxID IN ('762699615200000', '743709913800001', '743709913800001', '757622459200000')" 
+    mapWhereClause += " OR TaxID IN ('762699615200000', '743709913800001', '743709913800001', '757622459200000')" 
     //mapWhereClause += " OR DATE BETWEEN DATE '" + fromDate + "' AND DATE '" + toDate + "'"
+    mapWhereClause = processingDateFieldName + " BETWEEN DATE '" + fromDate + "' AND DATE '" + toDate + "'"
     logDebug("Looking for Parcels: " + mapWhereClause);
     var mapOutFields = null, longitude = null, latitude = null;
     var mapOutFields = "OBJECTID,GPIN,PARENT_GPIN,Description,ParentOverlapAcreage,TransactionID,Date,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,created_user,created_date,last_edited_user,last_edited_date,GlobalID";
@@ -2135,7 +2141,7 @@ function dbSql() {
                 if (i > 10) break;
             }
             // Parse Select Items
-            sqlSelectItems = sqlSelectItems.split("{").join("(").split("}").join(")");
+            sqlSelectItems = sqlSelectItems.replace(/\{/g,"(").replace(/\}/g,")");
             //logDebug(">> sqlSelectItems: " + sqlSelectItems);
             var sqlSelectItemsArray = sqlSelectItems.split(",");
             var sqlSelectItemNames = new Array();
@@ -2193,11 +2199,7 @@ function dbSql() {
             // Execute SQL Select
             try {
                 // Execute SQL Query
-                if (!sqlParams) {
-                    dbStmt.executeQuery(sql);
-                } else {
-                    dbStmt.executeQuery();
-                }
+                dbStmt.executeQuery();
                 if (dbStmt.getWarnings()) logDebug("db.select Warnings: " + dbStmt.getWarnings())
                 var sqlResults = dbStmt.getResultSet();
             } catch (err1) {
