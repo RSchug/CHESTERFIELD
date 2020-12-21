@@ -52,7 +52,7 @@ if (inspType.equals("Amusement Final") && inspResult.equals("Approved") && (AInf
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
 	}
 //If Inspection Result is "Approved" for Inspection Type "Boiler" close the Inspections Workflow Task.//
-if (inspType.equals("Boiler") && inspResult.equals("Approved")){
+if (inspType.equals("Boiler Final") && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Completed Inspection Result","");
 	}
 //If Inspection Result is "Approved" for Inspection Type "Electrical Final" close the Inspections Workflow Task.//
