@@ -85,6 +85,16 @@ if (inspType.equals("Building Final") && inspResult.equals("Approved")
 if (appMatch("Building/Permit/Residential/Fire") && (matches(inspType,"Spk Final Inspection","UGD Final Inspection")) && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Approved Inspection Result","");
 }
+//Add from Nick 12-2020
 if (appMatch("Building/Permit/Commercial/Fire") && (matches(inspType,"Alm Final Inspection","Cln Agt Final Inspection","Hood Suppression Final","Spk Final Inspection","UGD Final Inspection")) && inspResult.equals("Approved")){
 	closeTask("Inspections","Completed","Updated based on Approved Inspection Result","");
+}
+if((appMatch("Building/Permit/Commercial/NA") || appMatch("Building/Permit/Residential/NA")) &amp;&amp; (inspType == "Building Final" || inspType == "Budget and Management Final") &amp;&amp; inspResult == "Approved")
+{
+	var budget = checkinspectionstatus("Budget and Management Final","Approved");
+	var building = checkinspectionstatus("Building Final","Approved");
+	if(budget == "true" &amp;&amp; building == "true")
+	{
+		invoiceAllFees(capId);
+	}
 }

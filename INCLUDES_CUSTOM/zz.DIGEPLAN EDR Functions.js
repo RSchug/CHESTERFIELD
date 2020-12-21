@@ -262,7 +262,7 @@ function emailPendingApplicantNotification(wfTask, wfStatus) {
     addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
 
     if (applicantEmail != "") {
-        if (appMatch("eReview/*/*/*"))
+        //if (appMatch("eReview/*/*/*"))
             var emailTemplate = "WTUA_CONTACT NOTIFICATION_PEND APPL";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     } else {

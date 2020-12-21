@@ -15,6 +15,25 @@ if (getLastInspectioncomment(inspType) != "No Comments") {
 		editInspectionComment(capId, inspId, getLastInspectioncomment(inspType));
 	}
 }
+
+if((appMatch("Building/Permit/Commercial/NA") || appMatch("Building/Permit/Residential/NA")) &amp;&amp; inspType == "Building Final" )
+{
+createPendingInspection("CC-BLD-COMM","Budget and Management Final");
+schedulePendingInspection("Budget and Management Final",inspSchedDate)	
+var address = aa.address.getAddressByCapId(capId).getOutput();
+var fileNames = [];
+var emailParameters; 
+emailParameters = aa.util.newHashtable();
+emailParameters.put("$$RecordID$$", capIDString); 
+emailParameters.put("$$fileDate$$", fileDate);
+emailParameters.put("$$InspectionDate$$", inspSchedDate); 
+emailParameters.put("$$RecordStatus$$", capStatus);
+emailParameters.put("$$ProjectName$$", capName);
+emailParameters.put("$$AddressLine$$", address[0]);
+
+sendNotification("noreply@chesterfield.gov","mbouquin@truepointsolutions.com","ngraf@truepointsolutions.com","BUDGET_INSPECTION",emailParameters,fileNames);
+}
+
 //When Framing Inspection Type is scheduled, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
 //if (matches(inspType, "Framing")) {
 //	scheduleInspectDate("VSMP", dateAdd(inspSchedDate, 1), currentUserID, null, "Auto Scheduled from Scheduled Framing Inspection");
