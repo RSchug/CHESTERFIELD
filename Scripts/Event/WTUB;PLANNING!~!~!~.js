@@ -52,7 +52,7 @@ try {
 			comment('The Parcel(s) seem to have still applied Special Exception Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/Variance/*')) && parcelHasCondition_TPS('Variance', 'Applied')) {
+		else if (appMatch('*/*/Variance/*') && parcelHasCondition_TPS('Variance', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
