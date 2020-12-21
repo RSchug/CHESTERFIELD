@@ -293,7 +293,7 @@ function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComm
 						logDebug("Successfully added condition to Parcel " + Parcels[zz].getParcelNumber() + ":  " + cDesc);
 					}
 					else {
-						logDebug( "**ERROR: adding condition to Parcel " + Parcels[zz].getParcelNumber() + ": " + addParcelCondResult.getErrorMessage());
+						logDebug( "ERROR: adding condition to Parcel " + Parcels[zz].getParcelNumber() + ": " + addParcelCondResult.getErrorMessage());
 					}
 				}
 			}
@@ -308,7 +308,7 @@ function addParcelStdCondition_TPS(parcelNum,cType,cDesc,cShortComment,cLongComm
 				logDebug("Successfully added condition to Parcel " + parcelNum + ":  " + cDesc);
 			}
 			else {
-				logDebug( "**ERROR: adding condition to Parcel " + parcelNum + ": " + addParcelCondResult.getErrorMessage());
+				logDebug( "ERROR: adding condition to Parcel " + parcelNum + ": " + addParcelCondResult.getErrorMessage());
 			}
 		}
 	}
