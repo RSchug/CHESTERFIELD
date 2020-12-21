@@ -16,7 +16,7 @@ if (getLastInspectioncomment(inspType) != "No Comments") {
 	}
 }
 
-if((appMatch("Building/Permit/Commercial/NA") || appMatch("Building/Permit/Residential/NA")) &amp;&amp; inspType == "Building Final" )
+if((appMatch("Building/Permit/Commercial/NA") || appMatch("Building/Permit/Residential/NA")) && inspType == "Building Final" )
 {
 createPendingInspection("CC-BLD-COMM","Budget and Management Final");
 schedulePendingInspection("Budget and Management Final",inspSchedDate)	
