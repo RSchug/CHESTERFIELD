@@ -581,7 +581,7 @@ try {
 //for all DigEplan processing
 	loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 	
-// Create Conditions from proffers table - 59p - moved here 12/2020 for additional tables
+//Create Conditions from proffers table - 59p - moved here 12/2020 for additional tables
 	if (wfStatus == 'Create Conditions and Close Case') {
 		var sum = 0;
 		var tempAsit = loadASITable("PROFFER CONDITIONS");
@@ -602,6 +602,7 @@ try {
 			} //for all rows
 		}
 	}
+//add Parcels from TPA Data table - typically from Intake process, verify parcels are good, then create the APO
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

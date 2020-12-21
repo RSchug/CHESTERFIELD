@@ -42,14 +42,39 @@ try {
 			comment('The Parcel(s) seem to have still applied Parcel Acreage Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if ((appMatch('*/*/AdminVariance/*') || appMatch('*/*/SpecialException/*') || appMatch('*/*/Variance/*')) && parcelHasCondition_TPS('Variance', 'Applied')) {
+		else if (appMatch('*/*/AdminVariance/*') && parcelHasCondition_TPS('Admin Variance', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Admin Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if (appMatch('*/*/SpecialException/*') && parcelHasCondition_TPS('Special Exception', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Special Exception Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if (appMatch('*/*/Variance/*')) && parcelHasCondition_TPS('Variance', 'Applied')) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/SitePlan/*') && parcelHasCondition_TPS('Site Plan', 'Applied')) {
+		else if (appMatch('*/*/OverallConceptualPlan/*') && parcelHasCondition_TPS('Overall Conceptual', 'Applied')) {
 			showMessage = true;
-			comment('The Parcel(s) seem to have still applied Site Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			comment('The Parcel(s) seem to have still applied Overall Conceptual Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if (appMatch('*/SitePlan/Schematics/*') && parcelHasCondition_TPS('Schematics', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Schematics Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if (appMatch('*/SitePlan/Major/*') && parcelHasCondition_TPS('Major', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Site Major Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
+			cancel = true;
+		}
+		else if (appMatch('*/SitePlan/Minor/*') && parcelHasCondition_TPS('Minor', 'Applied')) {
+			showMessage = true;
+			comment('The Parcel(s) seem to have still applied Site Minor Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
