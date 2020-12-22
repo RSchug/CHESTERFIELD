@@ -93,7 +93,7 @@ if((appMatch("Building/Permit/Commercial/NA") || appMatch("Building/Permit/Resid
 {
 	var budget = checkinspectionstatus("Budget and Management Final","Approved");
 	var building = checkinspectionstatus("Building Final","Approved");
-	if(budget == "true" &amp;&amp; building == "true")
+	if(budget == "true" && building == "true")
 	{
 		invoiceAllFees(capId);
 	}
