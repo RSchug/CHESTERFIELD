@@ -96,8 +96,8 @@ if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "")
     } else {
         //fromDate = dateAdd(null, -100);
         //toDate = dateAdd(null, -1);
-        aa.env.setValue("lookAheadDays", "-100");
-        aa.env.setValue("daySpan", "99");
+        aa.env.setValue("lookAheadDays", "-10");
+        aa.env.setValue("daySpan", "9");
     }
 }
 
