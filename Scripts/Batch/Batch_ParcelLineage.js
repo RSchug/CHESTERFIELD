@@ -82,17 +82,22 @@ aa.print("Next Month: " + fromDateMMDDYYYY + " " + nextMonth);
 aa.print("End of Next Month: " + toDateMMDDYYYY + " " + nextMonthEnd);
 
 // Use specified date range.
-// var fromDateMMDDYYYY = "09/27/2018";
-// var toDateMMDDYYYY = "12/30/2018";
+var fromDateMMDDYYYY = "09/01/2020";
+var toDateMMDDYYYY = "09/30/2020";
+aa.env.setValue("fromDate", fromDateMMDDYYYY);
+aa.env.setValue("toDate", toDateMMDDYYYY);
 */
+
 
 if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "") {
     if (fromDateMMDDYYYY) {
         aa.env.setValue("fromDate", fromDateMMDDYYYY);
         aa.env.setValue("toDate", toDateMMDDYYYY);
     } else {
+        //fromDate = dateAdd(null, -100);
+        //toDate = dateAdd(null, -1);
         aa.env.setValue("lookAheadDays", "-100");
-        aa.env.setValue("daySpan", "-1");
+        aa.env.setValue("daySpan", "99");
     }
 }
 
@@ -107,6 +112,7 @@ if (aa.env.getValue("setPrefix") == ""){
     aa.env.setValue("setType", "Parcel Condition");
     aa.env.setValue("setStatus", "");
 }
+aa.env.setValue("deleteCAP", "N");
 
 var maxSeconds = 480;			// Standard Max Batch Job Runtime is 5 min (300 seconds). Reduce if you receive batch time error.
 
@@ -264,6 +270,8 @@ try {
     var sysFromEmail = "noReply@accela.com".replace("@", "-" + servProvCode + "@")
     var emailAddress = getJobParam("emailAddress"); // email to send report
     var emailAddressAdmin = "rschug@truepointsolutions.com";
+    var deleteCAP = getJobParam("deleteCAP").substring(0, 1).toUpperCase().equals("Y"); // delete CAP with Parcels to allow Parcel Conditions to be created.
+
     var count = 0;
     /*----------------------------------------------------------------------------------------------------/
     |
@@ -278,8 +286,6 @@ try {
     if (!toDate.length) { // no "to" date, assume today + number of look ahead days + span
         toDate = dateAdd(null, parseInt(lookAheadDays) + parseInt(daySpan))
     }
-    fromDate = dateAdd(null, -100);
-    toDate = dateAdd(null, -1);
 
     var mailFrom = lookup("ACA_EMAIL_TO_AND_FROM_SETTING", "RENEW_LICENSE_AUTO_ISSUANCE_MAILFROM");
     var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
@@ -379,8 +385,9 @@ try {
     mapWhereClause = processingDateFieldName + " BETWEEN DATE '" + fromDate + "' AND DATE '" + toDate + "'"
     logDebug("Looking for Parcels: " + mapWhereClause);
     var mapOutFields = null, longitude = null, latitude = null;
-    var mapOutFields = "OBJECTID,GPIN,PARENT_GPIN,Description,ParentOverlapAcreage,TransactionID,Date,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,created_user,created_date,last_edited_user,last_edited_date,GlobalID";
-    var mapOutFields = "OBJECTID,TransactionID,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,Date,GlobalID";
+    //var mapOutFields = "OBJECTID,GPIN,PARENT_GPIN,Description,ParentOverlapAcreage,TransactionID,Date,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,created_user,created_date,last_edited_user,last_edited_date,GlobalID";
+    //var mapOutFields = "OBJECTID,GPIN,PARENT_GPIN,Description,ParentOverlapAcreage,TransactionID,Date,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,created_user,created_date,last_edited_user,last_edited_date,GID,OriginalObjectID"
+    //var mapOutFields = "OBJECTID,TransactionID,TaxID,ParentTaxID,ProcessingDate,ProcessingStatus,Date";
     //var mapFeatures = mapService.query(mapTableName, mapWhereClause);
     var mapFeatures = mapService.query(mapTableName, mapWhereClause, mapOutFields, orderByFields, longitude, latitude);
     logDebug(">> " + mapTableName + br + mapService.getFeaturesString(mapTableName, mapFeatures));
@@ -388,20 +395,53 @@ try {
     logDebug("Find Map Features: Elapsed Time : " + elapsed() + " Seconds");
 
     // Create Partial CAP for use as needed.
-    //capId = createPartialRecord(partialCapType);
-    capId = createCap(partialCapType, "TEST Parcel Processing CAP")
+    capId = createPartialRecord(partialCapType);
+    //capId = createCap(partialCapType, "TEST Parcel Processing CAP")
     logDebug ("Processing CAP: " + capId + " " + partialCapType)
+    if (capId != null) {
+        servProvCode = capId.getServiceProviderCode();
+        capIDString = capId.getCustomID();
+        cap = aa.cap.getCap(capId).getOutput();
+        appTypeResult = cap.getCapType();
+        appTypeAlias = appTypeResult.getAlias();
+        appTypeString = appTypeResult.toString();
+        appTypeArray = appTypeString.split("/");
+        if (appTypeArray[0].substr(0, 1) != "_") {
+            var currentUserGroupObj = aa.userright.getUserRight(appTypeArray[0], currentUserID).getOutput()
+            if (currentUserGroupObj) currentUserGroup = currentUserGroupObj.getGroupName();
+        }
+        capName = cap.getSpecialText();
+        capStatus = cap.getCapStatus();
+        partialCap = !cap.isCompleteCap();
+    } else {
+        var cap = null,
+            capIDString = "",
+            appTypeResult = null,
+            appTypeAlias = "",
+            appTypeString = "",
+            appTypeArray = new Array(),
+            capName = null,
+            capStatus = null,
+            partialCap = false;
+    }
 
     mainProcess();
 
-    // Delete Partial CAP.
-    if (capId && false) {
-        var result = aa.cap.deletePartialCAP(capId);
-        if (result.getSuccess()) {
-            logDebug("Success deleting CAP: " + capId);
-        }
-        else {
-            logDebug("ERROR: deleting CAP: " + capId + ". " + result.getErrorMessage());
+    if (capId && deleteCAP) {
+        if (partialCap) {    // Delete Partial CAP.
+            var s_result = aa.cap.deletePartialCAP(capId);
+            if (s_result.getSuccess()) {
+                logDebug("Success deleting Partial CAP: " + capId);
+            } else {
+                logDebug("ERROR: deleting Partial CAP: " + capId + ". " + s_result.getErrorMessage());
+            }
+        } else {
+            var s_result = aa.cap.removeRecord(capId);
+            if (s_result.getSuccess()) {
+                logDebug("Success deleting CAP: " + capId);
+            } else {
+                logDebug("ERROR: deleting CAP: " + capId + ". " + s_result.getErrorMessage());
+            }
         }
     }
 
@@ -494,7 +534,7 @@ function mainProcess() {
             mapLayerName_xAPO = "Parcel_Owner";
             mapWhereClause_xAPO = "TaxID = '" + childParcelID + "'"
             var mapFeatures_xAPO = mapService_xAPO.query(mapLayerName_xAPO, mapWhereClause_xAPO);
-            if (mapFeatures_xAPO.length == 0) {
+            if (mapFeatures_xAPO == null || mapFeatures_xAPO.length == 0) {
                 logDebug(mapLayerName_xAPO + " where " + mapWhereClause_xAPO + ": No features found.");
                 processStatus.push("Child not in Parcel Layer");
             } else {
@@ -589,8 +629,8 @@ function mainProcess() {
         WHERE SERV_PROV_CODE = '"+ aa.getServiceProviderCode() + "' \
           AND B1_PARCEL IN ('" + childParcelID + "','" + parentParcelID + "')";
         //var db = new dbSql("MSSQL Azure", "java:/" + aa.getServiceProviderCode());
-        var db = new dbSql();
-        var sqlRows = db.select(sql);
+        //var db = new dbSql();
+        //var sqlRows = db.select(sql);
 
         // Remove existing parcels.
         // removeParcels();
@@ -984,6 +1024,52 @@ function MapService(serviceURL) {
     this.layers = null;
     this.tables = null;
     this.respObj = null;
+
+    var errorCodeMsgs = {
+        400: "Bad Request", //The server cannot or will not process the request due to an apparent client error(e.g., malformed request syntax, size too large, invalid request message framing, or deceptive request routing).[31]
+        401: "Unauthorized (RFC 7235)", // Similar to 403 Forbidden, but specifically for use when authentication is required and has failed or has not yet been provided.The response must include a WWW- Authenticate header field containing a challenge applicable to the requested resource.See Basic access authentication and Digest access authentication.[32] 401 semantically means "unauthorised", [33] the user does not have valid authentication credentials for the target resource.Note: Some sites incorrectly issue HTTP 401 when an IP address is banned from the website(usually the website domain) and that specific address is refused permission to access a website.[citation needed]
+        402: "Payment Required", //Reserved for future use.The original intention was that this code might be used as part of some form of digital cash or micropayment scheme, as proposed, for example, by GNU Taler, [34] but that has not yet happened, and this code is not widely used.Google Developers API uses this status if a particular developer has exceeded the daily limit on requests.[35] Sipgate uses this code if an account does not have sufficient funds to start a call.[36] Shopify uses this code when the store has not paid their fees and is temporarily disabled.[37] Stripe uses this code for failed payments where parameters were correct, for example blocked fraudulent payments.[38]
+        403: "Forbidden",   // The request contained valid data and was understood by the server, but the server is refusing action.This may be due to the user not having the necessary permissions for a resource or needing an account of some sort, or attempting a prohibited action(e.g.creating a duplicate record where only one is allowed).This code is also typically used if the request provided authentication by answering the WWW - Authenticate header field challenge, but the server did not accept that authentication.The request should not be repeated.
+        404 : "Not Found", //The requested resource could not be found but may be available in the future.Subsequent requests by the client are permissible.
+        405 : "Method Not Allowed", //A request method is not supported for the requested resource; for example, a GET request on a form that requires data to be presented via POST, or a PUT request on a read - only resource.
+        406: "Not Acceptable", // The requested resource is capable of generating only content not acceptable according to the Accept headers sent in the request.[39] See Content negotiation.
+        407: "Proxy Authentication Required (RFC 7235)", // The client must first authenticate itself with the proxy.[40]
+        408: "Request Timeout", //The server timed out waiting for the request.According to HTTP specifications: "The client did not produce a request within the time that the server was prepared to wait. The client MAY repeat the request without modifications at any later time."[41]
+        409: "Conflict", // Indicates that the request could not be processed because of conflict in the current state of the resource, such as an edit conflict between multiple simultaneous updates.
+        410: "Gone", // Indicates that the resource requested is no longer available and will not be available again.This should be used when a resource has been intentionally removed and the resource should be purged.Upon receiving a 410 status code, the client should not request the resource in the future.Clients such as search engines should remove the resource from their indices.[42] Most use cases do not require clients and search engines to purge the resource, and a "404 Not Found" may be used instead.
+        411: "Length Required", // The request did not specify the length of its content, which is required by the requested resource.[43]
+        412: "Precondition Failed (RFC 7232)", // The server does not meet one of the preconditions that the requester put on the request header fields.[44][45]
+        413: "Payload Too Large (RFC 7231)", // The request is larger than the server is willing or able to process.Previously called "Request Entity Too Large".[46]414 URI Too Long(RFC 7231)The URI provided was too long for the server to process.Often the result of too much data being encoded as a query - string of a GET request, in which case it should be converted to a POST request.[47] Called "Request-URI Too Long" previously.[48]
+        415: "Unsupported Media Type (RFC 7231)", // The request entity has a media type which the server or resource does not support.For example, the client uploads an image as image / svg + xml, but the server requires that images use a different format.[49]
+        416: "Range Not Satisfiable (RFC 7233)", //The client has asked for a portion of the file(byte serving), but the server cannot supply that portion.For example, if the client asked for a part of the file that lies beyond the end of the file.[50] Called "Requested Range Not Satisfiable" previously.[51]
+        417: "Expectation Failed", //The server cannot meet the requirements of the Expect request - header field.[52]
+        418: "I'm a teapot (RFC 2324, RFC 7168)", //This code was defined in 1998 as one of the traditional IETF April Fools' jokes, in RFC 2324, Hyper Text Coffee Pot Control Protocol, and is not expected to be implemented by actual HTTP servers.The RFC specifies this code should be returned by teapots requested to brew coffee.[53] This HTTP status is used as an Easter egg in some websites, such as Google.com's I'm a teapot easter egg.[54][55]
+        421: "Misdirected Request (RFC 7540)", // The request was directed at a server that is not able to produce a response[56](for example because of connection reuse).[57]
+        422: "Unprocessable Entity (WebDAV; RFC 4918)", // The request was well - formed but was unable to be followed due to semantic errors.[16]
+        423: "Locked (WebDAV; RFC 4918)", // The resource that is being accessed is locked.[16]
+        424: "Failed Dependency (WebDAV; RFC 4918)", // The request failed because it depended on another request and that request failed(e.g., a PROPPATCH).[16]
+        425: "Too Early (RFC 8470)", //Indicates that the server is unwilling to risk processing a request that might be replayed.
+        426: "Upgrade Required", //The client should switch to a different protocol such as TLS / 1.0, given in the Upgrade header field.[58]
+        428: "Precondition Required (RFC 6585)", //The origin server requires the request to be conditional.Intended to prevent the 'lost update' problem, where a client GETs a resource's state, modifies it, and PUTs it back to the server, when meanwhile a third party has modified the state on the server, leading to a conflict.[59]
+        429: "Too Many Requests (RFC 6585)", //The user has sent too many requests in a given amount of time. Intended for use with rate-limiting schemes.[59]
+        431: "Request Header Fields Too Large (RFC 6585)", //The server is unwilling to process the request because either an individual header field, or all the header fields collectively, are too large.[59]
+        451: "Unavailable For Legal Reasons (RFC 7725)", //A server operator has received a legal demand to deny access to a resource or to a set of resources that includes the requested resource.[60] The code 451 was chosen as a reference to the novel Fahrenheit 451 (see the Acknowledgements in the RFC).
+        // 5xx server errors: The server failed to fulfill a request.[61]
+        // Response status codes beginning with the digit "5" indicate cases in which the server is aware that it has encountered an error or is otherwise incapable of performing the request.Except when responding to a HEAD request, the server should include an entity containing an explanation of the error situation, and indicate whether it is a temporary or permanent condition.Likewise, user agents should display any included entity to the user.These response codes are applicable to any request method.[62]
+        498: "Invalid Token (Esri)", //Returned by ArcGIS for Server.Code 498 indicates an expired or otherwise invalid token.[77]
+        499: "Token Required (Esri)", //Returned by ArcGIS for Server.Code 499 indicates that a token is required but was not submitted.[77]
+        500: "Internal Server Error", // A generic error message, given when an unexpected condition was encountered and no more specific message is suitable.[63]
+        501: "Not Implemented", //The server either does not recognize the request method, or it lacks the ability to fulfil the request.Usually this implies future availability(e.g., a new feature of a web - service API).[64]
+        502: "Bad Gateway", //The server was acting as a gateway or proxy and received an invalid response from the upstream server.[65]
+        503: "Service Unavailable", //The server cannot handle the request (because it is overloaded or down for maintenance).Generally, this is a temporary state.[66]
+        504: "Gateway Timeout", //The server was acting as a gateway or proxy and did not receive a timely response from the upstream server.[67]
+        505: "HTTP Version Not Supported", //The server does not support the HTTP protocol version used in the request.[68]
+        506: "Variant Also Negotiates (RFC 2295)", //Transparent content negotiation for the request results in a circular reference.[69]
+        507: "Insufficient Storage (WebDAV; RFC 4918)", //The server is unable to store the representation needed to complete the request.[16]
+        508: "Loop Detected (WebDAV; RFC 5842)", // The server detected an infinite loop while processing the request(sent instead of 208 Already Reported).
+        510: "Not Extended (RFC 2774)", //Further extensions to the request are required for the server to fulfil it.[70]
+        511: "Network Authentication Required (RFC 6585)" //The client needs to authenticate to gain network access.Intended for use by intercepting proxies used to control access to the network(e.g., "captive portals" used to require agreement to Terms of Service before granting full Internet access via a Wi - Fi hotspot).[59]
+    }
     logDebug("Initializing MapService: " + serviceURL);
     this.toString = function () {
         return " mapService {URL: " + this.serviceURL
@@ -1103,7 +1189,7 @@ function MapService(serviceURL) {
                         logDebug("     response: " + resp);
                     }
                 };
-                //logDebug("respObj: " + this.respObj + br + describe_TPS(this.respObj));
+                logDebug("respObj: " + this.respObj + br + describe_TPS(this.respObj));
                 this.tokenObj = this.respObj
                 if (this.respObj && typeof (this.respObj) == "object") {
                     this.token = this.respObj.token;
@@ -1382,7 +1468,11 @@ function getCapsByParcel(parcelNumber) {
         return null;
 }
 
-function parcelHasCondition(parcelNumber, pType, pStatus, pDesc, pImpact) {
+function parcelHasCondition(parcelNumber, pType) {
+    var pStatus = (arguments.length > 2? arguments[2]:null);
+    var pDesc = (arguments.length > 3 ? arguments[3] : null);
+    var pImpact = (arguments.length > 4 ? arguments[4] : null);
+    var pGroup = (arguments.length > 5 ? arguments[5] : null);
     // Checks to see if conditions have been added to CAP
     // 06SSP-00223
     //
@@ -1408,13 +1498,16 @@ function parcelHasCondition(parcelNumber, pType, pStatus, pDesc, pImpact) {
         var cDesc = thisCond.getConditionDescription();
         var cImpact = thisCond.getImpactCode();
         var cType = thisCond.getConditionType();
+        var cGroup = thisCond.getConditionGroup();
+        logDebug("Check " + parcelNumber + " Parcel Condition: " + (pGroup ? cGroup + "." : "") + (pType ? cType + " " : "") + cDesc + (pImpact ? ", Impact: " + cImpact : "") + (pStatus ? ", Status: " + cStatus : ""));
         if (cStatus == null) cStatus = " ";
         if (cDesc == null) cDesc = " ";
         if (cImpact == null) cImpact = " ";
         //Look for matching condition
-        if (pStatus && !pStatus.toUpperCase().equals(cStatus.toUpperCase())) continue;
         if (pDesc && !pDesc.toUpperCase().equals(cDesc.toUpperCase())) continue;
-        if (pImpact && pImpact.toUpperCase().equals(cImpact.toUpperCase())) continue;
+        if (pStatus && !pStatus.toUpperCase().equals(cStatus.toUpperCase())) continue;
+        if (pImpact && !pImpact.toUpperCase().equals(cImpact.toUpperCase())) continue;
+        if (pGroup && !pGroup.toUpperCase().equals(cGroup.toUpperCase())) continue;
         return true; //matching condition found
     }
     return false; //no matching condition found
@@ -2213,11 +2306,12 @@ function dbSql() {
 
             // Process Results
             logDebug("Processing SQL Results...");
+            logDebug("SQL Results: " + sqlResults + br + describe_TPS(sqlResults, "property", null, true));
             var sqlRows = new Array();
             var sqlRowID = 0;
 
             while (sqlResults && sqlResults.next()) {
-                // logDebug("Processing SQL Results["+sqlRowID+"]: ");
+                logDebug("Processing SQL Results["+sqlRowID+"]: ");
                 var sqlObj = new Array();
                 var rowMsg = "";
                 var rowMsgCSV = "";
