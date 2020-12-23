@@ -584,6 +584,7 @@ try {
 //Create Conditions from proffers table - 59p - moved here 12/2020 for additional tables
 	if (wfStatus == 'Create Conditions and Close Case') {
 		logDebug("Inside: " + wfStatus);
+		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
 		var Parcels = capParcelResult.getOutput().toArray();
 		if (Parcels[0]==undefined) {
 			cancel = true; showMessage = true; comment("<span class='fontbold font14px'>Error: You do not have a Parcel on this record.</span>");
