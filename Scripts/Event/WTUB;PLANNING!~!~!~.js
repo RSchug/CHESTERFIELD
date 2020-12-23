@@ -99,6 +99,17 @@ try {
 			cancel = true;
 		}
 	}
+//added this here for the Conditions - the cancel does not work in the WTUA	
+	if (wfStatus == 'Create Conditions and Close Case') {
+		logDebug("WTUB - Inside: " + wfStatus);
+		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
+		var Parcels = capParcelResult.getOutput().toArray();
+		if (Parcels[0]==undefined) {
+			cancel = true; 
+			showMessage = true; 
+			comment("<span class='fontbold font14px'>Error: You do not have a Parcel on this record.</span>");
+		}
+	}
 /*	Could not get this to complete WTUB and then not update the due date in the BOS Hearing
 	if ((appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA') || appMatch('Planning/LandUse/Appeal/NA')) &&
 		matches(wfTask,'Review Consolidation','BZA Staff Report') && matches(wfStatus,'Ready for BZA','Complete') && isTaskActive('BZA Hearing')) {

@@ -586,9 +586,9 @@ try {
 		logDebug("Inside: " + wfStatus);
 		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
 		var Parcels = capParcelResult.getOutput().toArray();
-		if (Parcels[0]==undefined) {
+		/*if (Parcels[0]==undefined) {
 			cancel = true; showMessage = true; comment("<span class='fontbold font14px'>Error: You do not have a Parcel on this record.</span>");
-		} else {
+		} else { */
 			var sum = 0;
 			var tempAsit = loadASITable("PROFFER CONDITIONS");
 			if (tempAsit) {
@@ -609,7 +609,7 @@ try {
 					}
 				} //for all rows
 			}
-		}
+		//}
 	}
 //Autoemail items
 	/*if (matches(wfStatus, "Additional Information Requested")) {
