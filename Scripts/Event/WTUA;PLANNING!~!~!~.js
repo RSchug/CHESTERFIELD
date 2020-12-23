@@ -585,7 +585,7 @@ try {
 	if (wfStatus == 'Create Conditions and Close Case') {
 		logDebug("Inside: " + wfStatus);
 		var capParcelResult = aa.parcel.getParcelandAttribute(capId,null);
-		if (capParcelResult.getSuccess()) {
+		if (capParcelResult.length > 0) {
 			var sum = 0;
 			var tempAsit = loadASITable("PROFFER CONDITIONS");
 			if (tempAsit) {
