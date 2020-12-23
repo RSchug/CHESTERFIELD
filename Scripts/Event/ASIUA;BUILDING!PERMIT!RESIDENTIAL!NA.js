@@ -52,8 +52,8 @@ if (AInfo["Type of Building"] != "Multi-Family Dwelling"){
     addFee("SHED","CC-BLD-RES","FINAL",1,"Y");
     updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
     
-    if (AInfo["Nature of Work"] == "Alterations, and converting deck/porch/garage to finished space" && !feeExists("ALTERATION3")){
-    addFee("ALTERATION3","CC-BLD-RES","FINAL",1,"Y");
+    if (AInfo["Nature of Work"] == "Alterations, and converting deck/porch/garage to finished space" && !feeExists("ALTERATION171")){
+    addFee("ALTERATION171","CC-BLD-RES","FINAL",1,"Y");
     updateFee("STATELEVY","CC-BLD-RES","FINAL",1,"Y")}
     
     if (AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in change in use of square footage" && !feeExists("ALTERATION171")){
