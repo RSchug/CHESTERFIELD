@@ -589,8 +589,8 @@ try {
 			for (a in tempAsit) {
 				if (tempAsit[a]["Approved"] == 'CHECKED') {
 				// added this for the departments that are just going to be on the Parcel with no stoppage
-					if (matches(tempAsit[a]["Department"],'Airport','CE','Cnty Attorney','Econ Dev','GIS-IST','Gen Services','Library','Police','Radio Shop','Real Est Assr','School Constr','GIS-EDM','Hist Society','DEQ','US Corp Eng','Water Qual')) {
-						var cType = 'RevDev';
+					if (matches(tempAsit[a]["Department"],'Airport','CE','Cnty Attorney','Econ Dev','GIS-IST','Gen Services','Library','Police','Radio Shop','Real Est Assr','School Constr','GIS-EDM','Hist Society','DEQ','US Corps Eng','Water Qual')) {
+						var cType = 'RevDepts';
 					} else if(tempAsit[a]["Department"] != null) {
 						var cType = tempAsit[a]["Department"];
 					}
