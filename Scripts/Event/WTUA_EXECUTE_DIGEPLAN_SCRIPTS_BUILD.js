@@ -42,7 +42,7 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 //send email to Applicant on consolidationTask/consolidationResubmitStatus and update mark up to type to Comments 
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
+	//emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
@@ -63,7 +63,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 //Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
+	//emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
