@@ -1,6 +1,6 @@
 //update ASI Housing Units based on Additional Info Housing Units
 //if (!publicUser) {
-//editAppSpecific("Number of Units", houseCount);
+editAppSpecific("Number of Units", houseCount);
 //}
 //if recordType ("Building/Permit/Residential/Boiler")
 //addFee("BOILER","CC-BLD-RES-BOILER","FINAL",houseCount,"Y");
