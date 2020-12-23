@@ -583,6 +583,7 @@ try {
 	
 //Create Conditions from proffers table - 59p - moved here 12/2020 for additional tables
 	if (wfStatus == 'Create Conditions and Close Case') {
+		logDebug("Inside: " + wfStatus);
 		var sum = 0;
 		var tempAsit = loadASITable("PROFFER CONDITIONS");
 		if (tempAsit) {
@@ -591,8 +592,10 @@ try {
 				// added this for the departments that are just going to be on the Parcel with no stoppage
 					if (matches(tempAsit[a]["Department"],'Airport','CE','Cnty Attorney','Econ Dev','GIS-IST','Gen Services','Library','Police','Radio Shop','Real Est Assr','School Constr','GIS-EDM','Hist Society','DEQ','US Corps Eng','Water Qual')) {
 						var cType = 'RevDepts';
+						logDebug("Inside: " + cType);
 					} else if(tempAsit[a]["Department"] != null) {
 						var cType = tempAsit[a]["Department"];
+						logDebug("Inside: " + cType);
 					}
 					var cDesc = tempAsit[a]["Department"]+' - '+tempAsit[a]["Record Type"];
 					var cShortComment = tempAsit[a]["Proffer Condition"];
