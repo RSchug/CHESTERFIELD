@@ -25,11 +25,13 @@ try {
 		editAppSpecific("Total application acreage", revisedAcreage);
 		editAppSpecific("Total number of parcels", countParcels);
 
-//11-2020 added code for copying Address Parcel Owner information from a Table to a Record, because we cannont have multiple parcel submission at ACA intake
+//12-2020 added code for copying Address Parcel Owner information from a Table to a Record, because we cannont have multiple parcel submission at ACA intake
 		for (b in tempAsit) {
 			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
+				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
-				addParcelAndOwnerFromRefAddress(BaseAddress);
+				addParcelFromRef_TPS(parcelTaxID);
+				addAddressFromRef_TPS(BaseAddress); 
 			}
 		}
 	}
