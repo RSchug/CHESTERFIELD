@@ -6574,7 +6574,7 @@ function enableToBeResubmit(documentID,docStatusArray)
 		adsDocumentModel.setResubmit(true);
 		adsDocumentModel.setCategoryByAction("CHECK-IN");
 		adsDocumentModel.setAllowActions("RESBUMIT;ACA_RESUBMIT");
-		adsDocumentModel.setDocStatus("Pending Resubmittal");
+		adsDocumentModel.setDocStatus("Review Complete-Comments");
 			
 		//update this document model
 		aa.document.updateDocument(adsDocumentModel);

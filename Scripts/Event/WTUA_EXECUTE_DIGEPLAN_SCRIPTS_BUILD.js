@@ -54,7 +54,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
-				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),["Revisions Requested"]);;
+				if(docArray[d].getAllowActions() != null) disableToBeResubmit(docArray[d].getDocumentNo());;
 			}
 		}
 	}
