@@ -4,7 +4,7 @@ logDebug("Inside WTUA_EXECUTE_DIGEPLAN_SCRIPTS_PLAN");
 /*-----DEFINE VARIABLES FOR DIGEPLAN SCRIPTS-----*/
 //Document Specific Variables for PLANNING
 var docGroupArrayModule = ["GENERAL","CC-PLN-ZC","CC-PLN-VP","CC-PLN-HP","CC-PLN-SS","CC-PLN-PP"];
-var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site Plan/Master Plan","Other","Access Plan","Improvement Plan","Legal Documentation","Plat","Validation Plan Advisory Certificate","Final Plans","Plats"];
+var docTypeArrayModule = ["Plans","Survey Plat","Elevations or Renderings","Site Plan/Master Plan","Concept/Master Plan","Other","Access Plan","Improvement Plan","Legal Documentation","Plat","Validation Plan Advisory Certificate","Final Plans","Plats"];
 
 //Workflow Specific variables for Planning
 var reviewTasksArray = ["PLANNING REVIEW", "AIRPORT REVIEW", "ASSESSOR REVIEW", "BUILDING INSPECTION REVIEW", "COUNTY LIBRARY REVIEW", "HEALTH DEPARTMENT REVIEW", "CDOT REVIEW", "ECONOMIC DEVELOPMENT REVIEW", "ENVIRONMENTAL ENGINEERING", "FIRE AND LIFE SAFETY REVIEW", "GIS-IST REVIEW", "GIS-EDM UTILITIES REVIEW", "PARKS AND RECREATION REVIEW", "POLICE REVIEW", "REAL PROPERTY REVIEW", "SCHOOLS CONSTRUCTION REVIEW", "SCHOOLS RESEARCH AND PLANNING REVIEW", "UTILITIES REVIEW", "VDOT REVIEW", "WATER QUALITY REVIEW", "CHESTERFIELD HISTORICAL SOCIETY REVIEW", "COMMUNITY ENHANCEMENT REVIEW"];
@@ -26,6 +26,7 @@ var ApprovedStatus = ['Review Complete','Approved','Plans Approved'];
 if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
     logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
+	logDebug("<font color='blue'>Inside docArray: " + docArray + "</font>");
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
             if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
@@ -45,6 +46,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	//emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
+	logDebug("<font color='blue'>Inside docArray: " + docArray + "</font>");
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
