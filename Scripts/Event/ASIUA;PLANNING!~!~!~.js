@@ -31,7 +31,8 @@ try {
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
 				addParcelFromRef_TPS(parcelTaxID);
-				addAddressFromRef_TPS(BaseAddress); 
+				addAddressFromRef_TPS(BaseAddress);
+				GetOwnersByParcel();
 			}
 		}
 	}
