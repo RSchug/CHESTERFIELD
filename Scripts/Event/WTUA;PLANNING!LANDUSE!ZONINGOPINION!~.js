@@ -98,9 +98,12 @@ function emailPreAppComplete() {
 
 		var tempAsit = loadASITable("CC-LU-TPA");
 			if (tempAsit) {
+				var TaxIDArray = "";
 				for (b in tempAsit) {
 					var parcelTaxID[b] = tempAsit[b]["Tax ID"];
-					var TaxIDArray = TaxIDArray + ", " + parcelTaxID[b];
+					if (TaxIDArray == "") {
+						TaxIDArray = parcelTaxID[b];
+					} else { TaxIDArray = TaxIDArray + ", " + parcelTaxID[b]; }
 				}
 				addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
 			}
