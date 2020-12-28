@@ -33,6 +33,8 @@ try {
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
 				GetOwnersByParcel();
+				//copyParcelGisObjects(); - this is a holding place
+				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"], 'UNCHECKED');
 			}
 		}
 	}
