@@ -80,7 +80,7 @@ function emailPreAppComplete() {
         for (co in contObj) {
             if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
                 applicantEmail += contObj[co]["email"] + ";";
-				applicantName += contObj[co]["FullName"] + ";";
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"];
         }
     }
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
@@ -112,6 +112,10 @@ function emailPreAppComplete() {
     }
 	else if (applicantEmail != "" && wfStatus == 'Authorized to Proceed') {
 		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
+	else if (applicantEmail != "" && wfStatus == 'Additional Information Required') {
+		var emailTemplate = "WTUA_PRE_APP_NEED_INFO";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
 	else if (applicantEmail == "" && assignedToEmail != "") {
