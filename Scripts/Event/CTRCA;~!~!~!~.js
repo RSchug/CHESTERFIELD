@@ -39,10 +39,57 @@ try {
 			addParent(secondParentName);
 		}
 	}
+	// auto-emails for Planning records only 18EMAIL
+	if (appMatch('Planning/*/*/*')) {
+		emailNewPLNapp();
+	}	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }	
 	
+function emailNewPLNapp() {
+    showMessageDefault = showMessage;
+    //populate email notification parameters
+    var emailSendFrom = "";
+    var emailSendTo = "";
+    var emailCC = "";
+    var emailParameters = aa.util.newHashtable();
+    var fileNames = [];
+
+    getRecordParams4Notification(emailParameters);
+    getAPOParams4Notification(emailParameters);
+    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+    //getACARecordParam4Notification(emailParameters,acaSite);
+    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+    addParameter(emailParameters, "$$wfComment$$", wfComment);
+    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+
+    var applicantEmail = "";
+	var applicantName = "";
+    var contObj = {};
+    contObj = getContactArray(capId);
+    if (typeof(contObj) == "object") {
+        for (co in contObj) {
+            if ((contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null) || (contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null))
+                applicantEmail += contObj[co]["email"] + ";";
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
+        }
+    }
+    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+	addParameter(emailParameters, "$$applicantName$$", applicantName);
+
+    if ('Planning/LandUse/*/*') {
+		var emailTemplate = "CTRCA_LANDUSE";
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
+	else if ('Planning/SitePlan/*/*' || 'Planning/Subdivision/*/*') {
+		var emailTemplate = "CTRCA_SITESUBDIVISION";
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
+}
+
 //showMessage = true;
 //showDebug = 3;
 

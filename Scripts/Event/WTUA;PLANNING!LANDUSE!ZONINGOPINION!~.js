@@ -80,7 +80,7 @@ function emailPreAppComplete() {
         for (co in contObj) {
             if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
                 applicantEmail += contObj[co]["email"] + ";";
-				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"];
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
         }
     }
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
