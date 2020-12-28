@@ -100,10 +100,9 @@ function emailPreAppComplete() {
 			if (tempAsit) {
 				var TaxIDArray = "";
 				for (b in tempAsit) {
-					var parcelTaxID[b] = tempAsit[b]["Tax ID"];
 					if (TaxIDArray == "") {
-						TaxIDArray = parcelTaxID[b];
-					} else { TaxIDArray = TaxIDArray + ", " + parcelTaxID[b]; }
+						TaxIDArray = tempAsit[b]["Tax ID"];
+					} else { TaxIDArray = TaxIDArray + ", " + tempAsit[b]["Tax ID"]; }
 				}
 				addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
 			}
