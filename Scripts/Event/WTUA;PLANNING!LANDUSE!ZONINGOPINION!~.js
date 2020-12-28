@@ -42,7 +42,7 @@ try {
 		deactivateTask('Default');
 	}
 	//12-2020 auto-emails 11.1EMAIL
-	if (wfTask == 'Review Consolidation' && wfStatus == 'Authorized to Proceed') {
+	if (wfTask == 'Review Consolidation') {
 		emailPreAppComplete();
 	}
 	
@@ -70,6 +70,7 @@ function emailPreAppComplete() {
     addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
 
     var applicantEmail = "";
+	var applicantName = "";
     var assignedTo = getAssignedToStaff();
     var assignedToEmail = "";
     var assignedToFullName = "";
@@ -79,10 +80,11 @@ function emailPreAppComplete() {
         for (co in contObj) {
             if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
                 applicantEmail += contObj[co]["email"] + ";";
+				applicantName += contObj[co]["FullName"] + ";";
         }
     }
-
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+	addParameter(emailParameters, "$$applicantName$$", applicantName);
 
     if (assignedTo != null) {
         assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
@@ -93,27 +95,30 @@ function emailPreAppComplete() {
     addParameter(emailParameters, "$$assignedToFullName$$", assignedToFullName);
     addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
 
-    if (applicantEmail != "") {
-		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
-
-		var tempAsit = loadASITable("CC-LU-TPA");
-			if (tempAsit) {
-				var TaxIDArray = "";
-				for (b in tempAsit) {
-					if (TaxIDArray == "") {
-						TaxIDArray = tempAsit[b]["Tax ID"];
-					} else { TaxIDArray = TaxIDArray + ", " + tempAsit[b]["Tax ID"]; }
-				}
-				addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
+	//Load the Parcel numbers
+	var tempAsit = loadASITable("CC-LU-TPA");
+		if (tempAsit) {
+			var TaxIDArray = "";
+			for (b in tempAsit) {
+				if (TaxIDArray == "") {
+					TaxIDArray = tempAsit[b]["Tax ID"];
+				} else { TaxIDArray = TaxIDArray + ", " + tempAsit[b]["Tax ID"]; }
 			}
+			addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
+		}
+    if (applicantEmail != "" && wfStatus == 'Not Authorized') {
+		var emailTemplate = "WTUA_PRE_APP_NOT_COMPLETE";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
-    } else {
-        if (applicantEmail == "" && assignedToEmail != "") {
+    }
+	else if (applicantEmail != "" && wfStatus == 'Authorized to Proceed') {
+		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
+	else if (applicantEmail == "" && assignedToEmail != "") {
             var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
             sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
             showMessage = true;
             comment("There is no applicant email associated to this permit. Permit Coordinator has been notified via email to contact this applicant directly.");
             showMessage = showMessageDefault;
-        }
-    }
+	}
 }
