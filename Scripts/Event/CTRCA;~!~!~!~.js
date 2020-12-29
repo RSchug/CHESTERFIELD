@@ -95,9 +95,7 @@ function emailNewPLNapp() {
     acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
     //getACARecordParam4Notification(emailParameters,acaSite);
     addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
-    addParameter(emailParameters, "$$wfComment$$", wfComment);
-    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
-    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+    addParameter(emailParameters, "$$RecStatus$$", capStatus);
 
     var applicantEmail = "";
 	var applicantName = "";
