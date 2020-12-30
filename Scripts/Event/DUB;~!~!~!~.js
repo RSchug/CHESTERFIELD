@@ -15,7 +15,7 @@ try {
 	if (publicUser && appMatch("Planning/*/*/*") && !matches(capStatus,'Submitted','Pending Applicant',null)) {
 		cancel = true;
 		showMessage = true;
-		comment("<div class='docList'><span class='fontbold font14px ACA_Title_Color'>Error: You cannot upload a document when the record is " + capStatus + ".</span><ol>");
+		comment("<B><font color='red'>Error: You cannot upload a document when the record is " + capStatus + ".</B></font>");
     }
 	/*if (publicUser && appTypeString == 'eReview/Building/NA/NA' && !matches(capStatus,'Submitted','Pending Applicant') && exists(newDocModelArray[dl]["docCategory"],docTypeArrayModule)) {
 		cancel = true;
