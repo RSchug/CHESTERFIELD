@@ -45,10 +45,11 @@ if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUse
 if (inspType.equals("BI Erosion Control") && inspResult.equals("Corrections Required")) {
 	scheduleInspection("E and SC", 2, InspAssignment, null, "Auto Scheduled from BI Erosion Control Status of Corrections Required");
 }
-//When Framing Inspection Type is approved, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
-if (inspType.equals("Framing") && inspResult.equals("Approved")) {
+//For Residential Permit only, when Framing Inspection Type is approved, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
+if appMatch("Building/Permit/Residential/NA"){
+if (inspType.equals("Framing") &amp;&amp; inspResult.equals("Approved")) {
 	scheduleInspection("VSMP", 1, InspAssignment, null, "Auto Scheduled from Framing Approved Inspection.");
-}
+}}
 //If Inspection Result is "Extended" for Inspection Type "E and SC" schedule another E and SC Inspection 2 days out assigned to EE Inspector.//
 if (inspType.equals("E and SC") && inspResult.equals("Extended")) {
 	scheduleInspection("E and SC", 2, InspAssignment, null, "Auto Scheduled from E and SC Status of Extended");
