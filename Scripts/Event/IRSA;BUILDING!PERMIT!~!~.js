@@ -46,7 +46,7 @@ try {
 		scheduleInspection("E and SC", 2, InspAssignment, null, "Auto Scheduled from BI Erosion Control Status of Corrections Required");
 	}
 //For Residential Permit only, when Framing Inspection Type is approved, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
-	if appMatch("Building/Permit/Residential/NA"){
+	if (appMatch("Building/Permit/Residential/NA")) {
 		if (inspType.equals("Framing") && inspResult.equals("Approved")) {
 			scheduleInspection("VSMP", 1, InspAssignment, null, "Auto Scheduled from Framing Approved Inspection.");
 		}
