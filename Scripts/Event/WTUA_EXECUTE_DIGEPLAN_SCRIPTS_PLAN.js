@@ -55,7 +55,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
-				if(docArray[d].getAllowActions() != null) disableToBeResubmit(docArray[d].getDocumentNo());;
+				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),['Revisions Requested']);;
 			}
 			//Not going to work at this wftask... will have to have another event turn this on...???
 			if (exists(docArray[d]["docCategory"],"Comments") && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
