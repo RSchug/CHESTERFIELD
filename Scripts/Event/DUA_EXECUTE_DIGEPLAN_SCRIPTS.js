@@ -32,12 +32,11 @@ try {   //DUA_EXECUTE_DIGEPLAN_SCRIPTS
 	var newDocModelArray = documentModelArray.toArray();
 	var doPreCache = false;
 	//db updated per business request 4-27-2020
-	//if(/*publicUser &&*/ capIDString.indexOf("TMP") == -1) emailDocUploadNotification(docGroupArrayModule,docTypeArrayModule);
-
+	//if(publicUser && capIDString.indexOf("TMP") == -1) emailDocUploadNotification(docGroupArrayModule,docTypeArrayModule);
 	//if (capIDString.indexOf("TMP") == -1) {
-	if(exists(newDocModelArray[dl]["docGroup"],docGroupArrayModule) && exists(newDocModelArray[dl]["docCategory"],docTypeArrayModule)) {
-		doPreCache = true; 
-		for (dl in newDocModelArray) {
+	for (dl in newDocModelArray) {
+		if(exists(newDocModelArray[dl]["docGroup"],docGroupArrayModule) && exists(newDocModelArray[dl]["docCategory"],docTypeArrayModule)) {
+			doPreCache = true;
 			logDebug("<font color='green'>*****Document Details*****</font>");
 			logDebug("<font color='green'>DocName: " + newDocModelArray[dl]["docName"] + " - DocID: " + newDocModelArray[dl]["documentNo"] + "</font>");
 			logDebug("<font color='green'>DocGroup / DocCategory: " + newDocModelArray[dl]["docGroup"] + " / " + newDocModelArray[dl]["docCategory"] + "</font>");
