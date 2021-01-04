@@ -56,7 +56,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 			}
 			if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] != "Review Complete-Comments" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
 				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
-				disableToBeResubmit(docArray[d].getDocumentNo();
+				disableToBeResubmit(docArray[d].getDocumentNo());
 			}
 			if (exists(docArray[d]["docCategory"],"Comments") && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
 				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
