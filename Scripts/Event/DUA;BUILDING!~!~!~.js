@@ -3,10 +3,8 @@ try {
 	if (publicUser) {
 		addAdHocTask("ADHOC_WF","Document Submitted Online","");
     }
-//in DUA - we do not have the wfTask info, so had to be generic when docs uploaded by publicuser...
-	if (publicUser && matches(capStatus, "Pending Applicant")) {  //&& matches(wfTask,'Review Distribution')
-        updateAppStatus("Additional Information Received", "Update by Document Upload");
-    }
+//in DUA_EXECUTE_DIGEPLAN_SCRIPTS we update AppStatus when docs are uploaded by publicuser via the Resubmit button...
+
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }	
