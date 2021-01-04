@@ -675,4 +675,23 @@ function enableToBeResubmit(documentID,docStatusArray)
 	}
 }
 
+function disableResubmit(documentID,docStatusArray)
+{
+     //get current document model by documentID
+     var adsDocumentModel = aa.document.getDocumentByPK(documentID).getOutput();
+    
+     if (exists(adsDocumentModel.getDocStatus(),docStatusArray))
+     {
+           //set this doc resubmit
+           adsDocumentModel.setResubmit(false);
+           //adsDocumentModel.setCategoryByAction("CHECK-IN");
+           //adsDocumentModel.setAllowActions("RESBUMIT;ACA_RESUBMIT");
+           //adsDocumentModel.setDocStatus("Pending Resubmittal");
+               
+           //update this document model
+        aa.document.updateDocument(adsDocumentModel);
+        logDebug("<font color='blue'>Doc RESUBMIT disabled: " + adsDocumentModel["docName"] + "</font>");
+     }
+}
+
 /*--------END DIGEPLAN EDR CUSTOM FUNCTIONS---------*/
