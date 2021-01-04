@@ -53,9 +53,14 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
+			if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] != "Review Complete-Comments" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
+				disableToBeResubmit(docArray[d].getDocumentNo());
+			}
+			/* turned off for testing above..
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
 				if(docArray[d].getAllowActions() != null) disableToBeResubmit(docArray[d].getDocumentNo());;
-			}
+			}*/
 		}
 	}
 }

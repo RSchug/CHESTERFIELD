@@ -58,6 +58,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
 				disableToBeResubmit(docArray[d].getDocumentNo());
 			}
+			//Not going to work at this wftask... will have to have another event turn this on...???
 			if (exists(docArray[d]["docCategory"],"Comments") && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
 				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
 				enableToBeResubmit(docArray[d]["documentNo"],["Comments"]);
