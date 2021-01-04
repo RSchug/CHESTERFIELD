@@ -26,8 +26,7 @@ var ApprovedStatus = ['Review Complete','Approved','Plans Approved'];
 if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
     logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
     var docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
-	logDebug("<font color='blue'>Inside docArray: " + docArray + "</font>");
-    if (docArray != null && docArray.length > 0) {
+	if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
             if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] == "Uploaded" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
                 logDebug("<font color='blue'>Update document statuses to " + inReviewDocStatus + "</font>");
@@ -46,7 +45,6 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	//emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
-	logDebug("<font color='blue'>Inside docArray: " + docArray + "</font>");
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
@@ -56,9 +54,13 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
 			}
-			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
-				logDebug("<font color='blue'>Inside docStatus: " + docArray[d]["docStatus"] + "</font>");
-				if(docArray[d].getAllowActions() != null) disableToBeResubmit(docArray[d].getDocumentNo());;
+			if (exists(docArray[d]["docCategory"],docTypeArrayModule) && docArray[d]["docStatus"] != "Review Complete-Comments" && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
+				disableToBeResubmit(docArray[d].getDocumentNo();
+			}
+			if (exists(docArray[d]["docCategory"],"Comments") && docArray[d]["fileUpLoadBy"] != digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside docType docStatus: " + docArray[d]["docCategory"] + docArray[d]["docStatus"] + "</font>");
+				enableToBeResubmit(docArray[d]["documentNo"],["Comments"]);
 			}
 		}
 	}
