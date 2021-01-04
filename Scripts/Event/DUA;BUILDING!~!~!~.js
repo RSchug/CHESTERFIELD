@@ -3,11 +3,8 @@ try {
 	if (publicUser) {
 		addAdHocTask("ADHOC_WF","Document Submitted Online","");
     }
-//From eReview
-	if (publicUser && matches(capStatus, "Pending Applicant") && matches(wfTask,'Review Distribution')) {
-        updateAppStatus("Corrections Received", "Update by Document Upload");
-    }
-	else if (publicUser && matches(capStatus, "Pending Applicant") && matches(wfTask,'Application Submittal','Permit Issuance')) {
+//in DUA - we do not have the wfTask info, so had to be generic when docs uploaded by publicuser...
+	if (publicUser && matches(capStatus, "Pending Applicant")) {  //&& matches(wfTask,'Review Distribution')
         updateAppStatus("Additional Information Received", "Update by Document Upload");
     }
 } catch (err) {
