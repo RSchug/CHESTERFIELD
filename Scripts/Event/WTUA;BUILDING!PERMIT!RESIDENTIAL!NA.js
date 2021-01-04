@@ -107,7 +107,7 @@ try {
 			var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
 			var InspAssignment = null;
 				if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
-				scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled");
+				scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled based on Permit Issued");
 		}
 	}
 } catch (err) {
