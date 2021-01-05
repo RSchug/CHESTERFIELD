@@ -29,6 +29,7 @@ if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required PM') {
     }
 }
 
+
 if (wfTask == 'Community Enhancement' && wfStatus == 'Inspection Required ZC') {
     deactivateTask("Community Enhancement");
     var checkedItems = getAppSpecificFieldLabels(null, ["CC-ENF-VIOT"], null, ["CHECKED"], ["Checkbox"]);
