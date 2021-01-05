@@ -1,7 +1,7 @@
 try {
 //From eReview - but was wrapped in a different function.  There is no wfTask in DUA or DUB... Also, we update AppStatus in DUA_EXECUTE_DIGEPLAN_SCRIPTS, and this script should fire after.
 	//Any Planning Record with attachments creates an ADHOC task 'Document Submitted Online'
-	if (publicUser && !matches(capStatus,'Revisions Received') && capIDString.indexOf("TMP") != -1 && appMatch('Planning/LandUse/*/*')) { 
+	if (publicUser && !matches(capStatus,'Revisions Received',null) && appMatch('Planning/LandUse/*/*')) { //&& capIDString.indexOf("TMP") != -1
 		addAdHocTask("ADHOC_WF","Document Submitted Online","");
     }
 } catch (err) {
