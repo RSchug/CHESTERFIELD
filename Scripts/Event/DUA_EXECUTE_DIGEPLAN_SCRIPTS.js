@@ -46,7 +46,7 @@ try {   //DUA_EXECUTE_DIGEPLAN_SCRIPTS
 	  
 			if(newDocModelArray[dl]["categoryByAction"] == "RESUBMIT") {
 				doResubmitActions(newDocModelArray[dl],docGroupArrayModule,docTypeArrayModule,routingTask,routingResubmittalStatus,originalDocStatusOnResubmit,parentDocStatusOnResubmit,resubmitDocStatusOnResubmit);
-				updateAppStatus("Revisions Received", "Update by Document Upload from Cutomer");
+				updateAppStatus("Revisions Received", "Update from a Resubmit");
 			}
 		}
 	}
