@@ -1,11 +1,9 @@
 try {
-//From eReview - but was wrapped in a different function.  There is no wfTask in DUA or DUB... Also, we update AppStatus in DUA_EXECUTE_DIGEPLAN_SCRIPTS, but this is a catch all...
-	if (publicUser && matches(capStatus, "Pending Applicant","Submitted")) { // && matches(wfTask,'Review Distribution','Recordation')) {
-        updateAppStatus("Revisions Received", "Update by Document Upload from Cutomer");
+//From eReview - but was wrapped in a different function.  There is no wfTask in DUA or DUB... Also, we update AppStatus in DUA_EXECUTE_DIGEPLAN_SCRIPTS, and this script should fire after.
+	//Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
+	if (publicUser && capStatus != 'Revisions Received' && appMatch('Planning/LandUse/*/*')) {
+		addAdHocTask("ADHOC_WF","Document Submitted Online","");
     }
-	/*if (publicUser && matches(capStatus, "Submitted")) { // && matches(wfTask,'Review Distribution','Recordation')) {
-        updateAppStatus("Additional Information Uploaded", "Update by Document Upload from Cutomer");
-    }*/
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
@@ -65,4 +63,36 @@ if (debug.indexOf("**ERROR") > 0) {
 		if (showDebug)
 			aa.env.setValue("ErrorMessage", debug);
 	}
+}
+
+function addAdHocTask(adHocProcess, adHocTask, adHocNote)
+{
+//adHocProcess must be same as one defined in R1SERVER_CONSTANT
+//adHocTask must be same as Task Name defined in AdHoc Process
+//adHocNote can be variable
+//Optional 4 parameters = Assigned to User ID must match an AA user
+//Optional 5 parameters = CapID
+	var thisCap = capId;
+	var thisUser = currentUserID;
+	if(arguments.length > 3)
+		thisUser = arguments[3]
+	if(arguments.length > 4)
+		thisCap = arguments[4];
+	var userObj = aa.person.getUser(thisUser);
+	if (!userObj.getSuccess())
+	{
+		logDebug("Could not find user to assign to");
+		return false;
+	}
+	var taskObj = aa.workflow.getTasks(thisCap).getOutput()[0].getTaskItem()
+	taskObj.setProcessCode(adHocProcess);
+	taskObj.setTaskDescription(adHocTask);
+	taskObj.setDispositionNote(adHocNote);
+	taskObj.setProcessID(0);
+	taskObj.setAssignmentDate(aa.util.now());
+	taskObj.setDueDate(aa.util.now());
+	taskObj.setAssignedUser(userObj.getOutput());
+	wf = aa.proxyInvoker.newInstance("com.accela.aa.workflow.workflow.WorkflowBusiness").getOutput();
+	wf.createAdHocTaskItem(taskObj);
+	return true;
 }
