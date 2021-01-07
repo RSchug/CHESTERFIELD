@@ -1,10 +1,13 @@
 try {
-	var sessiontabledata = getASITablesRowsFromSession4ACA9(CC-LU-TPA);
+	var sessiontabledata = getASITablesRowsFromSession4ACA(CC-LU-TPA);
 	if (sessiontabledata == false) {
 		showMessage = true;
 		comment('You need to enter at least 1 Tax ID in the table to continue.');
 		cancel = true;
 	}
+} catch (err) {
+    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
 function getASITablesRowsFromSession4ACA(tableName) {
 	var gm = cap.getAppSpecificTableGroupModel()
 	var ta = gm.getTablesMap();
@@ -39,9 +42,6 @@ function getASITablesRowsFromSession4ACA(tableName) {
 		return asitTables;
 	}
 	return false;
-} catch (err) {
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
 }
 /*   var tableNames = (arguments.length > 1 ? arguments[1] : null); // list of tables
     var tableNameArray = getTableName(capId);
