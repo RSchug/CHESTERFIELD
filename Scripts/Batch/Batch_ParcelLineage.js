@@ -67,6 +67,7 @@ mapLayerName_xAPO = "Parcel_Owner";
 
 var partialCapType = "Enforcement/Converted/Historical/NA"; // used to create a partial record for some record based processing.
 var partialCapType = "Utilities/RealProperty/NA/NA";        // used to create a partial record for some record based processing.
+var partialCapType = "Planning/ChildParcelRecord/NA/NA";        // used to create a partial record for some record based processing.
 
 var current = new Date();
 var fromDateMMDDYYYY = null;
@@ -96,8 +97,8 @@ if (aa.env.getValue("fromDate") == "" && aa.env.getValue("lookAheadDays") == "")
     } else {
         //fromDate = dateAdd(null, -100);
         //toDate = dateAdd(null, -1);
-        aa.env.setValue("lookAheadDays", "-10");
-        aa.env.setValue("daySpan", "9");
+        aa.env.setValue("lookAheadDays", "-7");
+        aa.env.setValue("daySpan", "6");
     }
 }
 
