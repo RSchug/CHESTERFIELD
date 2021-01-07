@@ -1,5 +1,49 @@
 try {
-    var tableNames = (arguments.length > 1 ? arguments[1] : null); // list of tables
+	var sessiontabledata = getASITablesRowsFromSession4ACA9(CC-LU-TPA);
+	if (sessiontabledata == false) {
+		showMessage = true;
+		comment('You need to enter at least 1 Tax ID in the table to continue.');
+		cancel = true;
+	}
+function getASITablesRowsFromSession4ACA(tableName) {
+	var gm = cap.getAppSpecificTableGroupModel()
+	var ta = gm.getTablesMap();
+	var tai = ta.values().iterator();
+	while (tai.hasNext()) {
+		var tsm = tai.next();
+		if (tsm.rowIndex.isEmpty())
+			continue;
+
+		var asitRow = new Array;
+		var asitTables = new Array;
+		var tn = tsm.getTableName();
+		if (tn != tableName) {
+			continue;
+		}
+
+		var tsmfldi = tsm.getTableField().iterator();
+		var tsmcoli = tsm.getColumns().iterator();
+		while (tsmfldi.hasNext()) {
+
+			var tcol = tsmcoli.next();
+			var tval = tsmfldi.next();
+
+			asitRow[tcol.getColumnName()] = tval;
+
+			if (!tsmcoli.hasNext()) {
+				tsmcoli = tsm.getColumns().iterator();
+				asitTables.push(asitRow);
+				asitRow = new Array;
+			}
+		}
+		return asitTables;
+	}
+	return false;
+} catch (err) {
+    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
+}
+/*   var tableNames = (arguments.length > 1 ? arguments[1] : null); // list of tables
     var tableNameArray = getTableName(capId);
     if (tableNameArray == null) {
         showMessage = true;
@@ -44,9 +88,6 @@ try {
 		aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: \r" + br + debug);
 		showDebug = false;
 	}
-} catch (err) {
-    logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
 
 function localLoadASITable(tname) {
     // Returns a single ASI Table array of arrays
@@ -70,4 +111,4 @@ function localLoadASITable(tname) {
 		logDebug("Table has data in it");
 		return true;
     }
-}
+} */
