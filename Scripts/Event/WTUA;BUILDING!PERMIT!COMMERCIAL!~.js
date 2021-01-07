@@ -2,6 +2,7 @@ try {
 //11-2020 db updated this to work 
 	if (!appMatch("*/*/*/Demolition")){
 		if (wfTask =='Document Submitted Online' && wfStatus == 'Amendment'){
+			addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 			if (isTaskActive('Certificate Issuance') || isTaskActive('Inspections')){
 				if (appMatch("*/*/*/NA")) {
 					var newAppTypeString = "Building/Permit/Commercial/Amendment";
@@ -33,6 +34,7 @@ try {
 			}
 		}
 		if (wfTask =='Inspections' && wfStatus == 'Amendment Submitted') {
+			addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 			var newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Amendment";
 			if (appMatch("*/*/*/NA")) {
 				var newAppTypeString = "Building/Permit/Commercial/Amendment";
@@ -62,7 +64,6 @@ try {
 				editAppSpecific(expDateField, expDate, newCapId);
 			}
 		}
-		addFee("ADMIN", "CC-BLD-ADMIN", "FINAL", 1, "Y");
 	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
