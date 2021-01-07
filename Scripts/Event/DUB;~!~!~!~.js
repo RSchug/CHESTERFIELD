@@ -1,5 +1,6 @@
 try {
 	var docTypeArrayModule = ["Plans","Application","Calculation","Code Modification","Plat"];
+	showDebug = false;
 	/*------------LOAD DOCUMENT ARRAY------------*/
 	var newDocModelArray = documentModelArray.toArray();
 	for (dl in newDocModelArray) {
