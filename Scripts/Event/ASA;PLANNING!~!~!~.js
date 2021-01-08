@@ -1,29 +1,29 @@
 try {
-	//Add Planning/LandUse/ManufacturedHomes/NA Fee
-	if (appMatch("Planning/LandUse/ManufacturedHomes/NA")){
-		addFee("MANUFACTURED","CC-PLANNING","FINAL",1,"Y");
-	}
-	//Add Planning/LandUse/AdminVariance/NA Fee
-	if (appMatch("Planning/LandUse/AdminVariance/NA")){
-		addFee("VARIANCEADM","CC-PLANNING","FINAL",1,"Y");
-	}
-	//Add Planning/LandUse/Variance/NA Fee
-	if (appMatch("Planning/LandUse/Variance/NA")){
-		addFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"Y");
-	}
-	//Add Planning/LandUse/Appeal/NA Fee
-	if (appMatch("Planning/LandUse/Appeal/NA")){
-		addFee("APPEAL","CC-PLANNING","FINAL",1,"Y");
-	}
-	//Add Planning/LandUse/WrittenDetermination/NA Fee
-	if (appMatch("Planning/LandUse/WrittenDetermination/NA")){
-		addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
-	}	
-	//Add Planning/LandUse/RPAException/NA Fee
-	if (!publicUser && appMatch("Planning/LandUse/RPAException/NA")){
-		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
-		addFee("RPAEXCEPTOTH","CC-PLANNING","FINAL",1,"N");
-	}
+//Add Planning/LandUse/ManufacturedHomes/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Payment
+//	if (appMatch("Planning/LandUse/ManufacturedHomes/NA")){
+//		addFee("MANUFACTURED","CC-PLANNING","FINAL",1,"Y");
+//	}
+//Add Planning/LandUse/AdminVariance/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Payment
+//	if (appMatch("Planning/LandUse/AdminVariance/NA")){
+//		addFee("VARIANCEADM","CC-PLANNING","FINAL",1,"Y");
+//	}
+//Add Planning/LandUse/Variance/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Payment
+//	if (appMatch("Planning/LandUse/Variance/NA")){
+//		addFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"Y");
+//	}
+//Add Planning/LandUse/Appeal/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Paymen
+//	if (appMatch("Planning/LandUse/Appeal/NA")){
+//		addFee("APPEAL","CC-PLANNING","FINAL",1,"Y");
+//	}
+//Add Planning/LandUse/WrittenDetermination/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Payment
+//	if (appMatch("Planning/LandUse/WrittenDetermination/NA")){
+//		addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
+//	}	
+//Add Planning/LandUse/RPAException/NA Fee-Removed on 1/7/2021 and added to WTUA Application Submittal - Ready for Payment
+//	if (!publicUser && appMatch("Planning/LandUse/RPAException/NA")){
+//		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
+//		addFee("RPAEXCEPTOTH","CC-PLANNING","FINAL",1,"N");
+//	}
 	// Use Agency Sign Posting Number sequence to keep track of Sign Postings for Selectron.
 	// 10P Custom Field Sign Posting Number should be auto populated with a number of 100 - 999.  The number must not be a duplicate number for another active record.
 	// The sign post number is a number is related to the IVR prompt that will be recorded so that callers may get case information from calling the number.
