@@ -31,7 +31,7 @@ emailParameters.put("$$RecordStatus$$", capStatus);
 emailParameters.put("$$ProjectName$$", capName);
 emailParameters.put("$$AddressLine$$", address[0]);
 
-sendNotification("noreply@chesterfield.gov","mbouquin@truepointsolutions.com","ngraf@truepointsolutions.com","BUDGET_INSPECTION",emailParameters,fileNames);
+sendNotification("noreply@chesterfield.gov","budgetproffers@chesterfield.gov","mbouquin@truepointsolutions.com","BUDGET_INSPECTION",emailParameters,fileNames);
 }
 
 //When Framing Inspection Type is scheduled, schedule a VSMP Inspection Type for the following day and assign to EE Inspector
