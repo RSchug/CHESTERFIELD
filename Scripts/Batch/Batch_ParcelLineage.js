@@ -503,8 +503,10 @@ function mainProcess() {
         // Check for Parent Parcel
         mapFeature["Process Status"] = "";
         processStatus = [];
+
+        var sourceSeqNumber = null;
         // Check for Parent Parcel
-        parentParcelUID = null, parentParcelModel = null;
+/*        parentParcelUID = null, parentParcelModel = null;
         var parentParcels = getParcelListForAdmin(parentParcelID);
         if (parentParcels.length > 0) {
             var parentParcelModel = parentParcels[0].getParcelModel();
@@ -517,7 +519,7 @@ function mainProcess() {
             //parentParcelModel.setUID(parentParcelID);
         } else {
             processStatus.push("Missing Parent");
-        }
+        } */
         // Check for Child Parcel
         childParcelUID = null, childParcelModel = null;
         var childParcels = getParcelListForAdmin(childParcelID);
@@ -526,6 +528,7 @@ function mainProcess() {
             for (var xx in childParcels) {
                 var childParcelModel = childParcels[xx].getParcelModel();
                 //logDebug("Found ref childParcels[" + xx + "]: " + childParcelModel.getParcel() + ", UID: " + childParcelModel.getUID());
+                sourceSeqNumber = childParcelModel.getSourceSeqNumber();
             }
             childParcelUID = childParcelModel.getUID();
             //xAPO Workaround
@@ -572,6 +575,23 @@ function mainProcess() {
             continue;
         }
 
+        // Check for Parent Parcel
+        parentParcelUID = null, parentParcelModel = null;
+        var parentParcels = getParcelListForAdmin(parentParcelID);
+        if (parentParcels.length > 0) {
+            var parentParcelModel = parentParcels[0].getParcelModel();
+            for (var xx in parentParcels) {
+                var parentParcelModel = parentParcels[xx].getParcelModel();
+                //logDebug("Found ref parentParcels[" + xx + "]: " + parentParcelModel.getParcel() + ", UID: " + parentParcelModel.getUID());
+                sourceSeqNumber = parentParcelModel.getSourceSeqNumber();
+            }
+            parentParcelUID = parentParcelModel.getUID() + ""; // CHESTERFIELD$*$780654386300057
+            //xAPO Workaround
+            //parentParcelModel.setUID(parentParcelID);
+        } else {
+            processStatus.push("Missing Parent");
+        }
+
         var sql = " SELECT [L1_PARCEL_NBR] \
             , [SOURCE_SEQ_NBR] \
             , [L1_EVENT_ID] \
@@ -601,8 +621,10 @@ function mainProcess() {
             , [L1_SECTION] \
             , [L1_PRIMARY_PAR_FLG] \
         FROM [dbo].[L3PARCEL] \
-        WHERE SOURCE_SEQ_NBR = '"+ parentParcelModel.getSourceSeqNumber() + "' \
-          AND PARCEL_ID IN ('" + childParcelID + "','" + parentParcelID + "')";
+        WHERE " + (sourceSeqNumber ? " SOURCE_SEQ_NBR = '" + sourceSeqNumber + "' AND " :"")
+        "     (PARCEL_ID IN ('" + childParcelID + "','" + parentParcelID + "')" +
+        "  OR  EXT_UID LIKE '%" + childParcelID + "'" +
+        "  OR  EXT_UID LIKE '%" + parentParcelID + "')";
 
         var sql = "SELECT TOP(100) [SERV_PROV_CODE] \
             , [B1_PER_ID1], [B1_PER_ID2], [B1_PER_ID3] \
