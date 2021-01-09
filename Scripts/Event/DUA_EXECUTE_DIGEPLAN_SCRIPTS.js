@@ -36,7 +36,6 @@ try {   //DUA_EXECUTE_DIGEPLAN_SCRIPTS
 	//if (capIDString.indexOf("TMP") == -1) {
 	for (dl in newDocModelArray) {
 		if(exists(newDocModelArray[dl]["docGroup"],docGroupArrayModule) && exists(newDocModelArray[dl]["docCategory"],docTypeArrayModule)) {
-			doPreCache = true;
 			logDebug("<font color='green'>*****Document Details*****</font>");
 			logDebug("<font color='green'>DocName: " + newDocModelArray[dl]["docName"] + " - DocID: " + newDocModelArray[dl]["documentNo"] + "</font>");
 			logDebug("<font color='green'>DocGroup / DocCategory: " + newDocModelArray[dl]["docGroup"] + " / " + newDocModelArray[dl]["docCategory"] + "</font>");
@@ -47,6 +46,7 @@ try {   //DUA_EXECUTE_DIGEPLAN_SCRIPTS
 			if(newDocModelArray[dl]["categoryByAction"] == "RESUBMIT") {
 				doResubmitActions(newDocModelArray[dl],docGroupArrayModule,docTypeArrayModule,routingTask,routingResubmittalStatus,originalDocStatusOnResubmit,parentDocStatusOnResubmit,resubmitDocStatusOnResubmit);
 				updateAppStatus("Revisions Received", "Update from a Resubmit");
+				doPreCache = true;
 			}
 		}
 	}
