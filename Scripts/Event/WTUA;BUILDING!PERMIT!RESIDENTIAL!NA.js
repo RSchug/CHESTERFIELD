@@ -54,7 +54,8 @@ try {
 				var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
 				var newCapRelation = "Child";
 				var srcCapId = capId;
-				var newCapId = createCap_TPSdoc(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections);
+				var copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels","Docuemnts"];
+				var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections);
 				if (newCapId) {
 					showMessage = true;
 					comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
