@@ -54,7 +54,7 @@ try {
 				var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
 				var newCapRelation = "Child";
 				var srcCapId = capId;
-				var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId);
+				var newCapId = createCap_TPSdoc(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections);
 				if (newCapId) {
 					showMessage = true;
 					comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
