@@ -105,7 +105,7 @@ try {
 			if (isTaskComplete_TPS("Sign Posting")) {
 				activateTask("Sign Posting");
 			}
-			if (AInfo['Review Type'] == 'Administrative Review') {
+			if (appMatch('*/SitePlan/Major/*') && AInfo['Review Type'] == 'Administrative Review') {
 				if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 					addAdHocTask("ADHOC_WF","Public Notices","");
 				}

@@ -9,8 +9,8 @@ var docTypeArrayModule = ["Plan","Other","Plans","Plat","Site Plan / Key Plan"];
 //Workflow Specific variables
 var reviewTasksArray = ["STRUCTURAL REVIEW","NON STRUCTURAL REVIEW","MECHANICAL REVIEW","PLUMBING REVIEW","ELECTRICAL REVIEW","GAS REVIEW","ADDRESSING REVIEW","ENVIRONMENTAL ENGINEERING REVIEW","PLANNING REVIEW","UTILITIES REVIEW","BUDGET AND MANAGEMENT REVIEW","HEALTH DEPARTMENT REVIEW"];
 var taskStatusArray = ["APPROVED","APPROVED WITH CONDITIONS","CORRECTIONS REQUIRED","NOT REQUIRED"];
-var routingTask = ["Review Distribution","Application/Plat Submittal"];
-var routingStatusArray = ["Routed for Review","Distributed for Review"];
+var routingTask = ["Review Distribution","Application/Plat Submittal","Review Consolidation"]; //added rev cons for EE records
+var routingStatusArray = ["Routed for Review","Distributed for Review","Revisions Received"];
 var resubmittalRoutedStatusArray = ["Routed for Review","Distributed for Review"];
 var reviewTaskResubmittalReceivedStatus = ["Revisions Received"];
 var reviewTaskResubmitStatus = ["Corrections Required"];
@@ -18,11 +18,11 @@ var reviewTaskApprovedStatusArray = ["Approved","Approved with Conditions"]; //N
 var reviewTaskStatusPendingArray = [null,"",undefined,"Revisions Received","In Review"];
 var consolidationTask = ["Review Consolidation"];
 var ResubmitStatus = ["Corrections Required","Revisions Requested"];
-var ApprovedStatus = ["Approved","Complete"];
+var ApprovedStatus = ["Approved","Complete","Approved with Conditions"];
 
 /*-----START DIGEPLAN EDR SCRIPTS-----*/
 
-//Set "Uploaded" documents type/status to inReviewDocStatus upon routing
+//Set "Uploaded" documents type/status to inReviewDocStatus upon routing - 01-2021 added consolidationTask for EE and the rev received because they only use that step for this.
 if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
