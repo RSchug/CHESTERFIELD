@@ -37,8 +37,8 @@ try {
 		}
 	}
 //FEES
-	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
-		updateFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
+		addFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - whatever is related, then filter on the ASI
 		if (parentCapId != null) {
 			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
