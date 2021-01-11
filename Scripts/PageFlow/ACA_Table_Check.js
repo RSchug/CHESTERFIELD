@@ -1,10 +1,15 @@
 try {
-	var sessiontabledata = getASITablesRowsFromSession4ACA(CC-LU-TPA);
-	if (sessiontabledata == false) {
-		showMessage = true;
-		comment('You need to enter at least 1 Tax ID in the table to continue.');
-		cancel = true;
-	}
+	showDebug = false;				
+	var sessiontabledata = getASITablesRowsFromSession4ACA('CC-LU-TPA');
+	if (sessiontabledata) {
+		for (b in sessiontabledata) {
+			if (sessiontabledata[b]["Tax ID"] == null) {
+				showMessage = true;
+				comment('You need to enter at least 1 Tax ID in the table to continue.');
+				cancel = true;
+			}
+	} else { showMessage = true; comment('You need to enter at least 1 Tax ID in the table to continue.'); cancel = true; }
+	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
