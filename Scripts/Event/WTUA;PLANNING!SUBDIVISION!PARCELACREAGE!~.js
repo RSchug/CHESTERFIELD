@@ -32,7 +32,7 @@ try {
 			}
 		}
 	}
-	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 	//Fee
 if (AInfo['Plat Type'] == 'Family Subdivision' || AInfo['Plat Type'] == 'Parcel Subdivision'){
 		addFee("PARCELACRE","CC-PLANNING","FINAL",1,"N");
