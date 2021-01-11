@@ -49,7 +49,7 @@ try {
 		deactivateTask("Review Consolidation");
 	}
 // Add Fees
-	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 		addFees_ZoneCase();
 	}
 } catch (err) {
