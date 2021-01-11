@@ -8,6 +8,7 @@ try {
 				comment('You need to enter at least 1 Tax ID in the table to continue.');
 				cancel = true;
 			}
+		}
 	} else { showMessage = true; comment('You need to enter at least 1 Tax ID in the table to continue.'); cancel = true; }
 	
 } catch (err) {
