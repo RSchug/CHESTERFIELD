@@ -38,9 +38,9 @@ try {
 	}
 	
 	//FEE
-	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
 		addFee("OVERALLPLAN","CC-PLANNING","FINAL",1,"N");
-		addFee("OCPLAN","CC-PLANNING","FINAL",1,"Y");
+		addFee("OCPLAN","CC-PLANNING","FINAL",1,"N");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
