@@ -48,6 +48,8 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
 			if(docArray[d]["docStatus"] == "Review Complete" && docArray[d]["fileUpLoadBy"] == digEplanAPIUser) {
+				logDebug("<font color='blue'>Inside if Rev Comp & digEplanAPIUser: " + docArray[d]["docStatus"] + "</font>");
+				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete"]);
 				docArray[d].setDocStatus("Review Complete-Comments");
 				aa.document.updateDocument(docArray[d]);
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
