@@ -368,7 +368,7 @@ try {
 			editAppSpecific("Expiration Date",NewExpireDate);
 		}
 	}
-	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move To CPC')) {
+	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move to CPC')) {
 		if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
 		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
 				  
