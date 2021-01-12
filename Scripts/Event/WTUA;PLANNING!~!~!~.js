@@ -367,7 +367,37 @@ try {
 			}
 			editAppSpecific("Expiration Date",NewExpireDate);
 		}
-	}	
+	}
+	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move To CPC')) {
+		if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
+		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+				  
+			if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
+				addAdHocTask("ADHOC_WF","Public Notices","");
+			}
+			if (isTaskComplete_TPS("Public Notices")) {
+				activateTask("Public Notices");
+			}				
+			if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
+				addAdHocTask("ADHOC_WF","Adjacents","");
+			}
+			if (isTaskComplete_TPS("Adjacents")) {
+				activateTask("Adjacents");
+			}
+			if (!isTaskActive("Maps") && !isTaskComplete_TPS("Maps")){
+				addAdHocTask("ADHOC_WF","Maps","");
+			}
+			if (isTaskComplete_TPS("Maps")) {
+				activateTask("Maps");
+			}
+			if (!isTaskActive("CPC Staff Report") && !isTaskComplete_TPS("CPC Staff Report")){
+				addAdHocTask("ADHOC_WF","CPC Staff Report","");
+			}
+			if (isTaskComplete_TPS("CPC Staff Report")) {
+				activateTask("CPC Staff Report");
+			}
+		}
+	}
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
