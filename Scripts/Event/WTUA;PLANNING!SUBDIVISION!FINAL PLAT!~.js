@@ -39,7 +39,6 @@ try {
 		else if (AInfo['Case Type'] == 'New' || AInfo['Plat Type'] == 'Adjustment'){
 		addFee("FINALPLAT1","CC-PLANNING","FINAL",1,"N");
 		}
-	}
 
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code, Subdivision Code, and Section Code if they exist on related records, whatever is related, then filter on the ASI
 		if (parentCapId != null) {
