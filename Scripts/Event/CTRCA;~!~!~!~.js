@@ -39,10 +39,24 @@ try {
 			addParent(secondParentName);
 		}
 	}
+	var applicantEmail = "";
+	var applicantName = "";
+    var contObj = {};
+    contObj = getContactArrayBefore();
+    //if (typeof(contObj) == "object") {
+        for (co in contObj) {
+            if ((contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null) || (contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null))
+                applicantEmail += contObj[co]["email"] + ";";
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
+        }
 	// auto-emails for Planning records only 18EMAIL
-	if (appMatch('Planning/*/*/*')) {
-		emailNewPLNapp();
-	}	
+	if ('Planning/*/*/*') {
+		email(applicantEmail,'noreply@chesterfield.gov','You have Successfully Submitted Application # ' + capId.getCustomID(), 'Record: ' + capId.getCustomID() + ' submitted on  ' + fileDate + ' For Record Type: ' + appTypeString
+	}
+	
+	//if (appMatch('Planning/*/*/*')) {
+	//	emailNewPLNapp();
+	//}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
