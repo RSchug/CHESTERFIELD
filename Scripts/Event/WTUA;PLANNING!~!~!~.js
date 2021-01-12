@@ -612,9 +612,9 @@ try {
 		//}
 	}
 //Autoemail items
-	/*if (matches(wfStatus, "Additional Information Requested")) {
+	if (matches(wfStatus, "Additional Information Requested")) {
 		emailPendingApplicantNotification(wfTask, wfStatus)
-	}*/
+	}
 //add Parcels from TPA Data table - typically from Intake process, verify parcels are good, then create the APO
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

@@ -49,20 +49,20 @@ try {
 
 	
 function emailNewPLNapp() {
-    showMessageDefault = showMessage;
+    //showMessageDefault = showMessage;
     //populate email notification parameters
     var emailSendFrom = "";
     var emailSendTo = "";
-    var emailCC = "";
+    var emailCC = "dboucher@truepointsolutions.com";
     var emailParameters = aa.util.newHashtable();
     var fileNames = [];
 
-    getRecordParams4Notification(emailParameters);
-    getAPOParams4Notification(emailParameters);
-    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
-    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+    //getRecordParams4Notification(emailParameters);
+    //getAPOParams4Notification(emailParameters);
+    //var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+    //acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
     //getACARecordParam4Notification(emailParameters,acaSite);
-    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+    //addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
     addParameter(emailParameters, "$$RecStatus$$", capStatus);
 
     var applicantEmail = "";
