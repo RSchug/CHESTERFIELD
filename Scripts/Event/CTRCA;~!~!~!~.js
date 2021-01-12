@@ -54,7 +54,7 @@ function emailNewPLNapp() {
     //populate email notification parameters
     var emailSendFrom = "";
     var emailSendTo = "";
-    var emailCC = "dboucher@truepointsolutions.com";
+    var emailCC = "";
     var emailParameters = aa.util.newHashtable();
     var fileNames = [];
 

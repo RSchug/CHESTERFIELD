@@ -16,7 +16,7 @@ try {
 		loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 	}
 //For PROFFER
-	if (wfTask == 'Review Distribution' && wfStatus == 'Routed of Review') {
+	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
 		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && parcelHasCondition_TPS("Budget","Applied")) {
 			activateTask("Budget and Management Review");
 		}
