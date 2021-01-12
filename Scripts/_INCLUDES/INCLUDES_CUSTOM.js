@@ -4277,6 +4277,90 @@ function createRefLicProf(rlpId, rlpType, pContactType) {
 	}
 }
 
+function createRefLicProfFromLicProfTRU()
+{
+   //
+   // Get the lic prof from the app
+   //
+   capLicenseResult = aa.licenseScript.getLicenseProf(capId);
+   if (capLicenseResult.getSuccess())
+				  { capLicenseArr = capLicenseResult.getOutput();  }
+   else
+				  { logDebug("**ERROR: getting lic prof: " + capLicenseResult.getErrorMessage()); return false; }
+
+   if (!capLicenseArr.length)
+				  { logDebug("WARNING: no license professional available on the application:"); return false; }
+
+   licProfScriptModel = capLicenseArr[0];
+   rlpId = licProfScriptModel.getLicenseNbr();
+   birthdate = jsDateToMMDDYYYY(convertDate(licProfScriptModel.getBirthDate()));
+   //
+   // Now see if a reference version exists
+   //
+   var updating = false;
+
+   var newLic = getRefLicenseProf(rlpId)
+
+   if (newLic)
+	  {
+	  updating = true;
+	  logDebug("Updating existing Ref Lic Prof : " + rlpId);
+	  }
+   else
+	var newLic = aa.licenseScript.createLicenseScriptModel();
+
+   //
+   // Now add / update the ref lic prof
+   //
+   newLic.setStateLicense(rlpId);
+   newLic.setAddress1(licProfScriptModel.getAddress1());
+   newLic.setAddress2(licProfScriptModel.getAddress2());
+   newLic.setAddress3(licProfScriptModel.getAddress3());
+   newLic.setAgencyCode(licProfScriptModel.getAgencyCode());
+   newLic.setAuditDate(licProfScriptModel.getAuditDate());
+   newLic.setAuditID(licProfScriptModel.getAuditID());
+   newLic.setAuditStatus(licProfScriptModel.getAuditStatus());
+   newLic.setBusinessLicense(licProfScriptModel.getBusinessLicense());
+   newLic.setBusinessName(licProfScriptModel.getBusinessName());
+   newLic.setCity(licProfScriptModel.getCity());
+   newLic.setCityCode(licProfScriptModel.getCityCode());
+   newLic.setContactFirstName(licProfScriptModel.getContactFirstName());
+   newLic.setContactLastName(licProfScriptModel.getContactLastName());
+   newLic.setContactMiddleName(licProfScriptModel.getContactMiddleName());
+   newLic.setContryCode(licProfScriptModel.getCountryCode());
+   newLic.setCountry(licProfScriptModel.getCountry());
+   newLic.setEinSs(licProfScriptModel.getEinSs());
+   newLic.setEMailAddress(licProfScriptModel.getEmail());
+   newLic.setFax(licProfScriptModel.getFax());
+   newLic.setLicenseType(licProfScriptModel.getLicenseType());
+   newLic.setLicOrigIssDate(licProfScriptModel.getLicesnseOrigIssueDate());
+   newLic.setPhone1(licProfScriptModel.getPhone1());
+   newLic.setPhone2(licProfScriptModel.getPhone2());
+   newLic.setSelfIns(licProfScriptModel.getSelfIns());
+   newLic.setState(licProfScriptModel.getState());
+   newLic.setLicState(licProfScriptModel.getState());
+   newLic.setSuffixName(licProfScriptModel.getSuffixName());
+   newLic.setWcExempt(licProfScriptModel.getWorkCompExempt());
+   newLic.setZip(licProfScriptModel.getZip());
+   newLic.setComment(licProfScriptModel.getComment());
+   newLic.setLicenseBoard(licProfScriptModel.getLicenseBoard());
+   newLic.setFein(licProfScriptModel.getFein());
+
+   if (updating)
+	myResult = aa.licenseScript.editRefLicenseProf(newLic);
+   else
+	myResult = aa.licenseScript.createRefLicenseProf(newLic);
+
+   if (myResult.getSuccess())
+	{
+	updatereflp(rlpId,licProfScriptModel.getSalutation(),birthdate,licProfScriptModel.getPostOfficeBox())
+	logDebug("Successfully added/updated License ID : " + rlpId)
+	return rlpId;
+	}
+   else
+	{ logDebug("**ERROR: can't create ref lic prof: " + myResult.getErrorMessage()); }
+}
+
 /**
  * Format the input number into currency format ($9.99) for easy reading of dollar amounts.
  * @param  {float} num [Number to format]
@@ -7037,4 +7121,26 @@ function checkinspectionstatus(iType,status)
 		}
 	
 	return check
+}
+
+function updatereflp(licenseNbr,Salutation,BirthDate,PostOfficeBox)
+{
+   if(Salutation != null && Salutation != ""){var SAL = Salutation;} else {var SAL = "";}
+   if(BirthDate != null && BirthDate != ""){var BD = BirthDate;} else {var BD = "";}
+   if(PostOfficeBox != null && PostOfficeBox != ""){var PO = PostOfficeBox;} else {var PO = "";}
+
+   var initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext").getOutput();
+   var ds = initialContext.lookup("java:/CHESTERFIELD"); 
+   var conn = ds.getConnection(); 
+   var getSQL = "UPDATE RSTATE_LIC SET L1_SALUTATION = ?, L1_BIRTH_DATE = ?, L1_POST_OFFICE_BOX = ? WHERE SERV_PROV_CODE = 'CHESTERFIELD' AND LIC_NBR = ?";
+   var sSelect = conn.prepareStatement(getSQL);
+	sSelect.setString(1, SAL);
+	sSelect.setString(2, BD);
+	sSelect.setString(3, PO);
+	sSelect.setString(4, licenseNbr);
+
+   var result = sSelect.executeUpdate();
+	logDebug( "**Update Result: " + result );      
+	conn.close();
+   return result;
 }
