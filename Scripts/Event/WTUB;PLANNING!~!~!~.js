@@ -5,81 +5,81 @@ PLEASE BE ADVISED - Code was removed for Building Records.  Added wfStatus of Cr
  */
 try {
 	if (matches(wfTask, 'BOS Hearing') && matches(wfStatus, 'Approved')) {
-		if (appMatch('*/*/RPAException/*') && parcelHasCondition_TPS('RPA', 'Applied')) {
+		if (appMatch('*/*/RPAException/*') && (parcelHasCondition_TPS('RPA', 'Applied') || parcelHasCondition_TPS('RPA', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied RPA Exception Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ManufacturedHomes/*') && parcelHasCondition_TPS('Manufactured', 'Applied')) {
+		else if (appMatch('*/*/ManufacturedHomes/*') && (parcelHasCondition_TPS('Manufactured', 'Applied') || parcelHasCondition_TPS('Manufactured', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Manufactured Home Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/SubstantialAccord/*') && parcelHasCondition_TPS('Substantial', 'Applied')) {
+		else if (appMatch('*/*/SubstantialAccord/*') && (parcelHasCondition_TPS('Substantial', 'Applied') || parcelHasCondition_TPS('Substantial', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Substantial Accord Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/HistoricPreservation/*') && parcelHasCondition_TPS('Historic', 'Applied')) {
+		else if (appMatch('*/*/HistoricPreservation/*') && (parcelHasCondition_TPS('Historic', 'Applied') || parcelHasCondition_TPS('Historic', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Historic Preservation Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
 	if (matches(wfTask, 'Case Complete') && matches(wfStatus, 'Closed')) {
-		if (appMatch('*/*/Preliminary/*') && parcelHasCondition_TPS('Preliminary', 'Applied')) {
+		if (appMatch('*/*/Preliminary/*') && (parcelHasCondition_TPS('Preliminary', 'Applied') || parcelHasCondition_TPS('Preliminary', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Preliminary Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ConstructionPlan/*') && parcelHasCondition_TPS('Construction', 'Applied')) {
+		else if (appMatch('*/*/ConstructionPlan/*') && (parcelHasCondition_TPS('Construction', 'Applied') || parcelHasCondition_TPS('Construction', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Construction Plan Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/ParcelAcreage/*') && parcelHasCondition_TPS('Acreage', 'Applied')) {
+		else if (appMatch('*/*/ParcelAcreage/*') && (parcelHasCondition_TPS('Acreage', 'Applied') || parcelHasCondition_TPS('Acreage', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Parcel Acreage Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/AdminVariance/*') && parcelHasCondition_TPS('Admin Variance', 'Applied')) {
+		else if (appMatch('*/*/AdminVariance/*') && (parcelHasCondition_TPS('Admin Variance', 'Applied') || parcelHasCondition_TPS('Admin Variance', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Admin Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/SpecialException/*') && parcelHasCondition_TPS('Special Exception', 'Applied')) {
+		else if (appMatch('*/*/SpecialException/*') && (parcelHasCondition_TPS('Special Exception', 'Applied') || parcelHasCondition_TPS('Special Exception', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Special Exception Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/Variance/*') && parcelHasCondition_TPS('Variance', 'Applied')) {
+		else if (appMatch('*/*/Variance/*') && (parcelHasCondition_TPS('Variance', 'Applied') || parcelHasCondition_TPS('Variance', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Variance Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/*/OverallConceptualPlan/*') && parcelHasCondition_TPS('Overall Conceptual', 'Applied')) {
+		else if (appMatch('*/*/OverallConceptualPlan/*') && (parcelHasCondition_TPS('Overall Conceptual', 'Applied') || parcelHasCondition_TPS('Overall Conceptual', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Overall Conceptual Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/SitePlan/Schematics/*') && parcelHasCondition_TPS('Schematics', 'Applied')) {
+		else if (appMatch('*/SitePlan/Schematics/*') && (parcelHasCondition_TPS('Schematics', 'Applied') || parcelHasCondition_TPS('Schematics', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Schematics Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/SitePlan/Major/*') && parcelHasCondition_TPS('Major', 'Applied')) {
+		else if (appMatch('*/SitePlan/Major/*') && (parcelHasCondition_TPS('Major', 'Applied') || parcelHasCondition_TPS('Major', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Site Major Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
-		else if (appMatch('*/SitePlan/Minor/*') && parcelHasCondition_TPS('Minor', 'Applied')) {
+		else if (appMatch('*/SitePlan/Minor/*') && (parcelHasCondition_TPS('Minor', 'Applied') || parcelHasCondition_TPS('Minor', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Site Minor Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
 		}
 	}
 	if (matches(wfTask, 'GIS Update') && matches(wfStatus, 'Complete')) {
-		if (appMatch('*/*/Final Plat/*') && parcelHasCondition_TPS('Final', 'Applied')) {
+		if (appMatch('*/*/Final Plat/*') && (parcelHasCondition_TPS('Final', 'Applied') || parcelHasCondition_TPS('Final', 'Applied(Applied)'))) {
 			showMessage = true;
 			comment('The Parcel(s) seem to have still applied Final Plat Conditions? You will need to update those Condition(s) Status to Condition Met to proceed in the workflow');
 			cancel = true;
