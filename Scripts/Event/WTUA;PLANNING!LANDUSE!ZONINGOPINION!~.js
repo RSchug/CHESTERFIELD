@@ -8,6 +8,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
 	}
 	if (wfTask == 'Review Distribution' && (wfStatus == 'Routed for Residential and Commercial' || wfStatus == 'Routed for Residential Review')) {
@@ -23,6 +24,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
+		activateTask("Pre-Application Meeting");
 		if (wfStatus == 'Routed for Residential and Commercial') {
 			activateTask("General Services Review");
 		}
@@ -39,6 +41,7 @@ try {
 		activateTask("VDOT Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");
+		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
 	}
 	//12-2020 auto-emails 11.1EMAIL

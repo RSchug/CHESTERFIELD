@@ -398,6 +398,9 @@ try {
 			}
 		}
 	}
+	if (wfStatus == "Ready for Payment" || (wfStatus == "First Glance Review Complete") || (appMatch("*/Subdivision/ExceptiontoPreliminary/*") && wfStatus == "Accepted") || (appMatch("*/LandUse/WrittenDetermination/*") && wfStatus == "Request Validation")) {
+		emailReadyforPayment();	
+	}	
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
@@ -650,6 +653,65 @@ try {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 
+function emailReadyforPayment() {
+    showMessageDefault = showMessage;
+    //populate email notification parameters
+    var emailSendFrom = "";
+    var emailSendTo = "";
+    var emailCC = "";
+    var emailParameters = aa.util.newHashtable();
+    var fileNames = [];
+
+    getRecordParams4Notification(emailParameters);
+    getAPOParams4Notification(emailParameters);
+    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+    //getACARecordParam4Notification(emailParameters,acaSite);
+    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+    addParameter(emailParameters, "$$wfComment$$", wfComment);
+    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+
+    var applicantEmail = "";
+	var applicantName = "";
+    var assignedTo = getAssignedToStaff();
+    var assignedToEmail = "";
+    var assignedToFullName = "";
+    var contObj = {};
+    contObj = getContactArray(capId);
+    if (typeof(contObj) == "object") {
+        for (co in contObj) {
+            if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null || contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null || contObj[co]["contactType"] == "Individual" && contObj[co]["email"] != null)
+                applicantEmail += contObj[co]["email"] + ";";
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
+        }
+    }
+    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+	addParameter(emailParameters, "$$applicantName$$", applicantName);
+
+    if (assignedTo != null) {
+        assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
+        if (!matches(aa.person.getUser(assignedTo).getOutput().getEmail(), undefined, "", null)) {
+            assignedToEmail = aa.person.getUser(assignedTo).getOutput().getEmail();
+        }
+    }
+    addParameter(emailParameters, "$$assignedToFullName$$", assignedToFullName);
+    addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
+
+	//Load the Parcel numbers
+	var tempAsit = loadASITable("CC-LU-TPA");
+		if (tempAsit) {
+			var TaxIDArray = "";
+			for (b in tempAsit) {
+				if (TaxIDArray == "") {
+					TaxIDArray = tempAsit[b]["Tax ID"];
+				} else { TaxIDArray = TaxIDArray + ", " + tempAsit[b]["Tax ID"]; }
+			}
+			addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
+		}
+	var emailTemplate = "WTUA_PLANNING_READYFORPAYMENT";
+	sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
 
 /*07-2020 Boucher old 21p 
 	if (matches(wfTask,'Review Consolidation','Community Meeting') && matches(wfStatus,'Move to CPC')) {

@@ -69,6 +69,7 @@ function emailNewPLNapp() {
     var applicantEmail = "";
 	var applicantName = "";
     var contObj = {};
+	var contObj2 = {};
     contObj = getContactArrayBefore();
 	contObj2 = getApplicantModel();
     //if (typeof(contObj) == "object") {

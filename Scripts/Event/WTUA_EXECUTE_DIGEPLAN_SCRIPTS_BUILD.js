@@ -65,7 +65,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 //Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
+	// moving to WTUA: Building Permit Issued - emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
