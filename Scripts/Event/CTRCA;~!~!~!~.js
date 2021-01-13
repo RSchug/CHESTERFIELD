@@ -101,8 +101,8 @@ function emailNewPLNapp() {
         for (var yy in capContactArray) {
             if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
                 cArray.push(new contactObj(capContactArray[yy]));
-				applicantEmail += contactObj(capContactArray[yy]["email"] + ";";
-				applicantName += contactObj(capContactArray[yy]["firstName"] + " " + contactObj(capContactArray[yy]["lastName"] + ",";
+				applicantEmail += contactObj(capContactArray[yy])["email"] + ";";
+				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy]["lastName"] + ",";
             }
         }
 	}
