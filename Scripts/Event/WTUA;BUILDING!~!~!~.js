@@ -17,10 +17,10 @@ try {
 	}
 //For PROFFER
 	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
-		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && parcelHasCondition_TPS("Budget","Applied")) {
+		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && parcelHasCondition_TPS("Budget","Applied")) {
 			activateTask("Budget and Management Review");
 		}
-		if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family")) && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && parcelHasCondition_TPS("Budget","Applied")) {
+		if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family")) && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && parcelHasCondition_TPS("Budget","Applied(Applied)")) {
 			activateTask("Budget and Management Review");
 		}
 	}
