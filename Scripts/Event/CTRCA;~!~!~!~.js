@@ -65,7 +65,7 @@ function emailNewPLNapp() {
     //getACARecordParam4Notification(emailParameters,acaSite);
     //addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
     addParameter(emailParameters, "$$RecStatus$$", capStatus);
-
+/*
     var applicantEmail = "";
 	var applicantName = "";
     var contObj = {};
@@ -77,9 +77,38 @@ function emailNewPLNapp() {
 				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
         }
     //}
+*/
+//New Trial for all "people" emails from ACA
+	var capContactArray = new Array();
+    var cArray = new Array();
+    if (!cap.isCompleteCap() && controlString != "ApplicationSubmitAfter") {
+        if (cap.getApplicantModel()) {
+            capContactArray[0] = cap.getApplicantModel();
+        }
+        if (cap.getContactsGroup().size() > 0) {
+            var capContactAddArray = cap.getContactsGroup().toArray();
+            for (ccaa in capContactAddArray)
+                capContactArray.push(capContactAddArray[ccaa]);     
+        }
+    } else {
+        var capContactResult = aa.people.getCapContactByCapID(itemCap);
+        if (capContactResult.getSuccess()) {
+            var capContactArray = capContactResult.getOutput();
+            }
+	}
+		
+    if (capContactArray) {
+        for (var yy in capContactArray) {
+            if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
+                cArray.push(new contactObj(capContactArray[yy]));
+				applicantEmail += contactObj(capContactArray[yy]["email"] + ";";
+				applicantName += contactObj(capContactArray[yy]["firstName"] + " " + contactObj(capContactArray[yy]["lastName"] + ",";
+            }
+        }
+	}
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
 	addParameter(emailParameters, "$$applicantName$$", applicantName);
-
+	
     if ('Planning/LandUse/*/*') {
 		var emailTemplate = "CTRCA_LANDUSE";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);

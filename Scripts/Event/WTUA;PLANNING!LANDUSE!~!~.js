@@ -50,9 +50,9 @@ addFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"N");
 if (appMatch("Planning/LandUse/Appeal/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
 addFee("APPEAL","CC-PLANNING","FINAL",1,"N");
 }
-//Add Planning/LandUse/WrittenDetermination/NA Fee when Request Submitted - and NOT Request Not Applicable
+//Add Planning/LandUse/WrittenDetermination/NA Fee when Request Submitted - and NOT Request Not Applicable and FEE is AUTOINVOICED
 if (appMatch("Planning/LandUse/WrittenDetermination/NA") && (wfTask == 'Request Submitted' && wfStatus != 'Request Not Applicable')){
-addFee("WRITTEN","CC-PLANNING","FINAL",1,"N");
+addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
 }
 //Add Planning/LandUse/RPAException/NA Fee when Application Submittal - Calculate Fees
 if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
