@@ -81,21 +81,21 @@ function emailNewPLNapp() {
 //New Trial for all "people" emails from ACA
 	var capContactArray = new Array();
     var cArray = new Array();
-    if (!cap.isCompleteCap() && controlString != "ApplicationSubmitAfter") {
-        if (cap.getApplicantModel()) {
-            capContactArray[0] = cap.getApplicantModel();
-        }
-        if (cap.getContactsGroup().size() > 0) {
-            var capContactAddArray = cap.getContactsGroup().toArray();
-            for (ccaa in capContactAddArray)
-                capContactArray.push(capContactAddArray[ccaa]);     
-        }
-    } else {
+    //if (!cap.isCompleteCap() && controlString != "ApplicationSubmitAfter") {
+	if (cap.getApplicantModel()) {
+		capContactArray[0] = cap.getApplicantModel();
+	}
+	if (cap.getContactsGroup().size() > 0) {
+		var capContactAddArray = cap.getContactsGroup().toArray();
+		for (ccaa in capContactAddArray)
+			capContactArray.push(capContactAddArray[ccaa]);     
+	}
+    /*} else {
         var capContactResult = aa.people.getCapContactByCapID(itemCap);
         if (capContactResult.getSuccess()) {
             var capContactArray = capContactResult.getOutput();
-            }
-	}
+            } */
+	//}
 		
     if (capContactArray) {
         for (var yy in capContactArray) {
