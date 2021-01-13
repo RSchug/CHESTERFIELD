@@ -65,19 +65,25 @@ function emailNewPLNapp() {
     //getACARecordParam4Notification(emailParameters,acaSite);
     //addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
     addParameter(emailParameters, "$$RecStatus$$", capStatus);
-/*
+
     var applicantEmail = "";
 	var applicantName = "";
     var contObj = {};
     contObj = getContactArrayBefore();
+	contObj2 = getApplicantModel();
     //if (typeof(contObj) == "object") {
         for (co in contObj) {
             if ((contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null) || (contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null))
                 applicantEmail += contObj[co]["email"] + ";";
 				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
         }
+		for (co2 in contObj2) {
+            if ((contObj2[co2]["contactType"] == "Applicant" && contObj2[co2]["email"] != null))
+                applicantEmail += contObj2[co2]["email"] + ";";
+				applicantName += contObj2[co2]["firstName"] + " " + contObj2[co2]["lastName"] + ",";
+        }
     //}
-*/
+/*
 //New Trial for all "people" emails from ACA
 	var capContactArray = new Array();
     var cArray = new Array();
@@ -90,11 +96,11 @@ function emailNewPLNapp() {
 		for (ccaa in capContactAddArray)
 			capContactArray.push(capContactAddArray[ccaa]);     
 	}
-    /*} else {
+    } else {
         var capContactResult = aa.people.getCapContactByCapID(itemCap);
         if (capContactResult.getSuccess()) {
             var capContactArray = capContactResult.getOutput();
-            } */
+            }
 	//}
 		
     if (capContactArray) {
@@ -105,7 +111,7 @@ function emailNewPLNapp() {
 				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy])["lastName"] + ",";
             }
         }
-	}
+	} */
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
 	addParameter(emailParameters, "$$applicantName$$", applicantName);
 	
