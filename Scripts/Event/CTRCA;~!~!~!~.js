@@ -102,7 +102,7 @@ function emailNewPLNapp() {
             if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
                 cArray.push(new contactObj(capContactArray[yy]));
 				applicantEmail += contactObj(capContactArray[yy])["email"] + ";";
-				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy]["lastName"] + ",";
+				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy])["lastName"] + ",";
             }
         }
 	}
