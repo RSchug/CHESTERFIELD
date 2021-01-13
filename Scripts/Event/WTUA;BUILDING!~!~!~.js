@@ -16,11 +16,12 @@ try {
 		loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 	}
 //For PROFFER
+	var applied = ["Applied","Applied(Applied)"]
 	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
-		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && parcelHasCondition_TPS("Budget","Applied")) {
+		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && parcelHasCondition_TPS("Budget",applied)) {
 			activateTask("Budget and Management Review");
 		}
-		if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family")) && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && parcelHasCondition_TPS("Budget","Applied(Applied)")) {
+		if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family")) && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && parcelHasCondition_TPS("Budget",applied)) {
 			activateTask("Budget and Management Review");
 		}
 	}
