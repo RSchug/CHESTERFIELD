@@ -68,51 +68,42 @@ function emailNewPLNapp() {
 
     var applicantEmail = "";
 	var applicantName = "";
-    var contObj = {};
-	var contObj2 = {};
+    
+	var capContactArray = new Array();
+    var cArray = new Array();
+    if (!cap.isCompleteCap()) {
+		if (cap.getApplicantModel()) {
+			capContactArray[0] = cap.getApplicantModel();
+		}
+		if (cap.getContactsGroup().size() > 0) {
+			var capContactAddArray = cap.getContactsGroup().toArray();
+			for (ccaa in capContactAddArray)
+				capContactArray.push(capContactAddArray[ccaa]);
+		}
+    } else {
+		var capContactResult = aa.people.getCapContactByCapID(itemCap);
+		if (capContactResult.getSuccess()) {
+			var capContactArray = capContactResult.getOutput();
+		}
+    }
+    if (capContactArray) {
+		for (var yy in capContactArray) {
+			if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
+				cArray.push(new contactObj(capContactArray[yy]));
+				applicantEmail += contactObj(capContactArray[yy])["email"] + ";";
+				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy])["lastName"] + ",";
+			}
+		}
+    }
+/*
+	var contObj = {};
     contObj = getContactArrayBefore();
-	contObj2 = getApplicantModel();
-    //if (typeof(contObj) == "object") {
         for (co in contObj) {
             if ((contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null) || (contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null))
                 applicantEmail += contObj[co]["email"] + ";";
 				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
         }
-		for (co2 in contObj2) {
-            if ((contObj2[co2]["contactType"] == "Applicant" && contObj2[co2]["email"] != null))
-                applicantEmail += contObj2[co2]["email"] + ";";
-				applicantName += contObj2[co2]["firstName"] + " " + contObj2[co2]["lastName"] + ",";
-        }
-    //}
-/*
-//New Trial for all "people" emails from ACA
-	var capContactArray = new Array();
-    var cArray = new Array();
-    //if (!cap.isCompleteCap() && controlString != "ApplicationSubmitAfter") {
-	if (cap.getApplicantModel()) {
-		capContactArray[0] = cap.getApplicantModel();
-	}
-	if (cap.getContactsGroup().size() > 0) {
-		var capContactAddArray = cap.getContactsGroup().toArray();
-		for (ccaa in capContactAddArray)
-			capContactArray.push(capContactAddArray[ccaa]);     
-	}
-    } else {
-        var capContactResult = aa.people.getCapContactByCapID(itemCap);
-        if (capContactResult.getSuccess()) {
-            var capContactArray = capContactResult.getOutput();
-            }
-	//}
-		
-    if (capContactArray) {
-        for (var yy in capContactArray) {
-            if (!typesToLoad || exists(capContactArray[yy].getPeople().contactType, typesToLoad)) {
-                cArray.push(new contactObj(capContactArray[yy]));
-				applicantEmail += contactObj(capContactArray[yy])["email"] + ";";
-				applicantName += contactObj(capContactArray[yy])["firstName"] + " " + contactObj(capContactArray[yy])["lastName"] + ",";
-            }
-        }
-	} */
+*/
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
 	addParameter(emailParameters, "$$applicantName$$", applicantName);
 	
