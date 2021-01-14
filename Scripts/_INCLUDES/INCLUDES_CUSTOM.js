@@ -4322,6 +4322,7 @@ function createRefLicProfFromLicProfTRU()
    newLic.setAuditStatus(licProfScriptModel.getAuditStatus());
    newLic.setBusinessLicense(licProfScriptModel.getBusinessLicense());
    newLic.setBusinessName(licProfScriptModel.getBusinessName());
+   newLic.setBusinessName2(licProfScriptModel.getBusName2());
    newLic.setCity(licProfScriptModel.getCity());
    newLic.setCityCode(licProfScriptModel.getCityCode());
    newLic.setContactFirstName(licProfScriptModel.getContactFirstName());
