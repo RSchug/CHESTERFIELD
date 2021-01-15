@@ -1,9 +1,9 @@
 try {
 	//Permit Issuance is Issued than updated Permit Expiration Date to 180 days from system date
 	if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || !exists(capStatus, ["Cancelled","Pending Applicant"])) { 
-		//01-2021 moved the auto-email from the DigEplan scripts to here
-		var ResubmitStatus = null; var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
-		emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGroupArrayModule);
+		//01-2021 moved the auto-email from the DigEplan scripts to here - this is not working...
+		//var ResubmitStatus = null; var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
+		//emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGroupArrayModule);
 		// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
