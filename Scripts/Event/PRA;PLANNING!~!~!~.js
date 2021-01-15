@@ -3,7 +3,7 @@ try {
 	if (isTaskActive("Fee Payment") && (balanceDue == 0)) {
 		closeTask("Fee Payment","Payment Received","Updated based on Balance of 0","");
 	}
-	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && matches(appStatus, "Fees Requested") && (balanceDue == 0)) {
+	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && matches(capStatus, "Fees Requested") && (balanceDue == 0)) {
 		closeTask("Request Submitted","Request Validated","Updated based on full payment","");
 	}
 } catch (err) {
