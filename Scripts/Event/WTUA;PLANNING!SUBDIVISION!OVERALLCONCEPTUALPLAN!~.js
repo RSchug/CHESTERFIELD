@@ -39,7 +39,7 @@ try {
 	
 	//FEE
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
-		addFee("OVERALLPLAN","CC-PLANNING","FINAL",1,"N");
+		//addFee("OVERALLPLAN","CC-PLANNING","FINAL",1,"N"); - incorrect place/fee
 		addFee("OCPLAN","CC-PLANNING","FINAL",1,"N");
 	}
 } catch (err) {
