@@ -9,7 +9,7 @@ try {
 	else if ((wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') && (AInfo["Application Type"] == "Amendment")){
 		addFee("AMEND5SE","CC-PLANNING","FINAL",1,"N");
 	}
-	if (wfTask == 'Application Subittal' && wfStatus == 'Ready for Payment') {
+	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
 		invoiceAllFees(capId);
 	}
 } catch (err) {

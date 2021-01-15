@@ -58,6 +58,7 @@ try {
 	if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
 		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
 	}
+//Add the Invoiceall function here for the above records...
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
