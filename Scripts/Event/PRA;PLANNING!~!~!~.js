@@ -5,6 +5,7 @@ try {
 	}
 	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && matches(capStatus, "Fees Requested") && (balanceDue == 0)) {
 		closeTask("Request Submitted","Request Validated","Updated based on full payment","");
+		activateTask("Inquiry Letter");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

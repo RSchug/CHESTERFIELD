@@ -398,7 +398,7 @@ try {
 			}
 		}
 	}
-	if (wfStatus == "Ready for Payment" || (wfStatus == "First Glance Review Complete") || (appMatch("*/Subdivision/ExceptiontoPreliminary/*") && wfStatus == "Accepted") || (appMatch("*/LandUse/WrittenDetermination/*") && wfStatus == "Request Validation")) {
+	if (wfStatus == "Ready for Payment" || (wfStatus == "First Glance Review Complete") || (appMatch("*/Subdivision/ExceptiontoPreliminary/*") && wfStatus == "Accepted") || (appMatch("*/LandUse/WrittenDetermination/*") && wfStatus == "Calculate Fees")) {
 		emailReadyforPayment();	
 	}	
 // -------->  FEES <------------
