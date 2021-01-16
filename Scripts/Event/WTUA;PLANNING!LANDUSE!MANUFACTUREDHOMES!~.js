@@ -23,9 +23,12 @@ try {
 		editTaskDueDate('Real Property Review', dateAdd(getTaskDueDate('Review Distribution'),13));
 		deactivateTask("Default");
 	}
-if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
-addFee("MANUFACTURED","CC-PLANNING","FINAL",1,"N");
-}
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
+		addFee("MANUFACTURED","CC-PLANNING","FINAL",1,"N");
+	}
+	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+		invoiceAllFees(capId);
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

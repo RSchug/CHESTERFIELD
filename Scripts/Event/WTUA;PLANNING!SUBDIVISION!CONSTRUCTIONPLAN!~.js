@@ -34,12 +34,21 @@ try {
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P and 8.3P
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') && (AInfo["Total Residential Lots"] != null)) {
-		addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
+		if (AInfo["Case Type"] == "New") {
+			addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
+			addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
+		}
+		else if ((AInfo["Total Residential Lots"] == null)) {
+			addFee("EECPADJUST","CC-PLANNING","FINAL",1,"N");
+			addFee("CONSTPLAN4","CC-PLANNING","FINAL",1,"N");
+		}
 	}
-	//Construction Plan Fee
-	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
-		addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+		invoiceAllFees(capId);
+	}
+
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records, whatever is related, then filter on the ASI
+	if (wfTask == 'Fee Payment' && (wfStatus == 'Fees Waived' || wfStatus == 'Payment Received')) {
 		if (parentCapId != null) {
 			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
 			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');

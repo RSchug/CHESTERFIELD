@@ -58,7 +58,11 @@ try {
 	if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
 		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
 	}
-//Add the Invoiceall function here for the above records...
+//Add the Invoiceall function here for the above records, except for WD - that has other ...
+	if ((appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA") || appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/AdminVariance/NA")) &&
+		(wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')) {
+		invoiceAllFees(capId);
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
