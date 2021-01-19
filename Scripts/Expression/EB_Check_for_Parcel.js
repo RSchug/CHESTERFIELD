@@ -20,46 +20,35 @@ var perid2=expression.getValue("$$capID2$$").value;
 var perid3=expression.getValue("$$capID3$$").value;
 
 var capId = aa.cap.getCap(perid1,perid2,perid3).getOutput().getCapID();
-
-
 var totalRowCount = expression.getTotalRowCount();
+
 for(var rowIndex=0; rowIndex<totalRowCount; rowIndex++){
-
-		licObj=expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Tax ID");
-		theAddress = expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Base Address");
-        theAcres = expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Parcel Acreage");
-		var ParcNum = licObj.value;
-
-				
-		var parcelResult = aa.parcel.getParceListForAdmin(ParcNum, null, null, null, null, null, null, null, null, null);
-		if (!parcelResult.getSuccess()) 
-		{ 
+	licObj=expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Tax ID");
+	theAddress = expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Base Address");
+	theAcres = expression.getValue(rowIndex, "ASIT::CC-LU-TPA::Parcel Acreage");
+	var ParcNum = licObj.value;
+	var parcelResult = aa.parcel.getParceListForAdmin(ParcNum, null, null, null, null, null, null, null, null, null);
+	if (!parcelResult.getSuccess()) { 
 		licObj.message="Not a valid Parcel number";
 		expression.setReturn(rowIndex,licObj);
 		expression.setReturn(rowIndex,theAddress);
 		expression.setReturn(rowIndex,theAcres);
-		}
-		else
-		{
-				var parcels = parcelResult.getOutput();
-				for (pp in parcels)
-		{
+	} else {
+		var parcels = parcelResult.getOutput();
+		for (pp in parcels) {
 			fParcelObj  = parcels[pp];
 			break;
 		}
-		
-		
-        var fParcelModel = fParcelObj.parcelModel;
+		var fParcelModel = fParcelObj.parcelModel;
 		var parcelArea = 0;
 		parcelArea += fParcelModel.getParcelArea();
 		var parcelAttrObj = fParcelModel.getParcelAttribute().toArray();
 
-		for (z in parcelAttrObj)
-		{
-		theAddress.value = fParcelModel.getSubdivision();
-		theAcres.value = Number(fParcelModel.getParcelArea());
+		for (z in parcelAttrObj) {
+			theAddress.value = fParcelModel.getSubdivision();
+			theAcres.value = Number(fParcelModel.getParcelArea());
 		}
 		expression.setReturn(rowIndex,theAddress);
 		expression.setReturn(rowIndex,theAcres);
-		}
+	}
 }
