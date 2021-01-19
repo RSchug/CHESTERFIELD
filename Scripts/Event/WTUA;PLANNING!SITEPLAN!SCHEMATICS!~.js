@@ -1,7 +1,7 @@
 //FEE
 try {
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
-		addFee("SCHEMATIC","CC-PLANNING","FINAL",1,"N");
+		updateFee("SCHEMATIC","CC-PLANNING","FINAL",1,"N");
 	}
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
 		invoiceAllFees(capId);

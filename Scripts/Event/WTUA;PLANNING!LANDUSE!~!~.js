@@ -40,23 +40,23 @@ try {
 //90P  Not Needed - fixed in workflow
 //Add Planning/LandUse/AdminVariance/NA Fee when Application Submittal - Calculate Fees
 	if (appMatch("Planning/LandUse/AdminVariance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
-		addFee("VARIANCEADM","CC-PLANNING","FINAL",1,"N");
+		updateFee("VARIANCEADM","CC-PLANNING","FINAL",1,"N");
 	}
 //Add Planning/LandUse/Variance/NA Fee when Application Submittal - Calculate Fees
 	if (appMatch("Planning/LandUse/Variance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
-		addFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"N");
+		updateFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"N");
 	}
 //Add Planning/LandUse/Appeal/NA Fee when Application Submittal - Calculate Fees
 	if (appMatch("Planning/LandUse/Appeal/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
-		addFee("APPEAL","CC-PLANNING","FINAL",1,"N");
+		updateFee("APPEAL","CC-PLANNING","FINAL",1,"N");
 	}
 //Add Planning/LandUse/WrittenDetermination/NA Fee when Request Submitted - and NOT Request Not Applicable and FEE is AUTOINVOICED
 	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && (wfTask == 'Request Submitted' && wfStatus == 'Calculate Fees')){
-		addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
+		updateFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
 	}
 //Add Planning/LandUse/RPAException/NA Fee when Application Submittal - Calculate Fees
 	if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
-		addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
+		updateFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
 	}
 //Add the Invoiceall function here for the above records, except for WD - that has other ...
 	if ((appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA") || appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/AdminVariance/NA")) &&

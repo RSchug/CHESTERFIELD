@@ -24,7 +24,7 @@ try {
 		deactivateTask("Default");
 	}
 	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
-		addFee("MANUFACTURED","CC-PLANNING","FINAL",1,"N");
+		updateFee("MANUFACTURED","CC-PLANNING","FINAL",1,"N");
 	}
 	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
 		invoiceAllFees(capId);
