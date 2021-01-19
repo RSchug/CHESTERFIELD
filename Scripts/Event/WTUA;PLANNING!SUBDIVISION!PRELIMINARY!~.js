@@ -38,7 +38,15 @@ try {
 	}
 //FEES
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
-		addFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
+		if (AInfo["Case Type"] == "New") {
+			updateFee("PRESUBPLAT","CC-PLANNING","FINAL",1,"N");
+		}
+		if (AInfo["Case Type"] == "Major Change") {
+			updateFee("FINALPLAT3","CC-PLANNING","FINAL",1,"N");
+		}
+		if (AInfo["Case Type"] == "Minor Change") {
+			updateFee("TECHCORRECT","CC-PLANNING","FINAL",1,"N");
+		}
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records - whatever is related, then filter on the ASI
 		if (parentCapId != null) {
 			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
@@ -56,10 +64,13 @@ try {
 			copyASIfromParent(capId,recType,'Subdivision Code','Subdivision Code');
 		}
 	}
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+		invoiceAllFees(capId);
+	}
 	// in conjunction with 40p - adding submittal counts
 	if (wfTask == 'Review Consolidation' && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting') && AInfo['Waive Submittal Fee'] == 'UNCHECKED' && 
 		AInfo['Submittal Count'] > 2) {
-		updateFee("PRESUBPLAT2","CC-PLANNING","FINAL",1,"N");
+		addFee("PRESUBPLAT2","CC-PLANNING","FINAL",1,"N");
 	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

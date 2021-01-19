@@ -35,12 +35,12 @@ try {
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P and 8.3P
 	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
 		if (AInfo["Case Type"] == "New") {
-			addFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
-			addFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
+			updateFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N");
+			updateFee("CONSTPLAN","CC-PLANNING","FINAL",1,"N");
 		}
 		else if (AInfo["Case Type"] == "Adjustment") {
-			addFee("EECPADJUST","CC-PLANNING","FINAL",1,"N");
-			addFee("CONSTPLAN4","CC-PLANNING","FINAL",1,"N");
+			updateFee("EECPADJUST","CC-PLANNING","FINAL",1,"N");
+			updateFee("CONSTPLAN4","CC-PLANNING","FINAL",1,"N");
 		}
 		
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Subdivision Code, if they exist on related records, whatever is related, then filter on the ASI - 01-19-2021 added event
