@@ -411,6 +411,9 @@ try {
 	if ((appMatch("Planning/Subdivision/ConstructionPlan/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('CONSTPLAN2','CC-PLANNING','FINAL',1,'Y');
 	}
+	if (appMatch("Planning/Subdivision/ConstructionPlan/NA") && (wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Table Review'))) {
+		addFee('CONSTPLAN3','CC-PLANNING','FINAL',1,'Y');
+	}
 
 //07-2020 Boucher 24p
 	if (matches(wfTask, 'CPC Meeting', 'CPC Hearing') && matches(wfStatus, 'Deferred by Applicant')) {
