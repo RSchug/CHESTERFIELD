@@ -339,6 +339,9 @@ try {
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
 	if (matches(wfTask,'CPC Hearing','Review Distribution') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && matches(capStatus, 'Deferred from CPC','Deferred')){
 		activateTask("CPC Hearing");
+		if (wfTask == 'CPC Hearing') {
+			editTaskDueDate('CPC Hearing', getTaskDueDate('CPC Hearing'));
+		}
 	}
 	if (matches(wfTask,'BOS Hearing','Review Distribution') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS','Deferred from BOS') && matches(capStatus, 'Deferred from BOS','Deferred')){
 		activateTask("BOS Hearing");
