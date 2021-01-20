@@ -260,7 +260,7 @@ try {
 		}	  
 	}
 //per the ELM Planning Due Dates Doc
-	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
+	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date') && !matches(capStatus, 'Deferred from BOS','Deferred')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			
 			if (isTaskActive('Public Notices')) {
@@ -295,6 +295,21 @@ try {
 			if (isTaskActive('BOS Staff Report')) {
 				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-26));
 			}	
+		}
+	} else if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date') && matches(capStatus, 'Deferred from BOS','Deferred')) {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),-28));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),-23));
+			}
+			if (isTaskActive('BOS Staff Report')) {
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-26));
+			}
 		}
 	}
 	
