@@ -48,6 +48,27 @@ try {
 		activateTask("BOS Hearing");
 		deactivateTask("Review Consolidation");
 	}
+	if (matches(wfTask,'CPC Hearing') && matches(wfStatus,'Recommend Approval','Recommend Denial')) {
+						  
+		if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
+			addAdHocTask("ADHOC_WF","Public Notices","");
+		}
+		if (isTaskComplete_TPS("Public Notices")) {
+			activateTask("Public Notices");
+		}				
+		if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
+			addAdHocTask("ADHOC_WF","Adjacents","");
+		}
+		if (isTaskComplete_TPS("Adjacents")) {
+			activateTask("Adjacents");
+		}
+		if (!isTaskActive("Maps") && !isTaskComplete_TPS("Maps")){
+			addAdHocTask("ADHOC_WF","Maps","");
+		}
+		if (isTaskComplete_TPS("Maps")) {
+			activateTask("Maps");
+		}
+	}
 // Add Fees
 	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 		addFees_ZoneCase();
