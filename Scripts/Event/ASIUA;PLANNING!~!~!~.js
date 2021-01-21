@@ -35,10 +35,10 @@ try {
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
 				copyParcelGisObjects_Local(parcelTaxID);
-				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],'UNCHECKED');
+				if (checkcount == 1) { GetOwnersByParcel(); }
+				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],null);
 			}
 		}
-		if (checkcount > 0) { GetOwnersByParcel(); }
 	}
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
