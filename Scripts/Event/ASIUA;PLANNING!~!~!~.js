@@ -26,17 +26,19 @@ try {
 		editAppSpecific("Total number of parcels", countParcels);
 
 //12-2020 added code for copying Address Parcel Owner information from a Table to a Record, because we cannont have multiple parcel submission at ACA intake
+		var checkcount = 0;
 		for (b in tempAsit) {
 			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
+				checkcount = checkcount++
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
-				GetOwnersByParcel_Local(parcelTaxID);
 				copyParcelGisObjects_Local(parcelTaxID);
 				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],'UNCHECKED');
 			}
 		}
+		if (checkcount > 0) { GetOwnersByParcel(); }
 	}
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
@@ -61,30 +63,6 @@ function copyParcelGisObjects_Local(parcelTaxID) {
 				{ logDebug("Successfully added Cap GIS object: " + gisObjModel.getGisId())}
 			else
 				{ logDebug("**WARNING: Could not add Cap GIS Object.  Reason is: " + retval.getErrorType() + ":" + retval.getErrorMessage()) ; return false }	
-		}
-	}
-}
-
-function GetOwnersByParcel_Local(parcelTaxID) {
-//getting info from a table
-	var parcels = parcelTaxID;
-	if(parcels == null || parcels.length == 0) {
-		aa.print("There is no parcel info in the table.");
-	}
-	else {
-		var parcelOwnersResult = aa.owner.getOwnersByParcel(parcels);
-		if (parcelOwnersResult.getSuccess()) {
-			var actuallyParcelNumber = parcelNbr != null?parcelNbr:parcelUID;
-			aa.print("Successfully get owner(s) by Parcel "+actuallyParcelNumber+". Detail as follow:");
-			var ownerArr = parcelOwnersResult.getOutput();
-			aa.print("Size :" + ownerArr.length);
-			for (j = 0; j < ownerArr.length; j++) {
-				ownerArr[j].setCapID(capId);
-				aa.owner.createCapOwnerWithAPOAttribute(ownerArr[j]);
-			}		
-		}
-		else {
-			aa.print("ERROR: Failed to get owner(s) by Parcel(s): " + parcelOwnersResult.getErrorMessage());
 		}
 	}
 }
