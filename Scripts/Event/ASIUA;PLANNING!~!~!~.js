@@ -34,9 +34,9 @@ try {
 				var BaseAddress = tempAsit[b]["Base Address"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
+				GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-				if (checkcount == 1) { GetOwnersByParcel(); }
-				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],null);
+				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],'CHECKED');
 			}
 		}
 	}
