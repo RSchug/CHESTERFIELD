@@ -29,7 +29,7 @@ try {
 		var checkcount = 0;
 		for (b in tempAsit) {
 			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
-				checkcount = checkcount++
+				checkcount = checkcount++;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
 				addParcelFromRef_TPS(parcelTaxID);
