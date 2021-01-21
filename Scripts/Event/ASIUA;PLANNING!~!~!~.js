@@ -38,6 +38,9 @@ try {
 			}
 		}
 	}
+} catch (err) {
+		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
 
 function copyParcelGisObjects_Local(parcelTaxID) {
 //Update by db for getting table data to populate a record
@@ -61,6 +64,7 @@ function copyParcelGisObjects_Local(parcelTaxID) {
 		}
 	}
 }
+
 function GetOwnersByParcel_Local(parcelTaxID) {
 //getting info from a table
 	var parcels = parcelTaxID;
@@ -83,8 +87,4 @@ function GetOwnersByParcel_Local(parcelTaxID) {
 			aa.print("ERROR: Failed to get owner(s) by Parcel(s): " + parcelOwnersResult.getErrorMessage());
 		}
 	}
-}
-
-} catch (err) {
-		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
