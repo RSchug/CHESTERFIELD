@@ -69,10 +69,10 @@ function GetOwnersByParcel_Local(parcelTaxID) {
 //getting info from a table
 	var parcels = parcelTaxID;
 	if(parcels == null || parcels.length == 0) {
-		aa.print("There is no any parcel for the cap.");
+		aa.print("There is no parcel info in the table.");
 	}
 	else {
-		var parcelOwnersResult = aa.owner.getOwnersByParcel(parcelTaxID);
+		var parcelOwnersResult = aa.owner.getOwnersByParcel(parcels);
 		if (parcelOwnersResult.getSuccess()) {
 			var actuallyParcelNumber = parcelNbr != null?parcelNbr:parcelUID;
 			aa.print("Successfully get owner(s) by Parcel "+actuallyParcelNumber+". Detail as follow:");
