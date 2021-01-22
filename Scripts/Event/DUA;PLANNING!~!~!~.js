@@ -3,7 +3,7 @@ try {
 	if (publicUser && !matches(capStatus,'Revisions Received','Submitted',null)) { 
 		updateAppStatus("Revisions Received", "Update by Document Upload from Citizen");
     }
-	if (!publicUser && !matches(capStatus,'Pending Applicant','Submitted',null)) { 
+	if (!publicUser && matches(capStatus,'Pending Applicant','Submitted',null)) { 
 		updateAppStatus("Revisions Received", "Update by Document Upload from Back Office");
     }
 } catch (err) {
