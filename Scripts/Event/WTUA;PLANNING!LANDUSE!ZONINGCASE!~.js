@@ -69,26 +69,6 @@ try {
 			activateTask("Maps");
 		}
 	}
-	if (matches(wfTask,'Community Meeting') && matches(wfStatus,'Set Meeting Date')) {
-		if (isTaskActive('Maps')) {
-			editTaskDueDate('Maps', dateAdd(getTaskDueDate('Community Meeting'),-35));
-		}
-		if (isTaskActive('Public Notices')) {
-			editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('Community Meeting'),-34));
-		}
-		if (isTaskActive('Adjacents')) {
-			editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('Community Meeting'),-28));
-		}
-		if (isTaskActive('IVR Message')) {
-			editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('Community Meeting'),-23));
-		}
-		if (isTaskActive('Sign Posting')) {
-			editTaskDueDate('Sign Posting', dateAdd(getTaskDueDate('Community Meeting'),-22));
-		}
-		if (isTaskActive('CPC Staff Report')) {
-			editTaskDueDate('CPC Staff Report', dateAdd(getTaskDueDate('Community Meeting'),-15));
-		}
-	}
 // Add Fees
 	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 		addFees_ZoneCase();

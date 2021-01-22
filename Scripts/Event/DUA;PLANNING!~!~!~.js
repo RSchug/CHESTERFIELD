@@ -3,6 +3,9 @@ try {
 	if (publicUser && !matches(capStatus,'Revisions Received','Submitted',null)) { 
 		updateAppStatus("Revisions Received", "Update by Document Upload from Citizen");
     }
+	if (!publicUser && !matches(capStatus,'Pending Applicant','Submitted',null)) { 
+		updateAppStatus("Revisions Received", "Update by Document Upload from Back Office");
+    }
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
