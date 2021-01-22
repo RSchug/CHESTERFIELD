@@ -42,6 +42,12 @@ try {
 		}
 		if (checkcount > 0) { GetOwnersByParcel(); }
 	}
+	else if (tempAsit == false) {
+		editAppSpecific("Total Parcel Acreage", 0);
+		editAppSpecific("Total application acreage", 0);
+		editAppSpecific("Total number of parcels", 0);
+	}
+		
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
