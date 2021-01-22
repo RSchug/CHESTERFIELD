@@ -296,7 +296,7 @@ try {
 				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-26));
 			}	
 		}
-	} else if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Deferral Hearing Date') {
+	} else if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Deferral Hearing Date')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			if (isTaskActive('Public Notices')) {
 				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30));
