@@ -20,7 +20,7 @@ try {
 			}
 			countParcels++;
 		}//for all rows
-		//editAppSpecific("CC-LU-TPA-SUM.Total application acreage", sum);
+		//editAppSpecific("CC-LU-TPA.Total application acreage", sum);
 		editAppSpecific("Total Parcel Acreage", parcelAcreage);
 		editAppSpecific("Total application acreage", revisedAcreage);
 		editAppSpecific("Total number of parcels", countParcels);
@@ -29,16 +29,18 @@ try {
 		var checkcount = 0;
 		for (b in tempAsit) {
 			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
-				checkcount = checkcount++;
+				checkcount = checkcount += 1;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
+				var checkboxAPO = tempAsit[b]["Create Address-Parcel-Owner"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
-				GetOwnersByParcel();
+				//GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-				editAppSpecific(tempAsit[b]["Create Address-Parcel-Owner"],'CHECKED');
+				editAppSpecific(checkboxAPO,'UNCHECKED');
 			}
 		}
+		if (checkcount > 0) { GetOwnersByParcel(); }
 	}
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
