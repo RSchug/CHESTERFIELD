@@ -4348,6 +4348,7 @@ function createRefLicProfFromLicProfTRU()
    newLic.setLicenseBoard(licProfScriptModel.getLicenseBoard());
    newLic.setFein(licProfScriptModel.getFein());
 
+
    if (updating)
 	myResult = aa.licenseScript.editRefLicenseProf(newLic);
    else
