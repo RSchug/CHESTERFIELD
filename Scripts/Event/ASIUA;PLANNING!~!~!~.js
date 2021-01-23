@@ -28,16 +28,17 @@ try {
 //12-2020 added code for copying Address Parcel Owner information from a Table to a Record, because we cannont have multiple parcel submission at ACA intake
 		var checkcount = 0;
 		for (b in tempAsit) {
-			if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
+			//if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
+			if (tempAsit[b]["Create Parcel-Address-Owner"] == 'Y') {
 				checkcount = checkcount += 1;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
-				var checkboxAPO = tempAsit[b]["Create Address-Parcel-Owner"];
+				var checkboxAPO = tempAsit[b]["Create Parcel-Address-Owner"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
 				//GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-				editAppSpecific(checkboxAPO,'UNCHECKED');
+				editAppSpecific(checkboxAPO,'N');
 			}
 		}
 		if (checkcount > 0) { GetOwnersByParcel(); }
