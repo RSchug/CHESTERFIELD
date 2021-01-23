@@ -29,7 +29,7 @@ try {
 		var checkcount = 0;
 		for (b in tempAsit) {
 			//if (tempAsit[b]["Create Address-Parcel-Owner"] == 'CHECKED') {
-			if (tempAsit[b]["Create Parcel-Address-Owner"] == 'Y') {
+			if (tempAsit[b]["Create Parcel-Address-Owner"] == 'Yes') {
 				checkcount = checkcount += 1;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
@@ -38,7 +38,7 @@ try {
 				addAddressFromRef_TPS(BaseAddress);
 				//GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-				editAppSpecific(checkboxAPO,'N');
+				editAppSpecific(checkboxAPO,'No');
 			}
 		}
 		if (checkcount > 0) { GetOwnersByParcel(); }
