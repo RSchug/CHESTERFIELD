@@ -42,7 +42,6 @@ if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 //Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
 if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
@@ -54,6 +53,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				aa.document.updateDocument(docArray[d]);
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
+				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
 				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),['Revisions Requested']);;
@@ -70,7 +70,6 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 //Update Document Statuses/Category to Approved on consolidationTask/ApprovedStatus
 if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	logDebug("<font color='blue'>Inside workflow and status: " + wfTask+wfStatus + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
     docArray = aa.document.getCapDocumentList(capId, currentUserID).getOutput();
     if (docArray != null && docArray.length > 0) {
         for (d in docArray) {
@@ -81,6 +80,7 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 				docArray[d].setDocStatus("Review Complete - Approved");
 				aa.document.updateDocument(docArray[d]);
+				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 			if(exists(getParentDocStatus(docArray[d]),approvedDocStatus,approvedPendingDocStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");

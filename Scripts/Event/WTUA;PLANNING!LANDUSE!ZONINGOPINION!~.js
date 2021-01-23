@@ -48,6 +48,9 @@ try {
 	if (wfTask == 'Review Consolidation') {
 		emailPreAppComplete();
 	}
+	if (wfTask == 'Inquiry Submittal' && wfStatus == 'Pre-Application Meeting Waived') {
+		emailPreAppComplete();
+	}
 	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
