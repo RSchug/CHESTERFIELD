@@ -42,7 +42,6 @@ if(exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 //send email to Applicant on consolidationTask/consolidationResubmitStatus and update mark up to type to Comments 
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
@@ -54,6 +53,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				aa.document.updateDocument(docArray[d]);
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
+				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
 				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),['Revisions Requested']);;
@@ -65,7 +65,6 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 //Update Approved Document based on consolidationTask/ApprovedStatus and email applicant
 if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
-	// moving to WTUA: Building Permit Issued - emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 	docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
 		for (d in docArray) {
@@ -82,6 +81,7 @@ if(exists(wfTask,consolidationTask) && exists(wfStatus,ApprovedStatus)) {
 				logDebug("<font color='blue'>Inside Doc Num: " + docArray[d]["documentNo"] + "</font>");
 				updateCheckInDocStatus(docArray[d],revisionsRequiredDocStatus,approvedDocStatus,approvedFinalDocStatus);
 				//updateDocPermissionsbyCategory(docArray[d],docInternalCategory);
+				// moving to WTUA: Building Permit Issued - emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 		/*	if(docArray[d]["docName"].indexOf("Sheet Report") == 0 && docArray[d]["docStatus"] == "Uploaded") {
 				logDebug("<font color='green'>*Sheet Report DocumentID: " + docArray[d]["documentNo"] + "</font>");

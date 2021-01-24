@@ -34,12 +34,12 @@ try {
 				inChecked = true;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
-				var checkboxAPO = tempAsit[b]["CC-LU-TPA.Create Address-Parcel-Owner"];
+				//var checkboxAPO = tempAsit[b]["CC-LU-TPA.Create Address-Parcel-Owner"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
 				//GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-				editAppSpecific(checkboxAPO,'UNCHECKED');
+				//editAppSpecific(checkboxAPO,'UNCHECKED');  - not working..??
 			}
 		}
 		if (checkcount > 0) { GetOwnersByParcel(); }
