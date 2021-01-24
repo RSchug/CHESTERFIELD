@@ -3,7 +3,9 @@ try {
 	var sessiontabledata = getASITablesRowsFromSession4ACA_local('CC-LU-TPA');
 	if (sessiontabledata) {
 		for (b in sessiontabledata) {
-			if (sessiontabledata[b]["Tax ID"] == null) {
+			if (sessiontabledata[b]["Tax ID"] > 0) {
+				logDebug('There is data in Tax ID');
+			} else {
 				showMessage = true;
 				comment('You need to enter at least 1 Tax ID in the table to continue.');
 				cancel = true;
