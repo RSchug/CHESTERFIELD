@@ -34,19 +34,15 @@ try {
 				inChecked = true;
 				var parcelTaxID = tempAsit[b]["Tax ID"];
 				var BaseAddress = tempAsit[b]["Base Address"];
+				var checkboxAPO = tempAsit[b]["CC-LU-TPA.Create Address-Parcel-Owner"];
 				addParcelFromRef_TPS(parcelTaxID);
 				addAddressFromRef_TPS(BaseAddress);
 				//GetOwnersByParcel();
 				copyParcelGisObjects_Local(parcelTaxID);
-			}
-		}
-		if (checkcount > 0) { GetOwnersByParcel(); }
-		if (inChecked == true) {
-			for (c in tempAsit) {
-				var checkboxAPO = tempAsit[c]["Create Address-Parcel-Owner"];
 				editAppSpecific(checkboxAPO,'UNCHECKED');
 			}
 		}
+		if (checkcount > 0) { GetOwnersByParcel(); }
 	}
 	else if (tempAsit == false) {
 		editAppSpecific("Total Parcel Acreage", 0);
