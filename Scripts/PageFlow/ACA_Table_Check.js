@@ -1,5 +1,5 @@
 try {
-	showDebug = false;				
+	showDebug = true;				
 	var sessiontabledata = getASITablesRowsFromSession4ACA_local('CC-LU-TPA');
 	if (sessiontabledata) {
 		for (b in sessiontabledata) {
@@ -11,7 +11,7 @@ try {
 				cancel = true;
 			}
 		}
-	} else if (sessiontabledata == false) { showMessage = true; comment('You need to enter at least 1 Tax ID in the table to continue.'); cancel = true; }
+	} else if (sessiontabledata == false) { showMessage = true; comment('There is no table avaialable to pull data from'); cancel = true; }
 	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

@@ -59,7 +59,7 @@ try {
 		}
 	}
 //Autoemail items
-	if (matches(wfStatus, "Follow-up Needed")) {
+	if (matches(wfStatus, "Follow-Up Needed")) {
 		emailPendingApplicantNotification(wfTask, wfStatus)
 	}
 	

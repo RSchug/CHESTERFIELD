@@ -110,6 +110,13 @@ try {
 			comment("<span class='fontbold font14px'>Error: You do not have a Parcel on this record.</span>");
 		}
 	}
+//Check for all Task complete before closing - db 01-2021
+	if (matches(wfTask,'BOS Hearing','Case Complete','GIS Update') && matches(wfStatus,'Denied','Create Conditions and Close Case','Closed','Appeal','Complete')) {
+		cancel = true;
+		showMessage = true;
+		comment("There appears to be Workflow Tasks that are still Active - please close them appropriately.");
+	}
+	
 /*	Could not get this to complete WTUB and then not update the due date in the BOS Hearing
 	if ((appMatch('Planning/LandUse/AdminVariance/NA') || appMatch('Planning/LandUse/Variance/NA') || appMatch('Planning/LandUse/SpecialException/NA') || appMatch('Planning/LandUse/Appeal/NA')) &&
 		matches(wfTask,'Review Consolidation','BZA Staff Report') && matches(wfStatus,'Ready for BZA','Complete') && isTaskActive('BZA Hearing')) {

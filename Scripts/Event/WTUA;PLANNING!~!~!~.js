@@ -533,14 +533,7 @@ try {
 	if (matches(wfStatus, "Additional Information Requested")) {
 		emailPendingApplicantNotification(wfTask, wfStatus)
 	}
-//Check for all Task complete before closing
-	if (matches(wfTask,'BOS Hearing','Case Complete','GIS Update') && matches(wfStatus,'Denied','Create Conditions and Close Case','Closed','Appeal','Complete')) {
-		cancel = true;
-		showMessage = true;
-		comment("There appears to be Workflow Tasks that are still Active - please close them appropriately.");
-	}
 	
-//add Parcels from TPA Data table - typically from Intake process, verify parcels are good, then create the APO
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
