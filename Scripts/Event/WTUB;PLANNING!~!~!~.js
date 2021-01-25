@@ -112,9 +112,11 @@ try {
 	}
 //Check for all Task complete before closing - db 01-2021
 	if (matches(wfTask,'BOS Hearing','Case Complete','GIS Update') && matches(wfStatus,'Denied','Create Conditions and Close Case','Closed','Appeal','Complete')) {
-		cancel = true;
-		showMessage = true;
-		comment("There appears to be Workflow Tasks that are still Active - please close them appropriately.");
+		if (alltaskscomplete() == false) {
+			cancel = true;
+			showMessage = true;
+			comment("There appears to be Workflow Tasks that are still Active - please close them appropriately.");
+		}
 	}
 	
 /*	Could not get this to complete WTUB and then not update the due date in the BOS Hearing
