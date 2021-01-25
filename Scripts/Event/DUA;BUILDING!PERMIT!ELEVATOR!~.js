@@ -10,6 +10,7 @@ try {
 		var emailParameters; 
 		emailParameters = aa.util.newHashtable();
 		emailParameters.put("$$RecordID$$", capIDString); 
+emailParameters.put("$$ProjectName$$", capName);
 		sendNotification("noreply@chesterfield.gov","whitee@chesterfield.gov;watsona@chesterfield.gov","mbouquin@truepointsolutions.com","ELEVATOR_DOCUMENT",emailParameters,fileNames);
 	}
 } catch (err) {
