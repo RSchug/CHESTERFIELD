@@ -60,7 +60,7 @@ try {
 		invoiceAllFees(capId);
 	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P
-	var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
+	var TotalLDAcreage = parseFloat(AInfo['Total Disturbed Acreage']); 
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') && (TotalLDAcreage <=.229)) {
 		updateFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
 	}
