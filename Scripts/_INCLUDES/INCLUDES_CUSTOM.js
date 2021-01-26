@@ -3560,7 +3560,8 @@ function copyDocuments(pFromCapId, pToCapId) {
 				for(l in documentObject) if(typeof(documentObject[l])!="function"){{aa.print("loop attributes: " + l + " : " +documentObject[l]);}}
 				for(l in documentObject) if(typeof(documentObject[l])=="function"){{aa.print("loop methods: " + l);}}
 
-				var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				//var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				var downloadResult = aa.document.downloadFile2Disk(documentObject, "Building", EMDSUsername, EMDSPassword, useDefaultUserPassword);
 				if (downloadResult.getSuccess()) {
 					var path = downloadResult.getOutput();
 					logDebug("path=" + path);
