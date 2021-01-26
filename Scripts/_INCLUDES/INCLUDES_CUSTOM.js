@@ -3552,10 +3552,10 @@ function copyDocuments(pFromCapId, pToCapId) {
                 if (documentFound) continue;
 				
 				// download the document content
-				var useDefaultUserPassword = true;
+				var useDefaultUserPassword = false;
 				//If useDefaultUserPassword = true, there is no need to set user name & password, but if useDefaultUserPassword = false, we need define EDMS user name & password.
-				var EMDSUsername = null;
-				var EMDSPassword = null;
+				var EMDSUsername = "laserfiche";
+				var EMDSPassword = "pass123";
 
 				var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
 				if (downloadResult.getSuccess()) {
