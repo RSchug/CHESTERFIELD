@@ -51,7 +51,7 @@ function copyDocuments(pFromCapId, pToCapId) {
 
 
 				//var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
-				var downloadResult = aa.document.downloadFile2Disk(documentObject, "Building", EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				var downloadResult = aa.document.downloadFile2Disk(documentObject, "", EMDSUsername, EMDSPassword, useDefaultUserPassword);
 				if (downloadResult.getSuccess()) {
 					var path = downloadResult.getOutput();
 					logDebug("path=" + path);
