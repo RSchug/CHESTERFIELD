@@ -84,7 +84,7 @@ try {
 		  if (newCapId) {
 				// This code gives the License the same # as tha APP 
 				newCapIdString = newCapId.getCustomID();
-				var editIdString = capIDString.substr(0, 14) + 'A';
+				var editIdString = capIDString.substr(0, 14) + 'M';
 				logDebug("newCapId: " + newCapId + ", newCapIdString: " + newCapIdString + ", editIdString: " + editIdString);
 				if (editIdString) {   // Update Record ID
 					  aa.cap.updateCapAltID(newCapId, editIdString);
