@@ -67,9 +67,7 @@ try {
 	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') && (TotalLDAcreage >.229)) {
 		updateFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
 	}
-	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees')) {
-		updateFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
-	}    
+	//01-2021 db removed lot fee calculation per site Plan lots - only in Construction Plan 
 	//Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
 	//if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){
 	//    addFee("SITEPLAN2","CC-PLANNING","FINAL",1,"N")}
