@@ -43,7 +43,7 @@ try {
 				newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
 	//Renamed Amusement to Master on 9/15/2020            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
 				logDebug("AmusementDevice Installation")
-				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels", "Cap Detail"]; // Excludes Additional Info, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
 				var expType = "Semi-annual";
 				var expMonths = 6;
 				newCapIdString = null;
@@ -53,7 +53,7 @@ try {
 				&& AInfo["Commercial or Residential"] == "Commercial") {
 				newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
 				newCapIdString = null;
-				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels", "Cap Detail"]; // Excludes Additional Info, Conditions, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
 
 				expField = 'Annual Quarter'
 				expType = 'Annual'
