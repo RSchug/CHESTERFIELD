@@ -48,7 +48,7 @@ try {
 		else if (AInfo['Related Case Number'] != null) {
 			if (AInfo['Related Case Number'].toUpperCase().indexOf("CP") >= 0) {
 				var recType = "Planning/Subdivision/ConstructionPlan/NA"; }
-			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0) {
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0 || AInfo['Related Case Number'].toUpperCase().indexOf("TS") >= 0) {
 				var recType = "Planning/Subdivision/Preliminary/NA"; }	
 		}
 		copyASIfromParent(capId,recType,'Community Code','Community Code');
