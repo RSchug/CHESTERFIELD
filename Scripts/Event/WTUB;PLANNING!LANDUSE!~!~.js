@@ -12,7 +12,7 @@ try {
 	// 42.4P Manufactured Homes and RPA Exception
 	if (appMatch('Planning/LandUse/ManufacturedHomes/NA') || appMatch('Planning/LandUse/RPAException/NA')){    
 		if (matches(wfTask, 'BOS Hearing') && matches(wfStatus,'Approved')) { //Denied removed on 9/23/2020 per request
-			if (AInfo['Conditions'] == null || AInfo['Proffered Conditions'] == null || AInfo['Cash Proffers'] == null || AInfo['Complies with Plan'] == null ){
+			if (AInfo['BOS conditions'] == null || AInfo['BOS Proffered conditions'] == null || AInfo['BOS Cash proffers'] == null || AInfo['BOS Complies with plan'] == null ){
 				showMessage = true;
 				comment('You cannot advance this workflow until ALL fields in the <b>Results</b> area of the Data Fields are completely filled in.  Put in zeroes (0) for those fields that do not apply.');
 				cancel = true;
