@@ -7,6 +7,7 @@ try {
 		activateTask("Fire and Life Safety Review");
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
+		activateTask("Police Review");
 		activateTask("VDOT Review");
 		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
@@ -21,6 +22,7 @@ try {
 		activateTask("County Library Review");
 		activateTask("Parks and Recreation Review");
 		activateTask("Planning Review");
+		activateTask("Police Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
@@ -39,6 +41,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Police Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");
 		activateTask("Pre-Application Meeting");
