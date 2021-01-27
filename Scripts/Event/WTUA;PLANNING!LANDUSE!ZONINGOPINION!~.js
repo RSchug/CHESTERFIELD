@@ -141,7 +141,7 @@ function emailPreAppComplete() {
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
 	else if (applicantEmail != "" && wfStatus == 'Pre-Application Meeting Waived') {
-		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
+		var emailTemplate = "WTUA_PRE_APP_MEET_WAIVED";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
 	else if (applicantEmail == "" && assignedToEmail != "") {
