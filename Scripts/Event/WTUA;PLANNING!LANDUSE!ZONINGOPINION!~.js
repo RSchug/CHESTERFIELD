@@ -60,7 +60,7 @@ try {
 			}
 		}
 	}
-	//12-2020 auto-emails 11.1EMAIL
+//12-2020 auto-emails 11.1EMAIL
 	if (wfTask == 'Review Consolidation') {
 		emailPreAppComplete();
 	}
