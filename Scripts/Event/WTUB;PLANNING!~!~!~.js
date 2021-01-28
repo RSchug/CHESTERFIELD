@@ -112,6 +112,8 @@ try {
 	}
 //Check for all Task complete before closing - db 01-2021
 	if (matches(wfTask,'BOS Hearing','Case Complete','GIS Update') && matches(wfStatus,'Denied','Create Conditions and Close Case','Closed','Appeal','Complete')) {
+		var alltaskinfo = alltaskscomplete();
+		logDebug("alltaskinfo = " + alltaskinfo);
 		if (alltaskscomplete() == false) {
 			cancel = true;
 			showMessage = true;
