@@ -534,7 +534,7 @@ try {
 		//}
 	}
 //Autoemail items
-	if (matches(wfStatus, "Additional Information Requested")) {
+	if (matches(wfStatus, "Additional Information Requested") && !appMatch("Planning/LandUse/ZoningOpinion/NA")) {
 		emailPendingApplicantNotification(wfTask, wfStatus)
 	}
 	
