@@ -466,9 +466,10 @@ try {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
 		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
 		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBZA", feeQty = 1;
-		if (tasksHistory && tasksHistory.length > 1) {
-			feeQty = 2
-		}
+	//Per Business 01-2021 - no qty 2 for these fees.
+		//if (tasksHistory && tasksHistory.length > 1) {
+		//	feeQty = 2
+		//}
 		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
 		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
