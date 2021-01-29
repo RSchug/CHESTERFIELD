@@ -38,26 +38,31 @@ try {
 //48P  Not Needed - fixed in workflow
 
 //90P  Not Needed - fixed in workflow
-//Add Planning/LandUse/AdminVariance/NA Fee when Application Submittal - Ready for Payment
-if (appMatch("Planning/LandUse/AdminVariance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')){
-addFee("VARIANCEADM","CC-PLANNING","FINAL",1,"Y");
-}
-//Add Planning/LandUse/Variance/NA Fee when Application Submittal - Ready for Payment
-if (appMatch("Planning/LandUse/Variance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')){
-addFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"Y");
-}
-//Add Planning/LandUse/Appeal/NA Fee when Application Submittal - Ready for Paymen
-if (appMatch("Planning/LandUse/Appeal/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')){
-addFee("APPEAL","CC-PLANNING","FINAL",1,"Y");
-}
-//Add Planning/LandUse/WrittenDetermination/NA Fee when Request Submitted - and NOT Request Not Applicable
-if (appMatch("Planning/LandUse/WrittenDetermination/NA") && (wfTask == 'Request Submitted' && wfStatus != 'Request Not Applicable')){
-addFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
-}
-//Add Planning/LandUse/RPAException/NA Fee when Application Submittal - Ready for Payment
-if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')){
-addFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
-}
+//Add Planning/LandUse/AdminVariance/NA Fee when Application Submittal - Calculate Fees
+	if (appMatch("Planning/LandUse/AdminVariance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
+		updateFee("VARIANCEADM","CC-PLANNING","FINAL",1,"N");
+	}
+//Add Planning/LandUse/Variance/NA Fee when Application Submittal - Calculate Fees
+	if (appMatch("Planning/LandUse/Variance/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
+		updateFee("VARIANCEBZA","CC-PLANNING","FINAL",1,"N");
+	}
+//Add Planning/LandUse/Appeal/NA Fee when Application Submittal - Calculate Fees
+	if (appMatch("Planning/LandUse/Appeal/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
+		updateFee("APPEAL","CC-PLANNING","FINAL",1,"N");
+	}
+//Add Planning/LandUse/WrittenDetermination/NA Fee when Request Submitted - and NOT Request Not Applicable and FEE is AUTOINVOICED
+	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && (wfTask == 'Request Submitted' && wfStatus == 'Calculate Fees')){
+		updateFee("WRITTEN","CC-PLANNING","FINAL",1,"Y");
+	}
+//Add Planning/LandUse/RPAException/NA Fee when Application Submittal - Calculate Fees
+	if (appMatch("Planning/LandUse/RPAException/NA") && (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees')){
+		updateFee("RPAEXCEPTION","CC-PLANNING","FINAL",1,"N");
+	}
+//Add the Invoiceall function here for the above records, except for WD - that has other ...
+	if ((appMatch("Planning/LandUse/RPAException/NA") || appMatch("Planning/LandUse/Appeal/NA") || appMatch("Planning/LandUse/Variance/NA") || appMatch("Planning/LandUse/AdminVariance/NA")) &&
+		(wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment')) {
+		invoiceAllFees(capId);
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

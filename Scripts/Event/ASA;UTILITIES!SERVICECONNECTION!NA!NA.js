@@ -76,25 +76,25 @@ if (AInfo["Utility Type"] == "Water" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("WATERMETER2","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SERVICELINE","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] != "F" && AInfo["Actual Meter Size"] == '5/8"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SERVICELINE","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '5/8"'){
 	addFee("SERVICELINE","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1"'){
 	addFee("SERVICELINE1","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] != "F" && AInfo["Actual Meter Size"] == '1"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1"'){
 	addFee("SERVICELINE1","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1"'){
 	addFee("SERVICELINE1","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1 1/2"'){
 	addFee("SERVICELN15","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] != "F" && AInfo["Actual Meter Size"] == '1 1/2"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1 1/2"'){
 	addFee("SERVICELN15","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '1 1/2"'){
 	addFee("SERVICELN15","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Water" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '2"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
-	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] != "F" && AInfo["Actual Meter Size"] == '2"'){
+	if (AInfo["Utility Type"] == "Sewer" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '2"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}
 	if (AInfo["Utility Type"] == "Both" && AInfo["Connection Type"] == "F" && AInfo["Actual Meter Size"] == '2"'){
 	addFee("SERVICELINE2","CC-UTL-SC","FINAL",1,"Y")}

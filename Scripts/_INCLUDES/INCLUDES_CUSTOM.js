@@ -35,6 +35,7 @@ logDebug("Loading Events>Scripts>INCLUDES_CUSTOM");
 | 09/08/2020 Boucher updated addParcelStdCondition_TPS so status would be set correctly
 | 12/03/2020 Boucher added new funtion per Melissa
 | 12/26/2020 Boucher added new functions for Ref Parcel, Address and Owner to record from table
+| 01-19-2021 Boucher added new function for overallCodeSchema so that it can be called from different events
 |
 /------------------------------------------------------------------------------------------------------*/
 //This function activates or deactivates the given wfTask.
@@ -3509,6 +3510,7 @@ function copyDetailedDescription(srcCapId, targetCapId) {
 		updateWorkDesc(newWorkDes, targetCapId);
 }
 function copyDocuments(pFromCapId, pToCapId) {
+	//01-2021 db added code for this
     if (pToCapId == null)
         var vToCapId = capId;
     else
@@ -3551,12 +3553,16 @@ function copyDocuments(pFromCapId, pToCapId) {
                 if (documentFound) continue;
 				
 				// download the document content
-				var useDefaultUserPassword = true;
+				var useDefaultUserPassword = false;
 				//If useDefaultUserPassword = true, there is no need to set user name & password, but if useDefaultUserPassword = false, we need define EDMS user name & password.
-				var EMDSUsername = null;
-				var EMDSPassword = null;
+				var EMDSUsername = "laserfiche";
+				var EMDSPassword = "pass123";
+				for(l in documentObject) if(typeof(documentObject[l])!="function"){{aa.print("loop attributes: " + l + " : " +documentObject[l]);}}
+				for(l in documentObject) if(typeof(documentObject[l])=="function"){{aa.print("loop methods: " + l);}}
 
-				var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				//var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				//var downloadResult = aa.document.downloadFile2Disk(documentObject, "", EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				var downloadResult = aa.document.downloadFile2Disk(documentObject,"","","", true);
 				if (downloadResult.getSuccess()) {
 					var path = downloadResult.getOutput();
 					logDebug("path=" + path);
@@ -4275,6 +4281,92 @@ function createRefLicProf(rlpId, rlpType, pContactType) {
 		logMessage("**ERROR: can't create ref lic prof: " + myResult.getErrorMessage());
 		return false;
 	}
+}
+
+function createRefLicProfFromLicProfTRU()
+{
+   //
+   // Get the lic prof from the app
+   //
+   capLicenseResult = aa.licenseScript.getLicenseProf(capId);
+   if (capLicenseResult.getSuccess())
+				  { capLicenseArr = capLicenseResult.getOutput();  }
+   else
+				  { logDebug("**ERROR: getting lic prof: " + capLicenseResult.getErrorMessage()); return false; }
+
+   if (!capLicenseArr.length)
+				  { logDebug("WARNING: no license professional available on the application:"); return false; }
+
+   licProfScriptModel = capLicenseArr[0];
+   rlpId = licProfScriptModel.getLicenseNbr();
+   birthdate = jsDateToMMDDYYYY(convertDate(licProfScriptModel.getBirthDate()));
+   //
+   // Now see if a reference version exists
+   //
+   var updating = false;
+
+   var newLic = getRefLicenseProf(rlpId)
+
+   if (newLic)
+	  {
+	  updating = true;
+	  logDebug("Updating existing Ref Lic Prof : " + rlpId);
+	  }
+   else
+	var newLic = aa.licenseScript.createLicenseScriptModel();
+
+   //
+   // Now add / update the ref lic prof
+   //
+   newLic.setStateLicense(rlpId);
+   newLic.setAddress1(licProfScriptModel.getAddress1());
+   newLic.setAddress2(licProfScriptModel.getAddress2());
+   newLic.setAddress3(licProfScriptModel.getAddress3());
+   newLic.setAgencyCode(licProfScriptModel.getAgencyCode());
+   newLic.setAuditDate(licProfScriptModel.getAuditDate());
+   newLic.setAuditID(licProfScriptModel.getAuditID());
+   newLic.setAuditStatus(licProfScriptModel.getAuditStatus());
+   newLic.setBusinessLicense(licProfScriptModel.getBusinessLicense());
+   newLic.setBusinessName(licProfScriptModel.getBusinessName());
+   newLic.setBusinessName2(licProfScriptModel.getBusName2());
+   newLic.setCity(licProfScriptModel.getCity());
+   newLic.setCityCode(licProfScriptModel.getCityCode());
+   newLic.setContactFirstName(licProfScriptModel.getContactFirstName());
+   newLic.setContactLastName(licProfScriptModel.getContactLastName());
+   newLic.setContactMiddleName(licProfScriptModel.getContactMiddleName());
+   newLic.setContryCode(licProfScriptModel.getCountryCode());
+   newLic.setCountry(licProfScriptModel.getCountry());
+   newLic.setEinSs(licProfScriptModel.getEinSs());
+   newLic.setEMailAddress(licProfScriptModel.getEmail());
+   newLic.setFax(licProfScriptModel.getFax());
+   newLic.setLicenseType(licProfScriptModel.getLicenseType());
+   newLic.setLicOrigIssDate(licProfScriptModel.getLicesnseOrigIssueDate());
+   newLic.setPhone1(licProfScriptModel.getPhone1());
+   newLic.setPhone2(licProfScriptModel.getPhone2());
+   newLic.setSelfIns(licProfScriptModel.getSelfIns());
+   newLic.setState(licProfScriptModel.getState());
+   newLic.setLicState(licProfScriptModel.getState());
+   newLic.setSuffixName(licProfScriptModel.getSuffixName());
+   newLic.setWcExempt(licProfScriptModel.getWorkCompExempt());
+   newLic.setZip(licProfScriptModel.getZip());
+   newLic.setComment(licProfScriptModel.getComment());
+   newLic.setLicenseBoard(licProfScriptModel.getLicenseBoard());
+   newLic.setFein(licProfScriptModel.getFein());
+
+
+   if (updating)
+	myResult = aa.licenseScript.editRefLicenseProf(newLic);
+   else
+	myResult = aa.licenseScript.createRefLicenseProf(newLic);
+
+   if (myResult.getSuccess())
+	{
+	updatereflp(rlpId,licProfScriptModel.getSalutation(),birthdate,licProfScriptModel.getPostOfficeBox())
+	logDebug("Successfully added/updated License ID : " + rlpId)
+	return rlpId;
+	}
+   else
+	{ logDebug("**ERROR: can't create ref lic prof: " + myResult.getErrorMessage()); }
 }
 
 /**
@@ -5405,6 +5497,133 @@ function loadXAPOParcelAttributesTPS(thisArr) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 	}
 }
+
+function overallCodeSchema_CC() {
+// 01-19-21 db added this as function and it is specific to Chesterfield County, so it is called in the WTUA and PRA - and they should not overwrite each other.	
+try {
+	var ComCodeName = "Community Code";
+	if (AInfo[ComCodeName] > 1) {
+		logDebug('Community Code Already Exists: ' + AInfo[ComCodeName]);
+	} else {
+		var seq1CodeName = null;
+		if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/SitePlan/Major/*')) {
+			seq1CodeName = "Community Code";
+			if (seq1CodeName && typeof(AInfo[ComCodeName]) != "undefined") {
+				AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
+				if (AInfo[ComCodeName] < 10) {
+					AInfo[ComCodeName] = '00' + AInfo[ComCodeName];
+				} else if (AInfo[ComCodeName] < 100) {
+					AInfo[ComCodeName] = '0' + AInfo[ComCodeName];
+				} else if (AInfo[ComCodeName] < 1000) {
+					AInfo[ComCodeName] = AInfo[ComCodeName];
+				} else if (AInfo[ComCodeName] < 1000) {
+					AInfo[ComCodeName] = 'Incorrect Code Value';
+				}
+				logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
+				editAppSpecific(ComCodeName, AInfo[ComCodeName]);
+			}
+		}
+	}
+
+	var SubCodeName = "Subdivision Code";
+	if (AInfo[SubCodeName] > 1) {
+		logDebug('Subdivision Code Already Exists: ' + AInfo[SubCodeName]);
+	} else {
+		var seq2CodeName = null;
+		if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/Preliminary/*') || (appMatch('*/SitePlan/Major/*') && AInfo['Mixed Use'] == "Yes" && (AInfo['Multi-Family (MF)'] == 'CHECKED'
+					 || AInfo['Residential Construction Plan (CP)'] == 'CHECKED'))) {
+			seq2CodeName = "Subdivision Code";
+			if (seq2CodeName && typeof(AInfo[SubCodeName]) != "undefined") {
+				AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
+				if (AInfo[SubCodeName] < 100) {
+					AInfo[SubCodeName] = '000' + AInfo[SubCodeName];
+				} else if (AInfo[SubCodeName] < 1000) {
+					AInfo[SubCodeName] = '00' + AInfo[SubCodeName];
+				} else if (AInfo[SubCodeName] < 10000) {
+					AInfo[SubCodeName] = '0' + AInfo[SubCodeName];
+				} else if (AInfo[SubCodeName] < 100000) {
+					AInfo[SubCodeName] = AInfo[SubCodeName];
+				} else if (AInfo[SubCodeName] > 100000) {
+					AInfo[SubCodeName] = 'Incorrect Code Value';
+				}
+				logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
+				editAppSpecific(SubCodeName, AInfo[SubCodeName]);
+			}
+		}
+	}
+
+	var DevCodeName = "Development Code";
+	if (AInfo[DevCodeName] > 1) {
+		logDebug('Development Code Already Exists: ' + AInfo[DevCodeName]);
+	} else {
+		var seq3CodeName = null;
+		if (appMatch('*/SitePlan/Minor/*') || appMatch('*/SitePlan/Major/*')) {
+			seq3CodeName = "Development Code";
+			if (seq3CodeName && typeof(AInfo[DevCodeName]) != "undefined") {
+				AInfo[DevCodeName] = generateDevCode(DevCodeName);
+				if (AInfo[DevCodeName] < 100) {
+					AInfo[DevCodeName] = '000' + AInfo[DevCodeName];
+				} else if (AInfo[DevCodeName] < 1000) {
+					AInfo[DevCodeName] = '00' + AInfo[DevCodeName];
+				} else if (AInfo[DevCodeName] < 10000) {
+					AInfo[DevCodeName] = '0' + AInfo[DevCodeName];
+				} else if (AInfo[DevCodeName] < 100000) {
+					AInfo[DevCodeName] = AInfo[DevCodeName];
+				} else if (AInfo[DevCodeName] > 100000) {
+					AInfo[DevCodeName] = 'Incorrect Code Value';
+				}
+				logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
+				editAppSpecific(DevCodeName, AInfo[DevCodeName]);
+			}
+		}
+	}
+
+	var SecCodeName = "Section Code";
+	if (AInfo[SecCodeName] > 1) {
+		logDebug('Section Code Already Exists: ' + AInfo[SecCodeName]);
+	} else {
+		var seq4CodeName = null;
+		if (appMatch('*/Subdivision/ConstructionPlan/*')) {
+			seq4CodeName = "Section Code";
+			if (seq4CodeName && typeof(AInfo[SecCodeName]) != "undefined") {
+				AInfo[SecCodeName] = generateSecCode(SecCodeName);
+				if (AInfo[SecCodeName] < 100) {
+					AInfo[SecCodeName] = '00' + AInfo[SecCodeName];
+				} else if (AInfo[SecCodeName] < 1000) {
+					AInfo[SecCodeName] = '0' + AInfo[SecCodeName];
+				} else if (AInfo[SecCodeName] < 10000) {
+					AInfo[SecCodeName] = AInfo[SecCodeName];
+				} else if (AInfo[SecCodeName] > 10000) {
+					AInfo[SecCodeName] = 'Incorrect Code Vaule';
+				}
+				logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
+				editAppSpecific(SecCodeName, AInfo[SecCodeName]);
+			}
+		}
+	}
+
+	var SubIDName = "Subdivision ID";
+	if (AInfo[SubIDName] > 1) {
+		logDebug('Subdivision ID Already Exists: ' + AInfo[SubIDName]);
+	} else {
+		var seq5CodeName = null;
+		if (appMatch('*/Subdivision/Final Plat/*')) {
+			seq5CodeName = "Subdividion ID";
+			if (seq5CodeName && typeof(AInfo[SubIDName]) != "undefined") {
+				AInfo[SubIDName] = AInfo[ComCodeName] + '-' + AInfo[SubCodeName] + '-' + AInfo[SecCodeName];
+				logDebug(SubIDName + ": " + AInfo[SubIDName]);
+				editAppSpecific(SubIDName, AInfo[SubIDName]);
+			} else { {
+					AInfo[SubIDName] = 'Incorrect Code Vaule';
+				}
+			}
+		}
+	}
+} catch (err) {
+	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
+}
+
 function ownerExistsOnCap() {
         // Optional parameter, cap ID to load from
         var itemCap = (arguments.length> 0 && arguments[0]? arguments[0]:capId); // use cap ID if specified in args
@@ -7037,4 +7256,26 @@ function checkinspectionstatus(iType,status)
 		}
 	
 	return check
+}
+
+function updatereflp(licenseNbr,Salutation,BirthDate,PostOfficeBox)
+{
+   if(Salutation != null && Salutation != ""){var SAL = Salutation;} else {var SAL = "";}
+   if(BirthDate != null && BirthDate != ""){var BD = BirthDate;} else {var BD = "";}
+   if(PostOfficeBox != null && PostOfficeBox != ""){var PO = PostOfficeBox;} else {var PO = "";}
+
+   var initialContext = aa.proxyInvoker.newInstance("javax.naming.InitialContext").getOutput();
+   var ds = initialContext.lookup("java:/CHESTERFIELD"); 
+   var conn = ds.getConnection(); 
+   var getSQL = "UPDATE RSTATE_LIC SET L1_SALUTATION = ?, L1_BIRTH_DATE = ?, L1_POST_OFFICE_BOX = ? WHERE SERV_PROV_CODE = 'CHESTERFIELD' AND LIC_NBR = ?";
+   var sSelect = conn.prepareStatement(getSQL);
+	sSelect.setString(1, SAL);
+	sSelect.setString(2, BD);
+	sSelect.setString(3, PO);
+	sSelect.setString(4, licenseNbr);
+
+   var result = sSelect.executeUpdate();
+	logDebug( "**Update Result: " + result );      
+	conn.close();
+   return result;
 }

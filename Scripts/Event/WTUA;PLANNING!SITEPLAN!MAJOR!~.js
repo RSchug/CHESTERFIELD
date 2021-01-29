@@ -37,7 +37,7 @@ try {
 	}
 	
 	//Site Plan - Initial Submittal Fee 8.1P
-	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') {
 		updateFee("SITEPLAN","CC-PLANNING","FINAL",1,"N");
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code and Development Code, if they exist on related records, whatever is related, then filter on the ASI
 		if (parentCapId != null) {
@@ -56,17 +56,18 @@ try {
 			copyASIfromParent(capId,recType,'Development Code','Development Code');
 		}
 	}
+	if (wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') {
+		invoiceAllFees(capId);
+	}
 	//Erosion and Sediment Control Review and Enforcement Fees 8.2P
-	var TotalLDAcreage = parseFloat(AInfo['Total Land Disturbance Acreage']);
-	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage <=.229)) {
+	var TotalLDAcreage = parseFloat(AInfo['Total Disturbed Acreage']); 
+	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') && (TotalLDAcreage <=.229)) {
 		updateFee("ERSCRENFMIN","CC-PLANNING","FINAL",1,"N");
 	}
-	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (TotalLDAcreage >.229)) {
+	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'Calculate Fees') && (TotalLDAcreage >.229)) {
 		updateFee("ERSCRENFORCE","CC-PLANNING","FINAL",1,"N");
 	}
-	if ((wfTask == 'First Glance Consolidation' && wfStatus == 'First Glance Review Complete') && (AInfo["Total Residential Lots"] != null)) {
-		updateFee("ERSCRENFRLOT","CC-PLANNING","FINAL",1,"N"); 
-	}    
+	//01-2021 db removed lot fee calculation per site Plan lots - only in Construction Plan 
 	//Site Plan - Submittals Subsequent to First 3 Submittals Fees based on ASI Field 'Submittal Count'
 	//if ((wfTask == 'Review Distribution' && wfStatus == 'Revisions Received') && (AInfo["Submittal Count"] > 3)){
 	//    addFee("SITEPLAN2","CC-PLANNING","FINAL",1,"N")}

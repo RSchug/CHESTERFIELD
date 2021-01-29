@@ -58,6 +58,10 @@ try {
 			copyASIfromParent_TPS(capId,parentCapId,'Development Code','Development Code');
 		}
 	}
+//Autoemail items
+	if (matches(wfStatus, "Follow-Up Needed")) {
+		emailPendingApplicantNotification(wfTask, wfStatus)
+	}
 	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

@@ -105,7 +105,7 @@ try {
 			if (isTaskComplete_TPS("Sign Posting")) {
 				activateTask("Sign Posting");
 			}
-			if (AInfo['Review Type'] == 'Administrative Review') {
+			if (appMatch('*/SitePlan/Major/*') && AInfo['Review Type'] == 'Administrative Review') {
 				if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
 					addAdHocTask("ADHOC_WF","Public Notices","");
 				}
@@ -190,7 +190,7 @@ try {
 	}
 
 //09-2020 Boucher per ELM Planning DueDates for any record with TRC - No due dates are updated for Staff and Developer Meeting
-	if (matches(wfTask,'Technical Review Committee','Pre-Applicaiton Meeting','Staff and Developer Meeting') && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
+	if (matches(wfTask,'Technical Review Committee','Pre-Application Meeting','Staff and Developer Meeting') && matches(wfStatus,'Set Hearing Date','Set Meeting Date')) {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
 		for (var ind in taskAuditArray) {
@@ -202,9 +202,9 @@ try {
 						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Technical Review Committee'),3));
 					}
 				}
-				else if (wfbTask.getActiveFlag() == 'Y' && wfTask == 'Pre-Applicaiton Meeting') {
+				else if (wfbTask.getActiveFlag() == 'Y' && wfTask == 'Pre-Application Meeting') {
 					if (wfaTask == wfbTask.getTaskDescription()) {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Pre-Applicaiton Meeting'),-1));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(getTaskDueDate('Pre-Application Meeting'),-1));
 					}
 				}
 			}
@@ -260,7 +260,7 @@ try {
 		}	  
 	}
 //per the ELM Planning Due Dates Doc
-	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date')) {
+	if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Hearing Date') && !matches(capStatus, 'Deferred from BOS','Deferred')) {
 		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
 			
 			if (isTaskActive('Public Notices')) {
@@ -295,6 +295,21 @@ try {
 			if (isTaskActive('BOS Staff Report')) {
 				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-26));
 			}	
+		}
+	} else if (matches(wfTask,'BOS Hearing') && matches(wfStatus,'Set Deferral Hearing Date')) {
+		if (appMatch('*/LandUse/ZoningCase/*') || appMatch('*/LandUse/HistoricPreservation/*') || appMatch('*/LandUse/SubstantialAccord/*')) {
+			if (isTaskActive('Public Notices')) {
+				editTaskDueDate('Public Notices', dateAdd(getTaskDueDate('BOS Hearing'),-30));
+			}
+			if (isTaskActive('Adjacents')) {
+				editTaskDueDate('Adjacents', dateAdd(getTaskDueDate('BOS Hearing'),-28));
+			}
+			if (isTaskActive('IVR Message')) {
+				editTaskDueDate('IVR Message', dateAdd(getTaskDueDate('BOS Hearing'),-23));
+			}
+			if (isTaskActive('BOS Staff Report')) {
+				editTaskDueDate('BOS Staff Report', dateAdd(getTaskDueDate('BOS Hearing'),-26));
+			}
 		}
 	}
 	
@@ -339,6 +354,9 @@ try {
 //4.1P and 5p and 9p and 95p any Hearing task and Denial or Approval or deferred is submitted then activate the Hearing task, and follow ELM Planning Due Date doc for ad hocs
 	if (matches(wfTask,'CPC Hearing','Review Distribution') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by CPC') && matches(capStatus, 'Deferred from CPC','Deferred')){
 		activateTask("CPC Hearing");
+		//if (wfTask == 'CPC Hearing') {
+		//	editTaskDueDate('CPC Hearing', getTaskDueDate('CPC Hearing'));
+		//}
 	}
 	if (matches(wfTask,'BOS Hearing','Review Distribution') && matches(wfStatus,'Deferred','Remanded','Deferred by Applicant','Deferred by BOS','Deferred from BOS') && matches(capStatus, 'Deferred from BOS','Deferred')){
 		activateTask("BOS Hearing");
@@ -367,16 +385,56 @@ try {
 			}
 			editAppSpecific("Expiration Date",NewExpireDate);
 		}
+	}
+	if (matches(wfTask,'Review Consolidation') && matches(wfStatus,'Move to CPC')) {
+		if (appMatch('*/SitePlan/Major/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/ExceptiontoPreliminary/*') 
+		      || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/Subdivision/Preliminary/*')) {
+				  
+			if (!isTaskActive("Public Notices") && !isTaskComplete_TPS("Public Notices")) {
+				addAdHocTask("ADHOC_WF","Public Notices","");
+			}
+			if (isTaskComplete_TPS("Public Notices")) {
+				activateTask("Public Notices");
+			}				
+			if (!isTaskActive("Adjacents") && !isTaskComplete_TPS("Adjacents")){
+				addAdHocTask("ADHOC_WF","Adjacents","");
+			}
+			if (isTaskComplete_TPS("Adjacents")) {
+				activateTask("Adjacents");
+			}
+			if (!isTaskActive("Maps") && !isTaskComplete_TPS("Maps")){
+				addAdHocTask("ADHOC_WF","Maps","");
+			}
+			if (isTaskComplete_TPS("Maps")) {
+				activateTask("Maps");
+			}
+			if (!isTaskActive("CPC Staff Report") && !isTaskComplete_TPS("CPC Staff Report")){
+				addAdHocTask("ADHOC_WF","CPC Staff Report","");
+			}
+			if (isTaskComplete_TPS("CPC Staff Report")) {
+				activateTask("CPC Staff Report");
+			}
+		}
+	}
+	if (wfStatus == "Ready for Payment" || wfStatus == "First Glance Review Complete" || (appMatch("*/Subdivision/ExceptiontoPreliminary/*") && wfStatus == "Accepted") || (appMatch("*/LandUse/WrittenDetermination/*") && wfStatus == "Calculate Fees")) {
+		emailReadyforPayment();	
 	}	
 // -------->  FEES <------------
 	if ((appMatch("Planning/SitePlan/Major/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('SITEPLAN2','CC-PLANNING','FINAL',1,'Y');
+		emailReadyforPayment();
 	}
 	if ((appMatch("Planning/Subdivision/OverallConceptualPlan/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('OCPLAN2','CC-PLANNING','FINAL',1,'Y');
+		emailReadyforPayment();
 	}
 	if ((appMatch("Planning/Subdivision/ConstructionPlan/NA")) && ((wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Revisions Requested','RR-Substantial Approval','RR-Table Review','RR-Staff and Developer Meeting')) && ((AInfo['Submittal Count'] > 2) && (AInfo['Waive Submittal Fee'] != 'CHECKED')))) {
 		addFee('CONSTPLAN2','CC-PLANNING','FINAL',1,'Y');
+		emailReadyforPayment();
+	}
+	if (appMatch("Planning/Subdivision/ConstructionPlan/NA") && (wfTask.equals("Review Consolidation") && matches(wfStatus,'RR-Table Review'))) {
+		addFee('CONSTPLAN3','CC-PLANNING','FINAL',1,'Y');
+		emailReadyforPayment();
 	}
 
 //07-2020 Boucher 24p
@@ -408,152 +466,17 @@ try {
 		var tasksHistory = getWorkflowHistory_TPS(wfTask, wfStatus, null, capId);
 		logDebug("tasksHistory(" + wfTask + "," + wfStatus + "): " + tasksHistory.length);
 		var feeSchedule = "CC-PLANNING", feeCode = "DEFERRALBZA", feeQty = 1;
-		if (tasksHistory && tasksHistory.length > 1) {
-			feeQty = 2
-		}
+	//Per Business 01-2021 - no qty 2 for these fees.
+		//if (tasksHistory && tasksHistory.length > 1) {
+		//	feeQty = 2
+		//}
 		logDebug("Adding fee: " + feeSchedule + "." + feeCode + ", Qty:" + feeQty);
 		addFee(feeCode, feeSchedule, 'FINAL', feeQty, 'Y');
 	}
 	
-// 56p Community/Subdivision/Development/Section Codes are generated here at time of Fees Received or Fees Waived - logic based on CODE SchemaDesign for GIS spreadsheet.
-// Number should be generate, with padded 0 at the beginning.  No duplicates number for another active record.For: Planning/Subdivision/ Preliminary - OverallConceptualPlan - ConstructionPlan 
-//  and Planning/SitePlan/ -> Schematics - Major - Minor
+// 56p db 01-19-21 updated this to a function so it would be called at PRA too.  Based on the code inside the function, it should not overwrite or duplicate the numbers.
 	if (matches(wfTask,'Fee Payment') && matches(wfStatus,'Fees Received','Fees Waived','Payment Received')) {
-		var ComCodeName = "Community Code";
-		if (AInfo[ComCodeName] > 1) {
-			logDebug('Community Code Already Exists: ' + AInfo[ComCodeName]);
-		}
-		else {
-			var seq1CodeName = null;
-			if (appMatch('*/Subdivision/Preliminary/*') || appMatch('*/Subdivision/OverallConceptualPlan/*') || appMatch('*/SitePlan/Schematics/*') || appMatch('*/SitePlan/Major/*')) {
-				seq1CodeName = "Community Code";
-				if (seq1CodeName && typeof (AInfo[ComCodeName]) != "undefined") {
-					AInfo[ComCodeName] = generateCommunityCode(ComCodeName);
-					if (AInfo[ComCodeName] < 10) {
-						AInfo[ComCodeName] = '00'+AInfo[ComCodeName];
-					}
-					else if (AInfo[ComCodeName] < 100) {
-						AInfo[ComCodeName] = '0'+AInfo[ComCodeName];
-					}
-					else if (AInfo[ComCodeName] < 1000) {
-						AInfo[ComCodeName] = AInfo[ComCodeName];
-					}
-					else if (AInfo[ComCodeName] < 1000) {
-						AInfo[ComCodeName] = 'Incorrect Code Value';
-					}
-					logDebug(ComCodeName + ": " + AInfo[ComCodeName]);
-					editAppSpecific(ComCodeName, AInfo[ComCodeName]);	
-				}
-			}
-		}
-	
-		var SubCodeName = "Subdivision Code";
-		if (AInfo[SubCodeName] > 1) {
-			logDebug('Subdivision Code Already Exists: ' + AInfo[SubCodeName]);
-		}
-		else {
-			var seq2CodeName = null;
-			if (appMatch('*/Subdivision/ConstructionPlan/*') || appMatch('*/Subdivision/Preliminary/*') || (appMatch('*/SitePlan/Major/*') && AInfo['Mixed Use'] == "Yes" && (AInfo['Multi-Family (MF)'] == 'CHECKED'
-			|| AInfo['Residential Construction Plan (CP)'] == 'CHECKED'))) {
-				seq2CodeName = "Subdivision Code";
-				if (seq2CodeName && typeof (AInfo[SubCodeName]) != "undefined") {
-					AInfo[SubCodeName] = generateSubdivCode(SubCodeName);
-					if (AInfo[SubCodeName] < 100) {
-						AInfo[SubCodeName] = '000'+AInfo[SubCodeName];
-					}
-					else if (AInfo[SubCodeName] < 1000) {
-						AInfo[SubCodeName] = '00'+AInfo[SubCodeName];
-					}
-					else if (AInfo[SubCodeName] < 10000) {
-						AInfo[SubCodeName] = '0'+AInfo[SubCodeName];
-					}
-					else if (AInfo[SubCodeName] < 100000) {
-						AInfo[SubCodeName] = AInfo[SubCodeName];
-					}
-					else if (AInfo[SubCodeName] > 100000) {
-						AInfo[SubCodeName] = 'Incorrect Code Value';
-					}
-					logDebug(SubCodeName + ": " + AInfo[SubCodeName]);
-					editAppSpecific(SubCodeName, AInfo[SubCodeName]);	
-				}
-			}
-		}
-	
-		var DevCodeName = "Development Code";
-		if (AInfo[DevCodeName] > 1) {
-			logDebug('Development Code Already Exists: ' + AInfo[DevCodeName]);
-		}
-		else {
-			var seq3CodeName = null;
-			if (appMatch('*/SitePlan/Minor/*') || appMatch('*/SitePlan/Major/*')) {
-				seq3CodeName = "Development Code";
-				if (seq3CodeName && typeof (AInfo[DevCodeName]) != "undefined") {
-					AInfo[DevCodeName] = generateDevCode(DevCodeName);
-					if (AInfo[DevCodeName] < 100) {
-						AInfo[DevCodeName] = '000'+AInfo[DevCodeName];
-					}
-					else if (AInfo[DevCodeName] < 1000) {
-						AInfo[DevCodeName] = '00'+AInfo[DevCodeName];
-					}
-					else if (AInfo[DevCodeName] < 10000) {
-						AInfo[DevCodeName] = '0'+AInfo[DevCodeName];
-					}
-					else if (AInfo[DevCodeName] < 100000) {
-						AInfo[DevCodeName] = AInfo[DevCodeName];
-					}
-					else if (AInfo[DevCodeName] > 100000) {
-						AInfo[DevCodeName] = 'Incorrect Code Value';
-					}
-					logDebug(DevCodeName + ": " + AInfo[DevCodeName]);
-					editAppSpecific(DevCodeName, AInfo[DevCodeName]);	
-				}
-			}
-		}
-	
-		var SecCodeName = "Section Code";
-		if (AInfo[SecCodeName] > 1) {
-			logDebug('Section Code Already Exists: ' + AInfo[SecCodeName]);
-		}
-		else {
-			var seq4CodeName = null;
-			if (appMatch('*/Subdivision/ConstructionPlan/*')) {
-				seq4CodeName = "Section Code";
-				if (seq4CodeName && typeof (AInfo[SecCodeName]) != "undefined") {
-					AInfo[SecCodeName] = generateSecCode(SecCodeName);
-					if (AInfo[SecCodeName] < 100) {
-						AInfo[SecCodeName] = '00'+AInfo[SecCodeName];
-					}
-					else if (AInfo[SecCodeName] < 1000) {
-						AInfo[SecCodeName] = '0'+AInfo[SecCodeName];
-					}
-					else if (AInfo[SecCodeName] < 10000) {
-						AInfo[SecCodeName] = AInfo[SecCodeName];
-					}
-					else if (AInfo[SecCodeName] > 10000) {
-						AInfo[SecCodeName] = 'Incorrect Code Vaule';
-					}
-					logDebug(SecCodeName + ": " + AInfo[SecCodeName]);
-					editAppSpecific(SecCodeName, AInfo[SecCodeName]);	
-				}
-			}
-		}
-
-		var SubIDName = "Subdivision ID";
-		if (AInfo[SubIDName] > 1) {
-			logDebug('Subdivision ID Already Exists: ' + AInfo[SubIDName]);
-		}
-		else {
-			var seq5CodeName = null;
-			if (appMatch('*/Subdivision/Final Plat/*')) {
-				seq5CodeName = "Subdividion ID";
-				if (seq5CodeName && typeof (AInfo[SubIDName]) != "undefined") {
-					AInfo[SubIDName] = AInfo[ComCodeName] + '-' + AInfo[SubCodeName] + '-' + AInfo[SecCodeName];
-					logDebug(SubIDName + ": " + AInfo[SubIDName]);
-					editAppSpecific(SubIDName, AInfo[SubIDName]);	
-				}
-				else { {AInfo[SubIDName] = 'Incorrect Code Vaule';} }
-			}
-		}
+		overallCodeSchema_CC();
 	}
 
 // 44P: When Adhoc Workflow Task "Sign Posting" Status 'Signs Removed' is submitted, lookup the Record ID from the Standard Choice list, and then remove the Record ID.
@@ -612,14 +535,73 @@ try {
 		//}
 	}
 //Autoemail items
-	/*if (matches(wfStatus, "Additional Information Requested")) {
+	if (matches(wfStatus, "Additional Information Requested") && !appMatch("Planning/LandUse/ZoningOpinion/NA")) {
 		emailPendingApplicantNotification(wfTask, wfStatus)
-	}*/
-//add Parcels from TPA Data table - typically from Intake process, verify parcels are good, then create the APO
+	}
+	
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 
+function emailReadyforPayment() {
+    showMessageDefault = showMessage;
+    //populate email notification parameters
+    var emailSendFrom = "";
+    var emailSendTo = "";
+    var emailCC = "";
+    var emailParameters = aa.util.newHashtable();
+    var fileNames = [];
+
+    getRecordParams4Notification(emailParameters);
+    getAPOParams4Notification(emailParameters);
+    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+    //getACARecordParam4Notification(emailParameters,acaSite);
+    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+    addParameter(emailParameters, "$$wfComment$$", wfComment);
+    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+
+    var applicantEmail = "";
+	var applicantName = "";
+    var assignedTo = getAssignedToStaff();
+    var assignedToEmail = "";
+    var assignedToFullName = "";
+    var contObj = {};
+    contObj = getContactArray(capId);
+    if (typeof(contObj) == "object") {
+        for (co in contObj) {
+            if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null || contObj[co]["contactType"] == "Agent" && contObj[co]["email"] != null || contObj[co]["contactType"] == "Individual" && contObj[co]["email"] != null)
+                applicantEmail += contObj[co]["email"] + ";";
+				applicantName += contObj[co]["firstName"] + " " + contObj[co]["lastName"] + ",";
+        }
+    }
+    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+	addParameter(emailParameters, "$$applicantName$$", applicantName);
+
+    if (assignedTo != null) {
+        assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
+        if (!matches(aa.person.getUser(assignedTo).getOutput().getEmail(), undefined, "", null)) {
+            assignedToEmail = aa.person.getUser(assignedTo).getOutput().getEmail();
+        }
+    }
+    addParameter(emailParameters, "$$assignedToFullName$$", assignedToFullName);
+    addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
+
+	//Load the Parcel numbers
+	var tempAsit = loadASITable("CC-LU-TPA");
+		if (tempAsit) {
+			var TaxIDArray = "";
+			for (b in tempAsit) {
+				if (TaxIDArray == "") {
+					TaxIDArray = tempAsit[b]["Tax ID"];
+				} else { TaxIDArray = TaxIDArray + ", " + tempAsit[b]["Tax ID"]; }
+			}
+			addParameter(emailParameters, "$$TaxIdArray$$",TaxIDArray);	
+		}
+	var emailTemplate = "WTUA_PLANNING_READYFORPAYMENT";
+	sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
 
 /*07-2020 Boucher old 21p 
 	if (matches(wfTask,'Review Consolidation','Community Meeting') && matches(wfStatus,'Move to CPC')) {

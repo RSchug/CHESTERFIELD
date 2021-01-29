@@ -16,11 +16,13 @@ try {
 		loadCustomScript("WTUA_EXECUTE_DIGEPLAN_SCRIPTS_BUILD");
 	}
 //For PROFFER
-	if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && wfTask == 'Review Distribution' && wfStatus == 'Routed' && appHasCondition("Budget","Applied",null,null)) {
-		activateTask("Budget and Management Review");
-	}
-	if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family"))&& AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && wfTask == 'Review Distribution' && wfStatus == 'Routed' && appHasCondition("Budget","Applied",null,null)) {
-		activateTask("Budget and Management Review");
+	if (wfTask == 'Review Distribution' && wfStatus == 'Routed for Review') {
+		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && (parcelHasCondition_TPS("Budget","Applied") || parcelHasCondition_TPS("Budget","Applied(Applied)"))) {
+			addAdHocTask("ADHOC_WF","Budget and Management Review","");
+		}
+		if((appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family")) && AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" && (parcelHasCondition_TPS("Budget","Applied") || parcelHasCondition_TPS("Budget","Applied(Applied)"))) {
+			addAdHocTask("ADHOC_WF","Budget and Management Review","");
+		}
 	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);

@@ -32,14 +32,18 @@ try {
 			}
 		}
 	}
-	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 	//Fee
-if (AInfo['Plat Type'] == 'Family Subdivision' || AInfo['Plat Type'] == 'Parcel Subdivision'){
-		addFee("PARCELACRE","CC-PLANNING","FINAL",1,"N");
+		if (AInfo['Plat Type'] == 'Family Subdivision' || AInfo['Plat Type'] == 'Parcel Subdivision'){
+			updateFee("PARCELACRE","CC-PLANNING","FINAL",1,"N");
+		}
+		if (AInfo['Plat Type'] == 'Line Modification' || AInfo['Plat Type'] == 'Amendment Plat'){
+			updateFee("FINALPLAT2","CC-PLANNING","FINAL",1,"N");
+		}
 	}
-if (AInfo['Plat Type'] == 'Line Modification' || AInfo['Plat Type'] == 'Amendment Plat'){
-		addFee("FINALPLAT2","CC-PLANNING","FINAL",1,"N");
-}}
+	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+		invoiceAllFees(capId);
+	}
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }

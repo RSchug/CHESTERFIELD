@@ -1,5 +1,5 @@
 //Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
-if (publicUser) {
+if (publicUser && !matches(capStatus,'Submitted',null)) { 
     addAdHocTask("ADHOC_WF","Document Submitted Online Utilities","");
     }
     function addAdHocTask(adHocProcess, adHocTask, adHocNote)

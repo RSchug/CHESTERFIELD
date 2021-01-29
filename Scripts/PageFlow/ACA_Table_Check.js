@@ -1,14 +1,22 @@
 try {
-	var sessiontabledata = getASITablesRowsFromSession4ACA(CC-LU-TPA);
-	if (sessiontabledata == false) {
-		showMessage = true;
-		comment('You need to enter at least 1 Tax ID in the table to continue.');
-		cancel = true;
-	}
+	showDebug = true;				
+	var sessiontabledata = getASITablesRowsFromSession4ACA_local('CC-LU-TPA');
+	if (sessiontabledata) {
+		for (b in sessiontabledata) {
+			if (sessiontabledata[b]["Tax ID"] > 0) {
+				logDebug('There is data in Tax ID');
+			} else {
+				showMessage = true;
+				comment('You need to enter at least 1 Tax ID in the table to continue.');
+				cancel = true;
+			}
+		}
+	} else if (sessiontabledata == false) { showMessage = true; comment('There is no table avaialable to pull data from'); cancel = true; }
+	
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
-function getASITablesRowsFromSession4ACA(tableName) {
+function getASITablesRowsFromSession4ACA_local(tableName) {
 	var gm = cap.getAppSpecificTableGroupModel()
 	var ta = gm.getTablesMap();
 	var tai = ta.values().iterator();
@@ -43,20 +51,6 @@ function getASITablesRowsFromSession4ACA(tableName) {
 	}
 	return false;
 }
-/*   var tableNames = (arguments.length > 1 ? arguments[1] : null); // list of tables
-    var tableNameArray = getTableName(capId);
-    if (tableNameArray == null) {
-        showMessage = true;
-		comment('No Table in the Pageflow.');
-		cancel = true;
-    }
-    for (loopk in tableNameArray) {
-        var tableName = tableNameArray[loopk];
-        if (tableNames && !exists(tableName, tableNames))
-            continue;
-        
-        var targetAppSpecificTable = localLoadASITable(tableName);
-    }
 	// Get Public User Email Address
 	var debugEmailTo = "";
 	var publicUserEmail = "";
@@ -88,27 +82,3 @@ function getASITablesRowsFromSession4ACA(tableName) {
 		aa.sendMail("NoReply-" + servProvCode + "@accela.com", debugEmailTo, "", debugEmailSubject, "Debug: \r" + br + debug);
 		showDebug = false;
 	}
-
-function localLoadASITable(tname) {
-    // Returns a single ASI Table array of arrays
-    // Optional parameter, cap ID to load from
-    var itemCap = (arguments.length > 1 ? arguments[1] : capId); // use cap ID specified in args
-
-    var gm = aa.appSpecificTableScript.getAppSpecificTableGroupModel(itemCap).getOutput();
-    var ta = gm.getTablesArray()
-        var tai = ta.iterator();
-    while (tai.hasNext()) {
-        var tsm = tai.next();
-        var tn = tsm.getTableName();
-
-        if (!tn.equals(tname))
-            continue;
-        if (tsm.rowIndex.isEmpty()) {
-            showMessage = true;
-			comment('You need to enter at least 1 Tax ID in the table to continue.');
-			cancel = true;
-        }
-		logDebug("Table has data in it");
-		return true;
-    }
-} */

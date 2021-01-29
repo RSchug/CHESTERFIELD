@@ -7,7 +7,9 @@ try {
 		activateTask("Fire and Life Safety Review");
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
+		activateTask("Police Review");
 		activateTask("VDOT Review");
+		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
 	}
 	if (wfTask == 'Review Distribution' && (wfStatus == 'Routed for Residential and Commercial' || wfStatus == 'Routed for Residential Review')) {
@@ -20,9 +22,11 @@ try {
 		activateTask("County Library Review");
 		activateTask("Parks and Recreation Review");
 		activateTask("Planning Review");
+		activateTask("Police Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
+		activateTask("Pre-Application Meeting");
 		if (wfStatus == 'Routed for Residential and Commercial') {
 			activateTask("General Services Review");
 		}
@@ -37,12 +41,33 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Police Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");
+		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
 	}
-	//12-2020 auto-emails 11.1EMAIL
+//Set due dates to 3 days out per ELM Due Date Doc
+	if (wfTask == 'Review Distribution' && matches(wfStatus,'Routed for Towers Review','Routed for Residential and Commercial','Routed for Residential Review','Routed for Commercial Review')) {
+		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
+		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','General Services Review','Radio Shop Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review','Pre-Application Meeting'];
+		for (var ind in taskAuditArray) {
+			var wfaTask = taskAuditArray[ind];
+			for (var i in workflowTasks) {
+				var wfbTask = workflowTasks[i];
+				if (wfbTask.getActiveFlag() == 'Y') {
+					if (wfaTask == wfbTask.getTaskDescription()) {
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,3,true));
+					}
+				}
+			}
+		}
+	}
+//12-2020 auto-emails 11.1EMAIL
 	if (wfTask == 'Review Consolidation') {
+		emailPreAppComplete();
+	}
+	if (wfTask == 'Inquiry Submittal' && wfStatus == 'Pre-Application Meeting Waived') {
 		emailPreAppComplete();
 	}
 	
@@ -114,8 +139,12 @@ function emailPreAppComplete() {
 		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
-	else if (applicantEmail != "" && wfStatus == 'Additional Information Required') {
+	else if (applicantEmail != "" && wfStatus == 'Additional Information Requested') {
 		var emailTemplate = "WTUA_PRE_APP_NEED_INFO";
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    }
+	else if (applicantEmail != "" && wfStatus == 'Pre-Application Meeting Waived') {
+		var emailTemplate = "WTUA_PRE_APP_MEET_WAIVED";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
 	else if (applicantEmail == "" && assignedToEmail != "") {

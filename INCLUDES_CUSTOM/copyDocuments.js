@@ -1,4 +1,5 @@
 function copyDocuments(pFromCapId, pToCapId) {
+	//01-2021 db added code for this
     if (pToCapId == null)
         var vToCapId = capId;
     else
@@ -41,12 +42,17 @@ function copyDocuments(pFromCapId, pToCapId) {
                 if (documentFound) continue;
 				
 				// download the document content
-				var useDefaultUserPassword = true;
+				var useDefaultUserPassword = false;
 				//If useDefaultUserPassword = true, there is no need to set user name & password, but if useDefaultUserPassword = false, we need define EDMS user name & password.
-				var EMDSUsername = null;
-				var EMDSPassword = null;
+				var EMDSUsername = "laserfiche";
+				var EMDSPassword = "pass123";
+				for(l in documentObject) if(typeof(documentObject[l])!="function"){{aa.print("loop attributes: " + l + " : " +documentObject[l]);}}
+				for(l in documentObject) if(typeof(documentObject[l])=="function"){{aa.print("loop methods: " + l);}}
 
-				var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+
+				//var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				//var downloadResult = aa.document.downloadFile2Disk(documentObject, "", EMDSUsername, EMDSPassword, useDefaultUserPassword);
+				var downloadResult = aa.document.downloadFile2Disk(documentObject,"","","", true);
 				if (downloadResult.getSuccess()) {
 					var path = downloadResult.getOutput();
 					logDebug("path=" + path);

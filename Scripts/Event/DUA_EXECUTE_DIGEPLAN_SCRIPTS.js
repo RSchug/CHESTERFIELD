@@ -9,7 +9,8 @@ try {   //DUA_EXECUTE_DIGEPLAN_SCRIPTS
 	var resubmitDocStatusOnResubmit = "Uploaded";
 
 	//Workflow Specific variables
-	var routingTask = "Review Distribution";
+	if (appMatch('EnvEngineering/*/*/*')) { var routingTask = "Review Consolidation"; 
+	} else { var routingTask = "Review Distribution"; }
 	var routingStatus = "Routed for Review";
 	var routingResubmittalStatus = "Revisions Received";
 

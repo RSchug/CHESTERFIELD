@@ -54,7 +54,8 @@ try {
 				var newCapIdString = getNextChildCapId(capId, newAppTypeString, "-");
 				var newCapRelation = "Child";
 				var srcCapId = capId;
-				var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId);
+				var copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "LPs", "Owners", "Parcels","Documents"];
+				var newCapId = createCap_TPS(newAppTypeString, newCapName, newCapIdString, newCapRelation, srcCapId, copySections);
 				if (newCapId) {
 					showMessage = true;
 					comment("<b>Created " + (newCapRelation ? newCapRelation + " " : "")
@@ -101,13 +102,30 @@ try {
 	///New EE script
 	if (AInfo["Type of Building"] == "Single-Family Dwelling" || AInfo["Type of Building"] == "Multi-Family Dwelling"){
 		if (wfStatus == 'Issued'){
+			if (AInfo["Nature of Work"] == "Above-ground swimming pool with barrier" || 
+			AInfo["Nature of Work"] == "Additions and other accessory structures" || 
+			AInfo["Nature of Work"] == "Alterations, and converting deck/porch/garage to finished space" || 
+			AInfo["Nature of Work"] == "Deck, carport, gazebo, dormers, greenhouse, unheated pool house, retaining wall, boat dock with roof" || 
+			AInfo["Nature of Work"] == "Detached garages (no second floor occupiable space), double-door car shed, and finished pool house" || 
+			AInfo["Nature of Work"] == "Florida rooms, attached garages, detached garages with occupiable space" || 
+			AInfo["Nature of Work"] == "In-ground swimming pool with barrier" || 
+			AInfo["Nature of Work"] == "Industrialized Building" || 
+			AInfo["Nature of Work"] == "Manufactured or Mobile Home in Mobile Home Park" || 
+			AInfo["Nature of Work"] == "Manufactured or Mobile Home on Private Property" || 
+			AInfo["Nature of Work"] == "New Construction of Single Family Dwelling" || 
+			AInfo["Nature of Work"] == "Porch and chimney additions" || 
+			AInfo["Nature of Work"] == "Relocation (house moving)" || 
+			AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in change in use of square footage" || 
+			AInfo["Nature of Work"] == "Renovation, alteration, conversion-resulting in no change in use of square footage" || 
+			AInfo["Nature of Work"] == "Shed > 256sqft.") {
 			//Variables for the EE Inspector based on Parcel field "Inspection Dist" and Standard Choice 'InspectionAssignmentEnvEngineering'
-			var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
-			//var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
-			var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
-			var InspAssignment = null;
-				if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
-				scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled based on Permit Issued");
+				var ParcelInspectorEnvEng = AInfo["ParcelAttribute.InspectionDistrict"];
+				//var InspAssignment = lookup("InspectionAssignmentEnvEngineering",ParcelInspectorEnvEng);
+				var iInspector = assignInspection_CHESTERFIELD(null); // Get Inspector
+				var InspAssignment = null;
+					if (iInspector && iInspector.getGaUserID()) InspAssignment = iInspector.getGaUserID();
+					scheduleInspection("E and SC",15,InspAssignment,null,"Auto Scheduled based on Permit Issued");
+			}
 		}
 	}
 } catch (err) {

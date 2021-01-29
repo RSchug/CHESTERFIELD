@@ -31,8 +31,15 @@ try {
 			}
 		}
 	}
+//Fees
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
+		updateFee("SUBEXCEPTION","CC-PLANNING","FINAL",1,"N");
+	}
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code, Subdivision Code, and Section Code if they exist on related records, whatever is related, then filter on the ASI
 	if (wfTask == 'Application Submittal' && wfStatus == 'Accepted') {
+		// auto-invoice fee
+		invoiceAllFees(capId);
+		
 		if (parentCapId != null) {
 			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');
 			copyASIfromParent_TPS(capId,parentCapId,'Subdivision Code','Subdivision Code');
@@ -41,7 +48,7 @@ try {
 		else if (AInfo['Related Case Number'] != null) {
 			if (AInfo['Related Case Number'].toUpperCase().indexOf("CP") >= 0) {
 				var recType = "Planning/Subdivision/ConstructionPlan/NA"; }
-			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0) {
+			else if (AInfo['Related Case Number'].toUpperCase().indexOf("PP") >= 0 || AInfo['Related Case Number'].toUpperCase().indexOf("TS") >= 0) {
 				var recType = "Planning/Subdivision/Preliminary/NA"; }	
 		}
 		copyASIfromParent(capId,recType,'Community Code','Community Code');

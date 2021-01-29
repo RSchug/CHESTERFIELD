@@ -31,9 +31,15 @@ try {
 			}
 		}
 	}
-	if (wfTask == 'Application Submittal' && wfStatus == 'Ready for Payment') {
+	if (wfTask == 'Application Submittal' && wfStatus == 'Calculate Fees') {
 	//49P Final Plat Fee
-		updateFee("FINALPLAT1","CC-PLANNING","FINAL",1,"N");
+		if (AInfo['Case Type'] == 'Amended Plat' || AInfo['Case Type'] == 'Line Modification'){
+			updateFee("FINALPLAT2","CC-PLANNING","FINAL",1,"N");
+		}
+		else if (AInfo['Case Type'] == 'New') {
+			updateFee("FINALPLAT1","CC-PLANNING","FINAL",1,"N");
+		}
+
 	//56.1p 11-2020 Code Schema update for inheritence - copying Community Code, Subdivision Code, and Section Code if they exist on related records, whatever is related, then filter on the ASI
 		if (parentCapId != null) {
 			copyASIfromParent_TPS(capId,parentCapId,'Community Code','Community Code');

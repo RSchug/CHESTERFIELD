@@ -43,7 +43,7 @@ try {
 				newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
 	//Renamed Amusement to Master on 9/15/2020            newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "NA";
 				logDebug("AmusementDevice Installation")
-				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels", "Detailed Description"]; // Excludes Additional Info, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
 				var expType = "Semi-annual";
 				var expMonths = 6;
 				newCapIdString = null;
@@ -53,7 +53,7 @@ try {
 				&& AInfo["Commercial or Residential"] == "Commercial") {
 				newAppTypeString = appTypeArray[0] + "/" + appTypeArray[1] + "/" + appTypeArray[2] + "/" + "Master";
 				newCapIdString = null;
-				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "GIS Objects", "Owners", "Parcels"]; // Excludes Additional Info, Cap Detail, Conditions, Contacts, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
+				copySections = ["Addresses", "ASI", "ASIT", "Cap Name", "Cap Short Notes", "Conditions", "Contacts", "GIS Objects", "Owners", "Parcels", "Detailed Description"]; // Excludes Additional Info, Conditions, LPs, Comments, Detailed Description, Documents, Education, ContEducation, Examination
 
 				expField = 'Annual Quarter'
 				expType = 'Annual'
@@ -84,7 +84,7 @@ try {
 		  if (newCapId) {
 				// This code gives the License the same # as tha APP 
 				newCapIdString = newCapId.getCustomID();
-				var editIdString = capIDString.substr(0, 14) + 'A';
+				var editIdString = capIDString.substr(0, 14) + 'M';
 				logDebug("newCapId: " + newCapId + ", newCapIdString: " + newCapIdString + ", editIdString: " + editIdString);
 				if (editIdString) {   // Update Record ID
 					  aa.cap.updateCapAltID(newCapId, editIdString);
