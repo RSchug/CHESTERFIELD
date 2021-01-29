@@ -1,6 +1,6 @@
 try {
 //Any Building Record with attachments creates an ADHOC task 'Document Submitted Online'
-	if (publicUser) {
+	if (publicUser && !matches(capStatus,'Submitted',null)) { 
 		addAdHocTask("ADHOC_WF","Document Submitted Online","");
     }
 //in DUA_EXECUTE_DIGEPLAN_SCRIPTS we update AppStatus when docs are uploaded by publicuser via the Resubmit button...
