@@ -112,9 +112,9 @@ try {
 	}
 //Check for all Task complete before closing - db 01-2021
 	if (matches(wfTask,'BOS Hearing','Case Complete','GIS Update') && matches(wfStatus,'Denied','Create Conditions and Close Case','Closed','Appeal','Complete')) {
-		var alltaskinfo = allTasksComplete();
+		var alltaskinfo = allTasksComplete_Local();
 		logDebug("alltaskinfo = " + alltaskinfo);
-		if (allTasksComplete() == false) {
+		if (allTasksComplete_Local() == false) {
 			cancel = true;
 			showMessage = true;
 			comment("There appears to be Workflow Tasks that are still Active - please close them appropriately.");
@@ -138,3 +138,22 @@ try {
 } catch (err) {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
+
+function allTasksComplete_Local(stask) // added here for Chesterfield - trying to debug
+	{
+	var ignoreArray = new Array();
+	for (var i=1; i<arguments.length;i++) 
+		ignoreArray.push(arguments[i])
+
+	// returns true if any of the subtasks are active
+	var taskResult = aa.workflow.getTasks(capId);
+	if (taskResult.getSuccess())
+		{ taskArr = taskResult.getOutput(); }
+	else
+		{ logDebug( "**ERROR: getting tasks : " + taskResult.getErrorMessage()); return false }
+		
+	for (xx in taskArr)
+		if (taskArr[xx].getProcessCode().equals(stask) && taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray))
+			return false;
+	return true;
+	}
