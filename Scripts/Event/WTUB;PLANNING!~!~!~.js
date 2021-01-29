@@ -153,7 +153,7 @@ function allTasksComplete_Local(stask) // added here for Chesterfield - trying t
 		{ logDebug( "**ERROR: getting tasks : " + taskResult.getErrorMessage()); return false }
 		
 	for (xx in taskArr)
-		if (taskArr[xx].getProcessCode().equals(stask) && taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray))
-			return false;
-	return true;
+		if (taskArr[xx].getProcessCode().equals(stask) && taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
+			return false; }
+		else { return true; }
 	}
