@@ -139,7 +139,7 @@ try {
     logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
 
-function allTasksComplete_Local(stask) // added here for Chesterfield - trying to debug
+function allTasksComplete_Local() // added here for Chesterfield - trying to debug
 	{
 	var ignoreArray = new Array();
 	for (var i=1; i<arguments.length;i++) 
@@ -153,7 +153,8 @@ function allTasksComplete_Local(stask) // added here for Chesterfield - trying t
 		{ logDebug( "**ERROR: getting tasks : " + taskResult.getErrorMessage()); return false }
 		
 	for (xx in taskArr)
-		if (taskArr[xx].getProcessCode().equals(stask) && taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
+		if (taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
+			logDebug( "active tasks : " + taskArr[xx].getTaskDescription());
 			return false; }
 		else { return true; }
 	}

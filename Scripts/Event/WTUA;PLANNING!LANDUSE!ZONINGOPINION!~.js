@@ -139,7 +139,7 @@ function emailPreAppComplete() {
 		var emailTemplate = "WTUA_PRE_APP_MEET_COMPLETE";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
-	else if (applicantEmail != "" && wfStatus == 'Additional Information Required') {
+	else if (applicantEmail != "" && wfStatus == 'Additional Information Requested') {
 		var emailTemplate = "WTUA_PRE_APP_NEED_INFO";
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
     }
