@@ -152,9 +152,10 @@ function allTasksComplete_Local() // added here for Chesterfield - trying to deb
 	else
 		{ logDebug( "**ERROR: getting tasks : " + taskResult.getErrorMessage()); return false }
 		
-	for (xx in taskArr)
+	for (xx in taskArr) {
 		if (taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
 			logDebug( "active tasks : " + taskArr[xx].getTaskDescription());
 			return false; }
-		else { return true; }
+		}
+	return true;
 	}
