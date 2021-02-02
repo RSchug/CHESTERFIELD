@@ -3525,6 +3525,39 @@ function copyDocuments(pFromCapId, pToCapId) {
 	var newDocStatus = null;
 	if (arguments.list > 5) newDocStatus = arguments[5];
 
+//test coed from accela
+
+	var vDocList = aa.document.getDocumentListByEntity(capId, "CAP").getOutput();
+if (vDocList) {
+    for (var vCounter = 0; vCounter < vDocList.size(); vCounter++) {
+        var vDocModel = vDocList.get(vCounter);
+        var vDocGroup = vDocModel.docGroup;
+        var vDocCat = vDocModel.docCategory;
+        for (l in vDocModel)
+            if (typeof(vDocModel[l]) != "function") { {
+                    aa.print("loop attributes: " + l + " : " + vDocModel[l]);
+                }
+            }
+        for (m in vDocModel)
+            if (typeof(vDocModel[m]) == "function") { {
+                    aa.print("lmettods: " + m);
+                }
+            }
+
+        vDocModel.setCapID(vToCapId);
+        vDocModel.setEntityID(vToCapId.toString());
+
+        //holdFile=downloadFile2Disk(vDocModel,"","","", true)
+        //aa.print("new file: " +holdFile);
+
+        //vDocModel.setFileKey(holdFile);
+        //aa.document.updateDocument(vDocModel);
+        aa.document.createDocument(vDocModel);
+    }
+}
+	
+// to here
+
 	var capDocResult = aa.document.getDocumentListByEntity(pFromCapId, "CAP");
 	if (capDocResult.getSuccess()) {
 		if (capDocResult.getOutput().size() > 0) {
@@ -3559,6 +3592,7 @@ function copyDocuments(pFromCapId, pToCapId) {
 				var EMDSPassword = "pass123";
 				for(l in documentObject) if(typeof(documentObject[l])!="function"){{aa.print("loop attributes: " + l + " : " +documentObject[l]);}}
 				for(l in documentObject) if(typeof(documentObject[l])=="function"){{aa.print("loop methods: " + l);}}
+
 
 				//var downloadResult = aa.document.downloadFile2Disk(documentObject, documentObject.getModuleName(), EMDSUsername, EMDSPassword, useDefaultUserPassword);
 				//var downloadResult = aa.document.downloadFile2Disk(documentObject, "", EMDSUsername, EMDSPassword, useDefaultUserPassword);

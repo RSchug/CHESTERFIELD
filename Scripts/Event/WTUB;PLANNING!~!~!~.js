@@ -151,11 +151,12 @@ function allTasksComplete_Local() // added here for Chesterfield - trying to deb
 		{ taskArr = taskResult.getOutput(); }
 	else
 		{ logDebug( "**ERROR: getting tasks : " + taskResult.getErrorMessage()); return false }
-		
+	
+	var isActivecount = 0;
 	for (xx in taskArr) {
 		if (taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
-			logDebug( "active tasks : " + taskArr[xx].getTaskDescription());
+			logDebug( "active tasks : " + taskArr[xx].getTaskDescription()); isActivecount += 1;
 			return false; }
 		}
-	return true;
+	if (isActivecount == 0) { return true; }
 	}
