@@ -9,6 +9,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
+		activateTask("Police Review");
 		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}
@@ -25,6 +26,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
+		activateTask("Police Review");
 		activateTask("Technical Review Committee");
 		if (wfStatus == 'Routed for Residential and Commercial') {
 			activateTask("General Services Review");
@@ -41,6 +43,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
 		activateTask("Schools Research and Planning Review");
+		activateTask("Police Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");
 		activateTask("Technical Review Committee");
