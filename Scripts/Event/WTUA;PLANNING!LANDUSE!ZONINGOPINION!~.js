@@ -9,6 +9,7 @@ try {
 		activateTask("Utilities Review");
 		activateTask("Police Review");
 		activateTask("VDOT Review");
+		activateTask("Schools Research and Planning Review");
 		activateTask("Pre-Application Meeting");
 		deactivateTask('Default');
 	}
@@ -41,6 +42,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Schools Research and Planning Review");
 		activateTask("Police Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");

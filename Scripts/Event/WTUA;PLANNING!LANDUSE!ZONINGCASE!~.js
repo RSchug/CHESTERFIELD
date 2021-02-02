@@ -8,6 +8,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Schools Research and Planning Review");
 		activateTask("Technical Review Committee");
 		deactivateTask("Default");
 	}
@@ -39,6 +40,7 @@ try {
 		activateTask("Planning Review");
 		activateTask("Utilities Review");
 		activateTask("VDOT Review");
+		activateTask("Schools Research and Planning Review");
 		activateTask("General Services Review");
 		activateTask("Radio Shop Review");
 		activateTask("Technical Review Committee");
