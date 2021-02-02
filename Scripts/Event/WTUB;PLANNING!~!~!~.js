@@ -154,7 +154,7 @@ function allTasksComplete_Local() // added here for Chesterfield - trying to deb
 	
 	var isActivecount = 0;
 	for (xx in taskArr) {
-		if (taskArr[xx].getActiveFlag().equals("Y") && !exists(taskArr[xx].getTaskDescription(),ignoreArray)) {
+		if (taskArr[xx].getActiveFlag().equals("Y") && !taskArr[xx].getTaskDescription().equals(wfTask)) {
 			logDebug( "active tasks : " + taskArr[xx].getTaskDescription()); isActivecount += 1;
 			return false; }
 		}
