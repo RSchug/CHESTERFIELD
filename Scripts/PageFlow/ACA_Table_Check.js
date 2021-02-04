@@ -2,7 +2,7 @@ try {
 	showDebug = true;				
 	var sessiontabledata = getASITablesRowsFromSession4ACA_local('CC-LU-TPA');
 	if (sessiontabledata) {
-		for (b in sessiontabledata) {
+		/*for (b in sessiontabledata) {
 			if (sessiontabledata[b]["Tax ID"] > 0) {
 				logDebug('There is data in Tax ID');
 			} else {
@@ -10,7 +10,8 @@ try {
 				comment('You need to enter at least 1 Tax ID in the table to continue.');
 				cancel = true;
 			}
-		}
+		}*/
+		logDebug('There is data in Tax ID');
 	} else if (sessiontabledata == false) { showMessage = true; comment('There is no table avaialable to pull data from'); cancel = true; }
 	
 } catch (err) {
@@ -23,7 +24,7 @@ function getASITablesRowsFromSession4ACA_local(tableName) {
 	while (tai.hasNext()) {
 		var tsm = tai.next();
 		if (tsm.rowIndex.isEmpty())
-			continue;
+			return false; //continue;
 
 		var asitRow = new Array;
 		var asitTables = new Array;
