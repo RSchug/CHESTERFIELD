@@ -22,9 +22,9 @@ try {
 			var wfbTask = workflowTasks[i];
 			if (wfbTask.getActiveFlag() == 'Y') {
 				if (capStatus == 'Submit Signed Plat') {
-					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
+					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,false));
 				}
-				else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,true)); }
+				else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,false)); }
 			}
 		}
 	}
