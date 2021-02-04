@@ -14,16 +14,14 @@ try {
 		activateTask("Water Quality Review");
 		deactivateTask("Default");
 	//Set due dates to 5 days out per ELM Due Date Doc
+	}	
+	if (wfTask == 'Review Distribution' && matches(wfStatus,'Routed for Review','Manual Routing')) {
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
-		var taskAuditArray = ['Airport Review','Assessor Review','Building Inspection Review','Budget and Management Review','Community Enhancement Review','County Library Review','Chesterfield Historical Society Review','Health Department Review','CDOT Review','Economic Development Review','Environmental Engineering Review','Fire and Life Safety Review','GIS-EDM Utilities Review','GIS-IST Review','Parks and Recreation Review','Planning Review','Police Review','Real Property Review','Schools Research and Planning Review','County Attorney Review','Utilities Review','VDOT Review','Water Quality Review'];
-		for (var ind in taskAuditArray) {
-			var wfaTask = taskAuditArray[ind];
-			for (var i in workflowTasks) {
-				var wfbTask = workflowTasks[i];
-				if (wfbTask.getActiveFlag() == 'Y') {
-					if (wfaTask == wfbTask.getTaskDescription()) {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
-					}
+		for (var i in workflowTasks) {
+			var wfbTask = workflowTasks[i];
+			if (wfbTask.getActiveFlag() == 'Y') {
+				if (wfaTask == wfbTask.getTaskDescription()) {
+					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,true));
 				}
 			}
 		}
