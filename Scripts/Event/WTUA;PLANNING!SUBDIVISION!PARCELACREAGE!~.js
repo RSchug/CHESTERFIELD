@@ -26,9 +26,9 @@ try {
 				var wfbTask = workflowTasks[i];
 				if (wfbTask.getActiveFlag() == 'Y') {
 					if (capStatus == 'Submit Signed Plat') {
-						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5));
+						editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7));
 					}
-					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10)); }
+					else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,14)); }
 				}
 			}
 		//}
