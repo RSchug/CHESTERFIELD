@@ -16,15 +16,15 @@ try {
 		deactivateTask("Default");
 	}	
 	if (wfTask == 'Review Distribution' && matches(wfStatus,'Routed for Review','Manual Routing')) {		
-	//per the ELM Planning Due Dates Doc
+	//per the ELM Planning Due Dates Doc - removed true from dateAdd function 02-2021
 		var workflowTasks = aa.workflow.getTasks(capId).getOutput();
 		for (var i in workflowTasks) {
 			var wfbTask = workflowTasks[i];
 			if (wfbTask.getActiveFlag() == 'Y') {
 				if (capStatus == 'Submit Signed Plat') {
-					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5,false));
+					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,5));
 				}
-				else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10,false)); }
+				else { editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,10)); }
 			}
 		}
 	}
