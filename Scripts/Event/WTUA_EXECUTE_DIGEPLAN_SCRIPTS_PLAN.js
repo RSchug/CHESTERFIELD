@@ -42,6 +42,8 @@ if (exists(wfTask,routingTask) && exists(wfStatus,routingStatusArray)) {
 //Update Doc Type to Commnents and send email to Applicant on consolidationTask Resubmit
 if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 	logDebug("<font color='blue'>Inside workflow: " + wfTask + "</font>");
+	//02-2021 Moved here so it fires withou consieration of DigEplan Mark-up
+	emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 //Update the mark up report to and add Comment on end of Doc Status
 	var docArray = aa.document.getCapDocumentList(capId,currentUserID).getOutput();
 	if(docArray != null && docArray.length > 0) {
@@ -53,7 +55,6 @@ if (exists(wfTask,consolidationTask) && exists(wfStatus,ResubmitStatus)) {
 				aa.document.updateDocument(docArray[d]);
 				//updateDocPermissionsbyCategory(docArray[d],"Comments");  no work with laserfiche
 				enableToBeResubmit(docArray[d]["documentNo"],["Review Complete-Comments"]);
-				emailReviewCompleteNotification(ResubmitStatus,ApprovedStatus,docGroupArrayModule);
 			}
 			if (!matches(docArray[d]["docStatus"],"Review Complete-Comments","Review Complete")) {
 				if(docArray[d].getAllowActions() != null) disableResubmit(docArray[d].getDocumentNo(),['Revisions Requested']);;
