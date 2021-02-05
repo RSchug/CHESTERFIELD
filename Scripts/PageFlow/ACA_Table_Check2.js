@@ -52,9 +52,9 @@ try {
 function _loadASITable(tname) {
     // Returns a single ASI Table array of arrays
     // Optional parameter, cap ID to load from
-    var itemCap = (arguments.length > 1 ? arguments[1] : capId); // use cap ID specified in args
+    //var itemCap = (arguments.length > 1 ? arguments[1] : capId); // use cap ID specified in args
 
-    var gm = aa.appSpecificTableScript.getAppSpecificTableGroupModel(itemCap).getOutput();
+    var gm = aa.appSpecificTableScript.getAppSpecificTableGroupModel().getOutput();
     var ta = gm.getTablesArray()
     var tai = ta.iterator();
     while (tai.hasNext()) {
