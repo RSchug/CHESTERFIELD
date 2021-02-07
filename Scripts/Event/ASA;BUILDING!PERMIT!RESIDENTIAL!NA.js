@@ -125,6 +125,9 @@ addFee("PLANNING","CC-BLD-RES","FINAL",1,"Y")}
 if (AInfo["Nature of Work"] == "Industrialized Building"  && !feeExists("PLANNING")){
 addFee("PLANNING","CC-BLD-RES","FINAL",1,"Y")}
 
+if (AInfo["Nature of Work"] == "Manufactured or Mobile Home on Private Property"  && !feeExists("PLANNING")){
+addFee("PLANNING","CC-BLD-RES","FINAL",1,"Y")}
+
 //if (AInfo["Nature of Work"] == "Administrative"  && !feeExists("ADMIN")){
 //    addFee("ADMIN","CC-BLD-ADMIN","FINAL",1,"Y")}
 
