@@ -1,21 +1,20 @@
-comment("Test form ISA");
 comment("Get the Inspection Count for this type");
 var inspResult = aa.inspection.getInspection(capId, inspId);
 inspObj = inspResult.getOutput();
 inspObj.setTimeTotal(Number(getinsptypecount(capId, inspType)));
 var result = aa.inspection.editInspection(inspObj);
-
-if (getLastInspectioncomment(inspType) != "No Comments") {
-	var reqcomment = getInspectionComment(capId, inspId);
-	if (reqcomment != "No Comment" && reqcomment != null) {
-		inspcomment = reqcomment + " Last Result: " + getLastInspectioncomment(inspType);
-		editInspectionComment(capId, inspId, inspcomment);
-	}
-	else {
-		editInspectionComment(capId, inspId, getLastInspectioncomment(inspType));
-	}
-}
-
+//
+//if (getLastInspectioncomment(inspType) != "No Comments") {  //removed on Feb 8 2021 to not populate previous inspection comments into the inspection request comment//
+//	var reqcomment = getInspectionComment(capId, inspId);
+//	if (reqcomment != "No Comment" && reqcomment != null) {
+//		inspcomment = reqcomment + " Last Result: " + getLastInspectioncomment(inspType);
+//		editInspectionComment(capId, inspId, inspcomment);
+//	}
+//	else {
+//		editInspectionComment(capId, inspId, getLastInspectioncomment(inspType));
+//	}
+//}
+//
 //For PROFFERs Commercial//
 if (inspType == "Building Final" ){
 		if(appMatch("Building/Permit/Commercial/NA") && AInfo["Nature of Work"] == "New Construction" && (parcelHasCondition_TPS("Budget","Applied") || parcelHasCondition_TPS("Budget","Applied(Applied)"))) {
