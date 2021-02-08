@@ -56,7 +56,7 @@ function addFees_ZoneCase() {
             var feeCode = requestUseFeeMap[requestUseType];
             if (!feeCode) continue;
             if (typeof (feeQty[feeCode]) == "undefined") feeQty[feeCode] = 0;
-            if (exists(feeCode, ["AMEND1","AMEND2","DAYCARE","RECFACILITY","AMEND4","UTILITY","CTOWERCU","CTOWER"])) // Fees not based on acreage. 01-2021 db added ctowers per testing
+            if (exists(feeCode, ["AMEND1","AMEND2","DAYCARE","DAYCARECU","RECFACILITY","AMEND4","UTILITY","CTOWERCU","CTOWER"])) // Fees not based on acreage. 01-2021 db added ctowers per testing
                 feeQty[feeCode] = 1;
             else
                 feeQty[feeCode] += acreage;
@@ -65,6 +65,6 @@ function addFees_ZoneCase() {
     }
     for (var feeCode in feeQty) {
         logDebug("Adding Fee " + feeCode + ", Qty: " + feeQty[feeCode]);
-        addFee(feeCode, "CC-PLANNING", "FINAL", feeQty[feeCode], "N");
+        updateFee(feeCode, "CC-PLANNING", "FINAL", feeQty[feeCode], "N");
     }
 }
