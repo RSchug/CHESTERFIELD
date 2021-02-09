@@ -122,7 +122,7 @@ try {
 	logDebug("Begin Custom Pageflow Code");
 
 	var sessiontabledata = loadASITables4ACA_TPS();// Load ASITables into Arrays
-	}
+
 	if (sessiontabledata != "undefined") { // Check if ASITable array exists. 
 		logDebug("ASITable: " + sessiontabledata);
 		
