@@ -8,6 +8,7 @@
 | Action# : ACA CHECK PARCEL
 |
 | Notes   : 09-2020 Boucher created for Multiple parcel pull and check from a table
+|		  : 02-2021 Boucher testing in SUPP ACA for Appeal record only - need to figure how to get to TaxID - first row > 1..??
 |
 /------------------------------------------------------------------------------------------------------/
 | START User Configurable Parameters
@@ -186,7 +187,7 @@ function loadASITables4ACA_TPS() {
 	var tai = ta.values().iterator();
 	while (tai.hasNext()) {
 		var tsm = tai.next();
-		if (tsm.rowIndex.isEmpty()) { showMessage = true; comment('There is no table avaialable to pull data from'); cancel = true; } // continue;  // empty table
+		if (tsm.rowIndex.isEmpty()) { showMessage = true; comment('There is no table available to pull data from'); cancel = true; } // continue;  // empty table
 			var tempObject = new Array();
 			var tempArray = new Array();
 			var tn = tsm.getTableName();

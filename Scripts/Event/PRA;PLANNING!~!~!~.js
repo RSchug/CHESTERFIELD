@@ -3,6 +3,7 @@ try {
 	if (isTaskActive("Fee Payment") && (balanceDue == 0)) {
 		closeTask("Fee Payment","Payment Received","Updated based on Balance of 0","");
 		overallCodeSchema_CC();
+		updateAppStatus("In Review","Updated based on full payment.");
 	}
 //01-15-21 db added per UAT
 	if (appMatch("Planning/LandUse/WrittenDetermination/NA") && matches(capStatus, "Fees Requested") && (balanceDue == 0)) {
