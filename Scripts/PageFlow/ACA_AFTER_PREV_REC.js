@@ -298,7 +298,7 @@ try {
 		//logDebug("===== capModel (Before) =====");
 		//logCapModel(capModel);
 		logDebug("load capModel from cap: " + capId.getCustomID());
-		capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
+		capSections = ["AppName", "ASI", "ASIT", "Contacts", "LPs", "Additional Info"]; //"Addresses", "Parcels", "Owners", "Conditions", "Education", "Continuing Education", "Examination"] removed these based on business request 02-2021
 		capSections = ["AppName", "ASIT", "Contacts"];
 		var capSections = null;
 		loadCapModel(capId);
@@ -442,7 +442,7 @@ function loadCapModel(targetCapId) {
     try {
 		if (srcCapId != null) {
 			if (capSections == null)
-				capSections = ["AppName", "ASI", "ASIT", "Addresses", "Parcels", "Owners", "Contacts", "LPs", "Additional Info", "Conditions", "Education", "Continuing Education", "Examination"];
+				capSections = ["AppName", "ASI", "ASIT", "Contacts", "LPs", "Additional Info"]; //"Addresses", "Parcels", "Owners", "Conditions", "Education", "Continuing Education", "Examination" ] removed 02-2021 based on business request
 
 			logDebug("===== copying ===== from "
 				+ (srcCapId && srcCapId.getCustomID ? srcCapId.getCustomID() : srcCapId) + " to "
