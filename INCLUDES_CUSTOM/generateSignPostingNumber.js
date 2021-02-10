@@ -1,7 +1,7 @@
 function generateSignPostingNumber(fieldName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
     // Check if Sign Posting Number is in use.
-    for (var i = 100; i < 1000; i++) {
+    for (var i = 300; i < 500; i++) {
         var ASIValue = getNextSequence(fieldName);
         if (ASIValue && !isNaN(ASIValue)) {
             ASIValue = parseInt(ASIValue);
