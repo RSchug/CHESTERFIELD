@@ -1,15 +1,10 @@
 function generateSignPostingNumber(fieldName) {
     var inActiveCapStatuses = ["Cancelled", "Closed", "Expired", "Withdrawn"];
-    // Check if Sign Posting Number is in use.
+    //var ASIValue = getNextSequence(fieldName);
+    //if (ASIValue) ASIValue = ASIValue+"";
+
     for (var i = 300; i < 500; i++) {
-        var ASIValue = getNextSequence(fieldName);
-        if (ASIValue && !isNaN(ASIValue)) {
-            ASIValue = parseInt(ASIValue);
-            logDebug("Checking " + fieldName + " sequence: " + ASIValue);
-        } else {
-            continue;
-        }
-        var ASIValue = ASIValue + "";
+        var ASIValue = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(fieldName, ASIValue);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
         var apsArray = getCapResult.getOutput();
@@ -22,9 +17,7 @@ function generateSignPostingNumber(fieldName) {
             ASIValue = null;
             break; // Active record found so get next number
         }
-        if (ASIValue != null) { break; }
-		else if (ASIValue == null){
-			ASIValue = '000'; }
+        if (ASIValue != null) break
     }
     //if (ASIValue == null)
     return ASIValue;
