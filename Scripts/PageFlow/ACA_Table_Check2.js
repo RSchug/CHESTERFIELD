@@ -187,7 +187,7 @@ function loadASITables4ACA_TPS() {
 	var tai = ta.values().iterator();
 	while (tai.hasNext()) {
 		var tsm = tai.next();
-		if (tsm.rowIndex.isEmpty()) { showMessage = true; comment('There is no table available to pull data from'); cancel = true; } // continue;  // empty table
+		if (tsm.rowIndex.isEmpty()) { showMessage = true; comment('There is no table available to pull data from' + ' ' + tsm); cancel = true; } // continue;  // empty table
 			var tempObject = new Array();
 			var tempArray = new Array();
 			var tn = tsm.getTableName();
