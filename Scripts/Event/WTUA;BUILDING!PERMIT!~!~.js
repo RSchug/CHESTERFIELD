@@ -2,8 +2,8 @@ try {
 	//Permit Issuance is Issued than updated Permit Expiration Date to 180 days from system date
 	if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || !exists(capStatus, ["Cancelled","Pending Applicant"])) { 
 		//01-2021 moved the auto-email from the DigEplan scripts to here - this is not working...
-		//var ResubmitStatus = null; var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
-		//emailReviewCompleteNotification(ResubmitStatus, ApprovedStatus, docGroupArrayModule);
+		var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
+		emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
 		// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
@@ -59,4 +59,63 @@ try {
 	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
+}
+function emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule) {
+    showMessageDefault = showMessage;
+    //populate email notification parameters
+    var emailSendFrom = "";
+    var emailSendTo = "";
+    var emailCC = "";
+    var emailParameters = aa.util.newHashtable();
+    var fileNames = [];
+
+    getRecordParams4Notification(emailParameters);
+    getAPOParams4Notification(emailParameters);
+    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+    //getACARecordParam4Notification(emailParameters,acaSite);
+    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+    addParameter(emailParameters, "$$wfComment$$", wfComment);
+    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+
+    var applicantEmail = "";
+    var assignedTo = getAssignedToStaff();
+    var assignedToEmail = "";
+    var assignedToFullName = "";
+    var contObj = {};
+    contObj = getContactArray(capId);
+    if (typeof(contObj) == "object") {
+        for (co in contObj) {
+            if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
+                applicantEmail += contObj[co]["email"] + ";";
+        }
+    }
+
+    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+
+    if (assignedTo != null) {
+        assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
+        if (!matches(aa.person.getUser(assignedTo).getOutput().getEmail(), undefined, "", null)) {
+            assignedToEmail = aa.person.getUser(assignedTo).getOutput().getEmail();
+        }
+    }
+    addParameter(emailParameters, "$$assignedToFullName$$", assignedToFullName);
+    addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
+
+    if (applicantEmail != "") {
+        
+        if (exists(wfStatus, ApprovedStatus)) {
+			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED_BLD";
+        }
+        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+    } else {
+        if (applicantEmail == "" && assignedToEmail != "") {
+            var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
+            sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+            showMessage = true;
+            comment("There is no applicant email associated to this permit. Permit Coordinator has been notified via email to contact this applicant directly.");
+            showMessage = showMessageDefault;
+        }
+    }
 }
