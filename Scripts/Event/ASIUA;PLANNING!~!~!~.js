@@ -49,7 +49,10 @@ try {
 		editAppSpecific("Total application acreage", 0);
 		editAppSpecific("Total number of parcels", 0);
 	}
-		
+
+	//logDebug("Keith Test");
+	//updateDocSource("Laserfiche","REC21","00000","00163");
+	
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
