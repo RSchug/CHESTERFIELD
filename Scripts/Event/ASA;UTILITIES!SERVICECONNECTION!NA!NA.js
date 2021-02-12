@@ -1,8 +1,9 @@
+if (!publicUser) performCISLookup()
+
 try {
 var streetName, streetType, streetNumber;
 var customListGroupName = "CC-UT-UC";
 fillAddressParts();
-
 
 // var URL = encodeURI("http://auroraapp.northcentralus.cloudapp.azure.com/CISCustomerAccountNumberInterface/webservices/CISCustomerAccountNumberInterface.asmx/GetCISServiceAddress?StreetName="
 // 		+ streetName + "&streetType=" + streetType + "&streetNumber=" + streetNumber);
@@ -273,9 +274,10 @@ editAppSpecific("Service Number",lookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE
 editLookup("NEW_CONNECTION_SERVICE_NUMBER","SERVICE_NUMBER",zeroPad(newServNumber+count,8));
 }
 
-	if (!publicUser){
-		performCISLookup();
-	}
+//if (!publicUser){
+//performCISLookup();
+//}
+
 
 //11-2020 Boucher 105aca added per call with Economic Development
 	var addrArray = [];
