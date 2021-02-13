@@ -193,7 +193,7 @@ function loadASITables4ACA_TPS() {
 			var tn = tsm.getTableName();
 			tn = String(tn).replace(/[^a-zA-Z0-9]+/g,'');
 			//showMessage = true; comment('There is no table available to pull data from' + ' ' + tn); cancel = true;
-		if (!isNaN(tn.substring(0,1))) { showMessage = true; comment('There is no data in the Parcel List Table - please add at least 1 valid Tax ID' + tn.substring(0,1)); cancel = true; }
+did not work here//if (!isNaN(tn.substring(0,1))) { showMessage = true; comment('There is no data in the Parcel List Table - please add at least 1 valid Tax ID' + tn.substring(0,1)); cancel = true; }
 		if (!isNaN(tn.substring(0,1))) tn = "TBL" + tn  // prepend with TBL if it starts with a number
 			var tsmfldi = tsm.getTableField().iterator();
 			var tsmcoli = tsm.getColumns().iterator();
