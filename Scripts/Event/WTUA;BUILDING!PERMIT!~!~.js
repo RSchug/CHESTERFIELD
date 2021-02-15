@@ -12,7 +12,7 @@ try {
 		var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
 		var emailParameters; 
 		emailParameters = aa.util.newHashtable();
-		emailParameters.put("$$RecordID$$", capIDString); = aa.util.newHashtable();
+		emailParameters.put("$$RecordID$$", capIDString);
 		var fileNames = [];
 		sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
 		
