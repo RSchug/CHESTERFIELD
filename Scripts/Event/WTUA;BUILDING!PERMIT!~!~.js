@@ -3,7 +3,20 @@ try {
 	if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || !exists(capStatus, ["Cancelled","Pending Applicant"])) { 
 		//01-2021 moved the auto-email from the DigEplan scripts to here - this is not working...
 		var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
-		emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
+		//emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
+		
+		
+		var emailSendFrom = 'noreply@chesterfield.gov';
+		var emailSendTo = "dboucher@truepointsolutions.com";
+		var emailCC = "";
+		var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
+		var var emailParameters; 
+		emailParameters = aa.util.newHashtable();
+		emailParameters.put("$$RecordID$$", capIDString); = aa.util.newHashtable();
+		var fileNames = [];
+		sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+		
+		
 		// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
