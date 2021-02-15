@@ -10,7 +10,7 @@ try {
 		var emailSendTo = "dboucher@truepointsolutions.com";
 		var emailCC = "";
 		var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
-		var var emailParameters; 
+		var emailParameters; 
 		emailParameters = aa.util.newHashtable();
 		emailParameters.put("$$RecordID$$", capIDString); = aa.util.newHashtable();
 		var fileNames = [];
