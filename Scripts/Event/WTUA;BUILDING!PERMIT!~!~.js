@@ -34,7 +34,7 @@ try {
 			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
 		} else { logDebug("No applicants for " + capIDString); }
 		
-		// Update Permit Expiration Date on record, and where appropriate parent and children
+	// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
 		editAppSpecific(expField, expDateNew);
