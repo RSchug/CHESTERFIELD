@@ -3,9 +3,9 @@ try {
 	if ((wfTask == "Permit Issuance" && wfStatus == "Issued") || !exists(capStatus, ["Cancelled","Pending Applicant"])) { 
 		//01-2021 moved the auto-email from the DigEplan scripts to here - this is not working...
 		var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
-		//emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
+		emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
 		
-		
+		/*
 		var emailSendFrom = 'noreply@chesterfield.gov';
 		var emailSendTo = "dboucher@truepointsolutions.com";
 		var emailCC = "";
@@ -15,7 +15,7 @@ try {
 		emailParameters.put("$$RecordID$$", capIDString);
 		var fileNames = [];
 		sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
-		
+		*/
 		
 		// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
@@ -103,18 +103,8 @@ function emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule
             if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
                 applicantEmail += contObj[co]["email"] + ";";
         }
+	    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
     }
-
-    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
-
-    if (assignedTo != null) {
-        assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
-        if (!matches(aa.person.getUser(assignedTo).getOutput().getEmail(), undefined, "", null)) {
-            assignedToEmail = aa.person.getUser(assignedTo).getOutput().getEmail();
-        }
-    }
-    addParameter(emailParameters, "$$assignedToFullName$$", assignedToFullName);
-    addParameter(emailParameters, "$$assignedToEmail$$", assignedToEmail);
 
     if (applicantEmail != "") {
         
@@ -122,7 +112,7 @@ function emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule
 			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED_BLD";
         }
         sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
-    } else {
+    } /*else {
         if (applicantEmail == "" && assignedToEmail != "") {
             var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
             sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
@@ -130,5 +120,5 @@ function emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule
             comment("There is no applicant email associated to this permit. Permit Coordinator has been notified via email to contact this applicant directly.");
             showMessage = showMessageDefault;
         }
-    }
+    } */
 }
