@@ -3,7 +3,7 @@ try {
 	//if (appMatch('Planning/*/*/*')) {
 	//create parent relationships - any and all - firstParentName is 1st pageflow, secondParentName is in ASI
 		if (AInfo["Related Record ID"] != null) {
-			var firstParentName = AInfo["Inquiry Case Number"];
+			var firstParentName = AInfo["Related Record ID"];
 			addParent(firstParentName);
 		}
 	
