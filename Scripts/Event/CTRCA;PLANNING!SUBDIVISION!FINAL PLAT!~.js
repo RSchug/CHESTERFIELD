@@ -1,6 +1,6 @@
 //When Final Plat Record is submitted add a child Sureties Record.
 try {
-	if (!publicUser) {
+	if (publicUser) {
 		createChild("EnvEngineering","Sureties","NA","NA","");
 	}
 } catch (err) {
