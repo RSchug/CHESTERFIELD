@@ -20,9 +20,7 @@ try {
 		for (var i in workflowTasks) {
 			var wfbTask = workflowTasks[i];
 			if (wfbTask.getActiveFlag() == 'Y') {
-				if (wfaTask == wfbTask.getTaskDescription()) {
-					editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7));
-				}
+				editTaskDueDate(wfbTask.getTaskDescription(),dateAdd(null,7));
 			}
 		}
 	}
