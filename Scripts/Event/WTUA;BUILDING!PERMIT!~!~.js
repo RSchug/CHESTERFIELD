@@ -55,6 +55,17 @@ try {
 	if (wfStatus == 'Temporary Certificate Issued' && appMatch("Building/Permit/Elevator/Renewal")) {
 	editAppSpecific(tempcertexpdate,tempcertexpdatenew);
 	}
+	//Email if Payment Due 
+	if (wfTask == "Application Submittal" && wfStatus == "Payment Due"){
+		var address = aa.address.getAddressByCapId(capId).getOutput();
+		var fileNames = [];
+		var emailParameters; 
+		var applicantEmail = "";
+		emailParameters = aa.util.newHashtable();
+		emailParameters.put("$$RecordID$$", capIDString); 
+		sendNotification("noreply@chesterfield.gov","mbouquin@truepointsolutions.com","WTUA_BLDG_PAYMENT_DUE",emailParameters,fileNames);
+	}
+
 	//03-2021 Auto-emails
 	if (matches(wfTask,"Application Submittal","Review Distribution") && wfStatus == "Additional Information Required") { 
 		var emailSendFrom = '';
