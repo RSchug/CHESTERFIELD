@@ -57,11 +57,10 @@ try {
 	}
 	//Email if Payment Due 
 	if (wfTask == "Application Submittal" && wfStatus == "Payment Due"){
-		var address = aa.address.getAddressByCapId(capId).getOutput();
+		//var address = aa.address.getAddressByCapId(capId).getOutput();
 		var fileNames = [];
-		var emailParameters; 
+		var emailParameters = aa.util.newHashtable(); 
 		var applicantEmail = "";
-		emailParameters = aa.util.newHashtable();
 		emailParameters.put("$$RecordID$$", capIDString); 
 		sendNotification("noreply@chesterfield.gov","mbouquin@truepointsolutions.com","WTUA_BLDG_PAYMENT_DUE",emailParameters,fileNames);
 	}
@@ -97,7 +96,8 @@ try {
 			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
 		} else { logDebug("No applicants for " + capIDString); }
 	}
-	if (matches(wfTask,"Review Consolidation","Structural Review") && wfStatus == "Corrections Required") { 
+	if (((appMatch('Building/Permit/Residential/NA') && wfTask == 'Structural Review') || (appMatch('Building/Permit/Residential/Multi-Family') &&  wfTask == 'Structural Review') ||
+		matches(wfTask,"Review Consolidation")) &&  wfStatus == "Corrections Required") { 
 		var emailSendFrom = '';
 		var emailSendTo = "";
 		var emailCC = "";
