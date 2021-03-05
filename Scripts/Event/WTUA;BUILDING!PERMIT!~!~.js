@@ -55,11 +55,68 @@ try {
 	if (wfStatus == 'Temporary Certificate Issued' && appMatch("Building/Permit/Elevator/Renewal")) {
 	editAppSpecific(tempcertexpdate,tempcertexpdatenew);
 	}
-	/*f (wfTask == "Permit Issuance" && wfStatus == "Issued") { 
-		//01-2021 moved the auto-email from the DigEplan scripts to here - this is not working...
-		//var ApprovedStatus = 'Issued'; var docGroupArrayModule = 'General';
-		//emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule);
-		
+	//03-2021 Auto-emails
+	if (matches(wfTask,"Application Submittal","Review Distribution") && wfStatus == "Additional Information Required") { 
+		var emailSendFrom = '';
+		var emailSendTo = "";
+		var emailCC = "";
+		var emailTemplate = "WTUA_CONTACT NOTIFICATION_ADDITIONAL_BLD";
+		var fileNames = [];
+		var emailParameters = aa.util.newHashtable();
+		getRecordParams4Notification(emailParameters);
+		getAPOParams4Notification(emailParameters);
+		var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+		acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+		//getACARecordParam4Notification(emailParameters,acaSite);
+		addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+		addParameter(emailParameters, "$$wfComment$$", wfComment);
+		addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+		addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+		var applicantEmail = "";
+		var contObj = {};
+		contObj = getContactArray(capId);
+		if (typeof(contObj) == "object") {
+			for (co in contObj) {
+				if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
+					applicantEmail += contObj[co]["email"] + ";";
+			}
+			addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+		} else { logDebug("No contacts at all for " + capIDString); }
+		if (applicantEmail != "") {
+			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+		} else { logDebug("No applicants for " + capIDString); }
+	}
+	if (matches(wfTask,"Review Consolidation","Structural Review") && wfStatus == "Corrections Required") { 
+		var emailSendFrom = '';
+		var emailSendTo = "";
+		var emailCC = "";
+		var emailTemplate = "WTUA_CONTACT NOTIFICATION_CORRECTIONS_BLD";
+		var fileNames = [];
+		var emailParameters = aa.util.newHashtable();
+		getRecordParams4Notification(emailParameters);
+		getAPOParams4Notification(emailParameters);
+		var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
+		acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
+		//getACARecordParam4Notification(emailParameters,acaSite);
+		addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
+		addParameter(emailParameters, "$$wfComment$$", wfComment);
+		addParameter(emailParameters, "$$wfStatus$$", wfStatus);
+		addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
+		var applicantEmail = "";
+		var contObj = {};
+		contObj = getContactArray(capId);
+		if (typeof(contObj) == "object") {
+			for (co in contObj) {
+				if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
+					applicantEmail += contObj[co]["email"] + ";";
+			}
+			addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
+		} else { logDebug("No contacts at all for " + capIDString); }
+		if (applicantEmail != "") {
+			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
+		} else { logDebug("No applicants for " + capIDString); }
+	}
+	if (wfTask == "Permit Issuance" && wfStatus == "Issued") { 
 		var emailSendFrom = '';
 		var emailSendTo = "";
 		var emailCC = "";
@@ -88,56 +145,7 @@ try {
 		if (applicantEmail != "") {
 			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
 		} else { logDebug("No applicants for " + capIDString); }
-	}*/
+	}
 } catch (err) {
 	logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
-}
-function emailReviewCompleteNotification_BLD(ApprovedStatus, docGroupArrayModule) {
-    showMessageDefault = showMessage;
-    //populate email notification parameters
-    var emailSendFrom = "";
-    var emailSendTo = "";
-    var emailCC = "";
-    var emailParameters = aa.util.newHashtable();
-    var fileNames = [];
-
-    getRecordParams4Notification(emailParameters);
-    getAPOParams4Notification(emailParameters);
-    var acaSite = lookup("ACA_CONFIGS", "ACA_SITE");
-    acaSite = acaSite.substr(0, acaSite.toUpperCase().indexOf("/ADMIN"));
-    //getACARecordParam4Notification(emailParameters,acaSite);
-    addParameter(emailParameters, "$$acaRecordUrl$$", getACARecordURL(acaSite));
-    addParameter(emailParameters, "$$wfComment$$", wfComment);
-    addParameter(emailParameters, "$$wfStatus$$", wfStatus);
-    addParameter(emailParameters, "$$ShortNotes$$", getShortNotes());
-
-    var applicantEmail = "";
-    var assignedTo = getAssignedToStaff();
-    var assignedToEmail = "";
-    var assignedToFullName = "";
-    var contObj = {};
-    contObj = getContactArray(capId);
-    if (typeof(contObj) == "object") {
-        for (co in contObj) {
-            if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
-                applicantEmail += contObj[co]["email"] + ";";
-        }
-	    addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
-    }
-
-    if (applicantEmail != "") {
-        
-        if (exists(wfStatus, ApprovedStatus)) {
-			var emailTemplate = "WTUA_CONTACT NOTIFICATION_APPROVED_BLD";
-        }
-        sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
-    } /*else {
-        if (applicantEmail == "" && assignedToEmail != "") {
-            var emailTemplate = "WTUA_INTERNAL NOTIFICATION_REVIEWCOMPLETE";
-            sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
-            showMessage = true;
-            comment("There is no applicant email associated to this permit. Permit Coordinator has been notified via email to contact this applicant directly.");
-            showMessage = showMessageDefault;
-        }
-    } */
 }

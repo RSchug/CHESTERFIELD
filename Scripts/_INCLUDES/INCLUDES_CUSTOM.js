@@ -4640,7 +4640,7 @@ function generateSignPostingNumber(fieldName) {
     //var ASIValue = getNextSequence(fieldName);
     //if (ASIValue) ASIValue = ASIValue+"";
 
-    for (var i = 300; i < 500; i++) {
+    for (var i = 100; i < 999; i++) {
         var ASIValue = i + "";
         var getCapResult = aa.cap.getCapIDsByAppSpecificInfoField(fieldName, ASIValue);
         if (!getCapResult.getSuccess()) { logDebug("**ERROR: getting caps by app type: " + getCapResult.getErrorMessage()); return null }
@@ -6942,8 +6942,8 @@ function digEplanPreCache(client,capId)
 
 function getEnvironment() {
                 var environment = "";
-                var acaSite = lookup("ACA_CONFIGS","ACA_SITE");
-                if(acaSite.indexOf("https://aca-prod.accela.com/chesterfield/") == 0) {environment = "PROD";}
+                var acaSite = lookup("ACA_CONFIGS","ACA_SITE").toUpperCase();
+                if(acaSite.indexOf("HTTPS://ACA-PROD.ACCELA.COM/CHESTERFIELD/") == 0) {environment = "PROD";}
 					else {environment = "NON-PROD";}
 
                 return environment;
