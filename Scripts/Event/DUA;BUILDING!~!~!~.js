@@ -3,7 +3,7 @@ try {
 	if (publicUser && !matches(capStatus,'Submitted',null)) {
 		if (!isTaskActive("Document Submitted Online")) {
 				addAdHocTask("ADHOC_WF","Document Submitted Online","");
-				assignTask_CHESTERFIELD("Document Submitted Online", "GATEKEEPER");
+				assignTask_CHESTERFIELD("Document Submitted Online", "MCLEHANEYD");
 		}		
     }
 //in DUA_EXECUTE_DIGEPLAN_SCRIPTS we update AppStatus when docs are uploaded by publicuser via the Resubmit button...

@@ -14,6 +14,10 @@ try {
 			email('techzone@chesterfieldbusiness.com','noreply@chesterfield.gov','Record: ' + capId.getCustomID() + ' submitted in the Tech Zone','Date: ' + fileDate + ' For Record Type: ' + appTypeAlias);
 		}
 	}
+//03-2021 this is to account for GIS feature not getting populated via ACA
+	if (publicUser) {
+		copyParcelGisObjects();
+	}
 } catch (err) {
 		logDebug("A JavaScript Error occurred: " + err.message + " In Line " + err.lineNumber + " of " + err.fileName + " Stack " + err.stack);
 }
