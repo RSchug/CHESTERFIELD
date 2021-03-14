@@ -122,7 +122,7 @@ try {
 	}
 //03-2021 added scripting for Code Schema Checking
 	if ('Planning/SitePlan/*/*' || 'Planning/Subdivision/*/*') {
-		if (matches(wfTask,'CPC Hearing','Case Complete','Review COnsolidation') && matches(wfStatus,'County Signatures Complete','Create Conditions and Close Case','Closed','Appeal','Complete','CPC Approved','CPC Approved with Admin Review')) {
+		if (matches(wfTask,'CPC Hearing','Case Complete','Review Consolidation') && matches(wfStatus,'County Signatures Complete','Create Conditions and Close Case','Closed','Appeal','Complete','CPC Approved','CPC Approved with Admin Review')) {
 			if (AInfo['Subdivision Code'] == null || AInfo['Subdivision ID'] == null || AInfo['Subdivision Name'] == null || AInfo['Development Code'] == null || AInfo['Development Name'] == null || AInfo['Community Code'] == null) {
 				showMessage = true;
 				comment('You cannot advance this workflow until the Subdivision fields in the <b>Codes</b> area of the Data Fields are filled in appropriately. If a field is Not Applicable, you can mark it with NA.');

@@ -4,7 +4,7 @@ try {
 		var emailSendFrom = '';
 		var emailSendTo = "";
 		var emailCC = "";
-		var emailTemplate = "WTUA_BLDG_PAYMENT_DUE";
+		var emailTemplate = "WTUA_UTIL_PAYMENT_DUE";
 		var fileNames = [];
 		var emailParameters = aa.util.newHashtable();
 		getRecordParams4Notification(emailParameters);
@@ -21,7 +21,7 @@ try {
 		contObj = getContactArray(capId);
 		if (typeof(contObj) == "object") {
 			for (co in contObj) {
-				if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null)
+				if (contObj[co]["contactType"] == "Applicant" && contObj[co]["email"] != null || contObj[co]["contactType"] == "Billing Contact" && contObj[co]["email"] != null)
 					applicantEmail += contObj[co]["email"] + ";";
 			}
 			addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
