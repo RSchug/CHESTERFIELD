@@ -1,4 +1,8 @@
 try {
+// Added per new update 03-2021
+	if ((wfTask == 'Inative Applications' || wfTask == 'Inactive Permits') && matches(appStatus, "Withdrawn")) {
+		taskCloseAllActive('Closed','Per Record Status Update');
+	}
 // If setting the License status manually from the workflow
 	if (wfTask == 'Annual Status' && wfStatus == 'About to Expire') {
 		lic = new licenseObject(capIDString);
