@@ -1,10 +1,10 @@
 //Add Fees - 03-2021 update per new fee spec...
 try {
-	if (AInfo["Nature of Work"] == "Fuel tank installation and/or removal or replacement") && (!feeExists("FUELTANK") || !feeExists("WOODSTOVE") || !feeExists("MANUFACTURED") || !feeExists("DUCTWORK") || !feeExists("REPLCNEWDUCT") || !feeExists("REPLCNODUCT")) {
+	if ((AInfo["Nature of Work"] == "Fuel tank installation and/or removal or replacement" && !feeExists("FUELTANK")) && (!feeExists("WOODSTOVE") || !feeExists("MANUFACTURED") || !feeExists("DUCTWORK") || !feeExists("REPLCNEWDUCT") || !feeExists("REPLCNODUCT"))) {
 		addFee("FUELTANK","CC-BLD-RES-MECH","FINAL",1,"Y");
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 		
-	} else if (AInfo["Nature of Work"] == "Fuel tank installation and/or removal or replacement" && (feeExists("FUELTANK") || feeExists("WOODSTOVE") || feeExists("MANUFACTURED") || feeExnp.  I am hereists("DUCTWORK") || feeExists("REPLCNEWDUCT") || feeExists("REPLCNODUCT")) {
+	} else if (AInfo["Nature of Work"] == "Fuel tank installation and/or removal or replacement" && (feeExists("FUELTANK") || feeExists("WOODSTOVE") || feeExists("MANUFACTURED") || feeExists("DUCTWORK") || feeExists("REPLCNEWDUCT") || feeExists("REPLCNODUCT"))) {
 		addFee("ADD57","CC-BLD-RES-MECH","FINAL",1,"Y");
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 	}
