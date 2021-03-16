@@ -1,6 +1,6 @@
 try {
 // Added per new update 03-2021
-	if ((wfTask == 'Inative Application' || wfTask == 'Inactive Permit') && matches(appStatus, "Withdrawn")) {
+	if ((wfTask == 'Inative Application' || wfTask == 'Inactive Permit') && matches(wfStatus, "Withdrawn")) {
 		taskCloseAllActive('Closed','Per Record Status Update');
 	}
 // If setting the License status manually from the workflow
