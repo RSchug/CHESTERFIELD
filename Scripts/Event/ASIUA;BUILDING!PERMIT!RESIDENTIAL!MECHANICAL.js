@@ -25,17 +25,17 @@ try {
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 	}
 
-	if (!feeExists("NEWHVAC") && (AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property") && (AInfo["Type of Building"] != "Multi-Family Dwelling") ){
+	if (AInfo["Nature of Work"] == "Heating, venting and air conditioning (HVAC)" && !feeExists("NEWHVAC") && (AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property") && (AInfo["Type of Building"] != "Multi-Family Dwelling") ){
 		addFee("NEWHVAC","CC-BLD-RES-MECH","FINAL",1,"Y");
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 	}
 
-	if (AInfo["HVAC Type of Work"] == "System replacement with new ductwork" && !feeExists("REPLCNEWDUCT") && AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property"){
+	if (AInfo["Nature of Work"] == "Heating, venting and air conditioning (HVAC)" && AInfo["HVAC Type of Work"] == "System replacement with new ductwork" && !feeExists("REPLCNEWDUCT") && AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property"){
 		addFee("REPLCNEWDUCT","CC-BLD-RES-MECH","FINAL",1,"Y");
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 	}
 
-	if (AInfo["HVAC Type of Work"] == "System replacement without new ductwork" && !feeExists("REPLCNODUCT") && AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property"){
+	if (AInfo["Nature of Work"] == "Heating, venting and air conditioning (HVAC)" && AInfo["HVAC Type of Work"] == "System replacement without new ductwork" && !feeExists("REPLCNODUCT") && AInfo["Type of Building"] != "Mobile or Manufactured Home on Private Property"){
 		addFee("REPLCNODUCT","CC-BLD-RES-MECH","FINAL",1,"Y");
 		updateFee("STATELEVY","CC-BLD-RES-MECH","FINAL",1,"Y");
 	}
