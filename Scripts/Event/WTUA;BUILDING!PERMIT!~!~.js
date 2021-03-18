@@ -147,7 +147,7 @@ try {
 			sendNotification(emailSendFrom, emailSendTo, emailCC, emailTemplate, emailParameters, fileNames);
 		} else { logDebug("No applicants for " + capIDString); }
 	}
-	if (wfTask == "Permit Issuance" && wfStatus == "Issued") { 
+	if (wfTask == "Permit Issuance" && matches(wfStatus,"Issued","Issued - Inspections Not Required")) { 
 		var emailSendFrom = '';
 		var emailSendTo = "";
 		var emailCC = "";
