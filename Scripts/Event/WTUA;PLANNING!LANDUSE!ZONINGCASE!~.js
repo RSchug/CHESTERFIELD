@@ -106,7 +106,7 @@ function addAdHocTask_TPS(adHocProcess, adHocTask, adHocNote) {
 	taskObj.setDispositionNote(adHocNote);
 	taskObj.setProcessID(0);
 	//taskObj.setAssignmentDate(aa.util.now());
-	//taskObj.setDueDate(aa.util.now());
+	taskObj.setDueDate(null);
 	//taskObj.setAssignedUser(userObj.getOutput());
 	wf = aa.proxyInvoker.newInstance("com.accela.aa.workflow.workflow.WorkflowBusiness").getOutput();
 	wf.createAdHocTaskItem(taskObj);
