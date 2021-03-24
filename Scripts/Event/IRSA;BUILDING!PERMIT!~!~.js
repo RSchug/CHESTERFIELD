@@ -1,6 +1,6 @@
 try {
 	logDebug("Inspection Result " + inspResult);
-	if (exists(inspResult,["Approved","Corrections Required"]) {
+	if (exists(inspResult,["Approved","Corrections Required"])) {
 		logDebug("in if Inspection Result " + inspResult);
 	}
 	logDebug("Inspection Type " + inspType);
