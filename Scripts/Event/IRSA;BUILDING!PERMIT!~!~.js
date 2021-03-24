@@ -1,12 +1,5 @@
 try {
-	logDebug("Inspection Result " + inspResult);
-	if (exists(inspResult,["Approved","Corrections Required"])) {
-		logDebug("in if Inspection Result " + inspResult);
-	}
-	logDebug("Inspection Type " + inspType);
-	logDebug("Inspection Type index" + inspType.indexOf("Final"));
-	if (inspType.indexOf("Final") > 0) {
-		logDebug("in if Inspection Type " + inspType.indexOf("Final"));
+	if (exists(inspResult,["Approved","Corrections Required"]) && inspType.indexOf("Final") > -1) {
 	// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
