@@ -1,9 +1,16 @@
 try {
-	if (exists(inspResult,["Approved","Corrections Required"]) && inspType.indexOf("Final") < 0) {
+	logDebug("Inspection Result " + inspResult);
+	if (exists(inspResult,["Approved","Corrections Required"]) {
+		logDebug("in if Inspection Result " + inspResult);
+	}
+	logDebug("Inspection Type " + inspType);
+	if (inspType.indexOf("Final") < 0) {
+		logDebug("in if Inspection Type " + inspType.indexOf("Final"));
 	// Update Permit Expiration Date on record, and where appropriate parent and children
-	var expField = "Permit Expiration Date";
-	var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
-	editAppSpecific(expField, expDateNew);
+		var expField = "Permit Expiration Date";
+		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
+		editAppSpecific(expField, expDateNew);
+		
 		if (appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family") || appMatch("Building/Permit/Commercial/NA")) {
 			var childRecs = getChildren("Building/Permit/*/*", capId);
 		} else if (parentCapId) {
