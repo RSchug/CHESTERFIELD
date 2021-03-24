@@ -566,8 +566,8 @@ function emailReadyforPayment() {
     var applicantEmail = "";
 	var applicantName = "";
     var assignedTo = getAssignedToStaff();
-    var assignedToEmail = "";
-    var assignedToFullName = "";
+    var assignedToEmail = "No email";
+    var assignedToFullName = "Not Assigned";
     var contObj = {};
     contObj = getContactArray(capId);
     if (typeof(contObj) == "object") {
@@ -580,7 +580,7 @@ function emailReadyforPayment() {
     addParameter(emailParameters, "$$applicantEmail$$", applicantEmail);
 	addParameter(emailParameters, "$$applicantName$$", applicantName);
 
-    if (assignedTo != null) {
+    if (!matches(assignedTo,undefined,"",null)) {
         assignedToFullName = aa.person.getUser(assignedTo).getOutput().getFirstName() + " " + aa.person.getUser(assignedTo).getOutput().getLastName();
         if (!matches(aa.person.getUser(assignedTo).getOutput().getEmail(), undefined, "", null)) {
             assignedToEmail = aa.person.getUser(assignedTo).getOutput().getEmail();
