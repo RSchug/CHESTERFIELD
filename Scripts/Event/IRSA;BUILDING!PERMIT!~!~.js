@@ -4,7 +4,8 @@ try {
 		logDebug("in if Inspection Result " + inspResult);
 	}
 	logDebug("Inspection Type " + inspType);
-	if (inspType.indexOf("Final") < 0) {
+	logDebug("Inspection Type index" + inspType.indexOf("Final"));
+	if (inspType.indexOf("Final") > 0) {
 		logDebug("in if Inspection Type " + inspType.indexOf("Final"));
 	// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
