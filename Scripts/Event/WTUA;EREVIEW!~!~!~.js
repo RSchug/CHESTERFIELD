@@ -1,8 +1,8 @@
 try {
-    if (matches(wfTask, 'Review Distribution') & matches(wfStatus, 'Additional Information Requested')) {
+    if (matches(wfTask, 'Review Distribution') && matches(wfStatus, 'Additional Information Requested')) {
         emailPendingApplicantNotification();
     }
-    if (appMatch('*/Planning/*/*') && matches(wfTask,'Review Distribution') & matches(wfStatus,'Routed for Review') && AInfo['Review Time Options'] == 'First Glance') {
+    if (appMatch('*/Planning/*/*') && matches(wfTask,'Review Distribution') && matches(wfStatus,'Routed for Review') && AInfo['Review Time Options'] == 'First Glance') {
 		editTaskDueDate('*',dateAdd(null,7));
 	}
     if (wfProcess == "EREVIEW1") {
