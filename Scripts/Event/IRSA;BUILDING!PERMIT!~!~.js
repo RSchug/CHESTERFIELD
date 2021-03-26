@@ -1,30 +1,32 @@
 try {
-	if (exists(inspResult,["Approved","Corrections Required"]) && inspType.indexOf("Final") > -1) {
+	//03-2021 per Melissa B. BI wants for any inspecion updated to update expiration date.
+	if (exists(inspResult,["Approved","Corrections Required"])) { //&& inspType.indexOf("Final") > -1) {
 	// Update Permit Expiration Date on record, and where appropriate parent and children
 		var expField = "Permit Expiration Date";
 		var expDateNew = jsDateToASIDate(new Date(dateAdd(null, 180)));
 		editAppSpecific(expField, expDateNew);
 		
-		if (appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family") || appMatch("Building/Permit/Commercial/NA")) {
+		if (appMatch("Building/Permit/Residential/NA") || appMatch("Building/Permit/Residential/Multi-Family") || appMatch("Building/Permit/Commercial/NA")) { //moved to above
 			var childRecs = getChildren("Building/Permit/*/*", capId);
-		} else if (parentCapId) {
-			logDebug("Updating parent " + parentCapId.getCustomID() + " " + expField + " to " + expDateNew);
-			editAppSpecific(expField, expDateNew, parentCapId);
-			var childRecs = getChildren("Building/Permit/*/*", parentCapId);
-		} else {
-			logDebug("Could not update " + expField + ". No parent for " + capId.getCustomID());
-		}
-		for (var c in childRecs) {
-			var childCapId = childRecs[c];
-			var childCapStatus = null;
-			var getCapResult = aa.cap.getCap(childCapId);
-			if (getCapResult.getSuccess()) {
-				var childCap = getCapResult.getOutput();
-				var childCapStatus = childCap.getCapStatus();
+			if (parentCapId) {
+				logDebug("Updating parent " + parentCapId.getCustomID() + " " + expField + " to " + expDateNew);
+				editAppSpecific(expField, expDateNew, parentCapId);
+				var childRecs = getChildren("Building/Permit/*/*", parentCapId);
+			} else {
+				logDebug("Could not update " + expField + ". No parent for " + capId.getCustomID());
 			}
-			if (childCapStatus != "Cancelled") {
-				logDebug("Updating child " + childCapId.getCustomID() + " " + childCapStatus + " " + expField + " to " + expDateNew);
-				editAppSpecific(expField, expDateNew, childCapId);
+			for (var c in childRecs) {
+				var childCapId = childRecs[c];
+				var childCapStatus = null;
+				var getCapResult = aa.cap.getCap(childCapId);
+				if (getCapResult.getSuccess()) {
+					var childCap = getCapResult.getOutput();
+					var childCapStatus = childCap.getCapStatus();
+				}
+				if (childCapStatus != "Cancelled") {
+					logDebug("Updating child " + childCapId.getCustomID() + " " + childCapStatus + " " + expField + " to " + expDateNew);
+					editAppSpecific(expField, expDateNew, childCapId);
+				}
 			}
 		}
 	}
